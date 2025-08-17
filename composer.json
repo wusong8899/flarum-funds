@@ -1,0 +1,32 @@
+{
+  "name": "wusong8899/flarum-withdrawal",
+  "description": "Flarum withdrawal plugin allowing users to withdraw money to different platforms",
+  "type": "flarum-extension",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "wusong8899",
+      "email": "wusong8899@example.com"
+    }
+  ],
+  "require": {
+    "flarum/core": "^1.0",
+    "antoinefr/flarum-ext-money": "^1.0"
+  },
+  "extra": {
+    "flarum-extension": {
+      "title": "Withdrawal",
+      "category": "feature",
+      "icon": {
+        "name": "fas fa-money-bill-transfer",
+        "backgroundColor": "#238636",
+        "color": "#fff"
+      }
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "wusong8899\\Withdrawal\\": "src/"
+    }
+  }
+}

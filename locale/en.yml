@@ -1,0 +1,62 @@
+withdrawal:
+  admin:
+    page:
+      title: Withdrawal Management
+    settings:
+      title: Settings
+      min_amount: Minimum Withdrawal Amount
+      max_amount: Maximum Withdrawal Amount
+      fee: Withdrawal Fee
+    platforms:
+      title: Withdrawal Platforms
+      add_placeholder: Enter platform name
+      add_button: Add Platform
+      empty: No platforms configured
+      delete: Delete
+      delete_confirm: Are you sure you want to delete "{name}"?
+      add_success: Platform added successfully
+      add_error: Failed to add platform
+      delete_success: Platform deleted successfully
+      delete_error: Failed to delete platform
+    requests:
+      title: Withdrawal Requests
+      pending_title: Pending Requests
+      processed_title: Processed Requests
+      no_pending: No pending requests
+      no_processed: No processed requests
+      account_details: Account Details
+      approve: Approve
+      reject: Reject
+      approved_success: Request approved successfully
+      rejected_success: Request rejected successfully
+      update_error: Failed to update request
+      status:
+        pending: Pending
+        approved: Approved
+        rejected: Rejected
+
+  forum:
+    header:
+      withdrawal_button: Withdrawal
+    page:
+      title: Withdrawal
+      description: Submit a withdrawal request to transfer your funds to external platforms
+    form:
+      title: New Withdrawal Request
+      platform: Platform
+      select_platform: Select a platform
+      amount: Amount
+      amount_placeholder: "Enter amount (min: {min}, max: {max})"
+      amount_help: "Minimum: ${min}, Maximum: ${max}, Fee: ${fee}"
+      account_details: Account Details
+      account_details_placeholder: Enter your account details for receiving the withdrawal
+      submit: Submit Request
+      success: Withdrawal request submitted successfully
+      error: Failed to submit withdrawal request
+    history:
+      title: Withdrawal History
+      empty: No withdrawal requests yet
+    status:
+      pending: Pending
+      approved: Approved
+      rejected: Rejected

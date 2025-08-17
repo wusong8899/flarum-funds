@@ -1,0 +1,62 @@
+withdrawal:
+  admin:
+    page:
+      title: 提款管理
+    settings:
+      title: 设置
+      min_amount: 最小提款金额
+      max_amount: 最大提款金额
+      fee: 提款手续费
+    platforms:
+      title: 提款平台
+      add_placeholder: 输入平台名称
+      add_button: 添加平台
+      empty: 未配置平台
+      delete: 删除
+      delete_confirm: 确定要删除 "{name}" 吗？
+      add_success: 平台添加成功
+      add_error: 添加平台失败
+      delete_success: 平台删除成功
+      delete_error: 删除平台失败
+    requests:
+      title: 提款申请
+      pending_title: 待审核申请
+      processed_title: 已处理申请
+      no_pending: 暂无待审核申请
+      no_processed: 暂无已处理申请
+      account_details: 收款账号
+      approve: 审核通过
+      reject: 拒绝
+      approved_success: 申请已通过
+      rejected_success: 申请已拒绝
+      update_error: 更新申请失败
+      status:
+        pending: 待审核
+        approved: 已通过
+        rejected: 已拒绝
+
+  forum:
+    header:
+      withdrawal_button: 提款
+    page:
+      title: 提款
+      description: 提交提款申请，将您的资金转至外部平台
+    form:
+      title: 新建提款申请
+      platform: 平台
+      select_platform: 选择平台
+      amount: 金额
+      amount_placeholder: "输入金额 (最小: {min}, 最大: {max})"
+      amount_help: "最小金额: ${min}，最大金额: ${max}，手续费: ${fee}"
+      account_details: 收款账号
+      account_details_placeholder: 输入您接收提款的账号信息
+      submit: 提交申请
+      success: 提款申请提交成功
+      error: 提款申请提交失败
+    history:
+      title: 提款历史
+      empty: 暂无提款申请记录
+    status:
+      pending: 待审核
+      approved: 已通过
+      rejected: 已拒绝
