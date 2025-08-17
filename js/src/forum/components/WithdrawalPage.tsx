@@ -36,10 +36,6 @@ export default class WithdrawalPage extends Page {
   private submitting = false;
   private loadingBalance = true;
   private userBalance = 0;
-  private userSecurity = {
-    phoneVerified: false,
-    twoFactorEnabled: false
-  };
 
   private amount = Stream('');
   private selectedPlatform = Stream('');
@@ -52,7 +48,6 @@ export default class WithdrawalPage extends Page {
 
     this.loadData();
     this.loadUserBalance();
-    this.loadUserSecurity();
   }
 
   view() {
@@ -136,8 +131,6 @@ export default class WithdrawalPage extends Page {
                   </Button>
                 </div>
               </div>
-
-              {this.renderSecuritySection()}
 
               <div className="WithdrawalPage-formGroup">
                 <Button
@@ -245,66 +238,6 @@ export default class WithdrawalPage extends Page {
     return null;
   }
 
-  private renderSecuritySection(): Mithril.Children {
-    const isSecurityComplete = this.userSecurity.phoneVerified && this.userSecurity.twoFactorEnabled;
-
-    return (
-      <div className="WithdrawalPage-security">
-        <h4>{app.translator.trans('withdrawal.forum.security.title')}</h4>
-        
-        <div className="WithdrawalPage-securityItem">
-          <div className="WithdrawalPage-securityInfo">
-            <span className="WithdrawalPage-securityLabel">
-              {app.translator.trans('withdrawal.forum.security.phone_binding')}
-            </span>
-            <span className={`WithdrawalPage-securityStatus ${this.userSecurity.phoneVerified ? 'verified' : 'unverified'}`}>
-              {this.userSecurity.phoneVerified 
-                ? app.translator.trans('withdrawal.forum.security.phone_bound')
-                : app.translator.trans('withdrawal.forum.security.phone_unbound')
-              }
-            </span>
-          </div>
-          {!this.userSecurity.phoneVerified && (
-            <Button 
-              className="Button Button--link WithdrawalPage-securityAction"
-              onclick={() => this.redirectToPhoneBinding()}
-            >
-              {app.translator.trans('withdrawal.forum.security.phone_bind_action')}
-            </Button>
-          )}
-        </div>
-
-        <div className="WithdrawalPage-securityItem">
-          <div className="WithdrawalPage-securityInfo">
-            <span className="WithdrawalPage-securityLabel">
-              {app.translator.trans('withdrawal.forum.security.two_factor')}
-            </span>
-            <span className={`WithdrawalPage-securityStatus ${this.userSecurity.twoFactorEnabled ? 'verified' : 'unverified'}`}>
-              {this.userSecurity.twoFactorEnabled
-                ? app.translator.trans('withdrawal.forum.security.two_factor_enabled')
-                : app.translator.trans('withdrawal.forum.security.two_factor_disabled')
-              }
-            </span>
-          </div>
-          {!this.userSecurity.twoFactorEnabled && (
-            <Button 
-              className="Button Button--link WithdrawalPage-securityAction"
-              onclick={() => this.redirectToTwoFactor()}
-            >
-              {app.translator.trans('withdrawal.forum.security.two_factor_enable_action')}
-            </Button>
-          )}
-        </div>
-
-        {!isSecurityComplete && (
-          <div className="WithdrawalPage-securityWarning">
-            <span className="warning-icon">⚠</span>
-            <span>{app.translator.trans('withdrawal.forum.security.incomplete_warning')}</span>
-          </div>
-        )}
-      </div>
-    );
-  }
 
   private getPlatformOptions(): Record<string, string> {
     const options: Record<string, string> = {
@@ -319,13 +252,11 @@ export default class WithdrawalPage extends Page {
   }
 
   private canSubmit(): boolean {
-    const isSecurityComplete = this.userSecurity.phoneVerified && this.userSecurity.twoFactorEnabled;
     return !!(
       this.selectedPlatform() &&
       this.amount() &&
       this.accountDetails() &&
-      !this.submitting &&
-      isSecurityComplete
+      !this.submitting
     );
   }
 
@@ -350,17 +281,6 @@ export default class WithdrawalPage extends Page {
     }
   }
 
-  private redirectToPhoneBinding(): void {
-    // This would redirect to the phone binding page
-    // Implementation depends on your specific routing setup
-    console.log('Redirecting to phone binding page...');
-  }
-
-  private redirectToTwoFactor(): void {
-    // This would redirect to the 2FA setup page
-    // Implementation depends on your specific routing setup
-    console.log('Redirecting to 2FA setup page...');
-  }
 
   private async submit(): Promise<void> {
     if (!this.canSubmit()) return;
@@ -440,18 +360,4 @@ export default class WithdrawalPage extends Page {
     }
   }
 
-  private async loadUserSecurity(): Promise<void> {
-    try {
-      // For now, we'll mock the security status - in a real implementation,
-      // this would fetch from appropriate user security extensions
-      // TODO: Integrate with phone binding and 2FA extensions
-      this.userSecurity = {
-        phoneVerified: app.session.user?.attribute('phoneVerified') || false,
-        twoFactorEnabled: app.session.user?.attribute('twoFactorEnabled') || false
-      };
-      m.redraw();
-    } catch (error) {
-      console.error('Error loading user security status:', error);
-    }
-  }
 }

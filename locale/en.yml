@@ -64,17 +64,6 @@ withdrawal:
       submit: Submit Request
       success: Withdrawal request submitted successfully
       error: Failed to submit withdrawal request
-    security:
-      title: Security Verification
-      phone_binding: Phone Number Binding
-      phone_bound: "✓ Phone number verified"
-      phone_unbound: "⚠ Please bind your phone number"
-      phone_bind_action: "GO >"
-      two_factor: Two-Factor Authentication
-      two_factor_enabled: "✓ 2FA enabled"
-      two_factor_disabled: "⚠ Please enable 2FA"
-      two_factor_enable_action: "GO >"
-      incomplete_warning: "Please complete security verification to enable withdrawals"
     history:
       title: Withdrawal History
       empty: No withdrawal requests yet

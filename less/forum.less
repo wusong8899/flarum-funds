@@ -237,89 +237,6 @@
     }
   }
 
-  // Security Section
-  .WithdrawalPage-security {
-    background: var(--control-bg);
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    border: 1px solid rgba(255, 193, 7, 0.2);
-    
-    h4 {
-      margin: 0 0 16px 0;
-      color: var(--heading-color);
-      font-size: 1.05em;
-    }
-  }
-
-  .WithdrawalPage-securityItem {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border-color);
-    
-    &:last-of-type {
-      border-bottom: none;
-    }
-  }
-
-  .WithdrawalPage-securityInfo {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    
-    .WithdrawalPage-securityLabel {
-      font-weight: 600;
-      color: var(--text-color);
-      margin-bottom: 4px;
-    }
-    
-    .WithdrawalPage-securityStatus {
-      font-size: 0.9em;
-      
-      &.verified {
-        color: var(--success-color);
-      }
-      
-      &.unverified {
-        color: var(--warning-color);
-      }
-    }
-  }
-
-  .WithdrawalPage-securityAction {
-    padding: 6px 12px;
-    font-size: 0.9em;
-    color: var(--primary-color);
-    text-decoration: none;
-    
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  .WithdrawalPage-securityWarning {
-    background: rgba(255, 193, 7, 0.1);
-    border: 1px solid rgba(255, 193, 7, 0.3);
-    border-radius: 8px;
-    padding: 12px 16px;
-    margin-top: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    
-    .warning-icon {
-      color: var(--warning-color);
-      font-size: 1.2em;
-    }
-    
-    span:last-child {
-      color: var(--warning-color);
-      font-weight: 500;
-      font-size: 0.95em;
-    }
-  }
 
   // Enhanced Request History
   .WithdrawalRequest {
@@ -408,16 +325,6 @@
       .WithdrawalPage-allButton {
         align-self: stretch;
       }
-    }
-    
-    .WithdrawalPage-securityItem {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-    }
-    
-    .WithdrawalPage-securityAction {
-      align-self: flex-end;
     }
   }
 }
