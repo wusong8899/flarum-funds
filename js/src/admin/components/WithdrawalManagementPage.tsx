@@ -151,7 +151,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
 
   private renderPlatform(platform: WithdrawalPlatform): Mithril.Children {
     const createdDate = platform.attributes?.createdAt || platform.attributes?.created_at;
-    let dateDisplay = 'N/A';
+    let dateDisplay: Mithril.Children = 'N/A';
     
     if (createdDate && createdDate !== null) {
       try {
@@ -214,7 +214,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     const createdDate = request.attributes.createdAt || request.attributes.created_at;
     const accountDetails = request.attributes.accountDetails || request.attributes.account_details;
     
-    let dateDisplay = 'N/A';
+    let dateDisplay: Mithril.Children = 'N/A';
     if (createdDate && createdDate !== null) {
       try {
         dateDisplay = humanTime(new Date(createdDate));
@@ -309,7 +309,8 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   }
 
   private async deletePlatform(platform: WithdrawalPlatform): Promise<void> {
-    if (!confirm(app.translator.trans('withdrawal.admin.platforms.delete_confirm', { name: platform.attributes.name }))) {
+    const platformName = platform.attributes?.name || 'Unknown Platform';
+    if (!confirm(app.translator.trans('withdrawal.admin.platforms.delete_confirm', { name: platformName }))) {
       return;
     }
 

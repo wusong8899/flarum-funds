@@ -164,7 +164,7 @@ export default class WithdrawalPage extends Page {
     const platform = this.platforms.find(p => p.id == request.relationships.platform.data.id);
     const statusClass = `status-${request.attributes.status}`;
     
-    let dateDisplay = 'N/A';
+    let dateDisplay: Mithril.Children = 'N/A';
     if (request.attributes.createdAt && request.attributes.createdAt !== null) {
       try {
         dateDisplay = humanTime(new Date(request.attributes.createdAt));
