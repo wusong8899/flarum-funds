@@ -81,19 +81,36 @@
 
   // Balance Section
   .WithdrawalPage-balance {
-    background: linear-gradient(135deg, var(--primary-color), rgba(var(--primary-color-rgb), 0.8));
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-color));
     padding: 20px;
     border-radius: 12px;
     margin-bottom: 20px;
     color: white;
+    position: relative;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, transparent, rgba(0, 0, 0, 0.2));
+      border-radius: 12px;
+    }
     
     h3 {
       margin: 0 0 10px 0;
       font-size: 1.1em;
       opacity: 0.9;
+      position: relative;
+      z-index: 1;
     }
     
     .WithdrawalPage-balanceAmount {
+      position: relative;
+      z-index: 1;
+      
       .amount {
         font-size: 1.8em;
         font-weight: bold;
@@ -113,14 +130,14 @@
     padding: 16px;
     border-radius: 10px;
     margin-bottom: 20px;
-    border: 1px solid rgba(var(--primary-color-rgb), 0.1);
+    border: 1px solid var(--border-color);
   }
 
   .WithdrawalPage-infoRow {
     display: flex;
     align-items: center;
     padding: 8px 0;
-    border-bottom: 1px solid rgba(var(--border-color), 0.3);
+    border-bottom: 1px solid var(--border-color);
     
     &:last-child {
       border-bottom: none;
@@ -164,7 +181,7 @@
       &:focus {
         border-color: var(--primary-color);
         outline: none;
-        box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
       }
       
       &::placeholder {
@@ -207,8 +224,8 @@
 
   // Final Amount Display
   .WithdrawalPage-finalAmount {
-    background: rgba(var(--success-color-rgb), 0.1);
-    border: 1px solid rgba(var(--success-color-rgb), 0.3);
+    background: rgba(40, 167, 69, 0.1);
+    border: 1px solid rgba(40, 167, 69, 0.3);
     border-radius: 8px;
     padding: 12px 16px;
     margin-bottom: 15px;
@@ -226,7 +243,7 @@
     padding: 20px;
     border-radius: 10px;
     margin-bottom: 20px;
-    border: 1px solid rgba(var(--warning-color-rgb), 0.2);
+    border: 1px solid rgba(255, 193, 7, 0.2);
     
     h4 {
       margin: 0 0 16px 0;
@@ -240,7 +257,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 12px 0;
-    border-bottom: 1px solid rgba(var(--border-color), 0.2);
+    border-bottom: 1px solid var(--border-color);
     
     &:last-of-type {
       border-bottom: none;
@@ -283,8 +300,8 @@
   }
 
   .WithdrawalPage-securityWarning {
-    background: rgba(var(--warning-color-rgb), 0.1);
-    border: 1px solid rgba(var(--warning-color-rgb), 0.3);
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.3);
     border-radius: 8px;
     padding: 12px 16px;
     margin-top: 16px;
@@ -344,7 +361,7 @@
       }
       
       .WithdrawalRequest-platform {
-        background: rgba(var(--primary-color-rgb), 0.1);
+        background: rgba(0, 123, 255, 0.1);
         color: var(--primary-color);
         padding: 4px 12px;
         border-radius: 16px;
