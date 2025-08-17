@@ -10,7 +10,8 @@ interface WithdrawalPlatform {
   id: number;
   attributes: {
     name: string;
-    createdAt: string;
+    createdAt?: string;
+    created_at?: string;
   };
 }
 
@@ -18,15 +19,17 @@ interface WithdrawalRequest {
   id: number;
   attributes: {
     amount: number;
-    accountDetails: string;
+    accountDetails?: string;
+    account_details?: string;
     status: string;
-    createdAt: string;
+    createdAt?: string;
+    created_at?: string;
   };
-  relationships: {
-    user: {
+  relationships?: {
+    user?: {
       data: { id: number };
     };
-    platform: {
+    platform?: {
       data: { id: number };
     };
   };
@@ -195,24 +198,30 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   }
 
   private renderRequest(request: WithdrawalRequest, showActions: boolean): Mithril.Children {
-    const user = this.users[request.relationships.user.data.id];
-    const platform = this.platforms.find(p => p.id == request.relationships.platform.data.id);
+    const userId = request.relationships?.user?.data?.id;
+    const platformId = request.relationships?.platform?.data?.id;
+    const user = userId ? this.users[userId] : null;
+    const platform = platformId ? this.platforms.find(p => p.id == platformId) : null;
     const statusClass = `status-${request.attributes.status}`;
+    const createdDate = request.attributes.createdAt || request.attributes.created_at;
+    const accountDetails = request.attributes.accountDetails || request.attributes.account_details;
 
     return (
       <div key={request.id} className={`WithdrawalRequest ${statusClass}`}>
         <div className="WithdrawalRequest-info">
           <div className="WithdrawalRequest-user">
-            <strong>{user?.attributes.displayName || 'Unknown User'}</strong>
+            <strong>{user?.attributes?.displayName || 'Unknown User'}</strong>
           </div>
           <div className="WithdrawalRequest-details">
             <span className="amount">${request.attributes.amount}</span>
-            <span className="platform">{platform?.attributes.name}</span>
-            <span className="date">{dayjs(request.attributes.createdAt).format('YYYY-MM-DD HH:mm')}</span>
+            <span className="platform">{platform?.attributes?.name || 'Unknown Platform'}</span>
+            <span className="date">
+              {createdDate ? dayjs(createdDate).format('YYYY-MM-DD HH:mm') : 'N/A'}
+            </span>
           </div>
           <div className="WithdrawalRequest-account">
             <strong>{app.translator.trans('withdrawal.admin.requests.account_details')}:</strong>
-            <span>{request.attributes.accountDetails}</span>
+            <span>{accountDetails || 'N/A'}</span>
           </div>
           <div className="WithdrawalRequest-status">
             <span className={`Badge Badge--${request.attributes.status}`}>

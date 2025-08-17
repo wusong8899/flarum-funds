@@ -4,7 +4,7 @@ import commonExtend from '../common/extend';
 
 app.initializers.add('wusong8899-withdrawal', () => {
   // Apply common extensions
-  commonExtend.forEach(extend => extend(app));
+  commonExtend();
   
   app.extensionData
     .for('wusong8899-withdrawal')

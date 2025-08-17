@@ -7,5 +7,5 @@ export default class WithdrawalRequest extends Model {
   createdAt = Model.attribute('created_at', Model.transformDate);
   
   user = Model.hasOne('user');
-  platform = Model.hasOne('platform');
+  platform = Model.hasOne('withdrawal-platforms');
 }
