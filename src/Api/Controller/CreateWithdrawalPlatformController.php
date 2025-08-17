@@ -24,9 +24,16 @@ class CreateWithdrawalPlatformController extends AbstractCreateController
         }
 
         $attributes = Arr::get($request->getParsedBody(), 'data.attributes', []);
+        $name = Arr::get($attributes, 'name');
+
+        // Validate name field
+        if (empty($name) || !is_string($name)) {
+            throw new \InvalidArgumentException('Platform name is required and must be a string.');
+        }
 
         $platform = new WithdrawalPlatform();
-        $platform->name = Arr::get($attributes, 'name');
+        $platform->name = trim($name);
+        $platform->created_at = now();
         $platform->save();
 
         return $platform;
