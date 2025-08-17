@@ -5,7 +5,7 @@ import ItemList from 'flarum/common/utils/ItemList';
 import HeaderSecondary from 'flarum/forum/components/HeaderSecondary';
 import WithdrawalPage from './components/WithdrawalPage';
 
-app.initializers.add('wusong8899-flarum-withdrawal', () => {
+app.initializers.add('wusong8899-withdrawal', () => {
   app.routes.withdrawal = { path: '/withdrawal', component: WithdrawalPage };
 
   extend(HeaderSecondary.prototype, 'items', function (items: ItemList<any>) {
