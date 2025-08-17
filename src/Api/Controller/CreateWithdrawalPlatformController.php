@@ -6,6 +6,7 @@ use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Http\RequestUtil;
 use Flarum\User\Exception\PermissionDeniedException;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use wusong8899\Withdrawal\Api\Serializer\WithdrawalPlatformSerializer;
@@ -33,7 +34,7 @@ class CreateWithdrawalPlatformController extends AbstractCreateController
 
         $platform = new WithdrawalPlatform();
         $platform->name = trim($name);
-        $platform->created_at = now();
+        $platform->created_at = Carbon::now();
         $platform->save();
 
         return $platform;
