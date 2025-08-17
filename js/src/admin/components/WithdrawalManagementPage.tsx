@@ -147,11 +147,13 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   }
 
   private renderPlatform(platform: WithdrawalPlatform): Mithril.Children {
+    const createdDate = platform.attributes?.createdAt || platform.attributes?.created_at || new Date().toISOString();
+    
     return (
       <div key={platform.id} className="WithdrawalPlatform">
-        <span className="WithdrawalPlatform-name">{platform.attributes.name}</span>
+        <span className="WithdrawalPlatform-name">{platform.attributes?.name || 'Unknown Platform'}</span>
         <span className="WithdrawalPlatform-date">
-          {dayjs(platform.attributes.createdAt).format('YYYY-MM-DD')}
+          {createdDate ? dayjs(createdDate).format('YYYY-MM-DD') : 'N/A'}
         </span>
         <Button
           className="Button Button--danger"
@@ -252,11 +254,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
         }
       };
 
-      await app.request({
-        method: 'POST',
-        url: app.forum.attribute('apiUrl') + '/withdrawal-platforms',
-        body: { data }
-      });
+      await app.store.createRecord('withdrawal-platforms').save(data);
       
       this.newPlatformName('');
       await this.loadPlatforms();
@@ -283,17 +281,16 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     }
 
     try {
-      await app.request({
-        method: 'DELETE',
-        url: app.forum.attribute('apiUrl') + '/withdrawal-platforms/' + platform.id
-      });
-      
-      await this.loadPlatforms();
+      const record = app.store.getById('withdrawal-platforms', platform.id);
+      if (record) {
+        await record.delete();
+        await this.loadPlatforms();
         
-      app.alerts.show({
-        type: 'success',
-        message: app.translator.trans('withdrawal.admin.platforms.delete_success')
-      });
+        app.alerts.show({
+          type: 'success',
+          message: app.translator.trans('withdrawal.admin.platforms.delete_success')
+        });
+      }
     } catch (error) {
       console.error('Error deleting platform:', error);
       app.alerts.show({
@@ -305,24 +302,16 @@ export default class WithdrawalManagementPage extends ExtensionPage {
 
   private async updateRequestStatus(request: WithdrawalRequest, status: string): Promise<void> {
     try {
-      await app.request({
-        method: 'PATCH',
-        url: app.forum.attribute('apiUrl') + '/withdrawal-requests/' + request.id,
-        body: {
-          data: {
-            type: 'withdrawal-requests',
-            id: request.id,
-            attributes: { status }
-          }
-        }
-      });
-      
-      await this.loadRequests();
-      
-      app.alerts.show({
-        type: 'success',
-        message: app.translator.trans(`withdrawal.admin.requests.${status}_success`)
-      });
+      const record = app.store.getById('withdrawal-requests', request.id);
+      if (record) {
+        await record.save({ status });
+        await this.loadRequests();
+        
+        app.alerts.show({
+          type: 'success',
+          message: app.translator.trans(`withdrawal.admin.requests.${status}_success`)
+        });
+      }
     } catch (error) {
       console.error('Error updating request:', error);
       app.alerts.show({
@@ -347,19 +336,27 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   }
 
   private async loadPlatforms(): Promise<void> {
-    const response = await app.request({
-      method: 'GET',
-      url: app.forum.attribute('apiUrl') + '/withdrawal-platforms'
-    });
-    this.platforms = response.data || [];
+    try {
+      const response = await app.store.find('withdrawal-platforms');
+      this.platforms = Array.isArray(response) ? response : [response];
+      
+      console.log('Loaded platforms:', this.platforms);
+    } catch (error) {
+      console.error('Error loading platforms:', error);
+      this.platforms = [];
+    }
   }
 
   private async loadRequests(): Promise<void> {
-    const response = await app.request({
-      method: 'GET',
-      url: app.forum.attribute('apiUrl') + '/withdrawal-requests?include=user,platform'
-    });
-    this.requests = response.data || [];
+    try {
+      const response = await app.store.find('withdrawal-requests');
+      this.requests = Array.isArray(response) ? response : [response];
+      
+      console.log('Loaded requests:', this.requests);
+    } catch (error) {
+      console.error('Error loading requests:', error);
+      this.requests = [];
+    }
     
     // Load user data for each request
     const userIds = [...new Set(this.requests.map(r => r.relationships.user.data.id))];

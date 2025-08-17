@@ -4,8 +4,12 @@ import LinkButton from 'flarum/common/components/LinkButton';
 import ItemList from 'flarum/common/utils/ItemList';
 import HeaderSecondary from 'flarum/forum/components/HeaderSecondary';
 import WithdrawalPage from './components/WithdrawalPage';
+import commonExtend from '../common/extend';
 
 app.initializers.add('wusong8899-withdrawal', () => {
+  // Apply common extensions
+  commonExtend.forEach(extend => extend(app));
+  
   app.routes.withdrawal = { path: '/withdrawal', component: WithdrawalPage };
 
   extend(HeaderSecondary.prototype, 'items', function (items: ItemList<any>) {
