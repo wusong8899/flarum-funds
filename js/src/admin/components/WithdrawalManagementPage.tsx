@@ -252,7 +252,11 @@ export default class WithdrawalManagementPage extends ExtensionPage {
         }
       };
 
-      await app.store.createRecord('withdrawal-platforms').save(data);
+      await app.request({
+        method: 'POST',
+        url: app.forum.attribute('apiUrl') + '/withdrawal-platforms',
+        body: { data }
+      });
       
       this.newPlatformName('');
       await this.loadPlatforms();
@@ -279,16 +283,17 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     }
 
     try {
-      const record = app.store.getById('withdrawal-platforms', platform.id);
-      if (record) {
-        await record.delete();
-        await this.loadPlatforms();
+      await app.request({
+        method: 'DELETE',
+        url: app.forum.attribute('apiUrl') + '/withdrawal-platforms/' + platform.id
+      });
+      
+      await this.loadPlatforms();
         
-        app.alerts.show({
-          type: 'success',
-          message: app.translator.trans('withdrawal.admin.platforms.delete_success')
-        });
-      }
+      app.alerts.show({
+        type: 'success',
+        message: app.translator.trans('withdrawal.admin.platforms.delete_success')
+      });
     } catch (error) {
       console.error('Error deleting platform:', error);
       app.alerts.show({
@@ -300,16 +305,24 @@ export default class WithdrawalManagementPage extends ExtensionPage {
 
   private async updateRequestStatus(request: WithdrawalRequest, status: string): Promise<void> {
     try {
-      const record = app.store.getById('withdrawal-requests', request.id);
-      if (record) {
-        await record.save({ status });
-        await this.loadRequests();
-        
-        app.alerts.show({
-          type: 'success',
-          message: app.translator.trans(`withdrawal.admin.requests.${status}_success`)
-        });
-      }
+      await app.request({
+        method: 'PATCH',
+        url: app.forum.attribute('apiUrl') + '/withdrawal-requests/' + request.id,
+        body: {
+          data: {
+            type: 'withdrawal-requests',
+            id: request.id,
+            attributes: { status }
+          }
+        }
+      });
+      
+      await this.loadRequests();
+      
+      app.alerts.show({
+        type: 'success',
+        message: app.translator.trans(`withdrawal.admin.requests.${status}_success`)
+      });
     } catch (error) {
       console.error('Error updating request:', error);
       app.alerts.show({
@@ -334,13 +347,19 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   }
 
   private async loadPlatforms(): Promise<void> {
-    const response = await app.store.find('withdrawal-platforms');
-    this.platforms = Array.isArray(response) ? response : [response];
+    const response = await app.request({
+      method: 'GET',
+      url: app.forum.attribute('apiUrl') + '/withdrawal-platforms'
+    });
+    this.platforms = response.data || [];
   }
 
   private async loadRequests(): Promise<void> {
-    const response = await app.store.find('withdrawal-requests');
-    this.requests = Array.isArray(response) ? response : [response];
+    const response = await app.request({
+      method: 'GET',
+      url: app.forum.attribute('apiUrl') + '/withdrawal-requests?include=user,platform'
+    });
+    this.requests = response.data || [];
     
     // Load user data for each request
     const userIds = [...new Set(this.requests.map(r => r.relationships.user.data.id))];

@@ -297,7 +297,11 @@ export default class WithdrawalPage extends Page {
         }
       };
 
-      await app.store.createRecord('withdrawal-requests').save(data);
+      await app.request({
+        method: 'POST',
+        url: app.forum.attribute('apiUrl') + '/withdrawal-requests',
+        body: { data }
+      });
 
       app.alerts.show({
         type: 'success',
@@ -336,13 +340,19 @@ export default class WithdrawalPage extends Page {
   }
 
   private async loadPlatforms(): Promise<void> {
-    const response = await app.store.find('withdrawal-platforms');
-    this.platforms = Array.isArray(response) ? response : [response];
+    const response = await app.request({
+      method: 'GET',
+      url: app.forum.attribute('apiUrl') + '/withdrawal-platforms'
+    });
+    this.platforms = response.data || [];
   }
 
   private async loadRequests(): Promise<void> {
-    const response = await app.store.find('withdrawal-requests');
-    this.requests = Array.isArray(response) ? response : [response];
+    const response = await app.request({
+      method: 'GET',
+      url: app.forum.attribute('apiUrl') + '/withdrawal-requests?include=platform'
+    });
+    this.requests = response.data || [];
   }
 
   private async loadUserBalance(): Promise<void> {
