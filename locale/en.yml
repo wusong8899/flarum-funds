@@ -41,18 +41,40 @@ withdrawal:
     page:
       title: Withdrawal
       description: Submit a withdrawal request to transfer your funds to external platforms
+    balance:
+      title: Available Balance
+      amount: "Available: ${amount}"
+      loading: Loading balance...
+    info:
+      minimum_amount: "Minimum Amount: ${amount}"
+      maximum_amount: "Maximum Amount: ${amount}"
+      withdrawal_fee: "Withdrawal Fee: ${amount}"
+      final_amount: "Final Amount: ${amount}"
     form:
       title: New Withdrawal Request
       platform: Platform
       select_platform: Select a platform
       amount: Amount
-      amount_placeholder: "Enter amount (min: {min}, max: {max})"
+      amount_placeholder: "Enter amount"
       amount_help: "Minimum: ${min}, Maximum: ${max}, Fee: ${fee}"
+      all_button: All
       account_details: Account Details
       account_details_placeholder: Enter your account details for receiving the withdrawal
+      paste_button: Paste
       submit: Submit Request
       success: Withdrawal request submitted successfully
       error: Failed to submit withdrawal request
+    security:
+      title: Security Verification
+      phone_binding: Phone Number Binding
+      phone_bound: "✓ Phone number verified"
+      phone_unbound: "⚠ Please bind your phone number"
+      phone_bind_action: "GO >"
+      two_factor: Two-Factor Authentication
+      two_factor_enabled: "✓ 2FA enabled"
+      two_factor_disabled: "⚠ Please enable 2FA"
+      two_factor_enable_action: "GO >"
+      incomplete_warning: "Please complete security verification to enable withdrawals"
     history:
       title: Withdrawal History
       empty: No withdrawal requests yet

@@ -34,6 +34,12 @@ export default class WithdrawalPage extends Page {
   private requests: WithdrawalRequest[] = [];
   private loading = true;
   private submitting = false;
+  private loadingBalance = true;
+  private userBalance = 0;
+  private userSecurity = {
+    phoneVerified: false,
+    twoFactorEnabled: false
+  };
 
   private amount = Stream('');
   private selectedPlatform = Stream('');
@@ -45,6 +51,8 @@ export default class WithdrawalPage extends Page {
     app.setTitle(app.translator.trans('withdrawal.forum.page.title'));
 
     this.loadData();
+    this.loadUserBalance();
+    this.loadUserSecurity();
   }
 
   view() {
@@ -71,6 +79,9 @@ export default class WithdrawalPage extends Page {
           </div>
 
           <div className="WithdrawalPage-content">
+            {this.renderBalanceSection()}
+            {this.renderInfoSection(minAmount, maxAmount, fee)}
+            
             <div className="WithdrawalPage-form">
               <h3>{app.translator.trans('withdrawal.forum.form.title')}</h3>
               
@@ -85,31 +96,48 @@ export default class WithdrawalPage extends Page {
 
               <div className="WithdrawalPage-formGroup">
                 <label>{app.translator.trans('withdrawal.forum.form.amount')}</label>
-                <input
-                  type="number"
-                  className="FormControl"
-                  placeholder={app.translator.trans('withdrawal.forum.form.amount_placeholder', { min: minAmount, max: maxAmount })}
-                  value={this.amount()}
-                  oninput={(e: Event) => this.amount((e.target as HTMLInputElement).value)}
-                  min={minAmount}
-                  max={maxAmount}
-                  step="0.01"
-                />
-                <small className="helpText">
-                  {app.translator.trans('withdrawal.forum.form.amount_help', { min: minAmount, max: maxAmount, fee: fee })}
-                </small>
+                <div className="WithdrawalPage-amountInput">
+                  <input
+                    type="number"
+                    className="FormControl"
+                    placeholder={app.translator.trans('withdrawal.forum.form.amount_placeholder')}
+                    value={this.amount()}
+                    oninput={(e: Event) => this.amount((e.target as HTMLInputElement).value)}
+                    min={minAmount}
+                    max={maxAmount}
+                    step="0.01"
+                  />
+                  <Button
+                    className="Button Button--secondary WithdrawalPage-allButton"
+                    onclick={this.fillAllAmount.bind(this)}
+                  >
+                    {app.translator.trans('withdrawal.forum.form.all_button')}
+                  </Button>
+                </div>
               </div>
+
+              {this.renderFinalAmountCalculation(fee)}
 
               <div className="WithdrawalPage-formGroup">
                 <label>{app.translator.trans('withdrawal.forum.form.account_details')}</label>
-                <textarea
-                  className="FormControl"
-                  placeholder={app.translator.trans('withdrawal.forum.form.account_details_placeholder')}
-                  value={this.accountDetails()}
-                  oninput={(e: Event) => this.accountDetails((e.target as HTMLTextAreaElement).value)}
-                  rows={3}
-                />
+                <div className="WithdrawalPage-accountInput">
+                  <textarea
+                    className="FormControl"
+                    placeholder={app.translator.trans('withdrawal.forum.form.account_details_placeholder')}
+                    value={this.accountDetails()}
+                    oninput={(e: Event) => this.accountDetails((e.target as HTMLTextAreaElement).value)}
+                    rows={3}
+                  />
+                  <Button
+                    className="Button Button--secondary WithdrawalPage-pasteButton"
+                    onclick={this.pasteFromClipboard.bind(this)}
+                  >
+                    {app.translator.trans('withdrawal.forum.form.paste_button')}
+                  </Button>
+                </div>
               </div>
+
+              {this.renderSecuritySection()}
 
               <div className="WithdrawalPage-formGroup">
                 <Button
@@ -161,6 +189,123 @@ export default class WithdrawalPage extends Page {
     );
   }
 
+  private renderBalanceSection(): Mithril.Children {
+    return (
+      <div className="WithdrawalPage-balance">
+        <h3>{app.translator.trans('withdrawal.forum.balance.title')}</h3>
+        <div className="WithdrawalPage-balanceAmount">
+          {this.loadingBalance ? (
+            <span className="loading">{app.translator.trans('withdrawal.forum.balance.loading')}</span>
+          ) : (
+            <span className="amount">{app.translator.trans('withdrawal.forum.balance.amount', { amount: this.userBalance })}</span>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  private renderInfoSection(minAmount: number, maxAmount: number, fee: number): Mithril.Children {
+    return (
+      <div className="WithdrawalPage-info">
+        <div className="WithdrawalPage-infoRow">
+          <span className="WithdrawalPage-infoIcon">💰</span>
+          <span className="WithdrawalPage-infoText">
+            {app.translator.trans('withdrawal.forum.info.minimum_amount', { amount: minAmount })}
+          </span>
+        </div>
+        <div className="WithdrawalPage-infoRow">
+          <span className="WithdrawalPage-infoIcon">💰</span>
+          <span className="WithdrawalPage-infoText">
+            {app.translator.trans('withdrawal.forum.info.maximum_amount', { amount: maxAmount })}
+          </span>
+        </div>
+        <div className="WithdrawalPage-infoRow">
+          <span className="WithdrawalPage-infoIcon">💸</span>
+          <span className="WithdrawalPage-infoText">
+            {app.translator.trans('withdrawal.forum.info.withdrawal_fee', { amount: fee })}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  private renderFinalAmountCalculation(fee: number): Mithril.Children {
+    const amount = parseFloat(this.amount()) || 0;
+    const finalAmount = Math.max(0, amount - fee);
+
+    if (amount > 0) {
+      return (
+        <div className="WithdrawalPage-finalAmount">
+          <span className="WithdrawalPage-finalAmountLabel">
+            {app.translator.trans('withdrawal.forum.info.final_amount', { amount: finalAmount.toFixed(2) })}
+          </span>
+        </div>
+      );
+    }
+    return null;
+  }
+
+  private renderSecuritySection(): Mithril.Children {
+    const isSecurityComplete = this.userSecurity.phoneVerified && this.userSecurity.twoFactorEnabled;
+
+    return (
+      <div className="WithdrawalPage-security">
+        <h4>{app.translator.trans('withdrawal.forum.security.title')}</h4>
+        
+        <div className="WithdrawalPage-securityItem">
+          <div className="WithdrawalPage-securityInfo">
+            <span className="WithdrawalPage-securityLabel">
+              {app.translator.trans('withdrawal.forum.security.phone_binding')}
+            </span>
+            <span className={`WithdrawalPage-securityStatus ${this.userSecurity.phoneVerified ? 'verified' : 'unverified'}`}>
+              {this.userSecurity.phoneVerified 
+                ? app.translator.trans('withdrawal.forum.security.phone_bound')
+                : app.translator.trans('withdrawal.forum.security.phone_unbound')
+              }
+            </span>
+          </div>
+          {!this.userSecurity.phoneVerified && (
+            <Button 
+              className="Button Button--link WithdrawalPage-securityAction"
+              onclick={() => this.redirectToPhoneBinding()}
+            >
+              {app.translator.trans('withdrawal.forum.security.phone_bind_action')}
+            </Button>
+          )}
+        </div>
+
+        <div className="WithdrawalPage-securityItem">
+          <div className="WithdrawalPage-securityInfo">
+            <span className="WithdrawalPage-securityLabel">
+              {app.translator.trans('withdrawal.forum.security.two_factor')}
+            </span>
+            <span className={`WithdrawalPage-securityStatus ${this.userSecurity.twoFactorEnabled ? 'verified' : 'unverified'}`}>
+              {this.userSecurity.twoFactorEnabled
+                ? app.translator.trans('withdrawal.forum.security.two_factor_enabled')
+                : app.translator.trans('withdrawal.forum.security.two_factor_disabled')
+              }
+            </span>
+          </div>
+          {!this.userSecurity.twoFactorEnabled && (
+            <Button 
+              className="Button Button--link WithdrawalPage-securityAction"
+              onclick={() => this.redirectToTwoFactor()}
+            >
+              {app.translator.trans('withdrawal.forum.security.two_factor_enable_action')}
+            </Button>
+          )}
+        </div>
+
+        {!isSecurityComplete && (
+          <div className="WithdrawalPage-securityWarning">
+            <span className="warning-icon">⚠</span>
+            <span>{app.translator.trans('withdrawal.forum.security.incomplete_warning')}</span>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   private getPlatformOptions(): Record<string, string> {
     const options: Record<string, string> = {
       '': app.translator.trans('withdrawal.forum.form.select_platform')
@@ -174,12 +319,47 @@ export default class WithdrawalPage extends Page {
   }
 
   private canSubmit(): boolean {
+    const isSecurityComplete = this.userSecurity.phoneVerified && this.userSecurity.twoFactorEnabled;
     return !!(
       this.selectedPlatform() &&
       this.amount() &&
       this.accountDetails() &&
-      !this.submitting
+      !this.submitting &&
+      isSecurityComplete
     );
+  }
+
+  private fillAllAmount(): void {
+    this.amount(this.userBalance.toString());
+  }
+
+  private async pasteFromClipboard(): Promise<void> {
+    try {
+      if (navigator.clipboard && navigator.clipboard.readText) {
+        const text = await navigator.clipboard.readText();
+        this.accountDetails(text);
+        m.redraw();
+      }
+    } catch (error) {
+      console.error('Failed to read from clipboard:', error);
+      // Fallback for browsers without clipboard API
+      app.alerts.show({
+        type: 'error',
+        message: 'Clipboard access not available. Please paste manually.'
+      });
+    }
+  }
+
+  private redirectToPhoneBinding(): void {
+    // This would redirect to the phone binding page
+    // Implementation depends on your specific routing setup
+    console.log('Redirecting to phone binding page...');
+  }
+
+  private redirectToTwoFactor(): void {
+    // This would redirect to the 2FA setup page
+    // Implementation depends on your specific routing setup
+    console.log('Redirecting to 2FA setup page...');
   }
 
   private async submit(): Promise<void> {
@@ -243,5 +423,35 @@ export default class WithdrawalPage extends Page {
   private async loadRequests(): Promise<void> {
     const response = await app.store.find('withdrawal-requests');
     this.requests = Array.isArray(response) ? response : [response];
+  }
+
+  private async loadUserBalance(): Promise<void> {
+    try {
+      // For now, we'll mock the balance - in a real implementation, 
+      // this would fetch from the money extension API
+      // TODO: Integrate with antoinefr/flarum-ext-money extension
+      this.userBalance = app.session.user?.attribute('money') || 0;
+      this.loadingBalance = false;
+      m.redraw();
+    } catch (error) {
+      console.error('Error loading user balance:', error);
+      this.loadingBalance = false;
+      m.redraw();
+    }
+  }
+
+  private async loadUserSecurity(): Promise<void> {
+    try {
+      // For now, we'll mock the security status - in a real implementation,
+      // this would fetch from appropriate user security extensions
+      // TODO: Integrate with phone binding and 2FA extensions
+      this.userSecurity = {
+        phoneVerified: app.session.user?.attribute('phoneVerified') || false,
+        twoFactorEnabled: app.session.user?.attribute('twoFactorEnabled') || false
+      };
+      m.redraw();
+    } catch (error) {
+      console.error('Error loading user security status:', error);
+    }
   }
 }

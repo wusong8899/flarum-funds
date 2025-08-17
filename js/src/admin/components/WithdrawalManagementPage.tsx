@@ -344,14 +344,26 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     
     // Load user data for each request
     const userIds = [...new Set(this.requests.map(r => r.relationships.user.data.id))];
-    for (const userId of userIds) {
-      if (!this.users[userId]) {
-        try {
-          const user = await app.store.find('users', userId);
-          this.users[userId] = user;
-        } catch (error) {
-          console.error(`Error loading user ${userId}:`, error);
-        }
+    const usersToLoad = userIds.filter(userId => !this.users[userId]);
+    
+    if (usersToLoad.length > 0) {
+      try {
+        const userPromises = usersToLoad.map(userId => 
+          app.store.find('users', userId).catch(error => {
+            console.error(`Error loading user ${userId}:`, error);
+            return null;
+          })
+        );
+        
+        const loadedUsers = await Promise.all(userPromises);
+        
+        usersToLoad.forEach((userId, index) => {
+          if (loadedUsers[index]) {
+            this.users[userId] = loadedUsers[index];
+          }
+        });
+      } catch (error) {
+        console.error('Error loading users:', error);
       }
     }
   }

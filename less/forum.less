@@ -14,13 +14,11 @@
   }
 
   .WithdrawalPage-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 30px;
-    
-    @media @phone {
-      grid-template-columns: 1fr;
-    }
+    max-width: 600px;
+    margin: 0 auto;
   }
 
   .WithdrawalPage-form {
@@ -81,12 +79,244 @@
     }
   }
 
+  // Balance Section
+  .WithdrawalPage-balance {
+    background: linear-gradient(135deg, var(--primary-color), rgba(var(--primary-color-rgb), 0.8));
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    color: white;
+    
+    h3 {
+      margin: 0 0 10px 0;
+      font-size: 1.1em;
+      opacity: 0.9;
+    }
+    
+    .WithdrawalPage-balanceAmount {
+      .amount {
+        font-size: 1.8em;
+        font-weight: bold;
+        display: block;
+      }
+      
+      .loading {
+        font-size: 1.2em;
+        opacity: 0.8;
+      }
+    }
+  }
+
+  // Info Section
+  .WithdrawalPage-info {
+    background: var(--control-bg);
+    padding: 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(var(--primary-color-rgb), 0.1);
+  }
+
+  .WithdrawalPage-infoRow {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(var(--border-color), 0.3);
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    .WithdrawalPage-infoIcon {
+      margin-right: 12px;
+      font-size: 1.2em;
+      width: 24px;
+      text-align: center;
+    }
+    
+    .WithdrawalPage-infoText {
+      color: var(--text-color);
+      font-size: 0.95em;
+    }
+  }
+
+  // Enhanced Form Styling
+  .WithdrawalPage-formGroup {
+    margin-bottom: 20px;
+    
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-color);
+      font-size: 0.95em;
+    }
+    
+    .FormControl {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--control-bg);
+      border-radius: 8px;
+      background: var(--body-bg);
+      color: var(--text-color);
+      font-size: 0.95em;
+      transition: all 0.2s ease;
+      
+      &:focus {
+        border-color: var(--primary-color);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+      }
+      
+      &::placeholder {
+        color: var(--muted-color);
+      }
+    }
+  }
+
+  // Amount Input with All Button
+  .WithdrawalPage-amountInput {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+    
+    .FormControl {
+      flex: 1;
+    }
+    
+    .WithdrawalPage-allButton {
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+  }
+
+  // Account Input with Paste Button  
+  .WithdrawalPage-accountInput {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    
+    .WithdrawalPage-pasteButton {
+      align-self: flex-end;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.9em;
+    }
+  }
+
+  // Final Amount Display
+  .WithdrawalPage-finalAmount {
+    background: rgba(var(--success-color-rgb), 0.1);
+    border: 1px solid rgba(var(--success-color-rgb), 0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 15px;
+    
+    .WithdrawalPage-finalAmountLabel {
+      color: var(--success-color);
+      font-weight: 600;
+      font-size: 1.05em;
+    }
+  }
+
+  // Security Section
+  .WithdrawalPage-security {
+    background: var(--control-bg);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(var(--warning-color-rgb), 0.2);
+    
+    h4 {
+      margin: 0 0 16px 0;
+      color: var(--heading-color);
+      font-size: 1.05em;
+    }
+  }
+
+  .WithdrawalPage-securityItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(var(--border-color), 0.2);
+    
+    &:last-of-type {
+      border-bottom: none;
+    }
+  }
+
+  .WithdrawalPage-securityInfo {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    
+    .WithdrawalPage-securityLabel {
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 4px;
+    }
+    
+    .WithdrawalPage-securityStatus {
+      font-size: 0.9em;
+      
+      &.verified {
+        color: var(--success-color);
+      }
+      
+      &.unverified {
+        color: var(--warning-color);
+      }
+    }
+  }
+
+  .WithdrawalPage-securityAction {
+    padding: 6px 12px;
+    font-size: 0.9em;
+    color: var(--primary-color);
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .WithdrawalPage-securityWarning {
+    background: rgba(var(--warning-color-rgb), 0.1);
+    border: 1px solid rgba(var(--warning-color-rgb), 0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    
+    .warning-icon {
+      color: var(--warning-color);
+      font-size: 1.2em;
+    }
+    
+    span:last-child {
+      color: var(--warning-color);
+      font-weight: 500;
+      font-size: 0.95em;
+    }
+  }
+
+  // Enhanced Request History
   .WithdrawalRequest {
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 4px;
+    padding: 18px;
+    margin-bottom: 12px;
+    border-radius: 10px;
     border: 1px solid var(--control-bg);
     background: var(--body-bg);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
     
     &.status-pending {
       border-left: 4px solid var(--warning-color);
@@ -109,15 +339,17 @@
       
       .WithdrawalRequest-amount {
         font-weight: bold;
-        font-size: 1.1em;
+        font-size: 1.2em;
         color: var(--primary-color);
       }
       
       .WithdrawalRequest-platform {
-        background: var(--control-bg);
-        padding: 2px 8px;
-        border-radius: 12px;
+        background: rgba(var(--primary-color-rgb), 0.1);
+        color: var(--primary-color);
+        padding: 4px 12px;
+        border-radius: 16px;
         font-size: 0.9em;
+        font-weight: 600;
       }
       
       .WithdrawalRequest-date {
@@ -128,10 +360,10 @@
     
     .WithdrawalRequest-status {
       .Badge {
-        padding: 4px 8px;
-        border-radius: 12px;
-        font-size: 0.8em;
-        font-weight: bold;
+        padding: 6px 12px;
+        border-radius: 16px;
+        font-size: 0.85em;
+        font-weight: 600;
         
         &.Badge--pending {
           background: var(--warning-color);
@@ -148,6 +380,27 @@
           color: white;
         }
       }
+    }
+  }
+
+  // Responsive Design
+  @media @phone {
+    .WithdrawalPage-amountInput {
+      flex-direction: column;
+      
+      .WithdrawalPage-allButton {
+        align-self: stretch;
+      }
+    }
+    
+    .WithdrawalPage-securityItem {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    
+    .WithdrawalPage-securityAction {
+      align-self: flex-end;
     }
   }
 }

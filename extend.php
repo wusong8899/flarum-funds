@@ -2,6 +2,7 @@
 
 use Flarum\Extend;
 use wusong8899\Withdrawal\Api\Controller;
+use wusong8899\Withdrawal\Api\Serializer;
 use wusong8899\Withdrawal\Model;
 
 return [
@@ -34,4 +35,7 @@ return [
         ->serializeToForum('withdrawal.minAmount', 'withdrawal.min_amount', 'floatval')
         ->serializeToForum('withdrawal.maxAmount', 'withdrawal.max_amount', 'floatval')
         ->serializeToForum('withdrawal.fee', 'withdrawal.fee', 'floatval'),
+
+    (new Extend\ApiSerializer(\Flarum\Api\Serializer\UserSerializer::class))
+        ->attributes(Serializer\UserWithdrawalSerializer::class),
 ];
