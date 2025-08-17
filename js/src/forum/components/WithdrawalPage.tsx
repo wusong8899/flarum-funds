@@ -296,14 +296,24 @@ export default class WithdrawalPage extends Page {
     this.submitting = true;
 
     try {
-      const request = app.store.createRecord('withdrawal-requests');
-      request.pushAttributes({
-        platformId: parseInt(this.selectedPlatform()),
-        amount: parseFloat(this.amount()),
-        accountDetails: this.accountDetails()
+      const response = await app.request({
+        method: 'POST',
+        url: app.forum.attribute('apiUrl') + '/withdrawal-requests',
+        body: {
+          data: {
+            type: 'withdrawal-requests',
+            attributes: {
+              platformId: parseInt(this.selectedPlatform()),
+              amount: parseFloat(this.amount()),
+              accountDetails: this.accountDetails()
+            }
+          }
+        }
       });
       
-      await request.save();
+      if (response && response.data) {
+        app.store.pushPayload(response);
+      }
 
       app.alerts.show({
         type: 'success',

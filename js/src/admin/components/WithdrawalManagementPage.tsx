@@ -272,12 +272,22 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     this.submittingPlatform = true;
 
     try {
-      const platform = app.store.createRecord('withdrawal-platforms');
-      platform.pushAttributes({
-        name: this.newPlatformName()
+      const response = await app.request({
+        method: 'POST',
+        url: app.forum.attribute('apiUrl') + '/withdrawal-platforms',
+        body: {
+          data: {
+            type: 'withdrawal-platforms',
+            attributes: {
+              name: this.newPlatformName()
+            }
+          }
+        }
       });
       
-      await platform.save();
+      if (response && response.data) {
+        app.store.pushPayload(response);
+      }
       
       this.newPlatformName('');
       await this.loadPlatforms();
