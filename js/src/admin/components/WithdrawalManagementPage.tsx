@@ -347,7 +347,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   private async loadPlatforms(): Promise<void> {
     try {
       const response = await app.store.find('withdrawal-platforms');
-      this.platforms = Array.isArray(response) ? response : [response];
+      this.platforms = Array.isArray(response) ? response.filter(p => p !== null) : (response ? [response] : []);
       
       console.log('Loaded platforms:', this.platforms);
     } catch (error) {
@@ -359,7 +359,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   private async loadRequests(): Promise<void> {
     try {
       const response = await app.store.find('withdrawal-requests');
-      this.requests = Array.isArray(response) ? response : [response];
+      this.requests = Array.isArray(response) ? response.filter(r => r !== null) : (response ? [response] : []);
       
       console.log('Loaded requests:', this.requests);
     } catch (error) {

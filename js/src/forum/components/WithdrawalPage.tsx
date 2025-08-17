@@ -336,13 +336,23 @@ export default class WithdrawalPage extends Page {
   }
 
   private async loadPlatforms(): Promise<void> {
-    const response = await app.store.find('withdrawal-platforms');
-    this.platforms = Array.isArray(response) ? response : [response];
+    try {
+      const response = await app.store.find('withdrawal-platforms');
+      this.platforms = Array.isArray(response) ? response.filter(p => p !== null) : (response ? [response] : []);
+    } catch (error) {
+      console.error('Error loading platforms:', error);
+      this.platforms = [];
+    }
   }
 
   private async loadRequests(): Promise<void> {
-    const response = await app.store.find('withdrawal-requests');
-    this.requests = Array.isArray(response) ? response : [response];
+    try {
+      const response = await app.store.find('withdrawal-requests');
+      this.requests = Array.isArray(response) ? response.filter(r => r !== null) : (response ? [response] : []);
+    } catch (error) {
+      console.error('Error loading requests:', error);
+      this.requests = [];
+    }
   }
 
   private async loadUserBalance(): Promise<void> {
