@@ -8,7 +8,7 @@ import WithdrawalPlatform from '../common/models/WithdrawalPlatform';
 import WithdrawalRequest from '../common/models/WithdrawalRequest';
 
 app.initializers.add('wusong8899-withdrawal', () => {
-  // Register models directly
+  // Register models in store
   app.store.models['withdrawal-platforms'] = WithdrawalPlatform;
   app.store.models['withdrawal-requests'] = WithdrawalRequest;
   
