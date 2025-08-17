@@ -3,7 +3,7 @@ import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 import Button from 'flarum/common/components/Button';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import Stream from 'flarum/common/utils/Stream';
-import dayjs from 'flarum/common/utils/dayjs';
+import humanTime from 'flarum/common/helpers/humanTime';
 import type Mithril from 'mithril';
 
 interface WithdrawalPlatform {
@@ -150,14 +150,22 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   }
 
   private renderPlatform(platform: WithdrawalPlatform): Mithril.Children {
-    const createdDate = platform.attributes?.createdAt || platform.attributes?.created_at || new Date().toISOString();
+    const createdDate = platform.attributes?.createdAt || platform.attributes?.created_at;
+    let dateDisplay = 'N/A';
+    
+    if (createdDate && createdDate !== null) {
+      try {
+        dateDisplay = humanTime(new Date(createdDate));
+      } catch (e) {
+        console.error('Error formatting date:', e);
+        dateDisplay = 'Invalid Date';
+      }
+    }
     
     return (
       <div key={platform.id} className="WithdrawalPlatform">
         <span className="WithdrawalPlatform-name">{platform.attributes?.name || 'Unknown Platform'}</span>
-        <span className="WithdrawalPlatform-date">
-          {createdDate ? dayjs(createdDate).format('YYYY-MM-DD') : 'N/A'}
-        </span>
+        <span className="WithdrawalPlatform-date">{dateDisplay}</span>
         <Button
           className="Button Button--danger"
           onclick={() => this.deletePlatform(platform)}
@@ -205,6 +213,16 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     const statusClass = `status-${request.attributes.status}`;
     const createdDate = request.attributes.createdAt || request.attributes.created_at;
     const accountDetails = request.attributes.accountDetails || request.attributes.account_details;
+    
+    let dateDisplay = 'N/A';
+    if (createdDate && createdDate !== null) {
+      try {
+        dateDisplay = humanTime(new Date(createdDate));
+      } catch (e) {
+        console.error('Error formatting request date:', e);
+        dateDisplay = 'Invalid Date';
+      }
+    }
 
     return (
       <div key={request.id} className={`WithdrawalRequest ${statusClass}`}>
@@ -215,9 +233,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
           <div className="WithdrawalRequest-details">
             <span className="amount">${request.attributes.amount}</span>
             <span className="platform">{platform?.attributes?.name || 'Unknown Platform'}</span>
-            <span className="date">
-              {createdDate ? dayjs(createdDate).format('YYYY-MM-DD HH:mm') : 'N/A'}
-            </span>
+            <span className="date">{dateDisplay}</span>
           </div>
           <div className="WithdrawalRequest-account">
             <strong>{app.translator.trans('withdrawal.admin.requests.account_details')}:</strong>

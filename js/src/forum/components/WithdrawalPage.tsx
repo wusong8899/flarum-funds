@@ -4,7 +4,7 @@ import Button from 'flarum/common/components/Button';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import Select from 'flarum/common/components/Select';
 import Stream from 'flarum/common/utils/Stream';
-import dayjs from 'flarum/common/utils/dayjs';
+import humanTime from 'flarum/common/helpers/humanTime';
 import type Mithril from 'mithril';
 
 interface WithdrawalPlatform {
@@ -163,15 +163,23 @@ export default class WithdrawalPage extends Page {
   private renderRequest(request: WithdrawalRequest): Mithril.Children {
     const platform = this.platforms.find(p => p.id == request.relationships.platform.data.id);
     const statusClass = `status-${request.attributes.status}`;
+    
+    let dateDisplay = 'N/A';
+    if (request.attributes.createdAt && request.attributes.createdAt !== null) {
+      try {
+        dateDisplay = humanTime(new Date(request.attributes.createdAt));
+      } catch (e) {
+        console.error('Error formatting date:', e);
+        dateDisplay = 'Invalid Date';
+      }
+    }
 
     return (
       <div key={request.id} className={`WithdrawalRequest ${statusClass}`}>
         <div className="WithdrawalRequest-info">
           <span className="WithdrawalRequest-amount">${request.attributes.amount}</span>
           <span className="WithdrawalRequest-platform">{platform?.attributes.name}</span>
-          <span className="WithdrawalRequest-date">
-            {dayjs(request.attributes.createdAt).format('YYYY-MM-DD HH:mm')}
-          </span>
+          <span className="WithdrawalRequest-date">{dateDisplay}</span>
         </div>
         <div className="WithdrawalRequest-status">
           <span className={`Badge Badge--${request.attributes.status}`}>
