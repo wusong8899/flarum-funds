@@ -4,8 +4,14 @@ import LinkButton from 'flarum/common/components/LinkButton';
 import ItemList from 'flarum/common/utils/ItemList';
 import HeaderSecondary from 'flarum/forum/components/HeaderSecondary';
 import WithdrawalPage from './components/WithdrawalPage';
+import WithdrawalPlatform from '../common/models/WithdrawalPlatform';
+import WithdrawalRequest from '../common/models/WithdrawalRequest';
 
 app.initializers.add('wusong8899-withdrawal', () => {
+  // Register models directly
+  app.store.models['withdrawal-platforms'] = WithdrawalPlatform;
+  app.store.models['withdrawal-requests'] = WithdrawalRequest;
+  
   app.routes.withdrawal = { path: '/withdrawal', component: WithdrawalPage };
 
   extend(HeaderSecondary.prototype, 'items', function (items: ItemList<any>) {
