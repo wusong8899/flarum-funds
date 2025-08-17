@@ -3,17 +3,17 @@
   "name": "@wusong8899/flarum-withdrawal",
   "devDependencies": {
     "@types/mithril": "^2.2.7",
-    "flarum-tsconfig": "^1.0.3",
+    "flarum-tsconfig": "^1.0.0",
+    "flarum-webpack-config": "^2.0.2",
     "mithril": "^2.3.4",
     "oxlint": "^1.11.2",
-    "vite": "^7.1.2"
+    "vite": "^7.1.2",
+    "vite-plugin-oxlint": "^1.4.0"
   },
   "scripts": {
-    "dev": "vite -c vite.config.admin.ts build --mode development && vite -c vite.config.forum.ts build --mode development",
-    "dev:admin": "vite -c vite.config.admin.ts build --mode development",
-    "dev:forum": "vite -c vite.config.forum.ts build --mode development",
-    "dev:watch": "vite -c vite.config.admin.ts build --watch --mode development && vite -c vite.config.forum.ts build --watch --mode development",
-    "build": "vite -c vite.config.admin.ts build --mode production && vite -c vite.config.forum.ts build --mode production",
+    "dev": "vite -c vite.config.admin.mts build --watch --mode development",
+    "dev:forum": "vite -c vite.config.forum.mts build --watch --mode development",
+    "build": "vite -c vite.config.admin.mts build --mode production && vite -c vite.config.forum.mts build --mode production",
     "lint": "oxlint .",
     "lint:fix": "oxlint . --fix"
   }
