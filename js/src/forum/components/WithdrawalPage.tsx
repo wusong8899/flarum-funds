@@ -129,7 +129,7 @@ export default class WithdrawalPage extends Page {
               </div>
             </div>
             <div className="WithdrawalPage-platformName">
-              {selected ? selected.attributes.name : 'Bitcoin'}
+              {selected && selected.attributes ? selected.attributes.name : 'Bitcoin'}
             </div>
           </div>
           {icon('fas fa-chevron-down', { className: 'WithdrawalPage-dropdownIcon' })}
