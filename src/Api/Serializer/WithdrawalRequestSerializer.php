@@ -17,6 +17,8 @@ class WithdrawalRequestSerializer extends AbstractSerializer
             'amount' => (float) $request->amount,
             'accountDetails' => $request->account_details,
             'status' => $request->status,
+            'platformId' => $request->platform_id,
+            'userId' => $request->user_id,
             'createdAt' => $this->formatDate($request->created_at),
             'updatedAt' => $this->formatDate($request->updated_at),
         ];

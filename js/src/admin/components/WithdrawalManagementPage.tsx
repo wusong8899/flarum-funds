@@ -322,6 +322,11 @@ export default class WithdrawalManagementPage extends ExtensionPage {
       request.attributes?.accountDetails || request.attributes?.account_details) || 'N/A';
     const createdDate = (typeof request.createdAt === 'function' ? request.createdAt() : request.attributes?.createdAt) || null;
     
+    // Debug log to understand the structure
+    console.log('Request object:', request);
+    console.log('Request data:', typeof request === 'object' ? request.data : 'N/A');
+    console.log('Request relationships:', typeof request === 'object' ? request.relationships : 'N/A');
+    
     // Get user info
     let userName = 'Unknown User';
     if (typeof request.user === 'function') {
@@ -329,29 +334,59 @@ export default class WithdrawalManagementPage extends ExtensionPage {
       if (userData && typeof userData.displayName === 'function') {
         userName = userData.displayName();
       }
-    } else if (request.relationships?.user?.data?.id) {
-      const user = this.users[request.relationships.user.data.id];
-      if (user && user.attributes?.displayName) {
-        userName = user.attributes.displayName;
+    } else {
+      // Check both data.relationships and direct relationships structures
+      const userRelation = request?.data?.relationships?.user?.data || request?.relationships?.user?.data;
+      if (userRelation) {
+        const user = this.users[userRelation.id];
+        if (user && user.attributes?.displayName) {
+          userName = user.attributes.displayName;
+        }
       }
     }
     
-    // Get platform info
+    // Get platform info - use relationship data directly from API response
     let platformName = 'Unknown Platform';
+    
+    // First priority: Check if this is a Flarum Model instance with platform relationship
     if (typeof request.platform === 'function') {
       const platformData = request.platform();
       if (platformData && typeof platformData.name === 'function') {
         platformName = platformData.name();
       }
-    } else if (request.relationships?.platform?.data?.id) {
-      const platform = this.platforms.find(p => {
-        const pId = typeof p.id === 'function' ? p.id() : p.id;
-        return pId == request.relationships.platform.data.id;
-      });
-      if (platform) {
-        platformName = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
+    } 
+    // Second priority: Check relationship data (both nested and direct structures)
+    else {
+      const platformRelation = request?.data?.relationships?.platform?.data || request?.relationships?.platform?.data;
+      if (platformRelation) {
+        const platformId = platformRelation.id;
+        const platform = this.platforms.find(p => {
+          const pId = typeof p.id === 'function' ? p.id() : p.id;
+          return pId == platformId;
+        });
+        if (platform) {
+          platformName = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
+        }
+      }
+      // Fallback: checking stored platforms by platformId attribute (if available)
+      else if (typeof request.platformId === 'function' ? request.platformId() : request.attributes?.platformId) {
+        const platformIdValue = typeof request.platformId === 'function' ? request.platformId() : request.attributes?.platformId;
+        const platform = this.platforms.find(p => {
+          const pId = typeof p.id === 'function' ? p.id() : p.id;
+          return pId == platformIdValue;
+        });
+        if (platform) {
+          platformName = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
+        }
       }
     }
+    
+    console.log(`Request ${requestId}: Platform resolution:`, {
+      'request.data.relationships': request.data?.relationships?.platform?.data?.id,
+      'request.relationships': request.relationships?.platform?.data?.id,
+      'platformName': platformName,
+      'platforms available': this.platforms.length
+    });
     
     const statusClass = `status-${status}`;
     
@@ -560,8 +595,10 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     
     const userIds = [...new Set(this.requests
       .map(r => {
-        if (r && r.relationships && r.relationships.user && r.relationships.user.data) {
-          return r.relationships.user.data.id;
+        // Check both data.relationships and direct relationships structures
+        const userRelation = r?.data?.relationships?.user?.data || r?.relationships?.user?.data;
+        if (userRelation) {
+          return userRelation.id;
         }
         return null;
       })

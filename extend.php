@@ -31,4 +31,11 @@ return [
 
     (new Extend\ApiSerializer(\Flarum\Api\Serializer\UserSerializer::class))
         ->attributes(Serializer\UserWithdrawalSerializer::class),
+
+    // Register API serializers for our models
+    (new Extend\ApiController(\Flarum\Api\Controller\ListUsersController::class))
+        ->addInclude(['withdrawalRequests', 'withdrawalRequests.platform']),
+        
+    (new Extend\ApiController(\Flarum\Api\Controller\ShowUserController::class))
+        ->addInclude(['withdrawalRequests', 'withdrawalRequests.platform']),
 ];
