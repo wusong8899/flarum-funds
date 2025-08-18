@@ -267,7 +267,9 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   private canSubmitPlatform(): boolean {
     return !!(
       this.newPlatformName() &&
+      this.newPlatformName().trim() &&
       this.newPlatformSymbol() &&
+      this.newPlatformSymbol().trim() &&
       this.newPlatformMinAmount() &&
       this.newPlatformMaxAmount() &&
       parseFloat(this.newPlatformMinAmount()) > 0 &&

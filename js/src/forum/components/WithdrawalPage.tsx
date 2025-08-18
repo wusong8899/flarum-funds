@@ -158,7 +158,7 @@ export default class WithdrawalPage extends Page {
               </div>
               <div className="WithdrawalPage-platformDetails">
                 <div className="WithdrawalPage-platformSymbol">
-                  {selected ? (typeof selected.symbol === 'function' ? selected.symbol() : selected.attributes?.symbol) : 'N/A'}
+                  {selected ? ((typeof selected.symbol === 'function' ? selected.symbol() : selected.attributes?.symbol) || 'N/A') : 'N/A'}
                 </div>
                 <div className="WithdrawalPage-platformFlow">
                   {app.translator.trans('withdrawal.forum.remaining_flow', { amount: '0.00000000' })}
@@ -208,7 +208,7 @@ export default class WithdrawalPage extends Page {
             </div>
             <div className="WithdrawalPage-platformDetails">
               <div className="WithdrawalPage-platformSymbol">
-                {typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol}
+                {(typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol) || 'N/A'}
               </div>
               <div className="WithdrawalPage-platformName">
                 {typeof platform.name === 'function' ? platform.name() : platform.attributes?.name}
