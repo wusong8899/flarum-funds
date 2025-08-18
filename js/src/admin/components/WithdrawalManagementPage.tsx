@@ -348,63 +348,48 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     // Get platform info - use relationship data directly from API response
     let platformName = 'Unknown Platform';
     let platformSymbol = 'N/A';
+    let platform = null;
     
     // First priority: Check if this is a Flarum Model instance with platform relationship
     if (typeof request.platform === 'function') {
-      const platformData = request.platform();
-      if (platformData) {
-        platformName = (typeof platformData.name === 'function' ? platformData.name() : platformData.attributes?.name) || 'Unknown Platform';
-        platformSymbol = (typeof platformData.symbol === 'function' ? platformData.symbol() : platformData.attributes?.symbol) || 'N/A';
-      }
+      platform = request.platform();
     } 
-    // Second priority: Check relationship data (check data property first for API response structure)
+    // Second priority: Check relationship data through request.data (API response structure)
     else if (request?.data?.relationships?.platform?.data) {
       const platformId = request.data.relationships.platform.data.id;
-      // Use app.store.all() directly to ensure we have the latest data
-      const platforms = app.store.all('withdrawal-platforms');
-      const platform = platforms.find(p => {
+      // Find platform from store or loaded platforms
+      const allPlatforms = [...app.store.all('withdrawal-platforms'), ...this.platforms];
+      platform = allPlatforms.find(p => {
         const pId = typeof p.id === 'function' ? p.id() : p.id;
         return pId == platformId;
       });
-      if (platform) {
-        platformName = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
-        platformSymbol = (typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol) || 'N/A';
+    }
+    // Third priority: Use platformId attribute directly
+    else {
+      const platformId = (typeof request.platformId === 'function' ? request.platformId() : request.attributes?.platformId) || 
+                        request?.data?.attributes?.platformId;
+      if (platformId) {
+        // Find platform from store or loaded platforms
+        const allPlatforms = [...app.store.all('withdrawal-platforms'), ...this.platforms];
+        platform = allPlatforms.find(p => {
+          const pId = typeof p.id === 'function' ? p.id() : p.id;
+          return pId == platformId;
+        });
       }
     }
-    // Third priority: Check direct relationships property (for different data structures)
-    else if (request?.relationships?.platform?.data) {
-      const platformId = request.relationships.platform.data.id;
-      // Use app.store.all() directly to ensure we have the latest data
-      const platforms = app.store.all('withdrawal-platforms');
-      const platform = platforms.find(p => {
-        const pId = typeof p.id === 'function' ? p.id() : p.id;
-        return pId == platformId;
-      });
-      if (platform) {
-        platformName = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
-        platformSymbol = (typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol) || 'N/A';
-      }
-    }
-    // Fallback: checking stored platforms by platformId attribute (if available)
-    else if (typeof request.platformId === 'function' ? request.platformId() : request.attributes?.platformId) {
-      const platformIdValue = typeof request.platformId === 'function' ? request.platformId() : request.attributes?.platformId;
-      // Use app.store.all() directly to ensure we have the latest data
-      const platforms = app.store.all('withdrawal-platforms');
-      const platform = platforms.find(p => {
-        const pId = typeof p.id === 'function' ? p.id() : p.id;
-        return pId == platformIdValue;
-      });
-      if (platform) {
-        platformName = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
-        platformSymbol = (typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol) || 'N/A';
-      }
+    
+    // Extract platform name and symbol from found platform
+    if (platform) {
+      platformName = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
+      platformSymbol = (typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol) || 'N/A';
     }
     
     console.log(`Request ${requestId}: Platform resolution:`, {
       'request.data.relationships': request.data?.relationships?.platform?.data?.id,
-      'request.relationships': request.relationships?.platform?.data?.id,
+      'platformId from attributes': (typeof request.platformId === 'function' ? request.platformId() : request.attributes?.platformId) || request?.data?.attributes?.platformId,
       'platformName': platformName,
       'platformSymbol': platformSymbol,
+      'platform found': platform ? 'Yes' : 'No',
       'platforms available': this.platforms.length
     });
     
