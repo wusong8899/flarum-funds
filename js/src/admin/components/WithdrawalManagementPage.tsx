@@ -356,6 +356,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
         <div className="WithdrawalRequest-info">
           <div className="WithdrawalRequest-user">
             <strong>{userName}</strong>
+            <span className="request-id">#{requestId}</span>
           </div>
           <div className="WithdrawalRequest-details">
             <span className="amount">{amount}</span>
