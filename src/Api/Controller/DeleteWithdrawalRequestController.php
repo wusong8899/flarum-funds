@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace wusong8899\Withdrawal\Api\Controller;
 
 use Flarum\Api\Controller\AbstractDeleteController;
@@ -11,17 +13,22 @@ use wusong8899\Withdrawal\Model\WithdrawalRequest;
 
 class DeleteWithdrawalRequestController extends AbstractDeleteController
 {
-    protected function delete(ServerRequestInterface $request)
+    /**
+     * @param ServerRequestInterface $request
+     * @return void
+     * @throws PermissionDeniedException
+     */
+    protected function delete(ServerRequestInterface $request): void
     {
         $actor = RequestUtil::getActor($request);
-        $requestId = Arr::get($request->getQueryParams(), 'id');
+        $requestId = (int) Arr::get($request->getQueryParams(), 'id', 0);
 
         if (!$actor->isAdmin()) {
             throw new PermissionDeniedException();
         }
 
         $withdrawalRequest = WithdrawalRequest::findOrFail($requestId);
-        
+
         // Only allow deletion of pending requests or by admin
         if (!$actor->isAdmin() && !$withdrawalRequest->isPending()) {
             throw new PermissionDeniedException();

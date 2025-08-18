@@ -1,16 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace wusong8899\Withdrawal\Api\Serializer;
 
 use Flarum\Api\Serializer\AbstractSerializer;
 use Flarum\Api\Serializer\BasicUserSerializer;
 use Tobscure\JsonApi\Relationship;
+use wusong8899\Withdrawal\Model\WithdrawalRequest;
 
 class WithdrawalRequestSerializer extends AbstractSerializer
 {
     protected $type = 'withdrawal-requests';
 
-    protected function getDefaultAttributes($request)
+    /**
+     * @param WithdrawalRequest $request
+     * @return array<string, mixed>
+     */
+    protected function getDefaultAttributes($request): array
     {
         return [
             'id' => $request->id,
@@ -24,12 +31,20 @@ class WithdrawalRequestSerializer extends AbstractSerializer
         ];
     }
 
-    protected function user($request)
+    /**
+     * @param WithdrawalRequest $request
+     * @return Relationship
+     */
+    protected function user($request): Relationship
     {
         return $this->hasOne($request, BasicUserSerializer::class);
     }
 
-    protected function platform($request)
+    /**
+     * @param WithdrawalRequest $request
+     * @return Relationship
+     */
+    protected function platform($request): Relationship
     {
         return $this->hasOne($request, WithdrawalPlatformSerializer::class);
     }

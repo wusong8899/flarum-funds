@@ -1,15 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace wusong8899\Withdrawal\Model;
 
 use Flarum\Database\AbstractModel;
 use Flarum\User\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property int $platform_id
+ * @property float $amount
+ * @property string $account_details
+ * @property string $status
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property-read User $user
+ * @property-read WithdrawalPlatform $platform
+ */
 class WithdrawalRequest extends AbstractModel
 {
     protected $table = 'withdrawal_requests';
-    
+
     public $timestamps = true;
 
     protected $fillable = [
@@ -28,9 +42,9 @@ class WithdrawalRequest extends AbstractModel
         'updated_at' => 'datetime'
     ];
 
-    const STATUS_PENDING = 'pending';
-    const STATUS_APPROVED = 'approved';
-    const STATUS_REJECTED = 'rejected';
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_APPROVED = 'approved';
+    public const STATUS_REJECTED = 'rejected';
 
     public function user(): BelongsTo
     {

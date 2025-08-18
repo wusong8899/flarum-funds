@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace wusong8899\Withdrawal\Api\Controller;
 
 use Flarum\Api\Controller\AbstractShowController;
@@ -15,10 +17,16 @@ class UpdateWithdrawalPlatformController extends AbstractShowController
 {
     public $serializer = WithdrawalPlatformSerializer::class;
 
-    protected function data(ServerRequestInterface $request, Document $document)
+    /**
+     * @param ServerRequestInterface $request
+     * @param Document $document
+     * @return WithdrawalPlatform
+     * @throws PermissionDeniedException
+     */
+    protected function data(ServerRequestInterface $request, Document $document): WithdrawalPlatform
     {
         $actor = RequestUtil::getActor($request);
-        $platformId = Arr::get($request->getQueryParams(), 'id');
+        $platformId = (int) Arr::get($request->getQueryParams(), 'id', 0);
 
         if (!$actor->isAdmin()) {
             throw new PermissionDeniedException();
@@ -31,35 +39,35 @@ class UpdateWithdrawalPlatformController extends AbstractShowController
 
         // Update allowed fields
         if (isset($attributes['name'])) {
-            $platform->name = $attributes['name'];
+            $platform->name = (string) $attributes['name'];
         }
 
         if (isset($attributes['symbol'])) {
-            $platform->symbol = $attributes['symbol'];
+            $platform->symbol = (string) $attributes['symbol'];
         }
 
         if (isset($attributes['minAmount'])) {
-            $platform->min_amount = $attributes['minAmount'];
+            $platform->min_amount = (float) $attributes['minAmount'];
         }
 
         if (isset($attributes['maxAmount'])) {
-            $platform->max_amount = $attributes['maxAmount'];
+            $platform->max_amount = (float) $attributes['maxAmount'];
         }
 
         if (isset($attributes['fee'])) {
-            $platform->fee = $attributes['fee'];
+            $platform->fee = (float) $attributes['fee'];
         }
 
         if (isset($attributes['iconUrl'])) {
-            $platform->icon_url = $attributes['iconUrl'];
+            $platform->icon_url = $attributes['iconUrl'] ? (string) $attributes['iconUrl'] : null;
         }
 
         if (isset($attributes['iconClass'])) {
-            $platform->icon_class = $attributes['iconClass'];
+            $platform->icon_class = $attributes['iconClass'] ? (string) $attributes['iconClass'] : null;
         }
 
         if (isset($attributes['isActive'])) {
-            $platform->is_active = $attributes['isActive'];
+            $platform->is_active = (bool) $attributes['isActive'];
         }
 
         $platform->save();

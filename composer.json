@@ -28,5 +28,8 @@
     "psr-4": {
       "wusong8899\\Withdrawal\\": "src/"
     }
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.86"
   }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace wusong8899\Withdrawal\Api\Controller;
 
 use Flarum\Api\Controller\AbstractCreateController;
@@ -7,16 +9,32 @@ use Flarum\Http\RequestUtil;
 use Flarum\User\Exception\PermissionDeniedException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use wusong8899\Withdrawal\Api\Serializer\WithdrawalPlatformSerializer;
 use wusong8899\Withdrawal\Model\WithdrawalPlatform;
+use wusong8899\Withdrawal\Validator\WithdrawalPlatformValidator;
 
 class CreateWithdrawalPlatformController extends AbstractCreateController
 {
     public $serializer = WithdrawalPlatformSerializer::class;
 
-    protected function data(ServerRequestInterface $request, Document $document)
+    private WithdrawalPlatformValidator $validator;
+
+    public function __construct()
+    {
+        $this->validator = new WithdrawalPlatformValidator();
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @param Document $document
+     * @return WithdrawalPlatform
+     * @throws PermissionDeniedException
+     * @throws InvalidArgumentException
+     */
+    protected function data(ServerRequestInterface $request, Document $document): WithdrawalPlatform
     {
         $actor = RequestUtil::getActor($request);
 
@@ -25,43 +43,29 @@ class CreateWithdrawalPlatformController extends AbstractCreateController
         }
 
         $attributes = Arr::get($request->getParsedBody(), 'data.attributes', []);
-        
-        // Extract and validate required fields
-        $name = Arr::get($attributes, 'name');
-        $symbol = Arr::get($attributes, 'symbol');
-        $minAmount = Arr::get($attributes, 'minAmount');
-        $maxAmount = Arr::get($attributes, 'maxAmount');
-        $fee = Arr::get($attributes, 'fee', 0);
+
+        // Validate input data
+        $this->validator->validateCreate($attributes);
+
+        // Extract validated fields
+        $name = (string) Arr::get($attributes, 'name', '');
+        $symbol = (string) Arr::get($attributes, 'symbol', '');
+        $minAmount = (float) Arr::get($attributes, 'minAmount', 0);
+        $maxAmount = (float) Arr::get($attributes, 'maxAmount', 0);
+        $fee = (float) Arr::get($attributes, 'fee', 0);
         $iconUrl = Arr::get($attributes, 'iconUrl');
         $iconClass = Arr::get($attributes, 'iconClass');
-        $isActive = Arr::get($attributes, 'isActive', true);
-
-        // Validate required fields
-        if (empty($name) || !is_string($name)) {
-            throw new \InvalidArgumentException('Platform name is required and must be a string.');
-        }
-        if (empty($symbol) || !is_string($symbol)) {
-            throw new \InvalidArgumentException('Currency symbol is required and must be a string.');
-        }
-        if (!is_numeric($minAmount) || $minAmount <= 0) {
-            throw new \InvalidArgumentException('Minimum amount must be a positive number.');
-        }
-        if (!is_numeric($maxAmount) || $maxAmount <= 0) {
-            throw new \InvalidArgumentException('Maximum amount must be a positive number.');
-        }
-        if ($maxAmount < $minAmount) {
-            throw new \InvalidArgumentException('Maximum amount must be greater than or equal to minimum amount.');
-        }
+        $isActive = (bool) Arr::get($attributes, 'isActive', true);
 
         $platform = new WithdrawalPlatform();
         $platform->name = trim($name);
         $platform->symbol = trim($symbol);
-        $platform->min_amount = (float) $minAmount;
-        $platform->max_amount = (float) $maxAmount;
-        $platform->fee = (float) $fee;
-        $platform->icon_url = $iconUrl ? trim($iconUrl) : null;
-        $platform->icon_class = $iconClass ? trim($iconClass) : null;
-        $platform->is_active = (bool) $isActive;
+        $platform->min_amount = $minAmount;
+        $platform->max_amount = $maxAmount;
+        $platform->fee = $fee;
+        $platform->icon_url = $iconUrl ? trim((string) $iconUrl) : null;
+        $platform->icon_class = $iconClass ? trim((string) $iconClass) : null;
+        $platform->is_active = $isActive;
         $platform->created_at = Carbon::now();
         $platform->save();
 

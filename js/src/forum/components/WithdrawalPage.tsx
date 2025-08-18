@@ -82,7 +82,7 @@ export default class WithdrawalPage extends Page {
                   {app.translator.trans('withdrawal.forum.tabs.withdrawal')}
                 </div>
               </div>
-              <button className="WithdrawalPage-close" onclick={() => window.history.back()}>
+              <button className="WithdrawalPage-close" onclick={() => app.history.back()}>
                 {icon('fas fa-times')}
               </button>
             </div>

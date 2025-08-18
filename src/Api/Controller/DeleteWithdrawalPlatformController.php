@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace wusong8899\Withdrawal\Api\Controller;
 
 use Flarum\Api\Controller\AbstractDeleteController;
@@ -11,7 +13,12 @@ use wusong8899\Withdrawal\Model\WithdrawalPlatform;
 
 class DeleteWithdrawalPlatformController extends AbstractDeleteController
 {
-    protected function delete(ServerRequestInterface $request)
+    /**
+     * @param ServerRequestInterface $request
+     * @return void
+     * @throws PermissionDeniedException
+     */
+    protected function delete(ServerRequestInterface $request): void
     {
         $actor = RequestUtil::getActor($request);
 
@@ -19,7 +26,7 @@ class DeleteWithdrawalPlatformController extends AbstractDeleteController
             throw new PermissionDeniedException();
         }
 
-        $id = Arr::get($request->getQueryParams(), 'id');
+        $id = (int) Arr::get($request->getQueryParams(), 'id', 0);
         $platform = WithdrawalPlatform::findOrFail($id);
 
         $platform->delete();

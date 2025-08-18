@@ -1,15 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace wusong8899\Withdrawal\Api\Serializer;
 
 use Flarum\Api\Serializer\AbstractSerializer;
-use Flarum\Api\Serializer\BasicUserSerializer;
+use wusong8899\Withdrawal\Model\WithdrawalPlatform;
 
 class WithdrawalPlatformSerializer extends AbstractSerializer
 {
     protected $type = 'withdrawal-platforms';
 
-    protected function getDefaultAttributes($platform)
+    /**
+     * @param WithdrawalPlatform $platform
+     * @return array<string, mixed>
+     */
+    protected function getDefaultAttributes($platform): array
     {
         return [
             'id' => $platform->id,
