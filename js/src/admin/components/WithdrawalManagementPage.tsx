@@ -2,7 +2,6 @@ import app from 'flarum/admin/app';
 import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 import Button from 'flarum/common/components/Button';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
-import Alert from 'flarum/common/components/Alert';
 import Stream from 'flarum/common/utils/Stream';
 import humanTime from 'flarum/common/helpers/humanTime';
 import type Mithril from 'mithril';
@@ -324,18 +323,14 @@ export default class WithdrawalManagementPage extends ExtensionPage {
       await this.loadPlatforms();
       
       app.alerts.show(
-        Alert.component({
-          type: 'success',
-          children: app.translator.trans('withdrawal.admin.platforms.add_success')
-        })
+        { type: 'success', dismissible: true },
+        app.translator.trans('withdrawal.admin.platforms.add_success')
       );
     } catch (error) {
       console.error('Error adding platform:', error);
       app.alerts.show(
-        Alert.component({
-          type: 'error',
-          children: app.translator.trans('withdrawal.admin.platforms.add_error')
-        })
+        { type: 'error', dismissible: true },
+        app.translator.trans('withdrawal.admin.platforms.add_error')
       );
     } finally {
       this.submittingPlatform = false;
@@ -356,19 +351,15 @@ export default class WithdrawalManagementPage extends ExtensionPage {
         await this.loadPlatforms();
         
         app.alerts.show(
-          Alert.component({
-            type: 'success',
-            children: app.translator.trans('withdrawal.admin.platforms.delete_success')
-          })
+          { type: 'success', dismissible: true },
+          app.translator.trans('withdrawal.admin.platforms.delete_success')
         );
       }
     } catch (error) {
       console.error('Error deleting platform:', error);
       app.alerts.show(
-        Alert.component({
-          type: 'error',
-          children: app.translator.trans('withdrawal.admin.platforms.delete_error')
-        })
+        { type: 'error', dismissible: true },
+        app.translator.trans('withdrawal.admin.platforms.delete_error')
       );
     }
   }
@@ -381,19 +372,15 @@ export default class WithdrawalManagementPage extends ExtensionPage {
         await this.loadRequests();
         
         app.alerts.show(
-          Alert.component({
-            type: 'success',
-            children: app.translator.trans(`withdrawal.admin.requests.${status}_success`)
-          })
+          { type: 'success', dismissible: true },
+          app.translator.trans(`withdrawal.admin.requests.${status}_success`)
         );
       }
     } catch (error) {
       console.error('Error updating request:', error);
       app.alerts.show(
-        Alert.component({
-          type: 'error',
-          children: app.translator.trans('withdrawal.admin.requests.update_error')
-        })
+        { type: 'error', dismissible: true },
+        app.translator.trans('withdrawal.admin.requests.update_error')
       );
     }
   }
