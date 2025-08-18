@@ -4,6 +4,7 @@ import Button from 'flarum/common/components/Button';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import Stream from 'flarum/common/utils/Stream';
 import humanTime from 'flarum/common/helpers/humanTime';
+import Modal from 'flarum/common/components/Modal';
 import type Mithril from 'mithril';
 
 interface WithdrawalPlatform {
@@ -338,33 +339,32 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     }
   }
 
-  private async deletePlatform(platform: WithdrawalPlatform): Promise<void> {
+  private deletePlatform(platform: WithdrawalPlatform): void {
     const platformName = platform.name ? platform.name() : 'Unknown Platform';
-    console.log('Platform name for deletion:', platformName);
-    const confirmMessage = app.translator.trans('withdrawal.admin.platforms.delete_confirm', { name: platformName });
-    console.log('Confirm message:', confirmMessage);
-    if (!confirm(confirmMessage)) {
-      return;
-    }
-
-    try {
-      const record = app.store.getById('withdrawal-platforms', platform.id());
-      if (record) {
-        await record.delete();
-        await this.loadPlatforms();
-        
-        app.alerts.show(
-          { type: 'success', dismissible: true },
-          app.translator.trans('withdrawal.admin.platforms.delete_success')
-        );
+    
+    app.modal.show(ConfirmDeleteModal, {
+      platformName: platformName,
+      onConfirm: async () => {
+        try {
+          const record = app.store.getById('withdrawal-platforms', platform.id());
+          if (record) {
+            await record.delete();
+            await this.loadPlatforms();
+            
+            app.alerts.show(
+              { type: 'success', dismissible: true },
+              app.translator.trans('withdrawal.admin.platforms.delete_success')
+            );
+          }
+        } catch (error) {
+          console.error('Error deleting platform:', error);
+          app.alerts.show(
+            { type: 'error', dismissible: true },
+            app.translator.trans('withdrawal.admin.platforms.delete_error')
+          );
+        }
       }
-    } catch (error) {
-      console.error('Error deleting platform:', error);
-      app.alerts.show(
-        { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.admin.platforms.delete_error')
-      );
-    }
+    });
   }
 
   private async updateRequestStatus(request: WithdrawalRequest, status: string): Promise<void> {
@@ -449,5 +449,51 @@ export default class WithdrawalManagementPage extends ExtensionPage {
         console.error('Error loading users:', error);
       }
     }
+  }
+}
+
+class ConfirmDeleteModal extends Modal {
+  private platformName: string;
+  private onConfirm: () => void;
+
+  constructor(vnode: any) {
+    super(vnode);
+    this.platformName = vnode.attrs.platformName;
+    this.onConfirm = vnode.attrs.onConfirm;
+  }
+
+  className() {
+    return 'ConfirmDeleteModal Modal--small';
+  }
+
+  title() {
+    return app.translator.trans('withdrawal.admin.platforms.delete_confirm_title');
+  }
+
+  content() {
+    return (
+      <div className="Modal-body">
+        <p>{app.translator.trans('withdrawal.admin.platforms.delete_confirm_message', { name: this.platformName })}</p>
+        <div className="Form-group">
+          <Button 
+            className="Button Button--primary" 
+            onclick={this.confirm.bind(this)}
+          >
+            {app.translator.trans('withdrawal.admin.platforms.delete_confirm_button')}
+          </Button>
+          <Button 
+            className="Button" 
+            onclick={this.hide.bind(this)}
+          >
+            {app.translator.trans('withdrawal.admin.platforms.delete_cancel_button')}
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  confirm() {
+    this.onConfirm();
+    this.hide();
   }
 }

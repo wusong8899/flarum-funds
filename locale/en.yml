@@ -14,6 +14,11 @@ withdrawal:
       empty: No platforms configured
       delete: Delete
       delete_confirm: Are you sure you want to delete {name}?
+      delete_confirm_base: Are you sure you want to delete {name}?
+      delete_confirm_title: Confirm Delete
+      delete_confirm_message: Are you sure you want to delete platform "{name}"? This action cannot be undone.
+      delete_confirm_button: Delete
+      delete_cancel_button: Cancel
       add_success: Platform added successfully
       add_error: Failed to add platform
       delete_success: Platform deleted successfully
