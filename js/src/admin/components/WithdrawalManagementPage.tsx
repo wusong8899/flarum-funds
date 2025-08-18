@@ -244,7 +244,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
             <span className="WithdrawalPlatform-name">{platformName}</span>
             <span className={`WithdrawalPlatform-symbol ${symbol}`}>{symbol}</span>
             <span className={`WithdrawalPlatform-status ${isActive ? 'active' : 'inactive'}`}>
-              {isActive ? app.translator.trans('withdrawal.admin.platforms.active') : app.translator.trans('withdrawal.admin.platforms.inactive')}
+              {isActive ? '🟢' : '🔴'}
             </span>
           </div>
           <div className="WithdrawalPlatform-details">
