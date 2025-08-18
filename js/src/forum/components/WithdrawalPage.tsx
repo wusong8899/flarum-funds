@@ -111,7 +111,7 @@ export default class WithdrawalPage extends Page {
           <div className="WithdrawalPage-header">
             <div className="WithdrawalPage-tabs">
               <div className="WithdrawalPage-tab active">
-                {app.translator.trans('withdrawal.forum.tabs.crypto')}
+                {app.translator.trans('withdrawal.forum.tabs.withdrawal')}
               </div>
             </div>
             <button className="WithdrawalPage-close" onclick={() => window.history.back()}>
