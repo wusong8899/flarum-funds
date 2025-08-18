@@ -46,6 +46,32 @@ withdrawal:
     page:
       title: Withdrawal
       description: Submit a withdrawal request to transfer your funds to external platforms
+    tabs:
+      crypto: Withdrawal
+    types:
+      crypto: Cryptocurrency
+      fiat: Fiat Currency
+    remaining_flow: "Remaining flow: {amount}"
+    available_balance: "Available balance: {amount}"
+    form:
+      amount: Amount
+      all_button: All
+      address: "{symbol} Address"
+      address_placeholder: Enter or paste withdrawal address...
+      save_address: Save current address
+      submit: Submit
+    limits:
+      min_max: "Min & Max withdrawal amount:"
+      fee: "Fee:"
+    security:
+      bind_phone: Please bind your phone number
+      bind_2fa: Bind 2FA security verification
+    final_amount: "Amount to receive: {amount} {symbol}"
+    clipboard_error: Clipboard access not available. Please paste manually.
+    phone_binding_redirect: Phone binding feature coming soon
+    2fa_redirect: 2FA setup feature coming soon
+    success: Withdrawal request submitted successfully
+    error: Failed to submit withdrawal request
     balance:
       title: Available Balance
       amount: "Available: ${amount}"
@@ -55,20 +81,6 @@ withdrawal:
       maximum_amount: "Maximum Amount: ${amount}"
       withdrawal_fee: "Withdrawal Fee: ${amount}"
       final_amount: "Final Amount: ${amount}"
-    form:
-      title: New Withdrawal Request
-      platform: Platform
-      select_platform: Select a platform
-      amount: Amount
-      amount_placeholder: "Enter amount"
-      amount_help: "Minimum: ${min}, Maximum: ${max}, Fee: ${fee}"
-      all_button: All
-      account_details: Account Details
-      account_details_placeholder: Enter your account details for receiving the withdrawal
-      paste_button: Paste
-      submit: Submit Request
-      success: Withdrawal request submitted successfully
-      error: Failed to submit withdrawal request
     history:
       title: Withdrawal History
       empty: No withdrawal requests yet

@@ -18,12 +18,12 @@ class WithdrawalRequest extends AbstractModel
         'status'
     ];
 
-    protected $dates = ['created_at', 'updated_at'];
-
     protected $casts = [
-        'amount' => 'decimal:2',
+        'amount' => 'decimal:8',
         'user_id' => 'integer',
-        'platform_id' => 'integer'
+        'platform_id' => 'integer',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 
     const STATUS_PENDING = 'pending';

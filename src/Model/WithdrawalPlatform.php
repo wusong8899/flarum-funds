@@ -9,9 +9,24 @@ class WithdrawalPlatform extends AbstractModel
 {
     protected $table = 'withdrawal_platforms';
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+        'symbol',
+        'min_amount',
+        'max_amount',
+        'fee',
+        'icon',
+        'is_active'
+    ];
 
-    protected $dates = ['created_at', 'updated_at'];
+    protected $casts = [
+        'min_amount' => 'decimal:8',
+        'max_amount' => 'decimal:8', 
+        'fee' => 'decimal:8',
+        'is_active' => 'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
+    ];
 
     public function withdrawalRequests(): HasMany
     {

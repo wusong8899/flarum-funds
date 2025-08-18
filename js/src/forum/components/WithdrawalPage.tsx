@@ -2,15 +2,19 @@ import app from 'flarum/forum/app';
 import Page from 'flarum/common/components/Page';
 import Button from 'flarum/common/components/Button';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
-import Select from 'flarum/common/components/Select';
 import Stream from 'flarum/common/utils/Stream';
-import humanTime from 'flarum/common/helpers/humanTime';
+import icon from 'flarum/common/helpers/icon';
 import type Mithril from 'mithril';
 
 interface WithdrawalPlatform {
   id: number;
   attributes: {
     name: string;
+    symbol: string;
+    minAmount: number;
+    maxAmount: number;
+    fee: number;
+    icon?: string;
   };
 }
 
@@ -36,10 +40,12 @@ export default class WithdrawalPage extends Page {
   private submitting = false;
   private loadingBalance = true;
   private userBalance = 0;
+  private showDropdown = false;
 
   private amount = Stream('');
-  private selectedPlatform = Stream('');
+  private selectedPlatform = Stream<WithdrawalPlatform | null>(null);
   private accountDetails = Stream('');
+  private saveAddress = Stream(false);
 
   oninit(vnode: Mithril.VnodeDOM) {
     super.oninit(vnode);
@@ -54,105 +60,183 @@ export default class WithdrawalPage extends Page {
     if (this.loading) {
       return (
         <div className="WithdrawalPage">
-          <div className="container">
+          <div className="WithdrawalPage-loading">
             <LoadingIndicator />
           </div>
         </div>
       );
     }
 
-    const minAmount = app.forum.attribute('withdrawal.minAmount') || 0;
-    const maxAmount = app.forum.attribute('withdrawal.maxAmount') || 10000;
-    const fee = app.forum.attribute('withdrawal.fee') || 0;
-
     return (
       <div className="WithdrawalPage">
-        <div className="container">
+        <div className="WithdrawalPage-modal">
           <div className="WithdrawalPage-header">
-            <h1>{app.translator.trans('withdrawal.forum.page.title')}</h1>
-            <p>{app.translator.trans('withdrawal.forum.page.description')}</p>
+            <div className="WithdrawalPage-tabs">
+              <div className="WithdrawalPage-tab active">
+                {app.translator.trans('withdrawal.forum.tabs.crypto')}
+              </div>
+            </div>
+            <button className="WithdrawalPage-close" onclick={() => window.history.back()}>
+              {icon('fas fa-times')}
+            </button>
           </div>
 
           <div className="WithdrawalPage-content">
-            {this.renderBalanceSection()}
-            {this.renderInfoSection(minAmount, maxAmount, fee)}
-            
-            <div className="WithdrawalPage-form">
-              <h3>{app.translator.trans('withdrawal.forum.form.title')}</h3>
-              
-              <div className="WithdrawalPage-formGroup">
-                <label>{app.translator.trans('withdrawal.forum.form.platform')}</label>
-                <Select
-                  options={this.getPlatformOptions()}
-                  value={this.selectedPlatform()}
-                  onchange={this.selectedPlatform}
-                />
-              </div>
+            {this.renderCryptoTypeToggle()}
+            {this.renderPlatformSelector()}
+            {this.renderAmountSection()}
+            {this.renderAddressSection()}
+            {this.renderSecurityNotices()}
+            {this.renderSubmitButton()}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-              <div className="WithdrawalPage-formGroup">
-                <label>{app.translator.trans('withdrawal.forum.form.amount')}</label>
-                <div className="WithdrawalPage-amountInput">
-                  <input
-                    type="number"
-                    className="FormControl"
-                    placeholder={app.translator.trans('withdrawal.forum.form.amount_placeholder')}
-                    value={this.amount()}
-                    oninput={(e: Event) => this.amount((e.target as HTMLInputElement).value)}
-                    min={minAmount}
-                    max={maxAmount}
-                    step="0.01"
-                  />
-                  <Button
-                    className="Button Button--secondary WithdrawalPage-allButton"
-                    onclick={this.fillAllAmount.bind(this)}
-                  >
-                    {app.translator.trans('withdrawal.forum.form.all_button')}
-                  </Button>
+  private renderCryptoTypeToggle(): Mithril.Children {
+    return (
+      <div className="WithdrawalPage-typeToggle">
+        <div className="WithdrawalPage-typeOption active">
+          {app.translator.trans('withdrawal.forum.types.crypto')}
+        </div>
+        <div className="WithdrawalPage-typeOption">
+          {app.translator.trans('withdrawal.forum.types.fiat')}
+          <span className="WithdrawalPage-infoIcon">{icon('fas fa-info-circle')}</span>
+        </div>
+      </div>
+    );
+  }
+
+  private renderPlatformSelector(): Mithril.Children {
+    const selected = this.selectedPlatform();
+    
+    return (
+      <div className="WithdrawalPage-platformSelector">
+        <div className="WithdrawalPage-platformDropdown" onclick={() => this.showDropdown = !this.showDropdown}>
+          <div className="WithdrawalPage-platformSelected">
+            <div className="WithdrawalPage-platformInfo">
+              <div className="WithdrawalPage-platformIcon">
+                {selected ? this.renderPlatformIcon(selected) : icon('fas fa-bitcoin', { className: 'default-icon' })}
+              </div>
+              <div className="WithdrawalPage-platformDetails">
+                <div className="WithdrawalPage-platformSymbol">
+                  {selected ? selected.attributes.symbol : 'BTC'}
                 </div>
-              </div>
-
-              {this.renderFinalAmountCalculation(fee)}
-
-              <div className="WithdrawalPage-formGroup">
-                <label>{app.translator.trans('withdrawal.forum.form.account_details')}</label>
-                <div className="WithdrawalPage-accountInput">
-                  <textarea
-                    className="FormControl"
-                    placeholder={app.translator.trans('withdrawal.forum.form.account_details_placeholder')}
-                    value={this.accountDetails()}
-                    oninput={(e: Event) => this.accountDetails((e.target as HTMLTextAreaElement).value)}
-                    rows={3}
-                  />
-                  <Button
-                    className="Button Button--secondary WithdrawalPage-pasteButton"
-                    onclick={this.pasteFromClipboard.bind(this)}
-                  >
-                    {app.translator.trans('withdrawal.forum.form.paste_button')}
-                  </Button>
+                <div className="WithdrawalPage-platformFlow">
+                  {app.translator.trans('withdrawal.forum.remaining_flow', { amount: '0.00000000' })}
                 </div>
-              </div>
-
-              <div className="WithdrawalPage-formGroup">
-                <Button
-                  className="Button Button--primary"
-                  loading={this.submitting}
-                  disabled={!this.canSubmit()}
-                  onclick={this.submit.bind(this)}
-                >
-                  {app.translator.trans('withdrawal.forum.form.submit')}
-                </Button>
               </div>
             </div>
+            <div className="WithdrawalPage-platformName">
+              {selected ? selected.attributes.name : 'Bitcoin'}
+            </div>
+          </div>
+          {icon('fas fa-chevron-down', { className: 'WithdrawalPage-dropdownIcon' })}
+        </div>
 
-            <div className="WithdrawalPage-history">
-              <h3>{app.translator.trans('withdrawal.forum.history.title')}</h3>
-              {this.requests.length === 0 ? (
-                <p>{app.translator.trans('withdrawal.forum.history.empty')}</p>
-              ) : (
-                <div className="WithdrawalPage-historyList">
-                  {this.requests.map((request) => this.renderRequest(request))}
-                </div>
-              )}
+        {this.showDropdown && this.renderPlatformDropdown()}
+      </div>
+    );
+  }
+
+  private renderPlatformDropdown(): Mithril.Children {
+    return (
+      <div className="WithdrawalPage-dropdownMenu">
+        {this.platforms.map(platform => (
+          <div 
+            key={platform.id}
+            className="WithdrawalPage-dropdownItem"
+            onclick={() => {
+              this.selectedPlatform(platform);
+              this.showDropdown = false;
+              this.amount(''); // Clear amount when switching platforms
+            }}
+          >
+            <div className="WithdrawalPage-platformIcon">
+              {this.renderPlatformIcon(platform)}
+            </div>
+            <div className="WithdrawalPage-platformDetails">
+              <div className="WithdrawalPage-platformSymbol">{platform.attributes.symbol}</div>
+              <div className="WithdrawalPage-platformName">{platform.attributes.name}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  private renderPlatformIcon(platform: WithdrawalPlatform): Mithril.Children {
+    // Map common cryptocurrency symbols to icons
+    const iconMap: Record<string, string> = {
+      'BTC': 'fab fa-bitcoin',
+      'ETH': 'fab fa-ethereum',
+      'LTC': 'fas fa-coins',
+      'USDT': 'fas fa-dollar-sign',
+      'USDC': 'fas fa-dollar-sign',
+      'BNB': 'fas fa-coins',
+      'ADA': 'fas fa-coins',
+      'DOT': 'fas fa-coins',
+      'SOL': 'fas fa-coins',
+      'MATIC': 'fas fa-coins'
+    };
+
+    const iconClass = iconMap[platform.attributes.symbol] || 'fas fa-coins';
+    return icon(iconClass, { className: `crypto-icon ${platform.attributes.symbol.toLowerCase()}` });
+  }
+
+  private renderAmountSection(): Mithril.Children {
+    const selected = this.selectedPlatform();
+    const minAmount = selected?.attributes.minAmount || 0.001;
+    const maxAmount = selected?.attributes.maxAmount || 10;
+    const fee = selected?.attributes.fee || 0.0005;
+
+    return (
+      <div className="WithdrawalPage-amountSection">
+        <div className="WithdrawalPage-formGroup">
+          <div className="WithdrawalPage-balanceHeader">
+            <span className="WithdrawalPage-label">
+              {app.translator.trans('withdrawal.forum.form.amount')}
+            </span>
+            <span className="WithdrawalPage-balance">
+              {app.translator.trans('withdrawal.forum.available_balance', { 
+                amount: this.loadingBalance ? '0.00000000' : this.userBalance.toFixed(8) 
+              })}
+            </span>
+          </div>
+
+          <div className="WithdrawalPage-amountInput">
+            <input
+              type="text"
+              className="WithdrawalPage-input"
+              placeholder="0.00000000"
+              value={this.amount()}
+              oninput={(e: Event) => this.amount((e.target as HTMLInputElement).value)}
+            />
+            <Button
+              className="WithdrawalPage-allButton"
+              onclick={this.fillAllAmount.bind(this)}
+            >
+              {app.translator.trans('withdrawal.forum.form.all_button')}
+            </Button>
+          </div>
+
+          <div className="WithdrawalPage-amountLimits">
+            <div className="WithdrawalPage-limitRow">
+              <span className="WithdrawalPage-limitLabel">
+                {app.translator.trans('withdrawal.forum.limits.min_max')}
+              </span>
+              <span className="WithdrawalPage-limitValue">
+                {icon('fas fa-coins')} {minAmount} ~ {maxAmount}
+              </span>
+            </div>
+            <div className="WithdrawalPage-limitRow">
+              <span className="WithdrawalPage-limitLabel">
+                {app.translator.trans('withdrawal.forum.limits.fee')}
+              </span>
+              <span className="WithdrawalPage-limitValue">
+                {icon('fas fa-coins')} {fee}
+              </span>
             </div>
           </div>
         </div>
@@ -160,127 +244,95 @@ export default class WithdrawalPage extends Page {
     );
   }
 
-  private renderRequest(request: WithdrawalRequest): Mithril.Children {
-    const requestId = request.id();
-    const amount = request.amount ? request.amount() : 0;
-    const status = request.status ? request.status() : 'pending';
-    const createdAt = request.createdAt ? request.createdAt() : null;
-    
-    // Find platform
-    let platformName = 'Unknown Platform';
-    if (request.platform) {
-      const platformData = request.platform();
-      if (platformData && platformData.name) {
-        platformName = platformData.name();
-      }
-    } else if (request.relationships?.platform?.data?.id) {
-      const platform = this.platforms.find(p => p.id() == request.relationships.platform.data.id);
-      if (platform && platform.name) {
-        platformName = platform.name();
-      }
-    }
-    
-    const statusClass = `status-${status}`;
-    
-    let dateDisplay: Mithril.Children = 'N/A';
-    if (createdAt) {
-      try {
-        dateDisplay = humanTime(createdAt);
-      } catch (e) {
-        console.error('Error formatting date:', e);
-        dateDisplay = 'Invalid Date';
-      }
-    }
+  private renderAddressSection(): Mithril.Children {
+    const selected = this.selectedPlatform();
+    const symbol = selected?.attributes.symbol || 'BTC';
 
     return (
-      <div key={requestId} className={`WithdrawalRequest ${statusClass}`}>
-        <div className="WithdrawalRequest-info">
-          <span className="WithdrawalRequest-amount">${amount}</span>
-          <span className="WithdrawalRequest-platform">{platformName}</span>
-          <span className="WithdrawalRequest-date">{dateDisplay}</span>
-        </div>
-        <div className="WithdrawalRequest-status">
-          <span className={`Badge Badge--${status}`}>
-            {app.translator.trans(`withdrawal.forum.status.${status}`)}
-          </span>
+      <div className="WithdrawalPage-addressSection">
+        <div className="WithdrawalPage-formGroup">
+          <div className="WithdrawalPage-addressHeader">
+            <span className="WithdrawalPage-label">
+              {app.translator.trans('withdrawal.forum.form.address', { symbol })}
+              <span className="WithdrawalPage-required">*</span>
+            </span>
+            <div className="WithdrawalPage-saveAddress" onclick={() => this.saveAddress(!this.saveAddress())}>
+              {icon('fas fa-bookmark')}
+              {app.translator.trans('withdrawal.forum.form.save_address')}
+            </div>
+          </div>
+
+          <div className="WithdrawalPage-addressInput">
+            <input
+              type="text"
+              className="WithdrawalPage-input"
+              placeholder={app.translator.trans('withdrawal.forum.form.address_placeholder')}
+              value={this.accountDetails()}
+              oninput={(e: Event) => this.accountDetails((e.target as HTMLInputElement).value)}
+            />
+            <button className="WithdrawalPage-pasteButton" onclick={this.pasteFromClipboard.bind(this)}>
+              {icon('fas fa-paste')}
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
-  private renderBalanceSection(): Mithril.Children {
+  private renderSecurityNotices(): Mithril.Children {
     return (
-      <div className="WithdrawalPage-balance">
-        <h3>{app.translator.trans('withdrawal.forum.balance.title')}</h3>
-        <div className="WithdrawalPage-balanceAmount">
-          {this.loadingBalance ? (
-            <span className="loading">{app.translator.trans('withdrawal.forum.balance.loading')}</span>
-          ) : (
-            <span className="amount">{app.translator.trans('withdrawal.forum.balance.amount', { amount: this.userBalance })}</span>
-          )}
+      <div className="WithdrawalPage-securityNotices">
+        <div className="WithdrawalPage-securityNotice" onclick={() => this.redirectToPhoneBinding()}>
+          <div className="WithdrawalPage-noticeContent">
+            <span className="WithdrawalPage-noticeText">
+              {app.translator.trans('withdrawal.forum.security.bind_phone')}
+            </span>
+            <span className="WithdrawalPage-noticeAction">GO</span>
+          </div>
+          {icon('fas fa-chevron-right')}
+        </div>
+
+        <div className="WithdrawalPage-securityNotice" onclick={() => this.redirectTo2FA()}>
+          <div className="WithdrawalPage-noticeContent">
+            <span className="WithdrawalPage-noticeText">
+              {app.translator.trans('withdrawal.forum.security.bind_2fa')}
+            </span>
+            <span className="WithdrawalPage-noticeAction">GO</span>
+          </div>
+          {icon('fas fa-chevron-right')}
         </div>
       </div>
     );
   }
 
-  private renderInfoSection(minAmount: number, maxAmount: number, fee: number): Mithril.Children {
-    return (
-      <div className="WithdrawalPage-info">
-        <div className="WithdrawalPage-infoRow">
-          <span className="WithdrawalPage-infoIcon">💰</span>
-          <span className="WithdrawalPage-infoText">
-            {app.translator.trans('withdrawal.forum.info.minimum_amount', { amount: minAmount })}
-          </span>
-        </div>
-        <div className="WithdrawalPage-infoRow">
-          <span className="WithdrawalPage-infoIcon">💰</span>
-          <span className="WithdrawalPage-infoText">
-            {app.translator.trans('withdrawal.forum.info.maximum_amount', { amount: maxAmount })}
-          </span>
-        </div>
-        <div className="WithdrawalPage-infoRow">
-          <span className="WithdrawalPage-infoIcon">💸</span>
-          <span className="WithdrawalPage-infoText">
-            {app.translator.trans('withdrawal.forum.info.withdrawal_fee', { amount: fee })}
-          </span>
-        </div>
-      </div>
-    );
-  }
-
-  private renderFinalAmountCalculation(fee: number): Mithril.Children {
+  private renderSubmitButton(): Mithril.Children {
     const amount = parseFloat(this.amount()) || 0;
+    const selected = this.selectedPlatform();
+    const fee = selected?.attributes.fee || 0;
     const finalAmount = Math.max(0, amount - fee);
+    const symbol = selected?.attributes.symbol || 'BTC';
 
-    if (amount > 0) {
-      return (
-        <div className="WithdrawalPage-finalAmount">
-          <span className="WithdrawalPage-finalAmountLabel">
-            {app.translator.trans('withdrawal.forum.info.final_amount', { amount: finalAmount.toFixed(2) })}
-          </span>
-        </div>
-      );
-    }
-    return null;
-  }
+    return (
+      <div className="WithdrawalPage-submitSection">
+        <Button
+          className="WithdrawalPage-submitButton"
+          loading={this.submitting}
+          disabled={!this.canSubmit()}
+          onclick={this.submit.bind(this)}
+        >
+          {app.translator.trans('withdrawal.forum.form.submit')}
+        </Button>
 
-
-  private getPlatformOptions(): Record<string, string> {
-    const options: Record<string, string> = {
-      '': app.translator.trans('withdrawal.forum.form.select_platform')
-    };
-
-    this.platforms.forEach(platform => {
-      if (platform && platform.name) {
-        const id = platform.id();
-        const name = platform.name();
-        if (id && name) {
-          options[id.toString()] = name;
-        }
-      }
-    });
-
-    return options;
+        {amount > 0 && (
+          <div className="WithdrawalPage-finalAmount">
+            {app.translator.trans('withdrawal.forum.final_amount', { 
+              amount: finalAmount.toFixed(8), 
+              symbol 
+            })}
+          </div>
+        )}
+      </div>
+    );
   }
 
   private canSubmit(): boolean {
@@ -288,31 +340,47 @@ export default class WithdrawalPage extends Page {
       this.selectedPlatform() &&
       this.amount() &&
       this.accountDetails() &&
-      !this.submitting
+      !this.submitting &&
+      parseFloat(this.amount()) > 0
     );
   }
 
   private fillAllAmount(): void {
-    this.amount(this.userBalance.toString());
+    if (this.loadingBalance) return;
+    this.amount(this.userBalance.toFixed(8));
   }
 
   private async pasteFromClipboard(): Promise<void> {
     try {
       if (navigator.clipboard && navigator.clipboard.readText) {
         const text = await navigator.clipboard.readText();
-        this.accountDetails(text);
+        this.accountDetails(text.trim());
         m.redraw();
       }
     } catch (error) {
       console.error('Failed to read from clipboard:', error);
-      // Fallback for browsers without clipboard API
       app.alerts.show({
         type: 'error',
-        message: 'Clipboard access not available. Please paste manually.'
-      });
+        dismissible: true
+      }, app.translator.trans('withdrawal.forum.clipboard_error'));
     }
   }
 
+  private redirectToPhoneBinding(): void {
+    // TODO: Implement phone binding redirect
+    app.alerts.show({
+      type: 'info',
+      dismissible: true
+    }, app.translator.trans('withdrawal.forum.phone_binding_redirect'));
+  }
+
+  private redirectTo2FA(): void {
+    // TODO: Implement 2FA setup redirect  
+    app.alerts.show({
+      type: 'info',
+      dismissible: true
+    }, app.translator.trans('withdrawal.forum.2fa_redirect'));
+  }
 
   private async submit(): Promise<void> {
     if (!this.canSubmit()) return;
@@ -320,6 +388,8 @@ export default class WithdrawalPage extends Page {
     this.submitting = true;
 
     try {
+      const platform = this.selectedPlatform()!;
+      
       const response = await app.request({
         method: 'POST',
         url: app.forum.attribute('apiUrl') + '/withdrawal-requests',
@@ -327,7 +397,7 @@ export default class WithdrawalPage extends Page {
           data: {
             type: 'withdrawal-requests',
             attributes: {
-              platformId: parseInt(this.selectedPlatform()),
+              platformId: platform.id,
               amount: parseFloat(this.amount()),
               accountDetails: this.accountDetails()
             }
@@ -341,20 +411,22 @@ export default class WithdrawalPage extends Page {
 
       app.alerts.show({
         type: 'success',
-        message: app.translator.trans('withdrawal.forum.form.success')
-      });
+        dismissible: true
+      }, app.translator.trans('withdrawal.forum.form.success'));
 
+      // Reset form
       this.amount('');
-      this.selectedPlatform('');
       this.accountDetails('');
+      this.saveAddress(false);
 
+      // Reload data
       this.loadRequests();
     } catch (error) {
       console.error('Error submitting withdrawal request:', error);
       app.alerts.show({
         type: 'error',
-        message: app.translator.trans('withdrawal.forum.form.error')
-      });
+        dismissible: true
+      }, app.translator.trans('withdrawal.forum.form.error'));
     } finally {
       this.submitting = false;
       m.redraw();
@@ -379,6 +451,11 @@ export default class WithdrawalPage extends Page {
     try {
       const response = await app.store.find('withdrawal-platforms');
       this.platforms = Array.isArray(response) ? response.filter(p => p !== null) : (response ? [response] : []);
+      
+      // Auto-select first platform if available
+      if (this.platforms.length > 0 && !this.selectedPlatform()) {
+        this.selectedPlatform(this.platforms[0]);
+      }
     } catch (error) {
       console.error('Error loading platforms:', error);
       this.platforms = [];
@@ -397,9 +474,7 @@ export default class WithdrawalPage extends Page {
 
   private async loadUserBalance(): Promise<void> {
     try {
-      // For now, we'll mock the balance - in a real implementation, 
-      // this would fetch from the money extension API
-      // TODO: Integrate with antoinefr/flarum-ext-money extension
+      // Integration with antoinefr/flarum-ext-money extension
       this.userBalance = app.session.user?.attribute('money') || 0;
       this.loadingBalance = false;
       m.redraw();
@@ -409,5 +484,4 @@ export default class WithdrawalPage extends Page {
       m.redraw();
     }
   }
-
 }

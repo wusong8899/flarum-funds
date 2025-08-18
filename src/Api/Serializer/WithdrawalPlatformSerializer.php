@@ -14,6 +14,12 @@ class WithdrawalPlatformSerializer extends AbstractSerializer
         return [
             'id' => $platform->id,
             'name' => $platform->name,
+            'symbol' => $platform->symbol,
+            'minAmount' => (float) $platform->min_amount,
+            'maxAmount' => (float) $platform->max_amount,
+            'fee' => (float) $platform->fee,
+            'icon' => $platform->icon,
+            'isActive' => (bool) $platform->is_active,
             'createdAt' => $this->formatDate($platform->created_at),
             'updatedAt' => $this->formatDate($platform->updated_at),
         ];
