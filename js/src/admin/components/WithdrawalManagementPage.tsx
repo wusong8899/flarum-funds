@@ -360,7 +360,9 @@ export default class WithdrawalManagementPage extends ExtensionPage {
       const platformRelation = request?.data?.relationships?.platform?.data || request?.relationships?.platform?.data;
       if (platformRelation) {
         const platformId = platformRelation.id;
-        const platform = this.platforms.find(p => {
+        // Use app.store.all() directly to ensure we have the latest data
+        const platforms = app.store.all('withdrawal-platforms');
+        const platform = platforms.find(p => {
           const pId = typeof p.id === 'function' ? p.id() : p.id;
           return pId == platformId;
         });
@@ -371,7 +373,9 @@ export default class WithdrawalManagementPage extends ExtensionPage {
       // Fallback: checking stored platforms by platformId attribute (if available)
       else if (typeof request.platformId === 'function' ? request.platformId() : request.attributes?.platformId) {
         const platformIdValue = typeof request.platformId === 'function' ? request.platformId() : request.attributes?.platformId;
-        const platform = this.platforms.find(p => {
+        // Use app.store.all() directly to ensure we have the latest data
+        const platforms = app.store.all('withdrawal-platforms');
+        const platform = platforms.find(p => {
           const pId = typeof p.id === 'function' ? p.id() : p.id;
           return pId == platformIdValue;
         });
