@@ -314,18 +314,13 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   }
 
   private renderRequest(request: WithdrawalRequest, showActions: boolean): Mithril.Children {
-    // Handle both Model instances and plain objects
+    // Handle Flarum Model instances
     const requestId = typeof request.id === 'function' ? request.id() : request.id;
-    const amount = (typeof request.amount === 'function' ? request.amount() : request.attributes?.amount) || 0;
-    const status = (typeof request.status === 'function' ? request.status() : request.attributes?.status) || 'pending';
-    const accountDetails = (typeof request.accountDetails === 'function' ? request.accountDetails() : 
-      request.attributes?.accountDetails || request.attributes?.account_details) || 'N/A';
-    const createdDate = (typeof request.createdAt === 'function' ? request.createdAt() : request.attributes?.createdAt) || null;
-    
-    // Debug log to understand the structure
-    console.log('Request object:', request);
-    console.log('Request data:', typeof request === 'object' ? request.data : 'N/A');
-    console.log('Request relationships:', typeof request === 'object' ? request.relationships : 'N/A');
+    const amount = typeof request.amount === 'function' ? request.amount() : (request.attributes?.amount || 0);
+    const status = typeof request.status === 'function' ? request.status() : (request.attributes?.status || 'pending');
+    const accountDetails = typeof request.accountDetails === 'function' ? request.accountDetails() : 
+      (request.attributes?.accountDetails || request.attributes?.account_details || 'N/A');
+    const createdDate = typeof request.createdAt === 'function' ? request.createdAt() : (request.attributes?.createdAt || null);
     
     // Get user info
     let userName = 'Unknown User';
@@ -333,65 +328,22 @@ export default class WithdrawalManagementPage extends ExtensionPage {
       const userData = request.user();
       if (userData && typeof userData.displayName === 'function') {
         userName = userData.displayName();
-      }
-    } else {
-      // Check both data.relationships and direct relationships structures
-      const userRelation = request?.data?.relationships?.user?.data || request?.relationships?.user?.data;
-      if (userRelation) {
-        const user = this.users[userRelation.id];
-        if (user && user.attributes?.displayName) {
-          userName = user.attributes.displayName;
-        }
+      } else if (userData && userData.attributes?.displayName) {
+        userName = userData.attributes.displayName;
       }
     }
     
-    // Get platform info - use relationship data directly from API response
+    // Get platform info - simplified approach using Flarum Model relationships
     let platformName = 'Unknown Platform';
     let platformSymbol = 'N/A';
-    let platform = null;
     
-    // First priority: Check if this is a Flarum Model instance with platform relationship
     if (typeof request.platform === 'function') {
-      platform = request.platform();
-    } 
-    // Second priority: Check relationship data through request.data (API response structure)
-    else if (request?.data?.relationships?.platform?.data) {
-      const platformId = request.data.relationships.platform.data.id;
-      // Find platform from store or loaded platforms
-      const allPlatforms = [...app.store.all('withdrawal-platforms'), ...this.platforms];
-      platform = allPlatforms.find(p => {
-        const pId = typeof p.id === 'function' ? p.id() : p.id;
-        return pId == platformId;
-      });
-    }
-    // Third priority: Use platformId attribute directly
-    else {
-      const platformId = (typeof request.platformId === 'function' ? request.platformId() : request.attributes?.platformId) || 
-                        request?.data?.attributes?.platformId;
-      if (platformId) {
-        // Find platform from store or loaded platforms
-        const allPlatforms = [...app.store.all('withdrawal-platforms'), ...this.platforms];
-        platform = allPlatforms.find(p => {
-          const pId = typeof p.id === 'function' ? p.id() : p.id;
-          return pId == platformId;
-        });
+      const platform = request.platform();
+      if (platform) {
+        platformName = typeof platform.name === 'function' ? platform.name() : (platform.attributes?.name || 'Unknown Platform');
+        platformSymbol = typeof platform.symbol === 'function' ? platform.symbol() : (platform.attributes?.symbol || 'N/A');
       }
     }
-    
-    // Extract platform name and symbol from found platform
-    if (platform) {
-      platformName = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
-      platformSymbol = (typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol) || 'N/A';
-    }
-    
-    console.log(`Request ${requestId}: Platform resolution:`, {
-      'request.data.relationships': request.data?.relationships?.platform?.data?.id,
-      'platformId from attributes': (typeof request.platformId === 'function' ? request.platformId() : request.attributes?.platformId) || request?.data?.attributes?.platformId,
-      'platformName': platformName,
-      'platformSymbol': platformSymbol,
-      'platform found': platform ? 'Yes' : 'No',
-      'platforms available': this.platforms.length
-    });
     
     const statusClass = `status-${status}`;
     
@@ -412,7 +364,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
             <strong>{userName}</strong>
           </div>
           <div className="WithdrawalRequest-details">
-            <span className="amount">${amount}</span>
+            <span className="amount">{amount} ￥元</span>
             <span className="platform">{platformName}</span>
             <span className="symbol">{platformSymbol}</span>
             <span className="date">{dateDisplay}</span>
@@ -559,10 +511,10 @@ export default class WithdrawalManagementPage extends ExtensionPage {
 
   private async loadData(): Promise<void> {
     try {
-      await Promise.all([
-        this.loadPlatforms(),
-        this.loadRequests()
-      ]);
+      // Load platforms first to ensure they're in the store
+      await this.loadPlatforms();
+      // Then load requests which reference platforms
+      await this.loadRequests();
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {
@@ -585,7 +537,9 @@ export default class WithdrawalManagementPage extends ExtensionPage {
 
   private async loadRequests(): Promise<void> {
     try {
-      const response = await app.store.find('withdrawal-requests');
+      const response = await app.store.find('withdrawal-requests', {
+        include: 'user,platform'
+      });
       this.requests = Array.isArray(response) ? response.filter(r => r !== null) : (response ? [response] : []);
       
       console.log('Loaded requests:', this.requests);
