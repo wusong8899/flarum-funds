@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class WithdrawalRequest extends AbstractModel
 {
     protected $table = 'withdrawal_requests';
+    
+    public $timestamps = true;
 
     protected $fillable = [
         'user_id',

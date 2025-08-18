@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class WithdrawalPlatform extends AbstractModel
 {
     protected $table = 'withdrawal_platforms';
+    
+    public $timestamps = true;
 
     protected $fillable = [
         'name',
