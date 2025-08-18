@@ -347,41 +347,56 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     
     // Get platform info - use relationship data directly from API response
     let platformName = 'Unknown Platform';
+    let platformSymbol = 'N/A';
     
     // First priority: Check if this is a Flarum Model instance with platform relationship
     if (typeof request.platform === 'function') {
       const platformData = request.platform();
-      if (platformData && typeof platformData.name === 'function') {
-        platformName = platformData.name();
+      if (platformData) {
+        platformName = (typeof platformData.name === 'function' ? platformData.name() : platformData.attributes?.name) || 'Unknown Platform';
+        platformSymbol = (typeof platformData.symbol === 'function' ? platformData.symbol() : platformData.attributes?.symbol) || 'N/A';
       }
     } 
-    // Second priority: Check relationship data (both nested and direct structures)
-    else {
-      const platformRelation = request?.data?.relationships?.platform?.data || request?.relationships?.platform?.data;
-      if (platformRelation) {
-        const platformId = platformRelation.id;
-        // Use app.store.all() directly to ensure we have the latest data
-        const platforms = app.store.all('withdrawal-platforms');
-        const platform = platforms.find(p => {
-          const pId = typeof p.id === 'function' ? p.id() : p.id;
-          return pId == platformId;
-        });
-        if (platform) {
-          platformName = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
-        }
+    // Second priority: Check relationship data (check data property first for API response structure)
+    else if (request?.data?.relationships?.platform?.data) {
+      const platformId = request.data.relationships.platform.data.id;
+      // Use app.store.all() directly to ensure we have the latest data
+      const platforms = app.store.all('withdrawal-platforms');
+      const platform = platforms.find(p => {
+        const pId = typeof p.id === 'function' ? p.id() : p.id;
+        return pId == platformId;
+      });
+      if (platform) {
+        platformName = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
+        platformSymbol = (typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol) || 'N/A';
       }
-      // Fallback: checking stored platforms by platformId attribute (if available)
-      else if (typeof request.platformId === 'function' ? request.platformId() : request.attributes?.platformId) {
-        const platformIdValue = typeof request.platformId === 'function' ? request.platformId() : request.attributes?.platformId;
-        // Use app.store.all() directly to ensure we have the latest data
-        const platforms = app.store.all('withdrawal-platforms');
-        const platform = platforms.find(p => {
-          const pId = typeof p.id === 'function' ? p.id() : p.id;
-          return pId == platformIdValue;
-        });
-        if (platform) {
-          platformName = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
-        }
+    }
+    // Third priority: Check direct relationships property (for different data structures)
+    else if (request?.relationships?.platform?.data) {
+      const platformId = request.relationships.platform.data.id;
+      // Use app.store.all() directly to ensure we have the latest data
+      const platforms = app.store.all('withdrawal-platforms');
+      const platform = platforms.find(p => {
+        const pId = typeof p.id === 'function' ? p.id() : p.id;
+        return pId == platformId;
+      });
+      if (platform) {
+        platformName = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
+        platformSymbol = (typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol) || 'N/A';
+      }
+    }
+    // Fallback: checking stored platforms by platformId attribute (if available)
+    else if (typeof request.platformId === 'function' ? request.platformId() : request.attributes?.platformId) {
+      const platformIdValue = typeof request.platformId === 'function' ? request.platformId() : request.attributes?.platformId;
+      // Use app.store.all() directly to ensure we have the latest data
+      const platforms = app.store.all('withdrawal-platforms');
+      const platform = platforms.find(p => {
+        const pId = typeof p.id === 'function' ? p.id() : p.id;
+        return pId == platformIdValue;
+      });
+      if (platform) {
+        platformName = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
+        platformSymbol = (typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol) || 'N/A';
       }
     }
     
@@ -389,6 +404,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
       'request.data.relationships': request.data?.relationships?.platform?.data?.id,
       'request.relationships': request.relationships?.platform?.data?.id,
       'platformName': platformName,
+      'platformSymbol': platformSymbol,
       'platforms available': this.platforms.length
     });
     
@@ -413,6 +429,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
           <div className="WithdrawalRequest-details">
             <span className="amount">${amount}</span>
             <span className="platform">{platformName}</span>
+            <span className="symbol">{platformSymbol}</span>
             <span className="date">{dateDisplay}</span>
           </div>
           <div className="WithdrawalRequest-account">
