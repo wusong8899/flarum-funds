@@ -69,9 +69,8 @@ export default class WithdrawalPage extends Page {
     }
 
     // Check if no platforms are available
-    const validPlatforms = (this.platforms || []).filter(platform => 
-      platform && platform.attributes
-    );
+    // Accept any truthy platform object - this handles both Model instances and plain objects
+    const validPlatforms = (this.platforms || []).filter(platform => !!platform);
 
     if (validPlatforms.length === 0) {
       return (
@@ -159,7 +158,7 @@ export default class WithdrawalPage extends Page {
               </div>
               <div className="WithdrawalPage-platformDetails">
                 <div className="WithdrawalPage-platformSymbol">
-                  {selected?.attributes?.symbol || 'N/A'}
+                  {selected ? (typeof selected.symbol === 'function' ? selected.symbol() : selected.attributes?.symbol) : 'N/A'}
                 </div>
                 <div className="WithdrawalPage-platformFlow">
                   {app.translator.trans('withdrawal.forum.remaining_flow', { amount: '0.00000000' })}
@@ -167,7 +166,7 @@ export default class WithdrawalPage extends Page {
               </div>
             </div>
             <div className="WithdrawalPage-platformName">
-              {selected?.attributes?.name || 'No Platform Selected'}
+              {selected ? (typeof selected.name === 'function' ? selected.name() : selected.attributes?.name) : 'No Platform Selected'}
             </div>
           </div>
           {icon('fas fa-chevron-down', { className: 'WithdrawalPage-dropdownIcon' })}
@@ -180,9 +179,7 @@ export default class WithdrawalPage extends Page {
 
   private renderPlatformDropdown(): Mithril.Children {
     // Ensure platforms array is valid and filter out invalid items
-    const validPlatforms = (this.platforms || []).filter(platform => 
-      platform && platform.attributes
-    );
+    const validPlatforms = (this.platforms || []).filter(platform => !!platform);
 
     if (validPlatforms.length === 0) {
       return (
@@ -210,8 +207,12 @@ export default class WithdrawalPage extends Page {
               {this.renderPlatformIcon(platform)}
             </div>
             <div className="WithdrawalPage-platformDetails">
-              <div className="WithdrawalPage-platformSymbol">{platform.attributes.symbol}</div>
-              <div className="WithdrawalPage-platformName">{platform.attributes.name}</div>
+              <div className="WithdrawalPage-platformSymbol">
+                {typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol}
+              </div>
+              <div className="WithdrawalPage-platformName">
+                {typeof platform.name === 'function' ? platform.name() : platform.attributes?.name}
+              </div>
             </div>
           </div>
         ))}
@@ -221,24 +222,30 @@ export default class WithdrawalPage extends Page {
 
   private renderPlatformIcon(platform: WithdrawalPlatform): Mithril.Children {
     // Add null checks to prevent errors
-    if (!platform || !platform.attributes) {
+    if (!platform) {
       return icon('fas fa-coins', { className: 'crypto-icon default' });
     }
 
+    // Handle both Model instances and plain objects
+    const iconUrl = typeof platform.iconUrl === 'function' ? platform.iconUrl() : platform.attributes?.iconUrl;
+    const iconClass = typeof platform.iconClass === 'function' ? platform.iconClass() : platform.attributes?.iconClass;
+    const name = typeof platform.name === 'function' ? platform.name() : platform.attributes?.name;
+    const symbol = typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol;
+
     // Priority: iconUrl > iconClass > default
-    if (platform.attributes.iconUrl) {
+    if (iconUrl) {
       return (
         <img 
-          src={platform.attributes.iconUrl} 
-          alt={platform.attributes.name || 'Platform'}
+          src={iconUrl} 
+          alt={name || 'Platform'}
           className="platform-icon-image"
           onerror={(e) => {
             // Fallback to iconClass or default icon if image fails to load
             const target = e.target as HTMLImageElement;
             target.style.display = 'none';
             const fallbackIcon = document.createElement('i');
-            const iconClass = platform.attributes.iconClass || 'fas fa-coins';
-            fallbackIcon.className = `${iconClass} crypto-icon`;
+            const fallbackIconClass = iconClass || 'fas fa-coins';
+            fallbackIcon.className = `${fallbackIconClass} crypto-icon`;
             target.parentElement?.appendChild(fallbackIcon);
           }}
         />
@@ -246,16 +253,16 @@ export default class WithdrawalPage extends Page {
     }
 
     // Use Font Awesome icon class if specified, otherwise default
-    const iconClass = platform.attributes.iconClass || 'fas fa-coins';
-    const symbol = platform.attributes.symbol?.toLowerCase() || 'default';
-    return icon(iconClass, { className: `crypto-icon ${symbol}` });
+    const finalIconClass = iconClass || 'fas fa-coins';
+    const finalSymbol = symbol?.toLowerCase() || 'default';
+    return icon(finalIconClass, { className: `crypto-icon ${finalSymbol}` });
   }
 
   private renderAmountSection(): Mithril.Children {
     const selected = this.selectedPlatform();
-    const minAmount = selected?.attributes?.minAmount || 0.001;
-    const maxAmount = selected?.attributes?.maxAmount || 10;
-    const fee = selected?.attributes?.fee || 0.0005;
+    const minAmount = selected ? (typeof selected.minAmount === 'function' ? selected.minAmount() : selected.attributes?.minAmount) : 0.001;
+    const maxAmount = selected ? (typeof selected.maxAmount === 'function' ? selected.maxAmount() : selected.attributes?.maxAmount) : 10;
+    const fee = selected ? (typeof selected.fee === 'function' ? selected.fee() : selected.attributes?.fee) : 0.0005;
 
     return (
       <div className="WithdrawalPage-amountSection">
@@ -312,7 +319,7 @@ export default class WithdrawalPage extends Page {
 
   private renderAddressSection(): Mithril.Children {
     const selected = this.selectedPlatform();
-    const symbol = selected?.attributes?.symbol || '';
+    const symbol = selected ? (typeof selected.symbol === 'function' ? selected.symbol() : selected.attributes?.symbol) : '';
 
     return (
       <div className="WithdrawalPage-addressSection">
@@ -348,9 +355,9 @@ export default class WithdrawalPage extends Page {
   private renderSubmitButton(): Mithril.Children {
     const amount = parseFloat(this.amount()) || 0;
     const selected = this.selectedPlatform();
-    const fee = selected?.attributes?.fee || 0;
+    const fee = selected ? (typeof selected.fee === 'function' ? selected.fee() : selected.attributes?.fee) : 0;
     const finalAmount = Math.max(0, amount - fee);
-    const symbol = selected?.attributes?.symbol || '';
+    const symbol = selected ? (typeof selected.symbol === 'function' ? selected.symbol() : selected.attributes?.symbol) : '';
 
     return (
       <div className="WithdrawalPage-submitSection">
@@ -422,7 +429,7 @@ export default class WithdrawalPage extends Page {
           data: {
             type: 'withdrawal-requests',
             attributes: {
-              platformId: platform.id,
+              platformId: typeof platform.id === 'function' ? platform.id() : platform.id,
               amount: parseFloat(this.amount()),
               accountDetails: this.accountDetails()
             }
