@@ -121,7 +121,7 @@ export default class WithdrawalPage extends Page {
               </div>
               <div className="WithdrawalPage-platformDetails">
                 <div className="WithdrawalPage-platformSymbol">
-                  {selected ? selected.attributes.symbol : 'BTC'}
+                  {selected && selected.attributes ? selected.attributes.symbol || 'BTC' : 'BTC'}
                 </div>
                 <div className="WithdrawalPage-platformFlow">
                   {app.translator.trans('withdrawal.forum.remaining_flow', { amount: '0.00000000' })}
@@ -141,9 +141,24 @@ export default class WithdrawalPage extends Page {
   }
 
   private renderPlatformDropdown(): Mithril.Children {
+    // Ensure platforms array is valid and filter out invalid items
+    const validPlatforms = (this.platforms || []).filter(platform => 
+      platform && platform.attributes && platform.attributes.symbol
+    );
+
+    if (validPlatforms.length === 0) {
+      return (
+        <div className="WithdrawalPage-dropdownMenu">
+          <div className="WithdrawalPage-dropdownItem WithdrawalPage-noData">
+            {app.translator.trans('withdrawal.forum.no_platforms')}
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="WithdrawalPage-dropdownMenu">
-        {this.platforms.map(platform => (
+        {validPlatforms.map(platform => (
           <div 
             key={platform.id}
             className="WithdrawalPage-dropdownItem"
@@ -167,6 +182,11 @@ export default class WithdrawalPage extends Page {
   }
 
   private renderPlatformIcon(platform: WithdrawalPlatform): Mithril.Children {
+    // Add null checks to prevent errors
+    if (!platform || !platform.attributes || !platform.attributes.symbol) {
+      return icon('fas fa-coins', { className: 'crypto-icon default' });
+    }
+
     // Map common cryptocurrency symbols to icons
     const iconMap: Record<string, string> = {
       'BTC': 'fab fa-bitcoin',
@@ -181,8 +201,9 @@ export default class WithdrawalPage extends Page {
       'MATIC': 'fas fa-coins'
     };
 
-    const iconClass = iconMap[platform.attributes.symbol] || 'fas fa-coins';
-    return icon(iconClass, { className: `crypto-icon ${platform.attributes.symbol.toLowerCase()}` });
+    const symbol = platform.attributes.symbol;
+    const iconClass = iconMap[symbol] || 'fas fa-coins';
+    return icon(iconClass, { className: `crypto-icon ${symbol.toLowerCase()}` });
   }
 
   private renderAmountSection(): Mithril.Children {
@@ -449,8 +470,12 @@ export default class WithdrawalPage extends Page {
 
   private async loadPlatforms(): Promise<void> {
     try {
+      console.log('Loading withdrawal platforms...');
       const response = await app.store.find('withdrawal-platforms');
+      console.log('Platform response:', response);
+      
       this.platforms = Array.isArray(response) ? response.filter(p => p !== null) : (response ? [response] : []);
+      console.log('Processed platforms:', this.platforms);
       
       // Auto-select first platform if available
       if (this.platforms.length > 0 && !this.selectedPlatform()) {

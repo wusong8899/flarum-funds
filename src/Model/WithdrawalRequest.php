@@ -12,7 +12,7 @@ class WithdrawalRequest extends AbstractModel
 
     protected $fillable = [
         'user_id',
-        'platform_id', 
+        'platform_id',
         'amount',
         'account_details',
         'status'

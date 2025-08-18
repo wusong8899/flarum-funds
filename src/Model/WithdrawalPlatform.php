@@ -21,7 +21,7 @@ class WithdrawalPlatform extends AbstractModel
 
     protected $casts = [
         'min_amount' => 'decimal:8',
-        'max_amount' => 'decimal:8', 
+        'max_amount' => 'decimal:8',
         'fee' => 'decimal:8',
         'is_active' => 'boolean',
         'created_at' => 'datetime',
