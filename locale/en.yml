@@ -13,7 +13,7 @@ withdrawal:
       add_button: Add Platform
       empty: No platforms configured
       delete: Delete
-      delete_confirm: Are you sure you want to delete "${name}"?
+      delete_confirm: Are you sure you want to delete {name}?
       add_success: Platform added successfully
       add_error: Failed to add platform
       delete_success: Platform deleted successfully
