@@ -208,9 +208,9 @@ export default class WithdrawalPage extends Page {
 
   private renderAmountSection(): Mithril.Children {
     const selected = this.selectedPlatform();
-    const minAmount = selected?.attributes.minAmount || 0.001;
-    const maxAmount = selected?.attributes.maxAmount || 10;
-    const fee = selected?.attributes.fee || 0.0005;
+    const minAmount = selected?.attributes?.minAmount || 0.001;
+    const maxAmount = selected?.attributes?.maxAmount || 10;
+    const fee = selected?.attributes?.fee || 0.0005;
 
     return (
       <div className="WithdrawalPage-amountSection">
@@ -267,7 +267,7 @@ export default class WithdrawalPage extends Page {
 
   private renderAddressSection(): Mithril.Children {
     const selected = this.selectedPlatform();
-    const symbol = selected?.attributes.symbol || 'BTC';
+    const symbol = selected?.attributes?.symbol || 'BTC';
 
     return (
       <div className="WithdrawalPage-addressSection">
@@ -329,9 +329,9 @@ export default class WithdrawalPage extends Page {
   private renderSubmitButton(): Mithril.Children {
     const amount = parseFloat(this.amount()) || 0;
     const selected = this.selectedPlatform();
-    const fee = selected?.attributes.fee || 0;
+    const fee = selected?.attributes?.fee || 0;
     const finalAmount = Math.max(0, amount - fee);
-    const symbol = selected?.attributes.symbol || 'BTC';
+    const symbol = selected?.attributes?.symbol || 'BTC';
 
     return (
       <div className="WithdrawalPage-submitSection">
