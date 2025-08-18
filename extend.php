@@ -23,7 +23,8 @@ return [
         ->delete('/withdrawal-platforms/{id}', 'withdrawal.platforms.delete', Controller\DeleteWithdrawalPlatformController::class)
         ->get('/withdrawal-requests', 'withdrawal.requests.index', Controller\ListWithdrawalRequestsController::class)
         ->post('/withdrawal-requests', 'withdrawal.requests.create', Controller\CreateWithdrawalRequestController::class)
-        ->patch('/withdrawal-requests/{id}', 'withdrawal.requests.update', Controller\UpdateWithdrawalRequestController::class),
+        ->patch('/withdrawal-requests/{id}', 'withdrawal.requests.update', Controller\UpdateWithdrawalRequestController::class)
+        ->delete('/withdrawal-requests/{id}', 'withdrawal.requests.delete', Controller\DeleteWithdrawalRequestController::class),
 
     (new Extend\Model(Flarum\User\User::class))
         ->hasMany('withdrawalRequests', Model\WithdrawalRequest::class),

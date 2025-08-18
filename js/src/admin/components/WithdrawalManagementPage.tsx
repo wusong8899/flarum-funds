@@ -297,7 +297,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
           {pendingRequests.length === 0 ? (
             <p>{app.translator.trans('withdrawal.admin.requests.no_pending')}</p>
           ) : (
-            pendingRequests.map((request) => this.renderRequest(request, true))
+            pendingRequests.map((request) => this.renderRequest(request, true, true))
           )}
         </div>
 
@@ -306,14 +306,14 @@ export default class WithdrawalManagementPage extends ExtensionPage {
           {processedRequests.length === 0 ? (
             <p>{app.translator.trans('withdrawal.admin.requests.no_processed')}</p>
           ) : (
-            processedRequests.map((request) => this.renderRequest(request, false))
+            processedRequests.map((request) => this.renderRequest(request, false, true))
           )}
         </div>
       </div>
     );
   }
 
-  private renderRequest(request: WithdrawalRequest, showActions: boolean): Mithril.Children {
+  private renderRequest(request: WithdrawalRequest, showActions: boolean, showDelete: boolean = false): Mithril.Children {
     // Handle Flarum Model instances
     const requestId = typeof request.id === 'function' ? request.id() : request.id;
     const amount = typeof request.amount === 'function' ? request.amount() : (request.attributes?.amount || 0);
@@ -380,19 +380,30 @@ export default class WithdrawalManagementPage extends ExtensionPage {
           </div>
         </div>
         
-        {showActions && (
+        {(showActions || showDelete) && (
           <div className="WithdrawalRequest-actions">
+            {showActions && (
+              <>
+                <Button
+                  className="Button Button--primary"
+                  onclick={() => this.updateRequestStatus(request, 'approved')}
+                >
+                  {app.translator.trans('withdrawal.admin.requests.approve')}
+                </Button>
+                <Button
+                  className="Button Button--danger"
+                  onclick={() => this.updateRequestStatus(request, 'rejected')}
+                >
+                  {app.translator.trans('withdrawal.admin.requests.reject')}
+                </Button>
+              </>
+            )}
             <Button
-              className="Button Button--primary"
-              onclick={() => this.updateRequestStatus(request, 'approved')}
+              className="Button Button--link"
+              onclick={() => this.deleteRequest(request)}
             >
-              {app.translator.trans('withdrawal.admin.requests.approve')}
-            </Button>
-            <Button
-              className="Button Button--danger"
-              onclick={() => this.updateRequestStatus(request, 'rejected')}
-            >
-              {app.translator.trans('withdrawal.admin.requests.reject')}
+              <i className="fas fa-trash"></i>
+              {app.translator.trans('withdrawal.admin.requests.delete')}
             </Button>
           </div>
         )}
@@ -509,6 +520,46 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     }
   }
 
+  private deleteRequest(request: WithdrawalRequest): void {
+    const requestId = typeof request.id === 'function' ? request.id() : request.id;
+    const amount = typeof request.amount === 'function' ? request.amount() : (request.attributes?.amount || 0);
+    
+    // Get user name for display in confirmation
+    let userName = 'Unknown User';
+    if (typeof request.user === 'function') {
+      const userData = request.user();
+      if (userData && typeof userData.displayName === 'function') {
+        userName = userData.displayName();
+      } else if (userData && userData.attributes?.displayName) {
+        userName = userData.attributes.displayName;
+      }
+    }
+    
+    app.modal.show(ConfirmDeleteRequestModal, {
+      requestInfo: `${userName} - ${amount} ￥元`,
+      onConfirm: async () => {
+        try {
+          const record = app.store.getById('withdrawal-requests', requestId);
+          if (record) {
+            await record.delete();
+            await this.loadRequests();
+            
+            app.alerts.show(
+              { type: 'success', dismissible: true },
+              app.translator.trans('withdrawal.admin.requests.delete_success')
+            );
+          }
+        } catch (error) {
+          console.error('Error deleting request:', error);
+          app.alerts.show(
+            { type: 'error', dismissible: true },
+            app.translator.trans('withdrawal.admin.requests.delete_error')
+          );
+        }
+      }
+    });
+  }
+
   private async loadData(): Promise<void> {
     try {
       // Load platforms first to ensure they're in the store
@@ -623,6 +674,52 @@ class ConfirmDeleteModal extends Modal {
             onclick={this.hide.bind(this)}
           >
             {app.translator.trans('withdrawal.admin.platforms.delete_cancel_button')}
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  confirm() {
+    this.onConfirm();
+    this.hide();
+  }
+}
+
+class ConfirmDeleteRequestModal extends Modal {
+  private requestInfo: string;
+  private onConfirm: () => void;
+
+  constructor(vnode: any) {
+    super(vnode);
+    this.requestInfo = vnode.attrs.requestInfo;
+    this.onConfirm = vnode.attrs.onConfirm;
+  }
+
+  className() {
+    return 'ConfirmDeleteRequestModal Modal--small';
+  }
+
+  title() {
+    return app.translator.trans('withdrawal.admin.requests.delete_confirm_title');
+  }
+
+  content() {
+    return (
+      <div className="Modal-body">
+        <p>{app.translator.trans('withdrawal.admin.requests.delete_confirm_message', { info: this.requestInfo })}</p>
+        <div className="Form-group">
+          <Button 
+            className="Button Button--danger" 
+            onclick={this.confirm.bind(this)}
+          >
+            {app.translator.trans('withdrawal.admin.requests.delete_confirm_button')}
+          </Button>
+          <Button 
+            className="Button" 
+            onclick={this.hide.bind(this)}
+          >
+            {app.translator.trans('withdrawal.admin.requests.delete_cancel_button')}
           </Button>
         </div>
       </div>

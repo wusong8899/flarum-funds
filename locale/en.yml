@@ -39,6 +39,13 @@ withdrawal:
       account_details: Account Details
       approve: Approve
       reject: Reject
+      delete: Delete
+      delete_confirm_title: Confirm Delete Request
+      delete_confirm_message: Are you sure you want to delete withdrawal request "{info}"? This action cannot be undone.
+      delete_confirm_button: Confirm Delete
+      delete_cancel_button: Cancel
+      delete_success: Withdrawal request deleted successfully
+      delete_error: Failed to delete withdrawal request
       approved_success: Request approved successfully
       rejected_success: Request rejected successfully
       update_error: Failed to update request
