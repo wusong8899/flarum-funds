@@ -54,12 +54,9 @@ withdrawal:
       title: 提款
       description: 提交提款申请，将您的资金转至外部平台
     tabs:
-      crypto: 取款
+      withdrawal: 提款
     no_platforms: 暂无可用的提现平台
     no_platforms_description: 请联系管理员配置提现平台。
-    types:
-      crypto: 加密货币
-      fiat: 法定货币
     remaining_flow: "剩余流水: {amount}"
     available_balance: "可提现金额: {amount}"
     form:

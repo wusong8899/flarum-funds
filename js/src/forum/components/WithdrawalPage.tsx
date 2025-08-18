@@ -79,7 +79,7 @@ export default class WithdrawalPage extends Page {
             <div className="WithdrawalPage-header">
               <div className="WithdrawalPage-tabs">
                 <div className="WithdrawalPage-tab active">
-                  {app.translator.trans('withdrawal.forum.tabs.crypto')}
+                  {app.translator.trans('withdrawal.forum.tabs.withdrawal')}
                 </div>
               </div>
               <button className="WithdrawalPage-close" onclick={() => window.history.back()}>
@@ -120,7 +120,6 @@ export default class WithdrawalPage extends Page {
           </div>
 
           <div className="WithdrawalPage-content">
-            {this.renderCryptoTypeToggle()}
             {this.renderPlatformSelector()}
             {this.renderAmountSection()}
             {this.renderAddressSection()}
@@ -131,19 +130,6 @@ export default class WithdrawalPage extends Page {
     );
   }
 
-  private renderCryptoTypeToggle(): Mithril.Children {
-    return (
-      <div className="WithdrawalPage-typeToggle">
-        <div className="WithdrawalPage-typeOption active">
-          {app.translator.trans('withdrawal.forum.types.crypto')}
-        </div>
-        <div className="WithdrawalPage-typeOption">
-          {app.translator.trans('withdrawal.forum.types.fiat')}
-          <span className="WithdrawalPage-infoIcon">{icon('fas fa-info-circle')}</span>
-        </div>
-      </div>
-    );
-  }
 
   private renderPlatformSelector(): Mithril.Children {
     const selected = this.selectedPlatform();

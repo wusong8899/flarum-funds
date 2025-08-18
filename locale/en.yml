@@ -54,12 +54,9 @@ withdrawal:
       title: Withdrawal
       description: Submit a withdrawal request to transfer your funds to external platforms
     tabs:
-      crypto: Withdrawal
+      withdrawal: Withdrawal
     no_platforms: No withdrawal platforms available
     no_platforms_description: Please contact the administrator to configure withdrawal platforms.
-    types:
-      crypto: Cryptocurrency
-      fiat: Fiat Currency
     remaining_flow: "Remaining flow: {amount}"
     available_balance: "Available balance: {amount}"
     form:
