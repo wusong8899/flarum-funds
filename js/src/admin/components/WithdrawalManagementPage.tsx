@@ -340,7 +340,8 @@ export default class WithdrawalManagementPage extends ExtensionPage {
 
   private async deletePlatform(platform: WithdrawalPlatform): Promise<void> {
     const platformName = platform.name ? platform.name() : 'Unknown Platform';
-    if (!confirm(app.translator.trans('withdrawal.admin.platforms.delete_confirm', { name: platformName }))) {
+    const confirmMessage = app.translator.trans('withdrawal.admin.platforms.delete_confirm', { name: platformName });
+    if (!confirm(confirmMessage)) {
       return;
     }
 
