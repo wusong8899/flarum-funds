@@ -30,5 +30,3 @@ app.initializers.add('wusong8899-withdrawal', () => {
     }
   });
 });
-
-export { default as extend } from '../common/extend';

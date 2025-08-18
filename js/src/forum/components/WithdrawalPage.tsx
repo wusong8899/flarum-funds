@@ -136,6 +136,7 @@ export default class WithdrawalPage extends Page {
     
     return (
       <div className="WithdrawalPage-platformSelector">
+        <div className="WithdrawalPage-label">提取平台</div>
         <div className="WithdrawalPage-platformDropdown" onclick={() => this.showDropdown = !this.showDropdown}>
           <div className="WithdrawalPage-platformSelected">
             <div className="WithdrawalPage-platformInfo">

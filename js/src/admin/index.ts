@@ -12,5 +12,3 @@ app.initializers.add('wusong8899-withdrawal', () => {
     .for('wusong8899-withdrawal')
     .registerPage(WithdrawalManagementPage);
 });
-
-export { default as extend } from '../common/extend';
