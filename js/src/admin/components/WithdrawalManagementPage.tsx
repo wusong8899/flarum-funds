@@ -279,8 +279,14 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   }
 
   private renderRequestManagement(): Mithril.Children {
-    const pendingRequests = this.requests.filter(r => r.status ? r.status() === 'pending' : false);
-    const processedRequests = this.requests.filter(r => r.status ? r.status() !== 'pending' : true);
+    const pendingRequests = this.requests.filter(r => {
+      const status = (typeof r.status === 'function' ? r.status() : r.attributes?.status) || 'pending';
+      return status === 'pending';
+    });
+    const processedRequests = this.requests.filter(r => {
+      const status = (typeof r.status === 'function' ? r.status() : r.attributes?.status) || 'pending';
+      return status !== 'pending';
+    });
 
     return (
       <div className="WithdrawalManagementPage-section">
@@ -312,7 +318,8 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     const requestId = typeof request.id === 'function' ? request.id() : request.id;
     const amount = (typeof request.amount === 'function' ? request.amount() : request.attributes?.amount) || 0;
     const status = (typeof request.status === 'function' ? request.status() : request.attributes?.status) || 'pending';
-    const accountDetails = (typeof request.accountDetails === 'function' ? request.accountDetails() : request.attributes?.accountDetails) || 'N/A';
+    const accountDetails = (typeof request.accountDetails === 'function' ? request.accountDetails() : 
+      request.attributes?.accountDetails || request.attributes?.account_details) || 'N/A';
     const createdDate = (typeof request.createdAt === 'function' ? request.createdAt() : request.attributes?.createdAt) || null;
     
     // Get user info
@@ -546,8 +553,20 @@ export default class WithdrawalManagementPage extends ExtensionPage {
       this.requests = [];
     }
     
-    // Load user data for each request
-    const userIds = [...new Set(this.requests.map(r => r.relationships.user.data.id))];
+    // Load user data for each request - skip if no requests
+    if (this.requests.length === 0) {
+      return;
+    }
+    
+    const userIds = [...new Set(this.requests
+      .map(r => {
+        if (r && r.relationships && r.relationships.user && r.relationships.user.data) {
+          return r.relationships.user.data.id;
+        }
+        return null;
+      })
+      .filter(id => id !== null && id !== undefined)
+    )];
     const usersToLoad = userIds.filter(userId => !this.users[userId]);
     
     if (usersToLoad.length > 0) {
