@@ -11,6 +11,13 @@ interface WithdrawalPlatform {
   id: number;
   attributes: {
     name: string;
+    symbol?: string;
+    minAmount?: number;
+    maxAmount?: number;
+    fee?: number;
+    iconUrl?: string;
+    iconClass?: string;
+    isActive?: boolean;
     createdAt?: string;
     created_at?: string;
   };
@@ -49,6 +56,13 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   private users: { [key: number]: User } = {};
   private loading = true;
   private newPlatformName = Stream('');
+  private newPlatformSymbol = Stream('');
+  private newPlatformMinAmount = Stream('');
+  private newPlatformMaxAmount = Stream('');
+  private newPlatformFee = Stream('');
+  private newPlatformIconUrl = Stream('');
+  private newPlatformIconClass = Stream('');
+  private newPlatformIsActive = Stream(true);
   private submittingPlatform = false;
 
   oninit(vnode: Mithril.VnodeDOM) {
@@ -121,21 +135,113 @@ export default class WithdrawalManagementPage extends ExtensionPage {
         
         <div className="WithdrawalManagementPage-addPlatform">
           <div className="Form-group">
-            <input
-              type="text"
-              className="FormControl"
-              placeholder={app.translator.trans('withdrawal.admin.platforms.add_placeholder')}
-              value={this.newPlatformName()}
-              oninput={(e: Event) => this.newPlatformName((e.target as HTMLInputElement).value)}
-            />
-            <Button
-              className="Button Button--primary"
-              loading={this.submittingPlatform}
-              disabled={!this.newPlatformName()}
-              onclick={this.addPlatform.bind(this)}
-            >
-              {app.translator.trans('withdrawal.admin.platforms.add_button')}
-            </Button>
+            <div className="Form-row">
+              <div className="Form-col">
+                <label>{app.translator.trans('withdrawal.admin.platforms.name')}</label>
+                <input
+                  type="text"
+                  className="FormControl"
+                  placeholder={app.translator.trans('withdrawal.admin.platforms.add_placeholder')}
+                  value={this.newPlatformName()}
+                  oninput={(e: Event) => this.newPlatformName((e.target as HTMLInputElement).value)}
+                />
+              </div>
+              <div className="Form-col">
+                <label>{app.translator.trans('withdrawal.admin.platforms.symbol')}</label>
+                <input
+                  type="text"
+                  className="FormControl"
+                  placeholder="BTC, ETH, USDT..."
+                  value={this.newPlatformSymbol()}
+                  oninput={(e: Event) => this.newPlatformSymbol((e.target as HTMLInputElement).value)}
+                />
+              </div>
+            </div>
+            
+            <div className="Form-row">
+              <div className="Form-col">
+                <label>{app.translator.trans('withdrawal.admin.platforms.min_amount')}</label>
+                <input
+                  type="number"
+                  step="0.00000001"
+                  className="FormControl"
+                  placeholder="0.001"
+                  value={this.newPlatformMinAmount()}
+                  oninput={(e: Event) => this.newPlatformMinAmount((e.target as HTMLInputElement).value)}
+                />
+              </div>
+              <div className="Form-col">
+                <label>{app.translator.trans('withdrawal.admin.platforms.max_amount')}</label>
+                <input
+                  type="number"
+                  step="0.00000001"
+                  className="FormControl"
+                  placeholder="10.0"
+                  value={this.newPlatformMaxAmount()}
+                  oninput={(e: Event) => this.newPlatformMaxAmount((e.target as HTMLInputElement).value)}
+                />
+              </div>
+              <div className="Form-col">
+                <label>{app.translator.trans('withdrawal.admin.platforms.fee')}</label>
+                <input
+                  type="number"
+                  step="0.00000001"
+                  className="FormControl"
+                  placeholder="0.0005"
+                  value={this.newPlatformFee()}
+                  oninput={(e: Event) => this.newPlatformFee((e.target as HTMLInputElement).value)}
+                />
+              </div>
+            </div>
+            
+            <div className="Form-row">
+              <div className="Form-col">
+                <label>{app.translator.trans('withdrawal.admin.platforms.icon_url')}</label>
+                <input
+                  type="url"
+                  className="FormControl"
+                  placeholder="https://example.com/icon.png"
+                  value={this.newPlatformIconUrl()}
+                  oninput={(e: Event) => this.newPlatformIconUrl((e.target as HTMLInputElement).value)}
+                />
+                <small className="helpText">{app.translator.trans('withdrawal.admin.platforms.icon_url_help')}</small>
+              </div>
+              <div className="Form-col">
+                <label>{app.translator.trans('withdrawal.admin.platforms.icon_class')}</label>
+                <input
+                  type="text"
+                  className="FormControl"
+                  placeholder="fas fa-coins"
+                  value={this.newPlatformIconClass()}
+                  oninput={(e: Event) => this.newPlatformIconClass((e.target as HTMLInputElement).value)}
+                />
+                <small className="helpText">{app.translator.trans('withdrawal.admin.platforms.icon_class_help')}</small>
+              </div>
+            </div>
+            
+            <div className="Form-row">
+              <div className="Form-col">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={this.newPlatformIsActive()}
+                    onchange={(e: Event) => this.newPlatformIsActive((e.target as HTMLInputElement).checked)}
+                  />
+                  {app.translator.trans('withdrawal.admin.platforms.is_active')}
+                </label>
+              </div>
+            </div>
+            
+            <div className="Form-group">
+              <Button
+                className="Button Button--primary"
+                loading={this.submittingPlatform}
+                disabled={!this.canSubmitPlatform()}
+                onclick={this.addPlatform.bind(this)}
+              >
+                {app.translator.trans('withdrawal.admin.platforms.add_button')}
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -153,6 +259,11 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   private renderPlatform(platform: WithdrawalPlatform): Mithril.Children {
     const platformId = platform.id();
     const platformName = platform.name ? platform.name() : 'Unknown Platform';
+    const symbol = platform.symbol ? platform.symbol() : 'N/A';
+    const minAmount = platform.minAmount ? platform.minAmount() : 'N/A';
+    const maxAmount = platform.maxAmount ? platform.maxAmount() : 'N/A';
+    const fee = platform.fee ? platform.fee() : 'N/A';
+    const isActive = platform.isActive ? platform.isActive() : false;
     const createdDate = platform.createdAt ? platform.createdAt() : null;
     
     let dateDisplay: Mithril.Children = 'N/A';
@@ -167,8 +278,21 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     
     return (
       <div key={platformId} className="WithdrawalPlatform">
-        <span className="WithdrawalPlatform-name">{platformName}</span>
-        <span className="WithdrawalPlatform-date">{dateDisplay}</span>
+        <div className="WithdrawalPlatform-info">
+          <div className="WithdrawalPlatform-primary">
+            <span className="WithdrawalPlatform-name">{platformName}</span>
+            <span className={`WithdrawalPlatform-symbol ${symbol}`}>{symbol}</span>
+            <span className={`WithdrawalPlatform-status ${isActive ? 'active' : 'inactive'}`}>
+              {isActive ? app.translator.trans('withdrawal.admin.platforms.active') : app.translator.trans('withdrawal.admin.platforms.inactive')}
+            </span>
+          </div>
+          <div className="WithdrawalPlatform-details">
+            <span className="WithdrawalPlatform-amounts">
+              Min: {minAmount} | Max: {maxAmount} | Fee: {fee}
+            </span>
+            <span className="WithdrawalPlatform-date">{dateDisplay}</span>
+          </div>
+        </div>
         <Button
           className="Button Button--danger"
           onclick={() => this.deletePlatform(platform)}
@@ -176,6 +300,18 @@ export default class WithdrawalManagementPage extends ExtensionPage {
           {app.translator.trans('withdrawal.admin.platforms.delete')}
         </Button>
       </div>
+    );
+  }
+
+  private canSubmitPlatform(): boolean {
+    return !!(
+      this.newPlatformName() &&
+      this.newPlatformSymbol() &&
+      this.newPlatformMinAmount() &&
+      this.newPlatformMaxAmount() &&
+      parseFloat(this.newPlatformMinAmount()) > 0 &&
+      parseFloat(this.newPlatformMaxAmount()) > 0 &&
+      parseFloat(this.newPlatformMaxAmount()) >= parseFloat(this.newPlatformMinAmount())
     );
   }
 
@@ -298,7 +434,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   }
 
   private async addPlatform(): Promise<void> {
-    if (!this.newPlatformName() || this.submittingPlatform) return;
+    if (!this.canSubmitPlatform() || this.submittingPlatform) return;
 
     this.submittingPlatform = true;
 
@@ -310,7 +446,14 @@ export default class WithdrawalManagementPage extends ExtensionPage {
           data: {
             type: 'withdrawal-platforms',
             attributes: {
-              name: this.newPlatformName()
+              name: this.newPlatformName(),
+              symbol: this.newPlatformSymbol(),
+              minAmount: parseFloat(this.newPlatformMinAmount()),
+              maxAmount: parseFloat(this.newPlatformMaxAmount()),
+              fee: parseFloat(this.newPlatformFee() || '0'),
+              iconUrl: this.newPlatformIconUrl() || null,
+              iconClass: this.newPlatformIconClass() || null,
+              isActive: this.newPlatformIsActive()
             }
           }
         }
@@ -320,7 +463,16 @@ export default class WithdrawalManagementPage extends ExtensionPage {
         app.store.pushPayload(response);
       }
       
+      // Clear form
       this.newPlatformName('');
+      this.newPlatformSymbol('');
+      this.newPlatformMinAmount('');
+      this.newPlatformMaxAmount('');
+      this.newPlatformFee('');
+      this.newPlatformIconUrl('');
+      this.newPlatformIconClass('');
+      this.newPlatformIsActive(true);
+      
       await this.loadPlatforms();
       
       app.alerts.show(

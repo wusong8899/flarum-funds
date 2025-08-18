@@ -90,6 +90,34 @@
     color: #fff;
   }
 
+  // Empty State
+  .WithdrawalPage-emptyState {
+    text-align: center;
+    padding: 40px 20px;
+
+    .WithdrawalPage-emptyIcon {
+      font-size: 64px;
+      color: #4A90E2;
+      margin-bottom: 20px;
+      opacity: 0.7;
+    }
+
+    .WithdrawalPage-emptyTitle {
+      color: #fff;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .WithdrawalPage-emptyDescription {
+      color: #888;
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+  }
+
   // Type Toggle (Crypto/Fiat)
   .WithdrawalPage-typeToggle {
     display: flex;
@@ -165,17 +193,17 @@
             justify-content: center;
             color: #fff;
             font-size: 16px;
+            overflow: hidden;
+
+            .platform-icon-image {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 50%;
+            }
 
             .crypto-icon {
-              &.btc { color: #f7931a; }
-              &.eth { color: #627eea; }
-              &.usdt, &.usdc { color: #26a17b; }
-              &.bnb { color: #f3ba2f; }
-              &.ltc { color: #bfbbbb; }
-              &.ada { color: #0033ad; }
-              &.dot { color: #e6007a; }
-              &.sol { color: #9945ff; }
-              &.matic { color: #8247e5; }
+              &.default { color: #fff; }
             }
           }
 
@@ -243,6 +271,14 @@
           justify-content: center;
           color: #fff;
           font-size: 12px;
+          overflow: hidden;
+
+          .platform-icon-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+          }
         }
 
         .WithdrawalPage-platformDetails {
@@ -449,53 +485,6 @@
     }
   }
 
-  // Security Notices
-  .WithdrawalPage-securityNotices {
-    margin-bottom: 24px;
-
-    .WithdrawalPage-securityNotice {
-      background: #2a2a2a;
-      border: 1px solid #3a3a3a;
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:hover {
-        border-color: #4A90E2;
-        background: #2f2f2f;
-      }
-
-      .WithdrawalPage-noticeContent {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-
-        .WithdrawalPage-noticeText {
-          color: #fff;
-          font-size: 14px;
-        }
-
-        .WithdrawalPage-noticeAction {
-          background: #4A90E2;
-          color: #fff;
-          padding: 4px 12px;
-          border-radius: 4px;
-          font-size: 12px;
-          font-weight: 500;
-        }
-      }
-
-      i {
-        color: #888;
-        font-size: 12px;
-      }
-    }
-  }
 
   // Submit Section
   .WithdrawalPage-submitSection {

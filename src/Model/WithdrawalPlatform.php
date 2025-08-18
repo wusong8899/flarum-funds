@@ -15,7 +15,8 @@ class WithdrawalPlatform extends AbstractModel
         'min_amount',
         'max_amount',
         'fee',
-        'icon',
+        'icon_url',
+        'icon_class',
         'is_active'
     ];
 

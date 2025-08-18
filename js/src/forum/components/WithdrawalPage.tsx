@@ -14,7 +14,8 @@ interface WithdrawalPlatform {
     minAmount: number;
     maxAmount: number;
     fee: number;
-    icon?: string;
+    iconUrl?: string;
+    iconClass?: string;
   };
 }
 
@@ -67,6 +68,44 @@ export default class WithdrawalPage extends Page {
       );
     }
 
+    // Check if no platforms are available
+    const validPlatforms = (this.platforms || []).filter(platform => 
+      platform && platform.attributes
+    );
+
+    if (validPlatforms.length === 0) {
+      return (
+        <div className="WithdrawalPage">
+          <div className="WithdrawalPage-modal">
+            <div className="WithdrawalPage-header">
+              <div className="WithdrawalPage-tabs">
+                <div className="WithdrawalPage-tab active">
+                  {app.translator.trans('withdrawal.forum.tabs.crypto')}
+                </div>
+              </div>
+              <button className="WithdrawalPage-close" onclick={() => window.history.back()}>
+                {icon('fas fa-times')}
+              </button>
+            </div>
+            
+            <div className="WithdrawalPage-content">
+              <div className="WithdrawalPage-emptyState">
+                <div className="WithdrawalPage-emptyIcon">
+                  {icon('fas fa-coins')}
+                </div>
+                <h3 className="WithdrawalPage-emptyTitle">
+                  {app.translator.trans('withdrawal.forum.no_platforms')}
+                </h3>
+                <p className="WithdrawalPage-emptyDescription">
+                  {app.translator.trans('withdrawal.forum.no_platforms_description')}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="WithdrawalPage">
         <div className="WithdrawalPage-modal">
@@ -86,7 +125,6 @@ export default class WithdrawalPage extends Page {
             {this.renderPlatformSelector()}
             {this.renderAmountSection()}
             {this.renderAddressSection()}
-            {this.renderSecurityNotices()}
             {this.renderSubmitButton()}
           </div>
         </div>
@@ -121,7 +159,7 @@ export default class WithdrawalPage extends Page {
               </div>
               <div className="WithdrawalPage-platformDetails">
                 <div className="WithdrawalPage-platformSymbol">
-                  {selected && selected.attributes ? selected.attributes.symbol || 'BTC' : 'BTC'}
+                  {selected?.attributes?.symbol || 'N/A'}
                 </div>
                 <div className="WithdrawalPage-platformFlow">
                   {app.translator.trans('withdrawal.forum.remaining_flow', { amount: '0.00000000' })}
@@ -129,7 +167,7 @@ export default class WithdrawalPage extends Page {
               </div>
             </div>
             <div className="WithdrawalPage-platformName">
-              {selected && selected.attributes ? selected.attributes.name : 'Bitcoin'}
+              {selected?.attributes?.name || 'No Platform Selected'}
             </div>
           </div>
           {icon('fas fa-chevron-down', { className: 'WithdrawalPage-dropdownIcon' })}
@@ -143,7 +181,7 @@ export default class WithdrawalPage extends Page {
   private renderPlatformDropdown(): Mithril.Children {
     // Ensure platforms array is valid and filter out invalid items
     const validPlatforms = (this.platforms || []).filter(platform => 
-      platform && platform.attributes && platform.attributes.symbol
+      platform && platform.attributes
     );
 
     if (validPlatforms.length === 0) {
@@ -183,27 +221,34 @@ export default class WithdrawalPage extends Page {
 
   private renderPlatformIcon(platform: WithdrawalPlatform): Mithril.Children {
     // Add null checks to prevent errors
-    if (!platform || !platform.attributes || !platform.attributes.symbol) {
+    if (!platform || !platform.attributes) {
       return icon('fas fa-coins', { className: 'crypto-icon default' });
     }
 
-    // Map common cryptocurrency symbols to icons
-    const iconMap: Record<string, string> = {
-      'BTC': 'fab fa-bitcoin',
-      'ETH': 'fab fa-ethereum',
-      'LTC': 'fas fa-coins',
-      'USDT': 'fas fa-dollar-sign',
-      'USDC': 'fas fa-dollar-sign',
-      'BNB': 'fas fa-coins',
-      'ADA': 'fas fa-coins',
-      'DOT': 'fas fa-coins',
-      'SOL': 'fas fa-coins',
-      'MATIC': 'fas fa-coins'
-    };
+    // Priority: iconUrl > iconClass > default
+    if (platform.attributes.iconUrl) {
+      return (
+        <img 
+          src={platform.attributes.iconUrl} 
+          alt={platform.attributes.name || 'Platform'}
+          className="platform-icon-image"
+          onerror={(e) => {
+            // Fallback to iconClass or default icon if image fails to load
+            const target = e.target as HTMLImageElement;
+            target.style.display = 'none';
+            const fallbackIcon = document.createElement('i');
+            const iconClass = platform.attributes.iconClass || 'fas fa-coins';
+            fallbackIcon.className = `${iconClass} crypto-icon`;
+            target.parentElement?.appendChild(fallbackIcon);
+          }}
+        />
+      );
+    }
 
-    const symbol = platform.attributes.symbol;
-    const iconClass = iconMap[symbol] || 'fas fa-coins';
-    return icon(iconClass, { className: `crypto-icon ${symbol.toLowerCase()}` });
+    // Use Font Awesome icon class if specified, otherwise default
+    const iconClass = platform.attributes.iconClass || 'fas fa-coins';
+    const symbol = platform.attributes.symbol?.toLowerCase() || 'default';
+    return icon(iconClass, { className: `crypto-icon ${symbol}` });
   }
 
   private renderAmountSection(): Mithril.Children {
@@ -267,7 +312,7 @@ export default class WithdrawalPage extends Page {
 
   private renderAddressSection(): Mithril.Children {
     const selected = this.selectedPlatform();
-    const symbol = selected?.attributes?.symbol || 'BTC';
+    const symbol = selected?.attributes?.symbol || '';
 
     return (
       <div className="WithdrawalPage-addressSection">
@@ -300,38 +345,12 @@ export default class WithdrawalPage extends Page {
     );
   }
 
-  private renderSecurityNotices(): Mithril.Children {
-    return (
-      <div className="WithdrawalPage-securityNotices">
-        <div className="WithdrawalPage-securityNotice" onclick={() => this.redirectToPhoneBinding()}>
-          <div className="WithdrawalPage-noticeContent">
-            <span className="WithdrawalPage-noticeText">
-              {app.translator.trans('withdrawal.forum.security.bind_phone')}
-            </span>
-            <span className="WithdrawalPage-noticeAction">GO</span>
-          </div>
-          {icon('fas fa-chevron-right')}
-        </div>
-
-        <div className="WithdrawalPage-securityNotice" onclick={() => this.redirectTo2FA()}>
-          <div className="WithdrawalPage-noticeContent">
-            <span className="WithdrawalPage-noticeText">
-              {app.translator.trans('withdrawal.forum.security.bind_2fa')}
-            </span>
-            <span className="WithdrawalPage-noticeAction">GO</span>
-          </div>
-          {icon('fas fa-chevron-right')}
-        </div>
-      </div>
-    );
-  }
-
   private renderSubmitButton(): Mithril.Children {
     const amount = parseFloat(this.amount()) || 0;
     const selected = this.selectedPlatform();
     const fee = selected?.attributes?.fee || 0;
     const finalAmount = Math.max(0, amount - fee);
-    const symbol = selected?.attributes?.symbol || 'BTC';
+    const symbol = selected?.attributes?.symbol || '';
 
     return (
       <div className="WithdrawalPage-submitSection">
@@ -387,21 +406,6 @@ export default class WithdrawalPage extends Page {
     }
   }
 
-  private redirectToPhoneBinding(): void {
-    // TODO: Implement phone binding redirect
-    app.alerts.show({
-      type: 'info',
-      dismissible: true
-    }, app.translator.trans('withdrawal.forum.phone_binding_redirect'));
-  }
-
-  private redirectTo2FA(): void {
-    // TODO: Implement 2FA setup redirect  
-    app.alerts.show({
-      type: 'info',
-      dismissible: true
-    }, app.translator.trans('withdrawal.forum.2fa_redirect'));
-  }
 
   private async submit(): Promise<void> {
     if (!this.canSubmit()) return;

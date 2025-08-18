@@ -9,6 +9,18 @@ withdrawal:
       fee: 提款手续费
     platforms:
       title: 提款平台
+      name: 平台名称
+      symbol: 货币符号
+      min_amount: 最小金额
+      max_amount: 最大金额
+      fee: 手续费
+      icon_url: 图标图片URL（可选）
+      icon_url_help: 输入图片URL（如：https://example.com/icon.png）
+      icon_class: 图标CSS类（可选）
+      icon_class_help: 输入字体图标类（如：fas fa-coins）
+      is_active: 启用
+      active: 启用
+      inactive: 禁用
       add_placeholder: 输入平台名称
       add_button: 添加平台
       empty: 未配置平台
@@ -48,6 +60,8 @@ withdrawal:
       description: 提交提款申请，将您的资金转至外部平台
     tabs:
       crypto: 取款
+    no_platforms: 暂无可用的提现平台
+    no_platforms_description: 请联系管理员配置提现平台。
     types:
       crypto: 加密货币
       fiat: 法定货币
@@ -63,13 +77,8 @@ withdrawal:
     limits:
       min_max: "最小与最大取款金额:"
       fee: "手续费:"
-    security:
-      bind_phone: 请绑定您的手机号
-      bind_2fa: 绑定2FA安全验证
     final_amount: "到账金额: {amount} {symbol}"
     clipboard_error: 无法访问剪贴板，请手动粘贴
-    phone_binding_redirect: 手机绑定功能即将推出
-    2fa_redirect: 2FA设置功能即将推出
     success: 提款申请提交成功
     error: 提款申请提交失败
     balance:

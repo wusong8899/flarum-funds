@@ -9,6 +9,18 @@ withdrawal:
       fee: Withdrawal Fee
     platforms:
       title: Withdrawal Platforms
+      name: Platform Name
+      symbol: Currency Symbol
+      min_amount: Minimum Amount
+      max_amount: Maximum Amount
+      fee: Fee
+      icon_url: Icon Image URL (Optional)
+      icon_url_help: Enter image URL (e.g., https://example.com/icon.png)
+      icon_class: Icon CSS Class (Optional)
+      icon_class_help: Enter Font Awesome class (e.g., fas fa-coins)
+      is_active: Active
+      active: Active
+      inactive: Inactive
       add_placeholder: Enter platform name
       add_button: Add Platform
       empty: No platforms configured
@@ -48,6 +60,8 @@ withdrawal:
       description: Submit a withdrawal request to transfer your funds to external platforms
     tabs:
       crypto: Withdrawal
+    no_platforms: No withdrawal platforms available
+    no_platforms_description: Please contact the administrator to configure withdrawal platforms.
     types:
       crypto: Cryptocurrency
       fiat: Fiat Currency
@@ -63,13 +77,8 @@ withdrawal:
     limits:
       min_max: "Min & Max withdrawal amount:"
       fee: "Fee:"
-    security:
-      bind_phone: Please bind your phone number
-      bind_2fa: Bind 2FA security verification
     final_amount: "Amount to receive: {amount} {symbol}"
     clipboard_error: Clipboard access not available. Please paste manually.
-    phone_binding_redirect: Phone binding feature coming soon
-    2fa_redirect: 2FA setup feature coming soon
     success: Withdrawal request submitted successfully
     error: Failed to submit withdrawal request
     balance:

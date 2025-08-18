@@ -6,7 +6,8 @@ export default class WithdrawalPlatform extends Model {
   minAmount = Model.attribute('minAmount');
   maxAmount = Model.attribute('maxAmount');
   fee = Model.attribute('fee');
-  icon = Model.attribute('icon');
+  iconUrl = Model.attribute('iconUrl');
+  iconClass = Model.attribute('iconClass');
   isActive = Model.attribute('isActive');
   createdAt = Model.attribute('createdAt', Model.transformDate);
   updatedAt = Model.attribute('updatedAt', Model.transformDate);
