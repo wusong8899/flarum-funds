@@ -2,9 +2,6 @@ withdrawal:
   admin:
     page:
       title: 提款管理
-    settings:
-      title: 设置
-      fee: 默认提款手续费
     platforms:
       title: 提款平台
       name: 平台名称

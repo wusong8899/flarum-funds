@@ -80,7 +80,6 @@ export default class WithdrawalManagementPage extends ExtensionPage {
         <div className="container">
           <h2>{app.translator.trans('withdrawal.admin.page.title')}</h2>
           
-          {this.renderSettings()}
           {this.renderPlatformManagement()}
           {this.renderRequestManagement()}
         </div>
@@ -88,27 +87,6 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     );
   }
 
-  private renderSettings(): Mithril.Children {
-    return (
-      <div className="WithdrawalManagementPage-section">
-        <h3>{app.translator.trans('withdrawal.admin.settings.title')}</h3>
-        <div className="Form">          
-          <div className="Form-group">
-            <label>{app.translator.trans('withdrawal.admin.settings.fee')}</label>
-            {this.buildSettingComponent({
-              type: 'number',
-              setting: 'withdrawal.fee',
-              placeholder: '0'
-            })}
-          </div>
-          
-          <div className="Form-group">
-            {this.submitButton()}
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   private renderPlatformManagement(): Mithril.Children {
     return (

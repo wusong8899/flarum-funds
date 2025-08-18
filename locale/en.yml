@@ -2,9 +2,6 @@ withdrawal:
   admin:
     page:
       title: Withdrawal Management
-    settings:
-      title: Settings
-      fee: Default Withdrawal Fee
     platforms:
       title: Withdrawal Platforms
       name: Platform Name

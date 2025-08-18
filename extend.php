@@ -28,9 +28,6 @@ return [
     (new Extend\Model(Flarum\User\User::class))
         ->hasMany('withdrawalRequests', Model\WithdrawalRequest::class),
 
-    (new Extend\Settings())
-        ->default('withdrawal.fee', 0)
-        ->serializeToForum('withdrawal.fee', 'withdrawal.fee', 'floatval'),
 
     (new Extend\ApiSerializer(\Flarum\Api\Serializer\UserSerializer::class))
         ->attributes(Serializer\UserWithdrawalSerializer::class),
