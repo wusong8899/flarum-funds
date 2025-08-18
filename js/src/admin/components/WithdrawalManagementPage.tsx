@@ -239,14 +239,15 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   }
 
   private renderPlatform(platform: WithdrawalPlatform): Mithril.Children {
-    const platformId = platform.id();
-    const platformName = platform.name ? platform.name() : 'Unknown Platform';
-    const symbol = platform.symbol ? platform.symbol() : 'N/A';
-    const minAmount = platform.minAmount ? platform.minAmount() : 'N/A';
-    const maxAmount = platform.maxAmount ? platform.maxAmount() : 'N/A';
-    const fee = platform.fee ? platform.fee() : 'N/A';
-    const isActive = platform.isActive ? platform.isActive() : false;
-    const createdDate = platform.createdAt ? platform.createdAt() : null;
+    // Handle both Model instances and plain objects
+    const platformId = typeof platform.id === 'function' ? platform.id() : platform.id;
+    const platformName = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
+    const symbol = (typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol) || 'N/A';
+    const minAmount = (typeof platform.minAmount === 'function' ? platform.minAmount() : platform.attributes?.minAmount) || 'N/A';
+    const maxAmount = (typeof platform.maxAmount === 'function' ? platform.maxAmount() : platform.attributes?.maxAmount) || 'N/A';
+    const fee = (typeof platform.fee === 'function' ? platform.fee() : platform.attributes?.fee) || 'N/A';
+    const isActive = (typeof platform.isActive === 'function' ? platform.isActive() : platform.attributes?.isActive) ?? false;
+    const createdDate = (typeof platform.createdAt === 'function' ? platform.createdAt() : platform.attributes?.createdAt) || null;
     
     let dateDisplay: Mithril.Children = 'N/A';
     if (createdDate) {
@@ -327,37 +328,41 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   }
 
   private renderRequest(request: WithdrawalRequest, showActions: boolean): Mithril.Children {
-    const requestId = request.id();
-    const amount = request.amount ? request.amount() : 0;
-    const status = request.status ? request.status() : 'pending';
-    const accountDetails = request.accountDetails ? request.accountDetails() : 'N/A';
-    const createdDate = request.createdAt ? request.createdAt() : null;
+    // Handle both Model instances and plain objects
+    const requestId = typeof request.id === 'function' ? request.id() : request.id;
+    const amount = (typeof request.amount === 'function' ? request.amount() : request.attributes?.amount) || 0;
+    const status = (typeof request.status === 'function' ? request.status() : request.attributes?.status) || 'pending';
+    const accountDetails = (typeof request.accountDetails === 'function' ? request.accountDetails() : request.attributes?.accountDetails) || 'N/A';
+    const createdDate = (typeof request.createdAt === 'function' ? request.createdAt() : request.attributes?.createdAt) || null;
     
     // Get user info
     let userName = 'Unknown User';
-    if (request.user) {
+    if (typeof request.user === 'function') {
       const userData = request.user();
-      if (userData && userData.displayName) {
+      if (userData && typeof userData.displayName === 'function') {
         userName = userData.displayName();
       }
     } else if (request.relationships?.user?.data?.id) {
       const user = this.users[request.relationships.user.data.id];
-      if (user && user.displayName) {
-        userName = user.displayName();
+      if (user && user.attributes?.displayName) {
+        userName = user.attributes.displayName;
       }
     }
     
     // Get platform info
     let platformName = 'Unknown Platform';
-    if (request.platform) {
+    if (typeof request.platform === 'function') {
       const platformData = request.platform();
-      if (platformData && platformData.name) {
+      if (platformData && typeof platformData.name === 'function') {
         platformName = platformData.name();
       }
     } else if (request.relationships?.platform?.data?.id) {
-      const platform = this.platforms.find(p => p.id() == request.relationships.platform.data.id);
-      if (platform && platform.name) {
-        platformName = platform.name();
+      const platform = this.platforms.find(p => {
+        const pId = typeof p.id === 'function' ? p.id() : p.id;
+        return pId == request.relationships.platform.data.id;
+      });
+      if (platform) {
+        platformName = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
       }
     }
     
@@ -474,13 +479,14 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   }
 
   private deletePlatform(platform: WithdrawalPlatform): void {
-    const platformName = platform.name ? platform.name() : 'Unknown Platform';
+    const platformName = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
     
     app.modal.show(ConfirmDeleteModal, {
       platformName: platformName,
       onConfirm: async () => {
         try {
-          const record = app.store.getById('withdrawal-platforms', platform.id());
+          const platformId = typeof platform.id === 'function' ? platform.id() : platform.id;
+          const record = app.store.getById('withdrawal-platforms', platformId);
           if (record) {
             await record.delete();
             await this.loadPlatforms();
@@ -503,7 +509,8 @@ export default class WithdrawalManagementPage extends ExtensionPage {
 
   private async updateRequestStatus(request: WithdrawalRequest, status: string): Promise<void> {
     try {
-      const record = app.store.getById('withdrawal-requests', request.id);
+      const requestId = typeof request.id === 'function' ? request.id() : request.id;
+      const record = app.store.getById('withdrawal-requests', requestId);
       if (record) {
         await record.save({ status });
         await this.loadRequests();
