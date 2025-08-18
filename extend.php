@@ -20,6 +20,7 @@ return [
     (new Extend\Routes('api'))
         ->get('/withdrawal-platforms', 'withdrawal.platforms.index', Controller\ListWithdrawalPlatformsController::class)
         ->post('/withdrawal-platforms', 'withdrawal.platforms.create', Controller\CreateWithdrawalPlatformController::class)
+        ->patch('/withdrawal-platforms/{id}', 'withdrawal.platforms.update', Controller\UpdateWithdrawalPlatformController::class)
         ->delete('/withdrawal-platforms/{id}', 'withdrawal.platforms.delete', Controller\DeleteWithdrawalPlatformController::class)
         ->get('/withdrawal-requests', 'withdrawal.requests.index', Controller\ListWithdrawalRequestsController::class)
         ->post('/withdrawal-requests', 'withdrawal.requests.create', Controller\CreateWithdrawalRequestController::class)
@@ -36,7 +37,7 @@ return [
     // Register API serializers for our models
     (new Extend\ApiController(\Flarum\Api\Controller\ListUsersController::class))
         ->addInclude(['withdrawalRequests', 'withdrawalRequests.platform']),
-        
+
     (new Extend\ApiController(\Flarum\Api\Controller\ShowUserController::class))
         ->addInclude(['withdrawalRequests', 'withdrawalRequests.platform']),
 ];

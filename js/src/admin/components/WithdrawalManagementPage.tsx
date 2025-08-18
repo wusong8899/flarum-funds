@@ -62,7 +62,6 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   private newPlatformFee = Stream('');
   private newPlatformIconUrl = Stream('');
   private newPlatformIconClass = Stream('');
-  private newPlatformIsActive = Stream(true);
   private submittingPlatform = false;
 
   oninit(vnode: Mithril.VnodeDOM) {
@@ -179,19 +178,6 @@ export default class WithdrawalManagementPage extends ExtensionPage {
               </div>
             </div>
             
-            <div className="Form-row">
-              <div className="Form-col">
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={this.newPlatformIsActive()}
-                    onchange={(e: Event) => this.newPlatformIsActive((e.target as HTMLInputElement).checked)}
-                  />
-                  {app.translator.trans('withdrawal.admin.platforms.is_active')}
-                </label>
-              </div>
-            </div>
-            
             <div className="Form-group">
               <Button
                 className="Button Button--primary"
@@ -241,11 +227,11 @@ export default class WithdrawalManagementPage extends ExtensionPage {
       <div key={platformId} className="WithdrawalPlatform">
         <div className="WithdrawalPlatform-info">
           <div className="WithdrawalPlatform-primary">
-            <span className="WithdrawalPlatform-name">{platformName}</span>
-            <span className={`WithdrawalPlatform-symbol ${symbol}`}>{symbol}</span>
             <span className={`WithdrawalPlatform-status ${isActive ? 'active' : 'inactive'}`}>
               {isActive ? '🟢' : '🔴'}
             </span>
+            <span className="WithdrawalPlatform-name">{platformName}</span>
+            <span className={`WithdrawalPlatform-symbol ${symbol}`}>{symbol}</span>
           </div>
           <div className="WithdrawalPlatform-details">
             <span className="WithdrawalPlatform-amounts">
@@ -254,12 +240,20 @@ export default class WithdrawalManagementPage extends ExtensionPage {
             <span className="WithdrawalPlatform-date">{dateDisplay}</span>
           </div>
         </div>
-        <Button
-          className="Button Button--danger"
-          onclick={() => this.deletePlatform(platform)}
-        >
-          {app.translator.trans('withdrawal.admin.platforms.delete')}
-        </Button>
+        <div className="WithdrawalPlatform-actions">
+          <Button
+            className={`Button ${isActive ? 'Button--secondary' : 'Button--primary'}`}
+            onclick={() => this.togglePlatformStatus(platform)}
+          >
+            {app.translator.trans(`withdrawal.admin.platforms.${isActive ? 'disable' : 'enable'}`)}
+          </Button>
+          <Button
+            className="Button Button--danger"
+            onclick={() => this.deletePlatform(platform)}
+          >
+            {app.translator.trans('withdrawal.admin.platforms.delete')}
+          </Button>
+        </div>
       </div>
     );
   }
@@ -364,7 +358,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
             <strong>{userName}</strong>
           </div>
           <div className="WithdrawalRequest-details">
-            <span className="amount">{amount} ￥元</span>
+            <span className="amount">{amount}</span>
             <span className="platform">{platformName}</span>
             <span className="symbol">{platformSymbol}</span>
             <span className="date">{dateDisplay}</span>
@@ -431,7 +425,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
               fee: parseFloat(this.newPlatformFee() || '0'),
               iconUrl: this.newPlatformIconUrl() || null,
               iconClass: this.newPlatformIconClass() || null,
-              isActive: this.newPlatformIsActive()
+              isActive: true
             }
           }
         }
@@ -449,7 +443,6 @@ export default class WithdrawalManagementPage extends ExtensionPage {
       this.newPlatformFee('');
       this.newPlatformIconUrl('');
       this.newPlatformIconClass('');
-      this.newPlatformIsActive(true);
       
       await this.loadPlatforms();
       
@@ -466,6 +459,30 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     } finally {
       this.submittingPlatform = false;
       m.redraw();
+    }
+  }
+
+  private async togglePlatformStatus(platform: WithdrawalPlatform): Promise<void> {
+    try {
+      const platformId = typeof platform.id === 'function' ? platform.id() : platform.id;
+      const currentStatus = (typeof platform.isActive === 'function' ? platform.isActive() : platform.attributes?.isActive) ?? false;
+      const record = app.store.getById('withdrawal-platforms', platformId);
+      
+      if (record) {
+        await record.save({ isActive: !currentStatus });
+        await this.loadPlatforms();
+        
+        app.alerts.show(
+          { type: 'success', dismissible: true },
+          app.translator.trans(`withdrawal.admin.platforms.${!currentStatus ? 'enable' : 'disable'}_success`)
+        );
+      }
+    } catch (error) {
+      console.error('Error toggling platform status:', error);
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        app.translator.trans('withdrawal.admin.platforms.toggle_error')
+      );
     }
   }
 
@@ -536,7 +553,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     }
     
     app.modal.show(ConfirmDeleteRequestModal, {
-      requestInfo: `${userName} - ${amount} ￥元`,
+      requestInfo: `${userName} - ${amount}`,
       onConfirm: async () => {
         try {
           const record = app.store.getById('withdrawal-requests', requestId);

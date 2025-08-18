@@ -30,6 +30,11 @@ withdrawal:
       add_error: Failed to add platform
       delete_success: Platform deleted successfully
       delete_error: Failed to delete platform
+      enable: Enable
+      disable: Disable
+      enable_success: Platform enabled successfully
+      disable_success: Platform disabled successfully
+      toggle_error: Failed to toggle platform status
     requests:
       title: Withdrawal Requests
       pending_title: Pending Requests

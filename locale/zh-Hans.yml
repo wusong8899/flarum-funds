@@ -30,6 +30,11 @@ withdrawal:
       add_error: 添加平台失败
       delete_success: 平台删除成功
       delete_error: 删除平台失败
+      enable: 启用
+      disable: 禁用
+      enable_success: 平台已启用
+      disable_success: 平台已禁用
+      toggle_error: 切换平台状态失败
     requests:
       title: 提款申请
       pending_title: 待审核申请
