@@ -161,13 +161,31 @@ export default class WithdrawalPage extends Page {
   }
 
   private renderRequest(request: WithdrawalRequest): Mithril.Children {
-    const platform = this.platforms.find(p => p.id == request.relationships.platform.data.id);
-    const statusClass = `status-${request.attributes.status}`;
+    const requestId = request.id();
+    const amount = request.amount ? request.amount() : 0;
+    const status = request.status ? request.status() : 'pending';
+    const createdAt = request.createdAt ? request.createdAt() : null;
+    
+    // Find platform
+    let platformName = 'Unknown Platform';
+    if (request.platform) {
+      const platformData = request.platform();
+      if (platformData && platformData.name) {
+        platformName = platformData.name();
+      }
+    } else if (request.relationships?.platform?.data?.id) {
+      const platform = this.platforms.find(p => p.id() == request.relationships.platform.data.id);
+      if (platform && platform.name) {
+        platformName = platform.name();
+      }
+    }
+    
+    const statusClass = `status-${status}`;
     
     let dateDisplay: Mithril.Children = 'N/A';
-    if (request.attributes.createdAt && request.attributes.createdAt !== null) {
+    if (createdAt) {
       try {
-        dateDisplay = humanTime(new Date(request.attributes.createdAt));
+        dateDisplay = humanTime(createdAt);
       } catch (e) {
         console.error('Error formatting date:', e);
         dateDisplay = 'Invalid Date';
@@ -175,15 +193,15 @@ export default class WithdrawalPage extends Page {
     }
 
     return (
-      <div key={request.id} className={`WithdrawalRequest ${statusClass}`}>
+      <div key={requestId} className={`WithdrawalRequest ${statusClass}`}>
         <div className="WithdrawalRequest-info">
-          <span className="WithdrawalRequest-amount">${request.attributes.amount}</span>
-          <span className="WithdrawalRequest-platform">{platform?.attributes.name}</span>
+          <span className="WithdrawalRequest-amount">${amount}</span>
+          <span className="WithdrawalRequest-platform">{platformName}</span>
           <span className="WithdrawalRequest-date">{dateDisplay}</span>
         </div>
         <div className="WithdrawalRequest-status">
-          <span className={`Badge Badge--${request.attributes.status}`}>
-            {app.translator.trans(`withdrawal.forum.status.${request.attributes.status}`)}
+          <span className={`Badge Badge--${status}`}>
+            {app.translator.trans(`withdrawal.forum.status.${status}`)}
           </span>
         </div>
       </div>
@@ -253,7 +271,13 @@ export default class WithdrawalPage extends Page {
     };
 
     this.platforms.forEach(platform => {
-      options[platform.id.toString()] = platform.attributes.name;
+      if (platform && platform.name) {
+        const id = platform.id();
+        const name = platform.name();
+        if (id && name) {
+          options[id.toString()] = name;
+        }
+      }
     });
 
     return options;

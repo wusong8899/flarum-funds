@@ -21,7 +21,7 @@ class DeleteWithdrawalPlatformController extends AbstractDeleteController
 
         $id = Arr::get($request->getQueryParams(), 'id');
         $platform = WithdrawalPlatform::findOrFail($id);
-        
+
         $platform->delete();
     }
 }

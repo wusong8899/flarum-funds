@@ -150,12 +150,14 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   }
 
   private renderPlatform(platform: WithdrawalPlatform): Mithril.Children {
-    const createdDate = platform.attributes?.createdAt || platform.attributes?.created_at;
-    let dateDisplay: Mithril.Children = 'N/A';
+    const platformId = platform.id();
+    const platformName = platform.name ? platform.name() : 'Unknown Platform';
+    const createdDate = platform.createdAt ? platform.createdAt() : null;
     
-    if (createdDate && createdDate !== null) {
+    let dateDisplay: Mithril.Children = 'N/A';
+    if (createdDate) {
       try {
-        dateDisplay = humanTime(new Date(createdDate));
+        dateDisplay = humanTime(createdDate);
       } catch (e) {
         console.error('Error formatting date:', e);
         dateDisplay = 'Invalid Date';
@@ -163,8 +165,8 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     }
     
     return (
-      <div key={platform.id} className="WithdrawalPlatform">
-        <span className="WithdrawalPlatform-name">{platform.attributes?.name || 'Unknown Platform'}</span>
+      <div key={platformId} className="WithdrawalPlatform">
+        <span className="WithdrawalPlatform-name">{platformName}</span>
         <span className="WithdrawalPlatform-date">{dateDisplay}</span>
         <Button
           className="Button Button--danger"
@@ -177,8 +179,8 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   }
 
   private renderRequestManagement(): Mithril.Children {
-    const pendingRequests = this.requests.filter(r => r.attributes.status === 'pending');
-    const processedRequests = this.requests.filter(r => r.attributes.status !== 'pending');
+    const pendingRequests = this.requests.filter(r => r.status ? r.status() === 'pending' : false);
+    const processedRequests = this.requests.filter(r => r.status ? r.status() !== 'pending' : true);
 
     return (
       <div className="WithdrawalManagementPage-section">
@@ -206,18 +208,46 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   }
 
   private renderRequest(request: WithdrawalRequest, showActions: boolean): Mithril.Children {
-    const userId = request.relationships?.user?.data?.id;
-    const platformId = request.relationships?.platform?.data?.id;
-    const user = userId ? this.users[userId] : null;
-    const platform = platformId ? this.platforms.find(p => p.id == platformId) : null;
-    const statusClass = `status-${request.attributes.status}`;
-    const createdDate = request.attributes.createdAt || request.attributes.created_at;
-    const accountDetails = request.attributes.accountDetails || request.attributes.account_details;
+    const requestId = request.id();
+    const amount = request.amount ? request.amount() : 0;
+    const status = request.status ? request.status() : 'pending';
+    const accountDetails = request.accountDetails ? request.accountDetails() : 'N/A';
+    const createdDate = request.createdAt ? request.createdAt() : null;
+    
+    // Get user info
+    let userName = 'Unknown User';
+    if (request.user) {
+      const userData = request.user();
+      if (userData && userData.displayName) {
+        userName = userData.displayName();
+      }
+    } else if (request.relationships?.user?.data?.id) {
+      const user = this.users[request.relationships.user.data.id];
+      if (user && user.displayName) {
+        userName = user.displayName();
+      }
+    }
+    
+    // Get platform info
+    let platformName = 'Unknown Platform';
+    if (request.platform) {
+      const platformData = request.platform();
+      if (platformData && platformData.name) {
+        platformName = platformData.name();
+      }
+    } else if (request.relationships?.platform?.data?.id) {
+      const platform = this.platforms.find(p => p.id() == request.relationships.platform.data.id);
+      if (platform && platform.name) {
+        platformName = platform.name();
+      }
+    }
+    
+    const statusClass = `status-${status}`;
     
     let dateDisplay: Mithril.Children = 'N/A';
-    if (createdDate && createdDate !== null) {
+    if (createdDate) {
       try {
-        dateDisplay = humanTime(new Date(createdDate));
+        dateDisplay = humanTime(createdDate);
       } catch (e) {
         console.error('Error formatting request date:', e);
         dateDisplay = 'Invalid Date';
@@ -225,23 +255,23 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     }
 
     return (
-      <div key={request.id} className={`WithdrawalRequest ${statusClass}`}>
+      <div key={requestId} className={`WithdrawalRequest ${statusClass}`}>
         <div className="WithdrawalRequest-info">
           <div className="WithdrawalRequest-user">
-            <strong>{user?.attributes?.displayName || 'Unknown User'}</strong>
+            <strong>{userName}</strong>
           </div>
           <div className="WithdrawalRequest-details">
-            <span className="amount">${request.attributes.amount}</span>
-            <span className="platform">{platform?.attributes?.name || 'Unknown Platform'}</span>
+            <span className="amount">${amount}</span>
+            <span className="platform">{platformName}</span>
             <span className="date">{dateDisplay}</span>
           </div>
           <div className="WithdrawalRequest-account">
             <strong>{app.translator.trans('withdrawal.admin.requests.account_details')}:</strong>
-            <span>{accountDetails || 'N/A'}</span>
+            <span>{accountDetails}</span>
           </div>
           <div className="WithdrawalRequest-status">
-            <span className={`Badge Badge--${request.attributes.status}`}>
-              {app.translator.trans(`withdrawal.admin.requests.status.${request.attributes.status}`)}
+            <span className={`Badge Badge--${status}`}>
+              {app.translator.trans(`withdrawal.admin.requests.status.${status}`)}
             </span>
           </div>
         </div>
@@ -309,13 +339,13 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   }
 
   private async deletePlatform(platform: WithdrawalPlatform): Promise<void> {
-    const platformName = platform.attributes?.name || 'Unknown Platform';
+    const platformName = platform.name ? platform.name() : 'Unknown Platform';
     if (!confirm(app.translator.trans('withdrawal.admin.platforms.delete_confirm', { name: platformName }))) {
       return;
     }
 
     try {
-      const record = app.store.getById('withdrawal-platforms', platform.id);
+      const record = app.store.getById('withdrawal-platforms', platform.id());
       if (record) {
         await record.delete();
         await this.loadPlatforms();
