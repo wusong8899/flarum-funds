@@ -29,11 +29,7 @@ return [
         ->hasMany('withdrawalRequests', Model\WithdrawalRequest::class),
 
     (new Extend\Settings())
-        ->default('withdrawal.min_amount', 0)
-        ->default('withdrawal.max_amount', 10000)
         ->default('withdrawal.fee', 0)
-        ->serializeToForum('withdrawal.minAmount', 'withdrawal.min_amount', 'floatval')
-        ->serializeToForum('withdrawal.maxAmount', 'withdrawal.max_amount', 'floatval')
         ->serializeToForum('withdrawal.fee', 'withdrawal.fee', 'floatval'),
 
     (new Extend\ApiSerializer(\Flarum\Api\Serializer\UserSerializer::class))

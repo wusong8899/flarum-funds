@@ -4,7 +4,6 @@ namespace wusong8899\Withdrawal\Api\Controller;
 
 use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Http\RequestUtil;
-use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\User\Exception\PermissionDeniedException;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
@@ -12,19 +11,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use wusong8899\Withdrawal\Api\Serializer\WithdrawalRequestSerializer;
 use wusong8899\Withdrawal\Model\WithdrawalRequest;
+use wusong8899\Withdrawal\Model\WithdrawalPlatform;
 
 class CreateWithdrawalRequestController extends AbstractCreateController
 {
     public $serializer = WithdrawalRequestSerializer::class;
 
     public $include = ['user', 'platform'];
-
-    protected $settings;
-
-    public function __construct(SettingsRepositoryInterface $settings)
-    {
-        $this->settings = $settings;
-    }
 
     protected function data(ServerRequestInterface $request, Document $document)
     {
@@ -40,12 +33,28 @@ class CreateWithdrawalRequestController extends AbstractCreateController
         $platformId = (int) Arr::get($attributes, 'platformId');
         $accountDetails = Arr::get($attributes, 'accountDetails');
 
-        $minAmount = (float) $this->settings->get('withdrawal.min_amount', 0);
-        $maxAmount = (float) $this->settings->get('withdrawal.max_amount', 10000);
+        // Find the withdrawal platform
+        $platform = WithdrawalPlatform::where('id', $platformId)->first();
+        
+        if (!$platform) {
+            throw ValidationException::withMessages([
+                'platformId' => 'Selected platform does not exist'
+            ]);
+        }
+
+        if (!$platform->is_active) {
+            throw ValidationException::withMessages([
+                'platformId' => 'Selected platform is not active'
+            ]);
+        }
+
+        // Use platform-specific limits
+        $minAmount = (float) $platform->min_amount;
+        $maxAmount = (float) $platform->max_amount;
 
         if ($amount < $minAmount || $amount > $maxAmount) {
             throw ValidationException::withMessages([
-                'amount' => "Amount must be between {$minAmount} and {$maxAmount}"
+                'amount' => "Amount must be between {$minAmount} and {$maxAmount} for {$platform->name}"
             ]);
         }
 

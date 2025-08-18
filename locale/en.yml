@@ -4,9 +4,7 @@ withdrawal:
       title: Withdrawal Management
     settings:
       title: Settings
-      min_amount: Minimum Withdrawal Amount
-      max_amount: Maximum Withdrawal Amount
-      fee: Withdrawal Fee
+      fee: Default Withdrawal Fee
     platforms:
       title: Withdrawal Platforms
       name: Platform Name

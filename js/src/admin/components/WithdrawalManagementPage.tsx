@@ -92,25 +92,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     return (
       <div className="WithdrawalManagementPage-section">
         <h3>{app.translator.trans('withdrawal.admin.settings.title')}</h3>
-        <div className="Form">
-          <div className="Form-group">
-            <label>{app.translator.trans('withdrawal.admin.settings.min_amount')}</label>
-            {this.buildSettingComponent({
-              type: 'number',
-              setting: 'withdrawal.min_amount',
-              placeholder: '0'
-            })}
-          </div>
-          
-          <div className="Form-group">
-            <label>{app.translator.trans('withdrawal.admin.settings.max_amount')}</label>
-            {this.buildSettingComponent({
-              type: 'number',
-              setting: 'withdrawal.max_amount',
-              placeholder: '10000'
-            })}
-          </div>
-          
+        <div className="Form">          
           <div className="Form-group">
             <label>{app.translator.trans('withdrawal.admin.settings.fee')}</label>
             {this.buildSettingComponent({

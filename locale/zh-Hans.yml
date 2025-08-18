@@ -4,9 +4,7 @@ withdrawal:
       title: 提款管理
     settings:
       title: 设置
-      min_amount: 最小提款金额
-      max_amount: 最大提款金额
-      fee: 提款手续费
+      fee: 默认提款手续费
     platforms:
       title: 提款平台
       name: 平台名称
