@@ -239,7 +239,14 @@ export default class WithdrawalPage extends Page {
                       (request.attributes ? request.attributes.platformId : request.platformId) ||
                       (request.relationships?.platform?.data?.id);
     
-    const platform = this.platforms.find(p => getId(p) === platformId);
+    // Convert both to strings for comparison since API might return strings
+    const platformIdStr = String(platformId);
+    const platform = this.platforms.find(p => {
+      const pId = getId(p);
+      return String(pId) === platformIdStr;
+    });
+    
+    console.log('Looking for platform with ID:', platformIdStr, 'Available platforms:', this.platforms.map(p => ({ id: getId(p), name: getAttr(p, 'name') })));
     
     const status = getAttr(request, 'status') || 'pending';
     const statusClass = this.getStatusClass(status);
