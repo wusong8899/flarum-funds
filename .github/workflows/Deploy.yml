@@ -65,7 +65,3 @@ jobs:
             sudo -u www php flarum migrate
             sudo -u www php flarum cache:clear
             sudo -u www php flarum assets:publish
-
-            chown -R www:www .
-            chmod -R 755 .
-            chmod -R 775 storage/ public/assets/
