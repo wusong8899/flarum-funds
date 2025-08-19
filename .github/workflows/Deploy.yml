@@ -66,7 +66,6 @@ jobs:
             sudo -u www php flarum cache:clear
             sudo -u www php flarum assets:publish
 
-            find . -type f -name "*.php" -exec chmod 644 {} \;
-            find . -type d -exec chmod 755 {} \;
-            chmod -R 775 storage/ public/assets/
             chown -R www:www .
+            chmod -R 755 .
+            chmod -R 775 storage/ public/assets/
