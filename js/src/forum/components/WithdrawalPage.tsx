@@ -34,6 +34,15 @@ interface WithdrawalRequest {
   };
 }
 
+// Helper functions moved to outer scope to avoid recreating on every call
+const getId = (obj: any) => typeof obj.id === 'function' ? obj.id() : obj.id;
+const getAttr = (obj: any, attr: string) => {
+  if (typeof obj[attr] === 'function') {
+    return obj[attr]();
+  }
+  return obj.attributes ? obj.attributes[attr] : obj[attr];
+};
+
 export default class WithdrawalPage extends Page {
   private platforms: WithdrawalPlatform[] = [];
   private requests: WithdrawalRequest[] = [];
@@ -69,11 +78,10 @@ export default class WithdrawalPage extends Page {
       );
     }
 
-    // Check if no platforms are available
-    // Accept any truthy platform object - this handles both Model instances and plain objects
+    // Check if no platforms are available for the withdrawal tab
     const validPlatforms = (this.platforms || []).filter(platform => !!platform);
 
-    if (validPlatforms.length === 0) {
+    if (validPlatforms.length === 0 && this.activeTab() === 'withdrawal') {
       return (
         <div className="WithdrawalPage">
           <div className="WithdrawalPage-modal">
@@ -182,24 +190,66 @@ export default class WithdrawalPage extends Page {
       );
     }
 
+    // Filter out any null/undefined requests
+    const validRequests = this.requests.filter(request => {
+      if (!request) {
+        console.warn('Found null/undefined request in requests array');
+        return false;
+      }
+      return true;
+    });
+
+    if (validRequests.length === 0) {
+      return (
+        <div className="WithdrawalPage-emptyState">
+          <div className="WithdrawalPage-emptyIcon">
+            {icon('fas fa-history')}
+          </div>
+          <h3 className="WithdrawalPage-emptyTitle">
+            {app.translator.trans('withdrawal.forum.history.empty')}
+          </h3>
+          <p className="WithdrawalPage-emptyDescription">
+            {app.translator.trans('withdrawal.forum.history.empty_description')}
+          </p>
+        </div>
+      );
+    }
+
     return (
       <div className="WithdrawalPage-historyList">
-        {this.requests.map(request => this.renderHistoryItem(request))}
+        {validRequests.map(request => {
+          try {
+            return this.renderHistoryItem(request);
+          } catch (error) {
+            console.error('Error rendering history item:', error, request);
+            return null;
+          }
+        }).filter(item => item !== null)}
       </div>
     );
   }
 
   private renderHistoryItem(request: WithdrawalRequest): Mithril.Children {
-    const platform = this.platforms.find(p => 
-      (typeof p.id === 'function' ? p.id() : p.id) === request.relationships?.platform?.data?.id
-    );
+    // Add null checks and handle both Model instances and plain objects
+    if (!request) {
+      return null;
+    }
+
+    const platformId = typeof request.platformId === 'function' ? request.platformId() : 
+                      (request.attributes ? request.attributes.platformId : request.platformId) ||
+                      (request.relationships?.platform?.data?.id);
     
-    const status = request.attributes.status;
+    const platform = this.platforms.find(p => getId(p) === platformId);
+    
+    const status = getAttr(request, 'status') || 'pending';
     const statusClass = this.getStatusClass(status);
-    const date = new Date(request.attributes.createdAt);
+    const createdAt = getAttr(request, 'createdAt');
+    const date = createdAt ? new Date(createdAt) : new Date();
+    const amount = getAttr(request, 'amount') || 0;
+    const accountDetails = getAttr(request, 'accountDetails') || '';
 
     return (
-      <div key={request.id} className="WithdrawalPage-historyItem">
+      <div key={getId(request)} className="WithdrawalPage-historyItem">
         <div className="WithdrawalPage-historyHeader">
           <div className="WithdrawalPage-historyPlatform">
             <div className="WithdrawalPage-platformIcon">
@@ -224,7 +274,7 @@ export default class WithdrawalPage extends Page {
               {app.translator.trans('withdrawal.forum.history.amount')}:
             </span>
             <span className="WithdrawalPage-historyValue">
-              {request.attributes.amount} {platform ? (typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol) : ''}
+              {amount} {platform ? (typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol) : ''}
             </span>
           </div>
           <div className="WithdrawalPage-historyAddress">
@@ -232,7 +282,7 @@ export default class WithdrawalPage extends Page {
               {app.translator.trans('withdrawal.forum.history.address')}:
             </span>
             <span className="WithdrawalPage-historyValue">
-              {request.attributes.accountDetails}
+              {accountDetails}
             </span>
           </div>
         </div>
@@ -513,7 +563,6 @@ export default class WithdrawalPage extends Page {
     }
   }
 
-
   private async submit(): Promise<void> {
     if (!this.canSubmit()) return;
 
@@ -600,8 +649,11 @@ export default class WithdrawalPage extends Page {
 
   private async loadRequests(): Promise<void> {
     try {
+      console.log('Loading withdrawal requests...');
       const response = await app.store.find('withdrawal-requests');
+      console.log('Requests response:', response);
       this.requests = Array.isArray(response) ? response.filter(r => r !== null) : (response ? [response] : []);
+      console.log('Processed requests:', this.requests);
     } catch (error) {
       console.error('Error loading requests:', error);
       this.requests = [];
