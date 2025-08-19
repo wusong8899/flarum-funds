@@ -9,7 +9,6 @@ import SubmitButton from './SubmitButton';
 interface WithdrawalFormProps {
   platforms: WithdrawalPlatform[];
   formData: WithdrawalFormData;
-  userBalance: number;
   loadingBalance: boolean;
   submitting: boolean;
   onFormDataChange: (data: Partial<WithdrawalFormData>) => void;
@@ -22,7 +21,6 @@ export default class WithdrawalForm extends Component<WithdrawalFormProps> {
     const { 
       platforms, 
       formData, 
-      userBalance, 
       loadingBalance,
       submitting,
       onFormDataChange,
@@ -41,7 +39,6 @@ export default class WithdrawalForm extends Component<WithdrawalFormProps> {
       <AmountInput 
         amount={formData.amount}
         selectedPlatform={formData.selectedPlatform}
-        userBalance={userBalance}
         loadingBalance={loadingBalance}
         onAmountChange={(amount) => onFormDataChange({ amount })}
         onFillAllAmount={onFillAllAmount}

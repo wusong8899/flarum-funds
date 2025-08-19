@@ -49,9 +49,6 @@ export default class PlatformSelector extends Component<PlatformSelectorProps, P
                 <div className="WithdrawalPage-platformName">
                   {this.getPlatformName(selectedPlatform)}
                 </div>
-                <div className="WithdrawalPage-platformFlow">
-                  {app.translator.trans('withdrawal.forum.remaining_flow', { amount: '0.00000000' })}
-                </div>
               </div>
             </div>
           </div>

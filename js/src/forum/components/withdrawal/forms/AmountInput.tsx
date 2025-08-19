@@ -10,7 +10,6 @@ import { DEFAULTS, ICONS } from '../utils/constants';
 interface AmountInputProps {
   amount: string;
   selectedPlatform: WithdrawalPlatform | null;
-  userBalance: number;
   loadingBalance: boolean;
   onAmountChange: (amount: string) => void;
   onFillAllAmount: () => void;
@@ -21,7 +20,6 @@ export default class AmountInput extends Component<AmountInputProps> {
     const { 
       amount, 
       selectedPlatform, 
-      userBalance, 
       loadingBalance,
       onAmountChange,
       onFillAllAmount 
@@ -34,15 +32,8 @@ export default class AmountInput extends Component<AmountInputProps> {
     return (
       <div className="WithdrawalPage-amountSection">
         <div className="WithdrawalPage-formGroup">
-          <div className="WithdrawalPage-balanceHeader">
-            <span className="WithdrawalPage-label">
-              {app.translator.trans('withdrawal.forum.form.amount')}
-            </span>
-            <span className="WithdrawalPage-balance">
-              {app.translator.trans('withdrawal.forum.available_balance', { 
-                amount: loadingBalance ? '0.00000000' : userBalance.toFixed(DEFAULTS.BALANCE_PRECISION) 
-              })}
-            </span>
+          <div className="WithdrawalPage-label">
+            {app.translator.trans('withdrawal.forum.form.amount')}
           </div>
 
           <div className="WithdrawalPage-amountInput">

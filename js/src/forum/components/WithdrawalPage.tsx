@@ -109,7 +109,6 @@ export default class WithdrawalPage extends Page {
       <WithdrawalForm
         platforms={this.state.platforms}
         formData={this.getFormDataForComponent()}
-        userBalance={this.state.userBalance}
         loadingBalance={this.state.loadingBalance}
         submitting={this.state.submitting}
         onFormDataChange={this.handleFormDataChange.bind(this)}
