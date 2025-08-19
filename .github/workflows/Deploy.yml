@@ -24,23 +24,40 @@ jobs:
           REPO_NAME="${{ github.repository }}"
           COMMIT_SHA="${{ github.sha }}"
 
-          for i in {1..20}; do
+          echo "Repository: $REPO_NAME"
+          echo "Target commit: ${COMMIT_SHA:0:8}"
+
+          for i in {1..12}; do
             echo "检查第 $i 次..."
             
-            RESPONSE=$(curl -s "https://packagist.org/packages/${REPO_NAME}.json")
-            DEV_MAIN_REF=$(echo "$RESPONSE" | jq -r '.package.versions["dev-main"].source.reference // empty')
+            # 添加随机参数避免缓存，使用HEAD请求减少数据传输
+            CACHE_BUSTER=$(date +%s%N)
+            RESPONSE=$(curl -s -H "Cache-Control: no-cache" -H "Pragma: no-cache" \
+              "https://packagist.org/packages/${REPO_NAME}.json?t=${CACHE_BUSTER}")
             
-            if [[ "$DEV_MAIN_REF" == "$COMMIT_SHA" ]]; then
-              echo "✅ Packagist已同步最新版本!"
-              break
+            if [[ -n "$RESPONSE" && "$RESPONSE" != *"\"status\":404"* ]]; then
+              DEV_MAIN_REF=$(echo "$RESPONSE" | jq -r '.package.versions["dev-main"].source.reference // empty')
+              SYNC_TIME=$(echo "$RESPONSE" | jq -r '.package.versions["dev-main"].time // empty')
+              
+              echo "Packagist commit: ${DEV_MAIN_REF:0:8}"
+              echo "Sync time: $SYNC_TIME"
+              
+              if [[ "$DEV_MAIN_REF" == "$COMMIT_SHA" ]]; then
+                echo "✅ Packagist已同步最新版本!"
+                break
+              fi
+            else
+              echo "⚠️ 无法获取Packagist信息"
             fi
             
-            if [ $i -eq 20 ]; then
+            if [ $i -eq 12 ]; then
               echo "⚠️ Packagist同步超时，继续部署..."
+              echo "通常情况下Packagist会在几分钟内完成同步"
               break
             fi
             
-            sleep 30
+            echo "等待15秒后重试..."
+            sleep 15
           done
 
   # 部署到VPS
