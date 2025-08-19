@@ -144,16 +144,13 @@ export default class WithdrawalPage extends Page {
                 {selected ? this.renderPlatformIcon(selected) : icon('fas fa-bitcoin', { className: 'default-icon' })}
               </div>
               <div className="WithdrawalPage-platformDetails">
-                <div className="WithdrawalPage-platformSymbol">
-                  {selected ? ((typeof selected.symbol === 'function' ? selected.symbol() : selected.attributes?.symbol) || 'N/A') : 'N/A'}
+                <div className="WithdrawalPage-platformName">
+                  {selected ? (typeof selected.name === 'function' ? selected.name() : selected.attributes?.name) : '请选择平台'}
                 </div>
                 <div className="WithdrawalPage-platformFlow">
                   {app.translator.trans('withdrawal.forum.remaining_flow', { amount: '0.00000000' })}
                 </div>
               </div>
-            </div>
-            <div className="WithdrawalPage-platformName">
-              {selected ? (typeof selected.name === 'function' ? selected.name() : selected.attributes?.name) : 'No Platform Selected'}
             </div>
           </div>
           {icon('fas fa-chevron-down', { className: 'WithdrawalPage-dropdownIcon' })}
@@ -193,13 +190,8 @@ export default class WithdrawalPage extends Page {
             <div className="WithdrawalPage-platformIcon">
               {this.renderPlatformIcon(platform)}
             </div>
-            <div className="WithdrawalPage-platformDetails">
-              <div className="WithdrawalPage-platformSymbol">
-                {(typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol) || 'N/A'}
-              </div>
-              <div className="WithdrawalPage-platformName">
-                {typeof platform.name === 'function' ? platform.name() : platform.attributes?.name}
-              </div>
+            <div className="WithdrawalPage-platformName">
+              {typeof platform.name === 'function' ? platform.name() : platform.attributes?.name}
             </div>
           </div>
         ))}

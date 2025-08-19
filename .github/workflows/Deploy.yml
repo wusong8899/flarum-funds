@@ -1,0 +1,72 @@
+name: Deploy to VPS via Packagist
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "js/**"
+      - "less/**"
+      - "locale/**"
+      - "migrations/**"
+      - "composer.json"
+      - "composer.lock"
+      - "extend.php"
+
+jobs:
+  # 等待Packagist更新
+  wait-for-packagist:
+    runs-on: ubuntu-latest
+    name: Wait for Packagist Update
+    steps:
+      - name: Wait for Packagist to sync
+        run: |
+          REPO_NAME="${{ github.repository }}"
+          COMMIT_SHA="${{ github.sha }}"
+
+          for i in {1..20}; do
+            echo "检查第 $i 次..."
+            
+            RESPONSE=$(curl -s "https://packagist.org/packages/${REPO_NAME}.json")
+            DEV_MAIN_REF=$(echo "$RESPONSE" | jq -r '.package.versions["dev-main"].source.reference // empty')
+            
+            if [[ "$DEV_MAIN_REF" == "$COMMIT_SHA" ]]; then
+              echo "✅ Packagist已同步最新版本!"
+              break
+            fi
+            
+            if [ $i -eq 20 ]; then
+              echo "⚠️ Packagist同步超时，继续部署..."
+              break
+            fi
+            
+            sleep 30
+          done
+
+  # 部署到VPS
+  deploy:
+    needs: wait-for-packagist
+    runs-on: ubuntu-latest
+    name: Deploy to VPS
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          port: ${{ secrets.VPS_PORT }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+
+            cd /www/wwwroot/flarum
+
+            sudo -u www composer update --prefer-dist --no-plugins --no-dev -a --with-all-dependencies --no-interaction
+            sudo -u www php flarum migrate
+            sudo -u www php flarum cache:clear
+            sudo -u www php flarum assets:publish
+
+            find . -type f -name "*.php" -exec chmod 644 {} \;
+            find . -type d -exec chmod 755 {} \;
+            chmod -R 775 storage/ public/assets/
+            chown -R www:www .
