@@ -67,6 +67,7 @@ withdrawal:
       description: Submit a withdrawal request to transfer your funds to external platforms
     tabs:
       withdrawal: Withdrawal
+      history: History
     no_platforms: No withdrawal platforms available
     no_platforms_description: Please contact the administrator to configure withdrawal platforms.
     remaining_flow: "Remaining flow: {amount}"
@@ -97,6 +98,9 @@ withdrawal:
     history:
       title: Withdrawal History
       empty: No withdrawal requests yet
+      empty_description: You haven't made any withdrawal requests. Click the Withdrawal tab to submit your first request.
+      amount: Amount
+      address: Address
     status:
       pending: Pending
       approved: Approved

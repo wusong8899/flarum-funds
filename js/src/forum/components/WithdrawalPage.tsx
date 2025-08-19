@@ -42,6 +42,7 @@ export default class WithdrawalPage extends Page {
   private loadingBalance = true;
   private userBalance = 0;
   private showDropdown = false;
+  private activeTab = Stream('withdrawal'); // 'withdrawal' or 'history'
 
   private amount = Stream('');
   private selectedPlatform = Stream<WithdrawalPlatform | null>(null);
@@ -78,8 +79,17 @@ export default class WithdrawalPage extends Page {
           <div className="WithdrawalPage-modal">
             <div className="WithdrawalPage-header">
               <div className="WithdrawalPage-tabs">
-                <div className="WithdrawalPage-tab active">
+                <div 
+                  className={`WithdrawalPage-tab ${this.activeTab() === 'withdrawal' ? 'active' : ''}`}
+                  onclick={() => this.activeTab('withdrawal')}
+                >
                   {app.translator.trans('withdrawal.forum.tabs.withdrawal')}
+                </div>
+                <div 
+                  className={`WithdrawalPage-tab ${this.activeTab() === 'history' ? 'active' : ''}`}
+                  onclick={() => this.activeTab('history')}
+                >
+                  {app.translator.trans('withdrawal.forum.tabs.history')}
                 </div>
               </div>
               <button className="WithdrawalPage-close" onclick={() => app.history.back()}>
@@ -88,17 +98,19 @@ export default class WithdrawalPage extends Page {
             </div>
             
             <div className="WithdrawalPage-content">
-              <div className="WithdrawalPage-emptyState">
-                <div className="WithdrawalPage-emptyIcon">
-                  {icon('fas fa-coins')}
+              {this.activeTab() === 'withdrawal' ? (
+                <div className="WithdrawalPage-emptyState">
+                  <div className="WithdrawalPage-emptyIcon">
+                    {icon('fas fa-coins')}
+                  </div>
+                  <h3 className="WithdrawalPage-emptyTitle">
+                    {app.translator.trans('withdrawal.forum.no_platforms')}
+                  </h3>
+                  <p className="WithdrawalPage-emptyDescription">
+                    {app.translator.trans('withdrawal.forum.no_platforms_description')}
+                  </p>
                 </div>
-                <h3 className="WithdrawalPage-emptyTitle">
-                  {app.translator.trans('withdrawal.forum.no_platforms')}
-                </h3>
-                <p className="WithdrawalPage-emptyDescription">
-                  {app.translator.trans('withdrawal.forum.no_platforms_description')}
-                </p>
-              </div>
+              ) : this.renderHistoryList()}
             </div>
           </div>
         </div>
@@ -110,8 +122,17 @@ export default class WithdrawalPage extends Page {
         <div className="WithdrawalPage-modal">
           <div className="WithdrawalPage-header">
             <div className="WithdrawalPage-tabs">
-              <div className="WithdrawalPage-tab active">
+              <div 
+                className={`WithdrawalPage-tab ${this.activeTab() === 'withdrawal' ? 'active' : ''}`}
+                onclick={() => this.activeTab('withdrawal')}
+              >
                 {app.translator.trans('withdrawal.forum.tabs.withdrawal')}
+              </div>
+              <div 
+                className={`WithdrawalPage-tab ${this.activeTab() === 'history' ? 'active' : ''}`}
+                onclick={() => this.activeTab('history')}
+              >
+                {app.translator.trans('withdrawal.forum.tabs.history')}
               </div>
             </div>
             <button className="WithdrawalPage-close" onclick={() => window.history.back()}>
@@ -120,16 +141,116 @@ export default class WithdrawalPage extends Page {
           </div>
 
           <div className="WithdrawalPage-content">
-            {this.renderPlatformSelector()}
-            {this.renderAmountSection()}
-            {this.renderAddressSection()}
-            {this.renderSubmitButton()}
+            {this.activeTab() === 'withdrawal' ? this.renderWithdrawalForm() : this.renderHistoryList()}
           </div>
         </div>
       </div>
     );
   }
 
+  private renderWithdrawalForm(): Mithril.Children {
+    return [
+      this.renderPlatformSelector(),
+      this.renderAmountSection(),
+      this.renderAddressSection(),
+      this.renderSubmitButton()
+    ];
+  }
+
+  private renderHistoryList(): Mithril.Children {
+    if (this.loading) {
+      return (
+        <div className="WithdrawalPage-loading">
+          <LoadingIndicator />
+        </div>
+      );
+    }
+
+    if (!this.requests || this.requests.length === 0) {
+      return (
+        <div className="WithdrawalPage-emptyState">
+          <div className="WithdrawalPage-emptyIcon">
+            {icon('fas fa-history')}
+          </div>
+          <h3 className="WithdrawalPage-emptyTitle">
+            {app.translator.trans('withdrawal.forum.history.empty')}
+          </h3>
+          <p className="WithdrawalPage-emptyDescription">
+            {app.translator.trans('withdrawal.forum.history.empty_description')}
+          </p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="WithdrawalPage-historyList">
+        {this.requests.map(request => this.renderHistoryItem(request))}
+      </div>
+    );
+  }
+
+  private renderHistoryItem(request: WithdrawalRequest): Mithril.Children {
+    const platform = this.platforms.find(p => 
+      (typeof p.id === 'function' ? p.id() : p.id) === request.relationships?.platform?.data?.id
+    );
+    
+    const status = request.attributes.status;
+    const statusClass = this.getStatusClass(status);
+    const date = new Date(request.attributes.createdAt);
+
+    return (
+      <div key={request.id} className="WithdrawalPage-historyItem">
+        <div className="WithdrawalPage-historyHeader">
+          <div className="WithdrawalPage-historyPlatform">
+            <div className="WithdrawalPage-platformIcon">
+              {platform ? this.renderPlatformIcon(platform) : icon('fas fa-coins')}
+            </div>
+            <div className="WithdrawalPage-historyInfo">
+              <div className="WithdrawalPage-historyPlatformName">
+                {platform ? (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) : 'Unknown Platform'}
+              </div>
+              <div className="WithdrawalPage-historyDate">
+                {date.toLocaleDateString()} {date.toLocaleTimeString()}
+              </div>
+            </div>
+          </div>
+          <div className={`WithdrawalPage-historyStatus ${statusClass}`}>
+            {app.translator.trans(`withdrawal.forum.status.${status}`)}
+          </div>
+        </div>
+        <div className="WithdrawalPage-historyDetails">
+          <div className="WithdrawalPage-historyAmount">
+            <span className="WithdrawalPage-historyLabel">
+              {app.translator.trans('withdrawal.forum.history.amount')}:
+            </span>
+            <span className="WithdrawalPage-historyValue">
+              {request.attributes.amount} {platform ? (typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol) : ''}
+            </span>
+          </div>
+          <div className="WithdrawalPage-historyAddress">
+            <span className="WithdrawalPage-historyLabel">
+              {app.translator.trans('withdrawal.forum.history.address')}:
+            </span>
+            <span className="WithdrawalPage-historyValue">
+              {request.attributes.accountDetails}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  private getStatusClass(status: string): string {
+    switch (status) {
+      case 'approved':
+        return 'success';
+      case 'rejected':
+        return 'danger';
+      case 'pending':
+      default:
+        return 'warning';
+    }
+  }
 
   private renderPlatformSelector(): Mithril.Children {
     const selected = this.selectedPlatform();

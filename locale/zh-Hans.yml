@@ -67,6 +67,7 @@ withdrawal:
       description: 提交提款申请，将您的资金转至外部平台
     tabs:
       withdrawal: 提款
+      history: 申请记录
     no_platforms: 暂无可用的提现平台
     no_platforms_description: 请联系管理员配置提现平台。
     remaining_flow: "剩余流水: {amount}"
@@ -97,6 +98,9 @@ withdrawal:
     history:
       title: 提款历史
       empty: 暂无提款申请记录
+      empty_description: 您还没有提交过提款申请。点击"提款"标签页提交您的第一个申请。
+      amount: 金额
+      address: 收款地址
     status:
       pending: 待审核
       approved: 已通过
