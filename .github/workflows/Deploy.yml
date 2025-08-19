@@ -78,7 +78,7 @@ jobs:
 
             cd /www/wwwroot/flarum
 
-            sudo -u www composer update --prefer-dist --no-plugins --no-dev -a --with-all-dependencies --no-interaction
+            sudo -u www composer update --no-dev --optimize-autoloader --with-all-dependencies --no-interaction
             sudo -u www php flarum migrate
             sudo -u www php flarum cache:clear
             sudo -u www php flarum assets:publish
