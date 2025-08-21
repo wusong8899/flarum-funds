@@ -81,7 +81,22 @@ app.initializers.add('wusong8899-withdrawal', () => {
         mobileDisplay.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          app.route('withdrawal');
+          console.log('Mobile money display clicked!'); // 调试日志
+          
+          // 尝试多种导航方式
+          try {
+            // 方式1: 直接设置URL
+            window.location.href = '/withdrawal';
+            
+            // 方式2: 使用 app.route (备用)
+            // if (app.route && typeof app.route === 'function') {
+            //   app.route('withdrawal');
+            // }
+          } catch (error) {
+            console.error('Navigation error:', error);
+            // 最后的备用方案
+            window.location.href = '/withdrawal';
+          }
         });
         
         navigationEl.appendChild(mobileDisplay);

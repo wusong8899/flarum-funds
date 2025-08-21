@@ -45,7 +45,15 @@ export default class MobileMoneyDisplay extends Component<ComponentAttrs> {
   private handleWithdrawalClick(e: Event): void {
     e.preventDefault();
     e.stopPropagation();
-    // Navigate to withdrawal page
-    app.route('withdrawal');
+    console.log('MobileMoneyDisplay clicked!'); // 调试日志
+    
+    try {
+      // 直接导航到提现页面
+      window.location.href = '/withdrawal';
+    } catch (error) {
+      console.error('Navigation error:', error);
+      // 备用方案
+      window.location.href = '/withdrawal';
+    }
   }
 }
