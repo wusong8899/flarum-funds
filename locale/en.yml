@@ -97,8 +97,9 @@ withdrawal:
       final_amount: "Final Amount: ${amount}"
     history:
       title: Withdrawal History
-      empty: No withdrawal requests yet
-      empty_description: You haven't made any withdrawal requests. Click the Withdrawal tab to submit your first request.
+      empty:
+        title: No withdrawal requests yet
+        description: You haven't made any withdrawal requests. Click the Withdrawal tab to submit your first request.
       amount: Amount
       address: Address
     status:
