@@ -4,7 +4,6 @@ import Button from 'flarum/common/components/Button';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import Stream from 'flarum/common/utils/Stream';
 import type Mithril from 'mithril';
-import m from 'mithril';
 import type { WithdrawalPlatform, WithdrawalFormData, WithdrawalPageState } from './withdrawal/types/interfaces';
 import WithdrawalForm from './withdrawal/forms/WithdrawalForm';
 import WithdrawalHistory from './withdrawal/history/WithdrawalHistory';
@@ -130,7 +129,6 @@ export default class WithdrawalPage extends Page {
 
   private handleTabChange(tab: 'withdrawal' | 'history'): void {
     this.state.activeTab(tab);
-    m.redraw();
   }
 
   private getFormDataForComponent() {
@@ -155,7 +153,6 @@ export default class WithdrawalPage extends Page {
     if (data.saveAddress !== undefined) {
       this.formData.saveAddress(data.saveAddress);
     }
-    m.redraw();
   }
 
   private handleFillAllAmount(): void {
@@ -172,7 +169,6 @@ export default class WithdrawalPage extends Page {
     
     if (availableAmount > 0) {
       this.formData.amount(availableAmount.toString());
-      m.redraw();
     }
   }
 
@@ -188,7 +184,6 @@ export default class WithdrawalPage extends Page {
     }
 
     this.state.submitting = true;
-    m.redraw();
 
     try {
       const response = await app.request({
@@ -231,7 +226,6 @@ export default class WithdrawalPage extends Page {
       );
     } finally {
       this.state.submitting = false;
-      m.redraw();
     }
   }
 
@@ -254,11 +248,9 @@ export default class WithdrawalPage extends Page {
       this.state.platforms = app.store.all('withdrawal-platforms');
       this.state.requests = app.store.all('withdrawal-requests');
       this.state.loading = false;
-      m.redraw();
     } catch (error) {
       console.error('Error loading data:', error);
       this.state.loading = false;
-      m.redraw();
     }
   }
 
@@ -267,11 +259,9 @@ export default class WithdrawalPage extends Page {
       this.state.loadingBalance = true;
       this.state.userBalance = app.session.user?.attribute('money') || 0;
       this.state.loadingBalance = false;
-      m.redraw();
     } catch (error) {
       console.error('Error loading user balance:', error);
       this.state.loadingBalance = false;
-      m.redraw();
     }
   }
 
@@ -284,7 +274,6 @@ export default class WithdrawalPage extends Page {
 
       app.store.pushPayload(response);
       this.state.requests = app.store.all('withdrawal-requests');
-      m.redraw();
     } catch (error) {
       console.error('Error loading withdrawal requests:', error);
     }
