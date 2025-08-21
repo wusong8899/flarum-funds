@@ -1,0 +1,51 @@
+import Component, { ComponentAttrs } from 'flarum/common/Component';
+import app from 'flarum/forum/app';
+import type Mithril from 'mithril';
+import { MobileDetector } from '../utils/MobileDetector';
+
+/**
+ * MobileMoneyDisplay component for mobile navigation bar
+ * Shows user's money balance with withdrawal button in mobile navigation
+ */
+export default class MobileMoneyDisplay extends Component<ComponentAttrs> {
+  view(): Mithril.Children {
+    // Only show on mobile devices and for logged-in users
+    if (!MobileDetector.isMobile() || !app.session.user) {
+      return null;
+    }
+
+    const userMoney = app.session.user.attribute('money') || 0;
+
+    return (
+      <div className="Navigation-mobileMoneyDisplay clientCustomizeWithdrawalHeaderTotalMoney">
+        <div 
+          className="Navigation-moneySection"
+          onclick={this.handleWithdrawalClick.bind(this)}
+          title={`余额: ${userMoney} - 点击提款`}
+        >
+          {/* BTC图标和金额显示 */}
+          <div className="Navigation-moneyText">
+            <i className="fab fa-bitcoin" style={{ color: '#f7931a', marginRight: '4px' }} />
+            <span className="Navigation-moneyAmount">{userMoney}</span>
+          </div>
+          
+          {/* 提款按钮 */}
+          <div className="Navigation-withdrawalButton">
+            <i className="fas fa-money-bill-transfer" />
+            <span>提款</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /**
+   * Handle withdrawal button click
+   */
+  private handleWithdrawalClick(e: Event): void {
+    e.preventDefault();
+    e.stopPropagation();
+    // Navigate to withdrawal page
+    app.route('withdrawal');
+  }
+}

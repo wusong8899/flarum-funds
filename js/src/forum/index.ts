@@ -9,6 +9,7 @@ import WithdrawalPlatform from '../common/models/WithdrawalPlatform';
 import WithdrawalRequest from '../common/models/WithdrawalRequest';
 import MoneyDisplay from './components/MoneyDisplay';
 import { ConfigManager } from './utils/ConfigManager';
+import { MobileDetector } from './utils/MobileDetector';
 
 app.initializers.add('wusong8899-withdrawal', () => {
   // Register models in store
@@ -33,13 +34,58 @@ app.initializers.add('wusong8899-withdrawal', () => {
     }
   });
 
-  // Add money display to header primary
+  // Add money display to header primary (desktop)
   extend(HeaderPrimary.prototype, 'view', function (vnode) {
-    // Only add on tags page for logged-in users
+    // Only add on tags page for logged-in users and on desktop
     const configManager = ConfigManager.getInstance();
-    if (app.session.user && configManager.isTagsPage()) {
+    if (app.session.user && configManager.isTagsPage() && !MobileDetector.isMobile()) {
       // Add money display to the header primary view
       vnode.children.push(MoneyDisplay.component());
     }
   });
+
+  // Add mobile money display to navigation using DOM insertion
+  extend(HeaderPrimary.prototype, 'oncreate', function () {
+    // Only for mobile users and logged-in users
+    if (app.session.user && MobileDetector.isMobile()) {
+      this.insertMobileMoneyDisplay();
+    }
+  });
+
+  // Add method to HeaderPrimary for inserting mobile money display
+  HeaderPrimary.prototype.insertMobileMoneyDisplay = function() {
+    // Wait for DOM to be ready
+    setTimeout(() => {
+      const navigationEl = document.querySelector('#app-navigation .Navigation.ButtonGroup.App-backControl');
+      if (navigationEl && !navigationEl.querySelector('.Navigation-mobileMoneyDisplay')) {
+        // Create the mobile money display element
+        const mobileDisplay = document.createElement('div');
+        mobileDisplay.className = 'Navigation-mobileMoneyDisplay clientCustomizeWithdrawalHeaderTotalMoney';
+        
+        const userMoney = app.session.user?.attribute('money') || 0;
+        
+        mobileDisplay.innerHTML = `
+          <div class="Navigation-moneySection" title="余额: ${userMoney} - 点击提款">
+            <div class="Navigation-moneyText">
+              <i class="fab fa-bitcoin" style="color: #f7931a; margin-right: 4px;"></i>
+              <span class="Navigation-moneyAmount">${userMoney}</span>
+            </div>
+            <div class="Navigation-withdrawalButton">
+              <i class="fas fa-money-bill-transfer"></i>
+              <span>提款</span>
+            </div>
+          </div>
+        `;
+        
+        // Add click handler
+        mobileDisplay.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          app.route('withdrawal');
+        });
+        
+        navigationEl.appendChild(mobileDisplay);
+      }
+    }, 200);
+  };
 });

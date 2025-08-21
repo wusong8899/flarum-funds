@@ -80,6 +80,167 @@
   }
 }
 
+// =============================================================================
+// MOBILE NAVIGATION MONEY DISPLAY
+// =============================================================================
+
+.Navigation-mobileMoneyDisplay {
+  &.clientCustomizeWithdrawalHeaderTotalMoney {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    margin-left: 8px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  .Navigation-moneySection {
+    display: flex;
+    align-items: center;
+    padding: 6px 8px;
+    gap: 8px;
+    color: var(--header-color, #fff);
+  }
+
+  .Navigation-moneyText {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 500;
+
+    .fab.fa-bitcoin {
+      color: #f7931a;
+      font-size: 12px;
+    }
+
+    .Navigation-moneyAmount {
+      font-weight: 600;
+      min-width: 30px;
+    }
+  }
+
+  .Navigation-withdrawalButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 4px 6px;
+    background: rgba(40, 167, 69, 0.8);
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    min-width: 40px;
+
+    .fas.fa-money-bill-transfer {
+      color: #fff;
+      font-size: 10px;
+    }
+    
+    span {
+      color: #fff;
+      font-size: 10px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+  }
+
+  &:hover .Navigation-withdrawalButton {
+    background: rgba(40, 167, 69, 1);
+  }
+}
+
+// Mobile-only styles
+@media (max-width: 768px) {
+  .App-navigation .Navigation.ButtonGroup.App-backControl {
+    display: flex;
+    align-items: center;
+    
+    .Navigation-mobileMoneyDisplay {
+      flex-shrink: 0;
+      
+      &.clientCustomizeWithdrawalHeaderTotalMoney {
+        margin-left: 6px;
+        
+        .Navigation-moneySection {
+          padding: 4px 6px;
+          gap: 6px;
+        }
+        
+        .Navigation-moneyText {
+          font-size: 12px;
+          
+          .fab.fa-bitcoin {
+            font-size: 11px;
+          }
+        }
+        
+        .Navigation-withdrawalButton {
+          padding: 3px 5px;
+          min-width: 35px;
+          
+          .fas.fa-money-bill-transfer {
+            font-size: 9px;
+          }
+          
+          span {
+            font-size: 9px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Ultra small mobile screens
+@media (max-width: 480px) {
+  .App-navigation .Navigation.ButtonGroup.App-backControl {
+    .Navigation-mobileMoneyDisplay {
+      &.clientCustomizeWithdrawalHeaderTotalMoney {
+        margin-left: 4px;
+        
+        .Navigation-moneySection {
+          padding: 3px 5px;
+          gap: 4px;
+        }
+        
+        .Navigation-moneyText {
+          font-size: 11px;
+          
+          .Navigation-moneyAmount {
+            min-width: 25px;
+          }
+        }
+        
+        .Navigation-withdrawalButton {
+          padding: 2px 4px;
+          min-width: 30px;
+          
+          .fas.fa-money-bill-transfer {
+            font-size: 8px;
+          }
+          
+          span {
+            font-size: 8px;
+          }
+        }
+      }
+    }
+  }
+}
+
 // K8.io Style Withdrawal Page
 .WithdrawalPage {
   position: fixed;
