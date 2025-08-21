@@ -60,7 +60,7 @@ app.initializers.add('wusong8899-withdrawal', () => {
       if (navigationEl && !navigationEl.querySelector('.Navigation-mobileMoneyDisplay')) {
         // Create the mobile money display element
         const mobileDisplay = document.createElement('div');
-        mobileDisplay.className = 'Navigation-mobileMoneyDisplay clientCustomizeWithdrawalHeaderTotalMoney';
+        mobileDisplay.className = 'Navigation-mobileMoneyDisplay';
         
         const userMoney = app.session.user?.attribute('money') || 0;
         

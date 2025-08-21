@@ -17,7 +17,7 @@ export default class MobileMoneyDisplay extends Component<ComponentAttrs> {
     const userMoney = app.session.user.attribute('money') || 0;
 
     return (
-      <div className="Navigation-mobileMoneyDisplay clientCustomizeWithdrawalHeaderTotalMoney">
+      <div className="Navigation-mobileMoneyDisplay">
         <div 
           className="Navigation-moneySection"
           onclick={this.handleWithdrawalClick.bind(this)}
