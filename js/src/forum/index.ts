@@ -1,8 +1,5 @@
 import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
-import LinkButton from 'flarum/common/components/LinkButton';
-import ItemList from 'flarum/common/utils/ItemList';
-import HeaderSecondary from 'flarum/forum/components/HeaderSecondary';
 import HeaderPrimary from 'flarum/forum/components/HeaderPrimary';
 import WithdrawalPage from './components/WithdrawalPage';
 import WithdrawalPlatform from '../common/models/WithdrawalPlatform';
@@ -18,21 +15,6 @@ app.initializers.add('wusong8899-withdrawal', () => {
   
   app.routes.withdrawal = { path: '/withdrawal', component: WithdrawalPage };
 
-  extend(HeaderSecondary.prototype, 'items', function (items: ItemList<any>) {
-    if (app.session.user) {
-      items.add(
-        'withdrawal',
-        LinkButton.component(
-          {
-            href: app.route('withdrawal'),
-            icon: 'fas fa-money-bill-transfer',
-          },
-          app.translator.trans('withdrawal.forum.header.withdrawal_button')
-        ),
-        10
-      );
-    }
-  });
 
   // Add money display to header primary (desktop)
   extend(HeaderPrimary.prototype, 'view', function (vnode) {
