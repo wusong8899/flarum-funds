@@ -1,17 +1,13 @@
 import Component, { ComponentAttrs } from 'flarum/common/Component';
 import app from 'flarum/forum/app';
-import { ConfigManager } from '../utils/ConfigManager';
 import type Mithril from 'mithril';
 
 /**
  * MoneyDisplay component shows the user's money balance with withdrawal button
  */
 export default class MoneyDisplay extends Component<ComponentAttrs> {
-  private configManager = ConfigManager.getInstance();
-
   view(): Mithril.Children {
-    // Only show for logged-in users on tags page
-    if (!app.session.user || !this.configManager.isTagsPage()) {
+    if (!app.session.user) {
       return null;
     }
 

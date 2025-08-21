@@ -8,6 +8,7 @@ import WithdrawalPage from './components/WithdrawalPage';
 import WithdrawalPlatform from '../common/models/WithdrawalPlatform';
 import WithdrawalRequest from '../common/models/WithdrawalRequest';
 import MoneyDisplay from './components/MoneyDisplay';
+import { ConfigManager } from './utils/ConfigManager';
 
 app.initializers.add('wusong8899-withdrawal', () => {
   // Register models in store
@@ -33,25 +34,12 @@ app.initializers.add('wusong8899-withdrawal', () => {
   });
 
   // Add money display to header primary
-  extend(HeaderPrimary.prototype, 'view', function () {
-    const appNavigation = document.getElementById("app-navigation");
-    if (appNavigation) {
-      // Remove existing money display to prevent duplicates
-      const existingDisplay = document.getElementById("moneyDisplayContainer");
-      if (existingDisplay) {
-        existingDisplay.remove();
-      }
-      
-      // Add money display component
-      const moneyDisplayElement = document.createElement('div');
-      appNavigation.appendChild(moneyDisplayElement);
-      
-      // Render MoneyDisplay component into the element
-      setTimeout(() => {
-        import('mithril').then((m) => {
-          m.render(moneyDisplayElement, MoneyDisplay.component());
-        });
-      }, 0);
+  extend(HeaderPrimary.prototype, 'view', function (vnode) {
+    // Only add on tags page for logged-in users
+    const configManager = ConfigManager.getInstance();
+    if (app.session.user && configManager.isTagsPage()) {
+      // Add money display to the header primary view
+      vnode.children.push(MoneyDisplay.component());
     }
   });
 });
