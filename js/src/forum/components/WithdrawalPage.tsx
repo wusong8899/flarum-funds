@@ -3,6 +3,8 @@ import Page from 'flarum/common/components/Page';
 import Button from 'flarum/common/components/Button';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import Stream from 'flarum/common/utils/Stream';
+import icon from 'flarum/common/helpers/icon';
+import m from 'mithril';
 import type Mithril from 'mithril';
 import type { WithdrawalPlatform, WithdrawalFormData, WithdrawalPageState } from './withdrawal/types/interfaces';
 import WithdrawalForm from './withdrawal/forms/WithdrawalForm';
@@ -231,6 +233,8 @@ export default class WithdrawalPage extends Page {
 
   private async loadData(): Promise<void> {
     try {
+      console.log('Starting to load withdrawal data...');
+      
       const [platformsResponse, requestsResponse] = await Promise.all([
         app.request({
           method: 'GET',
@@ -242,15 +246,24 @@ export default class WithdrawalPage extends Page {
         })
       ]);
 
+      console.log('Platforms response:', platformsResponse);
+      console.log('Requests response:', requestsResponse);
+
       app.store.pushPayload(platformsResponse);
       app.store.pushPayload(requestsResponse);
 
       this.state.platforms = app.store.all('withdrawal-platforms');
       this.state.requests = app.store.all('withdrawal-requests');
+      
+      console.log('Loaded platforms:', this.state.platforms);
+      console.log('Loaded requests:', this.state.requests);
+      
       this.state.loading = false;
+      m.redraw();
     } catch (error) {
       console.error('Error loading data:', error);
       this.state.loading = false;
+      m.redraw();
     }
   }
 
