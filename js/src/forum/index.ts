@@ -14,7 +14,7 @@ app.initializers.add('wusong8899-withdrawal', () => {
   // Register models in store
   app.store.models['withdrawal-platforms'] = WithdrawalPlatform;
   app.store.models['withdrawal-requests'] = WithdrawalRequest;
-  
+
   app.routes.withdrawal = { path: '/withdrawal', component: WithdrawalPage };
 
 
@@ -35,6 +35,12 @@ app.initializers.add('wusong8899-withdrawal', () => {
       return;
     }
 
+    // Only work on homepage
+    const routeName = app.current.get('routeName');
+    if (routeName !== 'tags') {
+      return;
+    }
+
     // Only work for logged-in users
     if (!app.session.user) {
       return;
@@ -45,8 +51,8 @@ app.initializers.add('wusong8899-withdrawal', () => {
     }
 
     // Check if we already added the money display component to avoid duplication
-    const hasMoneyDisplay = vnode.children.some((child: any) => 
-      child && child.attrs && child.attrs.className && 
+    const hasMoneyDisplay = vnode.children.some((child: any) =>
+      child && child.attrs && child.attrs.className &&
       child.attrs.className.includes('Navigation-mobileMoneyDisplay')
     );
 
