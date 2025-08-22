@@ -1,7 +1,6 @@
 import Component, { ComponentAttrs } from 'flarum/common/Component';
 import app from 'flarum/forum/app';
 import type Mithril from 'mithril';
-import { MobileDetector } from '../utils/MobileDetector';
 
 /**
  * MobileMoneyDisplay component for mobile navigation bar
@@ -9,12 +8,9 @@ import { MobileDetector } from '../utils/MobileDetector';
  */
 export default class MobileMoneyDisplay extends Component<ComponentAttrs> {
   view(): Mithril.Children {
-    // Only show on mobile devices and for logged-in users
-    if (!MobileDetector.isMobile() || !app.session.user) {
-      return null;
-    }
-
-    const userMoney = app.session.user.attribute('money') || 0;
+    // Note: Mobile detection and user authentication are now handled in index.ts
+    // This component assumes it should render when called
+    const userMoney = app.session.user?.attribute('money') || 0;
 
     return (
       <div className="Navigation-mobileMoneyDisplay">
