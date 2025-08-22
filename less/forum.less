@@ -3,6 +3,7 @@
 // =============================================================================
 
 .client1-header-adv-wrapper {
+
   // Money Display Container
   .clientCustomizeWithdrawalHeaderTotalMoney {
     background: rgba(255, 255, 255, 0.15);
@@ -59,20 +60,20 @@
   .client1-header-adv-wrapper .clientCustomizeWithdrawalHeaderTotalMoney {
     font-size: 14px;
     margin-left: 4px;
-    
+
     .clientCustomizeWithdrawalHeaderText {
       font-size: 14px;
       max-width: 100px;
-      
+
       span {
         font-size: 14px;
       }
     }
-    
+
     .clientCustomizeWithdrawalButton {
       font-size: 11px;
       padding: 3px 5px;
-      
+
       span {
         font-size: 10px;
       }
@@ -125,12 +126,12 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 500;
 
     .fab.fa-bitcoin {
       color: #f7931a;
-      font-size: 12px;
+      font-size: 14px;
     }
 
     .Navigation-moneyAmount {
@@ -154,7 +155,7 @@
       color: #fff;
       font-size: 10px;
     }
-    
+
     span {
       color: #fff;
       font-size: 10px;
@@ -173,34 +174,33 @@
   .App-navigation .Navigation.ButtonGroup.App-backControl {
     display: flex;
     align-items: center;
-    
+
     .Navigation-mobileMoneyDisplay {
       flex-shrink: 0;
-      margin-left: 6px;
-      
+
       .Navigation-moneySection {
         padding: 4px 6px;
         gap: 6px;
       }
-      
+
       .Navigation-moneyText {
-        font-size: 12px;
-        
+        font-size: 14px;
+
         .fab.fa-bitcoin {
-          font-size: 11px;
+          font-size: 13px;
         }
       }
-      
+
       .Navigation-withdrawalButton {
         padding: 3px 5px;
         min-width: 35px;
-        
+
         .fas.fa-money-bill-transfer {
-          font-size: 9px;
+          font-size: 10px;
         }
-        
+
         span {
-          font-size: 9px;
+          font-size: 10px;
         }
       }
     }
@@ -211,31 +211,30 @@
 @media (max-width: 480px) {
   .App-navigation .Navigation.ButtonGroup.App-backControl {
     .Navigation-mobileMoneyDisplay {
-      margin-left: 4px;
-      
+
       .Navigation-moneySection {
         padding: 3px 5px;
         gap: 4px;
       }
-      
+
       .Navigation-moneyText {
-        font-size: 11px;
-        
+        font-size: 13px;
+
         .Navigation-moneyAmount {
           min-width: 25px;
         }
       }
-      
+
       .Navigation-withdrawalButton {
         padding: 2px 4px;
         min-width: 30px;
-        
+
         .fas.fa-money-bill-transfer {
-          font-size: 8px;
+          font-size: 9px;
         }
-        
+
         span {
-          font-size: 8px;
+          font-size: 9px;
         }
       }
     }
@@ -294,10 +293,10 @@
         cursor: pointer;
         position: relative;
         font-weight: 500;
-        
+
         &.active {
           color: #fff;
-          
+
           &::after {
             content: '';
             position: absolute;
@@ -421,7 +420,9 @@
             }
 
             .crypto-icon {
-              &.default { color: #fff; }
+              &.default {
+                color: #fff;
+              }
             }
           }
 
@@ -806,20 +807,20 @@
     gap: 16px;
     max-height: 400px;
     overflow-y: auto;
-    
+
     &::-webkit-scrollbar {
       width: 4px;
     }
-    
+
     &::-webkit-scrollbar-track {
       background: #333;
       border-radius: 2px;
     }
-    
+
     &::-webkit-scrollbar-thumb {
       background: #666;
       border-radius: 2px;
-      
+
       &:hover {
         background: #888;
       }
@@ -966,6 +967,7 @@
       }
 
       .WithdrawalPage-historyDetails {
+
         .WithdrawalPage-historyAmount,
         .WithdrawalPage-historyAddress {
           flex-direction: column;
