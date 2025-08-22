@@ -2,7 +2,6 @@
 
 use Flarum\Extend;
 use wusong8899\Withdrawal\Api\Controller;
-use wusong8899\Withdrawal\Api\Serializer;
 use wusong8899\Withdrawal\Model;
 
 return [
@@ -29,10 +28,6 @@ return [
 
     (new Extend\Model(Flarum\User\User::class))
         ->hasMany('withdrawalRequests', Model\WithdrawalRequest::class),
-
-
-    (new Extend\ApiSerializer(\Flarum\Api\Serializer\UserSerializer::class))
-        ->attributes(Serializer\UserWithdrawalSerializer::class),
 
     // Register API serializers for our models
     (new Extend\ApiController(\Flarum\Api\Controller\ListUsersController::class))
