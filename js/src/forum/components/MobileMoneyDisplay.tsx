@@ -21,7 +21,7 @@ export default class MobileMoneyDisplay extends Component<ComponentAttrs> {
         >
           {/* BTC图标和金额显示 */}
           <div className="Navigation-moneyText">
-            <i className="fab fa-bitcoin" style={{ color: '#f7931a', marginRight: '4px' }} />
+            <i className="fas fa-yen-sign" style={{ color: '#ff6b6b', marginRight: '4px' }} />
             <span className="Navigation-moneyAmount">{userMoney}</span>
           </div>
           

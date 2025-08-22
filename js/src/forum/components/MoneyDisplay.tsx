@@ -21,7 +21,7 @@ export default class MoneyDisplay extends Component<ComponentAttrs> {
       >
         <div className="clientCustomizeWithdrawalHeaderText">
           <span>
-            <i className="fab fa-bitcoin" style={{ paddingRight: '8px', color: 'gold' }} />
+            <i className="fas fa-yen-sign" style={{ paddingRight: '8px', color: '#ff6b6b' }} />
           </span>
           {userMoneyText}
         </div>
