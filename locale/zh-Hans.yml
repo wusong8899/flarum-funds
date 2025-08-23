@@ -86,8 +86,12 @@ withdrawal:
     clipboard_error: 无法访问剪贴板，请手动粘贴
     insufficient_balance: 余额不足，无法填入最大金额
     insufficient_balance_detailed: "余额不足。需要: {required}，可用: {available} {feeText}"
+    invalid_amount: "请输入大于零的有效金额"
+    amount_below_minimum: "金额 {amount} 低于 {platform} 的最小限额 {minimum}"
+    amount_above_maximum: "金额 {amount} 超过 {platform} 的最大限额 {maximum}"
     including_fee: "（含 {fee} 手续费）"
     balance_refresh_error: 刷新余额失败，请重试
+    server_error: 服务器发生错误，请稍后重试或联系管理员
     success: 提款申请提交成功
     error: 提款申请提交失败
     balance:

@@ -204,8 +204,47 @@ export default class WithdrawalPage extends Page {
       return;
     }
 
-    // 前端余额预检查
+    // 前端预验证
     const amountNum = parseFloat(amount);
+    
+    // 检查金额是否有效
+    if (isNaN(amountNum) || amountNum <= 0) {
+      app.alerts.show(
+        { type: 'warning', dismissible: true },
+        app.translator.trans('withdrawal.forum.invalid_amount')
+      );
+      return;
+    }
+    
+    // 检查平台限额
+    const minAmount = getAttr(selectedPlatform, 'minAmount') || 0;
+    const maxAmount = getAttr(selectedPlatform, 'maxAmount') || Infinity;
+    
+    if (amountNum < minAmount) {
+      app.alerts.show(
+        { type: 'warning', dismissible: true },
+        app.translator.trans('withdrawal.forum.amount_below_minimum', { 
+          amount: amountNum, 
+          minimum: minAmount,
+          platform: getAttr(selectedPlatform, 'name') 
+        })
+      );
+      return;
+    }
+    
+    if (amountNum > maxAmount) {
+      app.alerts.show(
+        { type: 'warning', dismissible: true },
+        app.translator.trans('withdrawal.forum.amount_above_maximum', { 
+          amount: amountNum, 
+          maximum: maxAmount,
+          platform: getAttr(selectedPlatform, 'name') 
+        })
+      );
+      return;
+    }
+    
+    // 检查余额
     const fee = getAttr(selectedPlatform, 'fee') || 0;
     const totalRequired = amountNum + fee;
     
@@ -277,16 +316,23 @@ export default class WithdrawalPage extends Page {
           }
         }
       } else if (error && error.responseText) {
-        try {
-          const response = JSON.parse(error.responseText);
-          if (response.errors && Array.isArray(response.errors) && response.errors.length > 0) {
-            const firstError = response.errors[0];
-            if (firstError.detail) {
-              errorMessage = firstError.detail;
+        // 检查是否是HTML错误响应（PHP Fatal Error）
+        if (error.responseText.includes('<b>Fatal error</b>') || error.responseText.includes('<!DOCTYPE')) {
+          errorMessage = app.translator.trans('withdrawal.forum.server_error');
+        } else {
+          try {
+            const response = JSON.parse(error.responseText);
+            if (response.errors && Array.isArray(response.errors) && response.errors.length > 0) {
+              const firstError = response.errors[0];
+              if (firstError.detail) {
+                errorMessage = firstError.detail;
+              }
             }
+          } catch (parseError) {
+            console.error('Failed to parse error response:', parseError);
+            // 如果解析失败，使用通用错误消息
+            errorMessage = app.translator.trans('withdrawal.forum.server_error');
           }
-        } catch (parseError) {
-          console.error('Failed to parse error response:', parseError);
         }
       }
       

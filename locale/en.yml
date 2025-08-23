@@ -86,8 +86,12 @@ withdrawal:
     clipboard_error: Clipboard access not available. Please paste manually.
     insufficient_balance: Insufficient balance to fill maximum amount
     insufficient_balance_detailed: "Insufficient balance. Required: {required}, Available: {available} {feeText}"
+    invalid_amount: "Please enter a valid amount greater than zero"
+    amount_below_minimum: "Amount {amount} is below minimum {minimum} for {platform}"
+    amount_above_maximum: "Amount {amount} exceeds maximum {maximum} for {platform}"
     including_fee: "(including {fee} fee)"
     balance_refresh_error: Failed to refresh balance. Please try again.
+    server_error: A server error occurred. Please try again later or contact the administrator.
     success: Withdrawal request submitted successfully
     error: Failed to submit withdrawal request
     balance:
