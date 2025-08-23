@@ -9,7 +9,7 @@
   "categories": {
     "correctness": "error",
     "suspicious": "error",
-    "perf": "error",
+    "perf": "error"
   },
   "rules": {
     "no-console": "off",
@@ -19,19 +19,6 @@
     "no-undefined": "off"
   },
   "overrides": [
-    {
-      "files": [
-        "**/*.test.*",
-        "**/__tests__/**"
-      ],
-      "plugins": [
-        "jest"
-      ],
-      "rules": {
-        "jest/no-focused-tests": "error",
-        "jest/no-disabled-tests": "warn"
-      }
-    },
     {
       // TypeScript specific tweaks if needed later
       "files": [

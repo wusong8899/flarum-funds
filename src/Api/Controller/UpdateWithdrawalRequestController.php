@@ -6,6 +6,7 @@ use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Http\RequestUtil;
 use Flarum\User\Exception\PermissionDeniedException;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
@@ -40,18 +41,52 @@ class UpdateWithdrawalRequestController extends AbstractShowController
         $status = Arr::get($attributes, 'status');
 
         if ($status === WithdrawalRequest::STATUS_APPROVED) {
-            $withdrawalRequest->approve();
+            $this->approveWithdrawal($withdrawalRequest);
         } elseif ($status === WithdrawalRequest::STATUS_REJECTED) {
             $withdrawalRequest->reject();
+            $withdrawalRequest->save();
         } else {
             throw ValidationException::withMessages([
                 'status' => 'Invalid status'
             ]);
         }
-
-        $withdrawalRequest->save();
         $withdrawalRequest->load(['user', 'platform']);
 
         return $withdrawalRequest;
+    }
+
+    /**
+     * Approve withdrawal request and deduct user balance
+     *
+     * @param WithdrawalRequest $withdrawalRequest
+     * @return void
+     * @throws ValidationException
+     */
+    private function approveWithdrawal(WithdrawalRequest $withdrawalRequest): void
+    {
+        DB::transaction(function () use ($withdrawalRequest) {
+            // Lock the user record for update to prevent concurrent modifications
+            $user = $withdrawalRequest->user()->lockForUpdate()->first();
+            $platform = $withdrawalRequest->platform;
+
+            $amount = $withdrawalRequest->amount;
+            $fee = (float) ($platform->fee ?? 0);
+            $totalAmount = $amount + $fee;
+
+            // Re-check balance to handle concurrent requests
+            if ($user->money < $totalAmount) {
+                throw ValidationException::withMessages([
+                    'amount' => "User has insufficient balance. Required: {$totalAmount} (including {$fee} fee), Available: {$user->money}"
+                ]);
+            }
+
+            // Deduct money from user balance
+            $user->money -= $totalAmount;
+            $user->save();
+
+            // Update withdrawal request status
+            $withdrawalRequest->approve();
+            $withdrawalRequest->save();
+        });
     }
 }
