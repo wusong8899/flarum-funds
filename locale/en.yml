@@ -84,6 +84,8 @@ withdrawal:
       fee: "Fee:"
     final_amount: "Amount to receive: {amount} {symbol}"
     clipboard_error: Clipboard access not available. Please paste manually.
+    insufficient_balance: Insufficient balance to fill maximum amount
+    balance_refresh_error: Failed to refresh balance. Please try again.
     success: Withdrawal request submitted successfully
     error: Failed to submit withdrawal request
     balance:

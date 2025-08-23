@@ -157,20 +157,39 @@ export default class WithdrawalPage extends Page {
     }
   }
 
-  private handleFillAllAmount(): void {
+  private async handleFillAllAmount(): Promise<void> {
     const selectedPlatform = this.formData.selectedPlatform();
     if (!selectedPlatform) return;
 
-    const fee = getAttr(selectedPlatform, 'fee') || 0;
-    const maxAmount = getAttr(selectedPlatform, 'maxAmount') || Infinity;
-    let availableAmount = this.state.userBalance - fee;
-    
-    if (maxAmount < Infinity && availableAmount > maxAmount) {
-      availableAmount = maxAmount;
-    }
-    
-    if (availableAmount > 0) {
-      this.formData.amount(availableAmount.toString());
+    // 防止重复点击
+    if (this.state.loadingBalance) return;
+
+    try {
+      // 从服务器重新获取最新余额
+      await this.loadUserBalance(true);
+
+      const fee = getAttr(selectedPlatform, 'fee') || 0;
+      const maxAmount = getAttr(selectedPlatform, 'maxAmount') || Infinity;
+      let availableAmount = this.state.userBalance - fee;
+      
+      if (maxAmount < Infinity && availableAmount > maxAmount) {
+        availableAmount = maxAmount;
+      }
+      
+      if (availableAmount > 0) {
+        this.formData.amount(availableAmount.toString());
+      } else {
+        app.alerts.show(
+          { type: 'warning', dismissible: true },
+          app.translator.trans('withdrawal.forum.insufficient_balance')
+        );
+      }
+    } catch (error) {
+      console.error('Error refreshing balance:', error);
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        app.translator.trans('withdrawal.forum.balance_refresh_error')
+      );
     }
   }
 
@@ -267,14 +286,37 @@ export default class WithdrawalPage extends Page {
     }
   }
 
-  private async loadUserBalance(): Promise<void> {
+  private async loadUserBalance(forceRefresh = false): Promise<void> {
     try {
       this.state.loadingBalance = true;
-      this.state.userBalance = app.session.user?.attribute('money') || 0;
+      
+      if (forceRefresh && app.session.user) {
+        // 从服务器获取最新用户数据
+        const response = await app.request({
+          method: 'GET',
+          url: `${app.forum.attribute('apiUrl')}/users/${app.session.user.id()}`
+        });
+        
+        app.store.pushPayload(response);
+        
+        // 更新当前用户实例
+        const updatedUser = app.store.getById('users', app.session.user.id());
+        if (updatedUser) {
+          this.state.userBalance = parseFloat(updatedUser.attribute('money')) || 0;
+        } else {
+          this.state.userBalance = 0;
+        }
+      } else {
+        // 使用当前缓存的用户数据
+        this.state.userBalance = parseFloat(app.session.user?.attribute('money')) || 0;
+      }
+      
       this.state.loadingBalance = false;
+      m.redraw();
     } catch (error) {
       console.error('Error loading user balance:', error);
       this.state.loadingBalance = false;
+      m.redraw();
     }
   }
 
