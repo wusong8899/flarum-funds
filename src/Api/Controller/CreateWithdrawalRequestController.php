@@ -55,7 +55,15 @@ class CreateWithdrawalRequestController extends AbstractCreateController
         $platform = WithdrawalPlatform::find($platformId);
 
         // Validate the request
-        $this->validator->validateCreate($actor, $amount, $platform, $accountDetails);
+        try {
+            $this->validator->validateCreate($actor, $amount, $platform, $accountDetails);
+        } catch (ValidationException $e) {
+            // Re-throw with better error formatting if needed
+            throw $e;
+        } catch (\Exception $e) {
+            // Handle unexpected errors
+            throw new ValidationException(['general' => ['An unexpected error occurred: ' . $e->getMessage()]]);
+        }
 
         $withdrawalRequest = new WithdrawalRequest();
         $withdrawalRequest->user_id = $actor->id;

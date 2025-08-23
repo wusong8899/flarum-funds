@@ -121,17 +121,25 @@ class WithdrawalRequestValidator
      */
     private function validateUserBalance(User $actor, float $amount, WithdrawalPlatform $platform): void
     {
-        // Check if money extension is available
-        if (!class_exists('AntoineFr\Money\User\UserMoney')) {
+        // Check if money extension is available by checking for the correct class
+        if (!class_exists('AntoineFr\Money\AddUserMoneyAttributes')) {
             return; // Skip balance validation if money extension is not available
         }
 
+        // Check if user has money attribute (should be added by money extension)
+        if (!isset($actor->money)) {
+            throw ValidationException::withMessages([
+                'amount' => ['Money extension is not properly configured']
+            ]);
+        }
+
         $userBalance = (float) ($actor->money ?? 0);
-        $totalRequired = $amount + (float) $platform->fee;
+        $totalRequired = $amount + (float) ($platform->fee ?? 0);
 
         if ($userBalance < $totalRequired) {
+            $feeText = $platform->fee > 0 ? " (including {$platform->fee} fee)" : '';
             throw ValidationException::withMessages([
-                'amount' => ["Insufficient balance. You need {$totalRequired} (including {$platform->fee} fee) but only have {$userBalance}"]
+                'amount' => ["Insufficient balance. You need {$totalRequired}{$feeText} but only have {$userBalance}"]
             ]);
         }
     }

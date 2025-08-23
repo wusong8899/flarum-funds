@@ -204,6 +204,24 @@ export default class WithdrawalPage extends Page {
       return;
     }
 
+    // 前端余额预检查
+    const amountNum = parseFloat(amount);
+    const fee = getAttr(selectedPlatform, 'fee') || 0;
+    const totalRequired = amountNum + fee;
+    
+    if (this.state.userBalance < totalRequired) {
+      const feeText = fee > 0 ? app.translator.trans('withdrawal.forum.including_fee', { fee }) : '';
+      app.alerts.show(
+        { type: 'warning', dismissible: true },
+        app.translator.trans('withdrawal.forum.insufficient_balance_detailed', {
+          required: totalRequired,
+          available: this.state.userBalance,
+          feeText
+        })
+      );
+      return;
+    }
+
     this.state.submitting = true;
 
     try {
@@ -241,9 +259,40 @@ export default class WithdrawalPage extends Page {
 
     } catch (error) {
       console.error('Withdrawal request failed:', error);
+      
+      // 尝试解析后端验证错误消息
+      let errorMessage = app.translator.trans('withdrawal.forum.error');
+      
+      if (error && error.response && error.response.errors) {
+        const errors = error.response.errors;
+        if (Array.isArray(errors) && errors.length > 0) {
+          // 获取第一个错误的详细信息
+          const firstError = errors[0];
+          if (firstError.detail) {
+            errorMessage = firstError.detail;
+          } else if (firstError.source && firstError.source.pointer) {
+            // 尝试从source.pointer获取字段名
+            const field = firstError.source.pointer.split('/').pop();
+            errorMessage = `${field}: ${firstError.title || firstError.detail || 'Validation error'}`;
+          }
+        }
+      } else if (error && error.responseText) {
+        try {
+          const response = JSON.parse(error.responseText);
+          if (response.errors && Array.isArray(response.errors) && response.errors.length > 0) {
+            const firstError = response.errors[0];
+            if (firstError.detail) {
+              errorMessage = firstError.detail;
+            }
+          }
+        } catch (parseError) {
+          console.error('Failed to parse error response:', parseError);
+        }
+      }
+      
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.forum.submit_error')
+        errorMessage
       );
     } finally {
       this.state.submitting = false;
