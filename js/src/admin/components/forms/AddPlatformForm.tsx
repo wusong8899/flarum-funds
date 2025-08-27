@@ -30,8 +30,7 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
                 type="text"
                 className="FormControl"
                 placeholder={app.translator.trans('withdrawal.admin.platforms.add_placeholder')}
-                value={this.name()}
-                oninput={(e: Event) => this.name((e.target as HTMLInputElement).value)}
+                bidi={this.name}
               />
             </div>
             <div className="Form-col">
@@ -40,8 +39,7 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
                 type="text"
                 className="FormControl"
                 placeholder="BTC, ETH, USDT..."
-                value={this.symbol()}
-                oninput={(e: Event) => this.symbol((e.target as HTMLInputElement).value)}
+                bidi={this.symbol}
               />
             </div>
           </div>
@@ -54,8 +52,7 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
                 step="0.00000001"
                 className="FormControl"
                 placeholder="0.001"
-                value={this.minAmount()}
-                oninput={(e: Event) => this.minAmount((e.target as HTMLInputElement).value)}
+                bidi={this.minAmount}
               />
             </div>
             <div className="Form-col">
@@ -65,8 +62,7 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
                 step="0.00000001"
                 className="FormControl"
                 placeholder="10.0"
-                value={this.maxAmount()}
-                oninput={(e: Event) => this.maxAmount((e.target as HTMLInputElement).value)}
+                bidi={this.maxAmount}
               />
             </div>
             <div className="Form-col">
@@ -76,8 +72,7 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
                 step="0.00000001"
                 className="FormControl"
                 placeholder="0.0005"
-                value={this.fee()}
-                oninput={(e: Event) => this.fee((e.target as HTMLInputElement).value)}
+                bidi={this.fee}
               />
             </div>
           </div>
@@ -89,8 +84,7 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
                 type="url"
                 className="FormControl"
                 placeholder="https://example.com/icon.png"
-                value={this.iconUrl()}
-                oninput={(e: Event) => this.iconUrl((e.target as HTMLInputElement).value)}
+                bidi={this.iconUrl}
               />
               <small className="helpText">{app.translator.trans('withdrawal.admin.platforms.icon_url_help')}</small>
             </div>
@@ -100,8 +94,7 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
                 type="text"
                 className="FormControl"
                 placeholder="fas fa-coins"
-                value={this.iconClass()}
-                oninput={(e: Event) => this.iconClass((e.target as HTMLInputElement).value)}
+                bidi={this.iconClass}
               />
               <small className="helpText">{app.translator.trans('withdrawal.admin.platforms.icon_class_help')}</small>
             </div>
