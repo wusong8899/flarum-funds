@@ -5,8 +5,8 @@ namespace wusong8899\Withdrawal\Api\Controller;
 use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Http\RequestUtil;
 use Flarum\User\Exception\PermissionDeniedException;
+use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
@@ -18,6 +18,19 @@ class UpdateWithdrawalRequestController extends AbstractShowController
     public $serializer = WithdrawalRequestSerializer::class;
 
     public $include = ['user', 'platform'];
+
+    /**
+     * @var ConnectionInterface
+     */
+    protected $db;
+
+    /**
+     * @param ConnectionInterface $db
+     */
+    public function __construct(ConnectionInterface $db)
+    {
+        $this->db = $db;
+    }
 
     protected function data(ServerRequestInterface $request, Document $document)
     {
@@ -64,7 +77,7 @@ class UpdateWithdrawalRequestController extends AbstractShowController
      */
     private function approveWithdrawal(WithdrawalRequest $withdrawalRequest): void
     {
-        DB::transaction(function () use ($withdrawalRequest) {
+        $this->db->transaction(function () use ($withdrawalRequest) {
             // Lock the user record for update to prevent concurrent modifications
             $user = $withdrawalRequest->user()->lockForUpdate()->first();
             $platform = $withdrawalRequest->platform;
