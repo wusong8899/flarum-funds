@@ -22,8 +22,7 @@ export default class MobileMoneyDisplay extends Component<ComponentAttrs> {
         >
           {/* 货币图标和金额显示 */}
           <div className="Navigation-moneyText">
-            <span style={{ 
-              backgroundColor: '#ffd700', 
+            <span style={{  
               borderRadius: '50%', 
               padding: '4px 6px', 
               marginRight: '6px',
@@ -35,9 +34,8 @@ export default class MobileMoneyDisplay extends Component<ComponentAttrs> {
                 src={iconUrl} 
                 alt="Money icon" 
                 style={{ 
-                  width: '12px', 
-                  height: '12px', 
-                  filter: 'brightness(0) invert(1)' // Makes image white
+                  width: '18px', 
+                  height: '18px'
                 }}
                 onError={(e: Event) => {
                   // Fallback to default icon if image fails to load

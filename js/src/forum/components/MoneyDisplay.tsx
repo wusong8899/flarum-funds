@@ -21,8 +21,7 @@ export default class MoneyDisplay extends Component<ComponentAttrs> {
         className="client1-header-adv-wrapper clientCustomizeWithdrawalHeaderTotalMoney"
       >
         <div className="clientCustomizeWithdrawalHeaderText">
-          <span style={{ 
-            backgroundColor: '#ffd700', 
+          <span style={{  
             borderRadius: '50%', 
             padding: '6px 8px', 
             marginRight: '8px',
@@ -34,9 +33,8 @@ export default class MoneyDisplay extends Component<ComponentAttrs> {
               src={iconUrl} 
               alt="Money icon" 
               style={{ 
-                width: '16px', 
-                height: '16px', 
-                filter: 'brightness(0) invert(1)' // Makes image white
+                width: '20px', 
+                height: '20px'
               }}
               onError={(e: Event) => {
                 // Fallback to default icon if image fails to load
