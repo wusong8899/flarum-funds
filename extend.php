@@ -37,6 +37,5 @@ return [
         ->addInclude(['withdrawalRequests', 'withdrawalRequests.platform']),
 
     (new Extend\Settings())
-        ->default('wusong8899-withdrawal.moneyIconUrl', 'https://i.mji.rip/2025/08/28/cd18932c68e9bbee9502b1fb6317cba9.png')
-        ->serializeToForum('wusong8899-withdrawal.moneyIconUrl', 'wusong8899-withdrawal.moneyIconUrl'),
+        ->serializeToForum('wusong8899-withdrawal.moneyIconUrl', 'wusong8899-withdrawal.moneyIconUrl', null, 'https://i.mji.rip/2025/08/28/cd18932c68e9bbee9502b1fb6317cba9.png'),
 ];
