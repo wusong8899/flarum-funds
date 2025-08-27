@@ -11,7 +11,7 @@ export default class MobileMoneyDisplay extends Component<ComponentAttrs> {
     // Note: Mobile detection and user authentication are now handled in index.ts
     // This component assumes it should render when called
     const userMoney = app.session.user?.attribute('money') || 0;
-    const iconUrl = app.forum.attribute('wusong8899-withdrawal.moneyIconUrl') || 'https://i.mji.rip/2025/08/28/cd18932c68e9bbee9502b1fb6317cba9.png';
+    const iconUrl = app.forum.attribute('wusong8899-withdrawal.moneyIconUrl');
 
     return (
       <div className="Navigation-mobileMoneyDisplay">
@@ -22,33 +22,30 @@ export default class MobileMoneyDisplay extends Component<ComponentAttrs> {
         >
           {/* 货币图标和金额显示 */}
           <div className="Navigation-moneyText">
-            <span style={{  
-              borderRadius: '50%', 
-              padding: '4px 6px', 
-              marginRight: '6px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <img 
-                src={iconUrl} 
-                alt="Money icon" 
-                style={{ 
-                  width: '18px', 
-                  height: '18px'
-                }}
-                onError={(e: Event) => {
-                  // Fallback to default icon if image fails to load
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                  const fallbackIcon = document.createElement('i');
-                  fallbackIcon.className = 'fas fa-yen-sign';
-                  fallbackIcon.style.color = '#ffffff';
-                  fallbackIcon.style.fontSize = '12px';
-                  target.parentNode?.appendChild(fallbackIcon);
-                }}
-              />
-            </span>
+            {iconUrl && iconUrl.trim() && (
+              <span style={{  
+                borderRadius: '50%', 
+                padding: '4px 6px', 
+                marginRight: '6px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <img 
+                  src={iconUrl} 
+                  alt="Money icon" 
+                  style={{ 
+                    width: '18px', 
+                    height: '18px'
+                  }}
+                  onError={(e: Event) => {
+                    // Hide image if it fails to load
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                  }}
+                />
+              </span>
+            )}
             <span className="Navigation-moneyAmount">{userMoney}</span>
           </div>
           
