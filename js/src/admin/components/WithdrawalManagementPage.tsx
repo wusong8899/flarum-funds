@@ -79,6 +79,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
         <div className="container">
           <h2>{app.translator.trans('withdrawal.admin.page.title')}</h2>
           
+          {this.renderGeneralSettings()}
           {this.renderPlatformManagement()}
           {this.renderRequestManagement()}
         </div>
@@ -86,6 +87,30 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     );
   }
 
+  private renderGeneralSettings(): Mithril.Children {
+    return (
+      <div className="WithdrawalManagementPage-section">
+        <h3>General Settings</h3>
+        
+        <div className="Form">
+          <div className="Form-group">
+            <label>{app.translator.trans('withdrawal.admin.settings.money_icon_url')}</label>
+            <input
+              type="url"
+              className="FormControl"
+              placeholder="https://i.mji.rip/2025/08/28/63ef70196bd4a72d61206edad826aea5.png"
+              value={app.forum.attribute('wusong8899-withdrawal.moneyIconUrl') || ''}
+              oninput={(e: Event) => {
+                const value = (e.target as HTMLInputElement).value;
+                this.saveSetting('wusong8899-withdrawal.moneyIconUrl', value);
+              }}
+            />
+            <small className="helpText">{app.translator.trans('withdrawal.admin.settings.money_icon_url_help')}</small>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   private renderPlatformManagement(): Mithril.Children {
     return (
@@ -655,6 +680,26 @@ export default class WithdrawalManagementPage extends ExtensionPage {
       } catch (error) {
         console.error('Error loading users:', error);
       }
+    }
+  }
+
+  private async saveSetting(key: string, value: string): Promise<void> {
+    try {
+      await app.request({
+        method: 'POST',
+        url: app.forum.attribute('apiUrl') + '/settings',
+        body: { [key]: value }
+      });
+      
+      // Update the forum attribute immediately so the UI reflects the change
+      app.forum.pushAttributes({ [key]: value });
+      
+    } catch (error) {
+      console.error('Error saving setting:', error);
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        'Failed to save setting'
+      );
     }
   }
 }
