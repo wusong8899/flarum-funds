@@ -2,6 +2,9 @@ withdrawal:
   admin:
     page:
       title: Withdrawal Management
+    settings:
+      money_icon_url: Money Display Icon URL
+      money_icon_url_help: Enter image URL for the money display icon (shows in header)
     platforms:
       title: Withdrawal Platforms
       name: Platform Name

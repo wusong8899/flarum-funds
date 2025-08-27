@@ -2,6 +2,9 @@ withdrawal:
   admin:
     page:
       title: 提款管理
+    settings:
+      money_icon_url: 货币显示图标URL
+      money_icon_url_help: 输入货币显示图标的图片URL（显示在头部）
     platforms:
       title: 提款平台
       name: 平台名称

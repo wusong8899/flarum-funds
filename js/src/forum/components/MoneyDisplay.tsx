@@ -13,6 +13,7 @@ export default class MoneyDisplay extends Component<ComponentAttrs> {
 
     const moneyName = app.forum.attribute('antoinefr-money.moneyname') || '[money]';
     const userMoneyText = moneyName.replace('[money]', app.session.user.attribute("money"));
+    const iconUrl = app.forum.attribute('wusong8899-withdrawal.moneyIconUrl') || 'https://i.mji.rip/2025/08/28/63ef70196bd4a72d61206edad826aea5.png';
 
     return (
       <div
@@ -20,8 +21,34 @@ export default class MoneyDisplay extends Component<ComponentAttrs> {
         className="client1-header-adv-wrapper clientCustomizeWithdrawalHeaderTotalMoney"
       >
         <div className="clientCustomizeWithdrawalHeaderText">
-          <span>
-            <i className="fas fa-yen-sign" style={{ paddingRight: '8px', color: '#ff6b6b' }} />
+          <span style={{ 
+            backgroundColor: '#ffd700', 
+            borderRadius: '50%', 
+            padding: '6px 8px', 
+            marginRight: '8px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <img 
+              src={iconUrl} 
+              alt="Money icon" 
+              style={{ 
+                width: '16px', 
+                height: '16px', 
+                filter: 'brightness(0) invert(1)' // Makes image white
+              }}
+              onError={(e: Event) => {
+                // Fallback to default icon if image fails to load
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                const fallbackIcon = document.createElement('i');
+                fallbackIcon.className = 'fas fa-yen-sign';
+                fallbackIcon.style.color = '#ffffff';
+                fallbackIcon.style.fontSize = '14px';
+                target.parentNode?.appendChild(fallbackIcon);
+              }}
+            />
           </span>
           {userMoneyText}
         </div>
