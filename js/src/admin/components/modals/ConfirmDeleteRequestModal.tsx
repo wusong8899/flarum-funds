@@ -40,6 +40,6 @@ export default class ConfirmDeleteRequestModal extends Modal<ConfirmDeleteReques
 
   confirm() {
     this.attrs.onConfirm();
-    this.hide();
+    app.modal.close();
   }
 }

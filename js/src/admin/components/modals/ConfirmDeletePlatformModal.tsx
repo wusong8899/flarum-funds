@@ -40,6 +40,6 @@ export default class ConfirmDeletePlatformModal extends Modal<ConfirmDeletePlatf
 
   confirm() {
     this.attrs.onConfirm();
-    this.hide();
+    app.modal.close();
   }
 }
