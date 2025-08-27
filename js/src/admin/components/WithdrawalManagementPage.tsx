@@ -98,7 +98,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
             <input
               type="url"
               className="FormControl"
-              placeholder="https://i.mji.rip/2025/08/28/63ef70196bd4a72d61206edad826aea5.png"
+              placeholder="https://i.mji.rip/2025/08/28/cd18932c68e9bbee9502b1fb6317cba9.png"
               value={app.forum.attribute('wusong8899-withdrawal.moneyIconUrl') || ''}
               oninput={(e: Event) => {
                 const value = (e.target as HTMLInputElement).value;

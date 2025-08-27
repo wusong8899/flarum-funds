@@ -7,7 +7,7 @@ app.initializers.add('wusong8899-withdrawal', () => {
   // Register models in store
   app.store.models['withdrawal-platforms'] = WithdrawalPlatform;
   app.store.models['withdrawal-requests'] = WithdrawalRequest;
-  
+
   app.extensionData
     .for('wusong8899-withdrawal')
     .registerSetting({
@@ -15,7 +15,7 @@ app.initializers.add('wusong8899-withdrawal', () => {
       type: 'url',
       label: app.translator.trans('withdrawal.admin.settings.money_icon_url'),
       help: app.translator.trans('withdrawal.admin.settings.money_icon_url_help'),
-      placeholder: 'https://i.mji.rip/2025/08/28/63ef70196bd4a72d61206edad826aea5.png'
+      placeholder: 'https://i.mji.rip/2025/08/28/cd18932c68e9bbee9502b1fb6317cba9.png'
     })
     .registerPage(WithdrawalManagementPage);
 });

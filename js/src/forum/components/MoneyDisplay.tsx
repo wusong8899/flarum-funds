@@ -13,7 +13,7 @@ export default class MoneyDisplay extends Component<ComponentAttrs> {
 
     const moneyName = app.forum.attribute('antoinefr-money.moneyname') || '[money]';
     const userMoneyText = moneyName.replace('[money]', app.session.user.attribute("money"));
-    const iconUrl = app.forum.attribute('wusong8899-withdrawal.moneyIconUrl') || 'https://i.mji.rip/2025/08/28/63ef70196bd4a72d61206edad826aea5.png';
+    const iconUrl = app.forum.attribute('wusong8899-withdrawal.moneyIconUrl') || 'https://i.mji.rip/2025/08/28/cd18932c68e9bbee9502b1fb6317cba9.png';
 
     return (
       <div
