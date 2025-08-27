@@ -4,7 +4,7 @@
     padding: 20px;
     background: var(--control-bg);
     border-radius: 6px;
-    
+
     h3 {
       margin-top: 0;
       margin-bottom: 20px;
@@ -12,7 +12,7 @@
       border-bottom: 1px solid var(--control-bg);
       padding-bottom: 10px;
     }
-    
+
     h4 {
       margin-top: 20px;
       margin-bottom: 15px;
@@ -25,7 +25,7 @@
       display: flex;
       gap: 10px;
       align-items: center;
-      
+
       .FormControl {
         flex: 1;
         padding: 8px 12px;
@@ -33,7 +33,7 @@
         border-radius: 4px;
         background: var(--body-bg);
         color: var(--text-color);
-        
+
         &:focus {
           border-color: var(--primary-color);
           outline: none;
@@ -51,29 +51,29 @@
     background: var(--body-bg);
     border-radius: 4px;
     border: 1px solid var(--control-bg);
-    
+
     .WithdrawalPlatform-info {
       flex: 1;
-      
+
       .WithdrawalPlatform-primary {
         display: flex;
         align-items: center;
         gap: 10px;
         margin-bottom: 5px;
-        
+
         .WithdrawalPlatform-status {
           font-size: 1.2em;
           line-height: 1;
-          
+
           &.inactive {
             opacity: 0.5;
           }
         }
-        
+
         .WithdrawalPlatform-name {
           font-weight: bold;
         }
-        
+
         .platform-id {
           background: var(--control-bg);
           padding: 2px 6px;
@@ -82,7 +82,7 @@
           font-size: 0.9em;
           color: var(--muted-color);
         }
-        
+
         .WithdrawalPlatform-symbol {
           background: var(--primary-color);
           color: white;
@@ -92,23 +92,23 @@
           font-weight: bold;
         }
       }
-      
+
       .WithdrawalPlatform-details {
         display: flex;
         gap: 20px;
         font-size: 0.9em;
         color: var(--muted-color);
-        
+
         .WithdrawalPlatform-amounts {
           font-family: monospace;
         }
       }
     }
-    
+
     .WithdrawalPlatform-actions {
       display: flex;
       gap: 10px;
-      
+
       .Button {
         padding: 6px 12px;
         font-size: 0.9em;
@@ -122,30 +122,30 @@
     border-radius: 4px;
     border: 1px solid var(--control-bg);
     background: var(--body-bg);
-    
+
     &.status-pending {
       border-left: 4px solid var(--warning-color);
     }
-    
+
     &.status-approved {
       border-left: 4px solid var(--success-color);
     }
-    
+
     &.status-rejected {
       border-left: 4px solid var(--danger-color);
     }
-    
+
     .WithdrawalRequest-info {
       margin-bottom: 15px;
-      
+
       .WithdrawalRequest-user {
         margin-bottom: 10px;
-        
+
         strong {
           color: var(--primary-color);
           margin-right: 10px;
         }
-        
+
         .request-id {
           background: var(--control-bg);
           padding: 2px 6px;
@@ -155,26 +155,26 @@
           color: var(--muted-color);
         }
       }
-      
+
       .WithdrawalRequest-details {
         display: flex;
         gap: 20px;
         flex-wrap: wrap;
         margin-bottom: 10px;
-        
+
         .amount {
           font-weight: bold;
           font-size: 1.1em;
           color: var(--success-color);
         }
-        
+
         .platform {
           background: var(--control-bg);
           padding: 2px 8px;
           border-radius: 12px;
           font-size: 0.9em;
         }
-        
+
         .symbol {
           background: var(--primary-color);
           color: white;
@@ -183,20 +183,20 @@
           font-size: 0.9em;
           font-weight: bold;
         }
-        
+
         .date {
           color: var(--muted-color);
           font-size: 0.9em;
         }
       }
-      
+
       .WithdrawalRequest-account {
         margin-bottom: 10px;
-        
+
         strong {
           margin-right: 8px;
         }
-        
+
         span {
           background: var(--control-bg);
           padding: 4px 8px;
@@ -205,36 +205,36 @@
           word-break: break-all;
         }
       }
-      
+
       .WithdrawalRequest-status {
         .Badge {
           padding: 4px 8px;
           border-radius: 12px;
           font-size: 0.8em;
           font-weight: bold;
-          
+
           &.Badge--pending {
-            background: var(--warning-color);
+            background: #f39c12;
             color: white;
           }
-          
+
           &.Badge--approved {
-            background: var(--success-color);
+            background: #27ae60;
             color: white;
           }
-          
+
           &.Badge--rejected {
-            background: var(--danger-color);
+            background: #e74c3c;
             color: white;
           }
         }
       }
     }
-    
+
     .WithdrawalRequest-actions {
       display: flex;
       gap: 10px;
-      
+
       .Button {
         padding: 6px 12px;
         font-size: 0.9em;
@@ -245,14 +245,14 @@
   .Form {
     .Form-group {
       margin-bottom: 20px;
-      
+
       label {
         display: block;
         font-weight: bold;
         margin-bottom: 8px;
         color: var(--text-color);
       }
-      
+
       .FormControl {
         width: 100%;
         max-width: 300px;
@@ -261,7 +261,7 @@
         border-radius: 4px;
         background: var(--body-bg);
         color: var(--text-color);
-        
+
         &:focus {
           border-color: var(--primary-color);
           outline: none;
