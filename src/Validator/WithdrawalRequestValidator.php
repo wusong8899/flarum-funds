@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace wusong8899\Withdrawal\Validator;
 
 use Flarum\User\User;
-use Illuminate\Validation\ValidationException;
+use Flarum\Foundation\ValidationException;
 use wusong8899\Withdrawal\Model\WithdrawalPlatform;
 
 class WithdrawalRequestValidator

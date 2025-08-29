@@ -7,7 +7,7 @@ namespace wusong8899\Withdrawal\Api\Controller;
 use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Http\RequestUtil;
 use Illuminate\Support\Arr;
-use Illuminate\Validation\ValidationException;
+use Flarum\Foundation\ValidationException;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use wusong8899\Withdrawal\Api\Serializer\DepositTransactionSerializer;
