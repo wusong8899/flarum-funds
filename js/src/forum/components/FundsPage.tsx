@@ -218,30 +218,34 @@ export default class FundsPage extends Page {
 
     if (validPlatforms.length === 0) {
       return (
-        <div className="FundsPage-emptyState">
-          <div className="FundsPage-emptyIcon">
-            {icon('fas fa-coins')}
+        <div className="FundsPage-withdrawalTab">
+          <div className="WithdrawalPage-emptyState">
+            <div className="WithdrawalPage-emptyIcon">
+              {icon('fas fa-coins')}
+            </div>
+            <h3 className="WithdrawalPage-emptyTitle">
+              {app.translator.trans('withdrawal.forum.no_platforms')}
+            </h3>
+            <p className="WithdrawalPage-emptyDescription">
+              {app.translator.trans('withdrawal.forum.no_platforms_description')}
+            </p>
           </div>
-          <h3 className="FundsPage-emptyTitle">
-            {app.translator.trans('withdrawal.forum.no_platforms')}
-          </h3>
-          <p className="FundsPage-emptyDescription">
-            {app.translator.trans('withdrawal.forum.no_platforms_description')}
-          </p>
         </div>
       );
     }
 
     return (
-      <WithdrawalForm
-        platforms={this.state.withdrawalPlatforms}
-        formData={this.getWithdrawalFormDataForComponent()}
-        loadingBalance={this.state.loadingBalance}
-        submitting={this.state.submitting}
-        onFormDataChange={this.handleWithdrawalFormDataChange.bind(this)}
-        onFillAllAmount={this.handleFillAllAmount.bind(this)}
-        onSubmit={this.handleWithdrawalSubmit.bind(this)}
-      />
+      <div className="FundsPage-withdrawalTab">
+        <WithdrawalForm
+          platforms={this.state.withdrawalPlatforms}
+          formData={this.getWithdrawalFormDataForComponent()}
+          loadingBalance={this.state.loadingBalance}
+          submitting={this.state.submitting}
+          onFormDataChange={this.handleWithdrawalFormDataChange.bind(this)}
+          onFillAllAmount={this.handleFillAllAmount.bind(this)}
+          onSubmit={this.handleWithdrawalSubmit.bind(this)}
+        />
+      </div>
     );
   }
 
@@ -350,11 +354,13 @@ export default class FundsPage extends Page {
 
   private renderWithdrawalHistoryTab(): Mithril.Children {
     return (
-      <WithdrawalHistory
-        requests={this.state.withdrawalRequests}
-        platforms={this.state.withdrawalPlatforms}
-        loading={false}
-      />
+      <div className="FundsPage-withdrawalTab">
+        <WithdrawalHistory
+          requests={this.state.withdrawalRequests}
+          platforms={this.state.withdrawalPlatforms}
+          loading={false}
+        />
+      </div>
     );
   }
 

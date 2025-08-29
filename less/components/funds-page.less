@@ -1,3 +1,7 @@
+// Import withdrawal and deposit component styles for compatibility
+@import "withdrawal-page.less";
+@import "deposit-page.less";
+
 // Unified Funds Page Styles (Withdrawal + Deposit)
 .FundsPage {
   position: fixed;
@@ -198,6 +202,25 @@
           line-height: 1.4;
         }
       }
+    }
+  }
+
+  // Withdrawal-specific styles - ensure compatibility with WithdrawalPage components
+  .FundsPage-withdrawalTab {
+    // Inherit all WithdrawalPage styles when inside FundsPage
+    .WithdrawalPage-platformSelector,
+    .WithdrawalPage-amountSection,
+    .WithdrawalPage-addressSection,
+    .WithdrawalPage-submitSection,
+    .WithdrawalPage-historyList,
+    .WithdrawalPage-historyItem,
+    .WithdrawalPage-emptyState {
+      // All existing WithdrawalPage component styles will be applied
+    }
+    
+    // Override any conflicting styles if needed
+    .WithdrawalPage-emptyState {
+      color: #fff;
     }
   }
 
