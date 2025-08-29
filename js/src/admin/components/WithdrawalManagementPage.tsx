@@ -458,12 +458,12 @@ export default class WithdrawalManagementPage extends ExtensionPage {
 
   private deleteDepositPlatform(platform: DepositPlatform): void {
     app.modal.show(ConfirmDeletePlatformModal, {
-      platformName: platform.name,
+      platformName: platform.name(),
       onConfirm: async () => {
         try {
           await app.request({
             method: 'DELETE',
-            url: `${app.forum.attribute('apiUrl')}/deposit-platforms/${platform.id}`
+            url: `${app.forum.attribute('apiUrl')}/deposit-platforms/${platform.id()}`
           });
 
           await this.loadDepositPlatforms();
