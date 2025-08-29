@@ -109,7 +109,7 @@ withdrawal:
         add_error: Failed to add deposit platform
         delete_success: Deposit platform deleted successfully
         delete_error: Failed to delete deposit platform
-        required_fields_error: Please fill required fields: platform name, currency symbol and network type
+        required_fields_error: "Please fill required fields: platform name, currency symbol and network type"
         address_required_error: Deposit address is required
         enable_success: Deposit platform enabled successfully
         disable_success: Deposit platform disabled successfully
