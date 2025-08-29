@@ -87,7 +87,41 @@ withdrawal:
       load_error: Failed to load network types
     deposit:
       platforms:
+        title: Deposit Platform Management
+        name: Platform Name
+        symbol: Currency Symbol
+        network: Network Type
+        min_amount: Minimum Amount
+        max_amount: Maximum Amount
+        address: Deposit Address
+        address_help: Static deposit address (optional)
+        icon_url: Icon Image URL
+        icon_class: Icon CSS Class
+        warning_text: Warning Text
         custom_network: Custom Network Name
+        is_active: Active
+        active: Active
+        inactive: Inactive
+        add_button: Add Platform
+        empty: No deposit platforms configured
+        delete: Delete
+        add_success: Deposit platform added successfully
+        add_error: Failed to add deposit platform
+        delete_success: Deposit platform deleted successfully
+        delete_error: Failed to delete deposit platform
+        required_fields_error: Please fill required fields: platform name, currency symbol and network type
+        address_required_error: Deposit address is required
+        enable_success: Deposit platform enabled successfully
+        disable_success: Deposit platform disabled successfully
+      transactions:
+        title: Deposit Transaction Management
+        pending_title: Pending Transactions
+        completed_title: Completed Transactions
+        no_pending: No pending transactions
+        no_completed: No completed transactions
+        complete_success: Transaction completed successfully
+        complete_error: Failed to complete transaction
+        update_error: Failed to update transaction
 
   forum:
     header:

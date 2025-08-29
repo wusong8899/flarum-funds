@@ -4,7 +4,7 @@ import Button from 'flarum/common/components/Button';
 import Switch from 'flarum/common/components/Switch';
 import icon from 'flarum/common/helpers/icon';
 import type Mithril from 'mithril';
-import type { DepositPlatform } from '../types/AdminTypes';
+import type DepositPlatform from '../../../common/models/DepositPlatform';
 
 export interface DepositPlatformListItemAttrs {
   platform: DepositPlatform;
@@ -25,33 +25,33 @@ export default class DepositPlatformListItem extends Component<DepositPlatformLi
           
           <div className="DepositPlatformListItem-info">
             <div className="DepositPlatformListItem-primary">
-              <strong>{platform.name}</strong>
+              <strong>{platform.name()}</strong>
               <span className="DepositPlatformListItem-displayName">
-                {platform.symbol} ({platform.network})
+                {platform.symbol()} ({platform.network()})
               </span>
             </div>
             
             <div className="DepositPlatformListItem-details">
               <span className="DepositPlatformListItem-detail">
-                Min: {platform.minAmount} {platform.symbol}
+                Min: {platform.minAmount()} {platform.symbol()}
               </span>
               {platform.maxAmount && (
                 <span className="DepositPlatformListItem-detail">
-                  Max: {platform.maxAmount} {platform.symbol}
+                  Max: {platform.maxAmount()} {platform.symbol()}
                 </span>
               )}
               <span className="DepositPlatformListItem-detail">
-                Address: {platform.address ? 'Static' : 'Template'}
+                Address: {platform.address() ? 'Static' : 'Template'}
               </span>
             </div>
           </div>
           
           <div className="DepositPlatformListItem-actions">
             <Switch 
-              state={platform.isActive} 
+              state={platform.isActive()} 
               onchange={onToggleStatus}
             >
-              {platform.isActive 
+              {platform.isActive() 
                 ? app.translator.trans('withdrawal.admin.deposit.platforms.active')
                 : app.translator.trans('withdrawal.admin.deposit.platforms.inactive')
               }
@@ -70,16 +70,16 @@ export default class DepositPlatformListItem extends Component<DepositPlatformLi
   }
 
   private renderPlatformIcon(platform: DepositPlatform): Mithril.Children {
-    if (platform.iconUrl) {
-      return <img src={platform.iconUrl} alt={platform.symbol} className="DepositPlatformListItem-img" />;
+    if (platform.iconUrl()) {
+      return <img src={platform.iconUrl()} alt={platform.symbol()} className="DepositPlatformListItem-img" />;
     }
 
-    if (platform.iconClass) {
-      return icon(platform.iconClass);
+    if (platform.iconClass()) {
+      return icon(platform.iconClass());
     }
 
     // Default currency icons
-    switch (platform.symbol) {
+    switch (platform.symbol()) {
       case 'USDT':
         return <span className="DepositPlatformListItem-currencyIcon usdt">₮</span>;
       case 'USDC':
