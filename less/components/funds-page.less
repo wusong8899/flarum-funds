@@ -139,7 +139,7 @@
       display: flex;
       gap: 12px;
       margin-bottom: 24px;
-      
+
       // Make responsive on mobile
       @media (max-width: 480px) {
         flex-direction: column;
@@ -207,17 +207,406 @@
 
   // Withdrawal-specific styles - ensure compatibility with WithdrawalPage components
   .FundsPage-withdrawalTab {
-    // Inherit all WithdrawalPage styles when inside FundsPage
-    .WithdrawalPage-platformSelector,
-    .WithdrawalPage-amountSection,
-    .WithdrawalPage-addressSection,
-    .WithdrawalPage-submitSection,
+
+    .WithdrawalPage-platformSelector {
+      margin-bottom: 24px;
+      position: relative;
+
+      .WithdrawalPage-label {
+        color: #fff;
+        font-weight: 500;
+        font-size: 16px;
+        margin-bottom: 12px;
+      }
+
+      .WithdrawalPage-platformDropdown {
+        background: #2a2a2a;
+        border: 1px solid #3a3a3a;
+        border-radius: 12px;
+        padding: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.2s ease;
+
+        &:hover {
+          border-color: #4A90E2;
+        }
+
+        .WithdrawalPage-platformSelected {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex: 1;
+
+          .WithdrawalPage-platformInfo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            .WithdrawalPage-platformIcon {
+              width: 32px;
+              height: 32px;
+              border-radius: 50%;
+              background: #4A90E2;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: #fff;
+              font-size: 16px;
+              overflow: hidden;
+
+              .platform-icon-image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 50%;
+              }
+
+              .crypto-icon {
+                &.default {
+                  color: #fff;
+                }
+              }
+            }
+
+            .WithdrawalPage-platformDetails {
+              .WithdrawalPage-platformSymbol {
+                font-weight: 600;
+                font-size: 16px;
+                color: #fff;
+              }
+
+              .WithdrawalPage-platformFlow {
+                font-size: 12px;
+                color: #888;
+                margin-top: 2px;
+              }
+            }
+          }
+
+          .WithdrawalPage-platformName {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+          }
+        }
+
+        .WithdrawalPage-dropdownIcon {
+          color: #888;
+          transition: transform 0.2s ease;
+        }
+      }
+
+      .WithdrawalPage-dropdownMenu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #2a2a2a;
+        border: 1px solid #3a3a3a;
+        border-radius: 12px;
+        margin-top: 8px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1001;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+        .WithdrawalPage-dropdownItem {
+          padding: 12px 16px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          cursor: pointer;
+          transition: background 0.2s ease;
+
+          &:hover {
+            background: #3a3a3a;
+          }
+
+          .WithdrawalPage-platformIcon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #4A90E2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 12px;
+            overflow: hidden;
+
+            .platform-icon-image {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 50%;
+            }
+          }
+
+          .WithdrawalPage-platformDetails {
+            .WithdrawalPage-platformSymbol {
+              font-weight: 600;
+              color: #fff;
+            }
+
+            .WithdrawalPage-platformName {
+              font-size: 14px;
+              color: #888;
+              margin-top: 2px;
+            }
+          }
+        }
+      }
+    }
+
+    .WithdrawalPage-amountSection {
+      margin-bottom: 24px;
+
+      .WithdrawalPage-formGroup {
+        .WithdrawalPage-balanceHeader {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 12px;
+
+          .WithdrawalPage-label {
+            color: #fff;
+            font-weight: 500;
+            font-size: 16px;
+          }
+
+          .WithdrawalPage-balance {
+            color: #888;
+            font-size: 14px;
+          }
+        }
+
+        .WithdrawalPage-amountInput {
+          display: flex;
+          gap: 12px;
+          margin-bottom: 16px;
+
+          .WithdrawalPage-input {
+            flex: 1;
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            border-radius: 8px;
+            padding: 14px 16px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.2s ease;
+
+            &:focus {
+              border-color: #4A90E2;
+              box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+            }
+
+            &::placeholder {
+              color: #666;
+            }
+          }
+
+          .WithdrawalPage-allButton {
+            background: #4A90E2;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+
+            &:hover {
+              background: #3a7bc8;
+            }
+          }
+        }
+
+        .WithdrawalPage-amountLimits {
+          .WithdrawalPage-limitRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+
+            &:last-child {
+              border-bottom: none;
+            }
+
+            .WithdrawalPage-limitLabel {
+              color: #888;
+              font-size: 14px;
+            }
+
+            .WithdrawalPage-limitValue {
+              color: #fff;
+              font-size: 14px;
+              display: flex;
+              align-items: center;
+              gap: 4px;
+
+              i {
+                color: #4A90E2;
+                font-size: 12px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .WithdrawalPage-addressSection {
+      margin-bottom: 24px;
+
+      .WithdrawalPage-formGroup {
+        .WithdrawalPage-addressHeader {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 12px;
+
+          .WithdrawalPage-label {
+            color: #fff;
+            font-weight: 500;
+            font-size: 16px;
+
+            .WithdrawalPage-required {
+              color: #ff6b6b;
+              margin-left: 4px;
+            }
+          }
+
+          .WithdrawalPage-saveAddress {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4A90E2;
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+
+            &:hover {
+              color: #3a7bc8;
+            }
+
+            i {
+              font-size: 12px;
+            }
+          }
+        }
+
+        .WithdrawalPage-addressInput {
+          display: flex;
+          gap: 12px;
+
+          .WithdrawalPage-input {
+            flex: 1;
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            border-radius: 8px;
+            padding: 14px 16px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.2s ease;
+
+            &:focus {
+              border-color: #4A90E2;
+              box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+            }
+
+            &::placeholder {
+              color: #666;
+            }
+          }
+
+          .WithdrawalPage-pasteButton {
+            background: #3a3a3a;
+            border: 1px solid #4a4a4a;
+            border-radius: 8px;
+            padding: 14px 16px;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+              background: #4a4a4a;
+              color: #fff;
+            }
+
+            i {
+              font-size: 16px;
+            }
+          }
+        }
+      }
+    }
+
+    .WithdrawalPage-submitSection {
+      .WithdrawalPage-submitButton {
+        width: 100%;
+        background: #4A90E2;
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        padding: 16px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-bottom: 12px;
+
+        &:hover:not(:disabled) {
+          background: #3a7bc8;
+          transform: translateY(-1px);
+        }
+
+        &:disabled {
+          background: #3a3a3a;
+          color: #666;
+          cursor: not-allowed;
+          transform: none;
+        }
+
+        &.loading {
+          position: relative;
+          color: transparent;
+
+          &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+          }
+        }
+      }
+
+      .WithdrawalPage-finalAmount {
+        text-align: center;
+        color: #4A90E2;
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+
     .WithdrawalPage-historyList,
     .WithdrawalPage-historyItem,
     .WithdrawalPage-emptyState {
       // All existing WithdrawalPage component styles will be applied
     }
-    
+
     // Override any conflicting styles if needed
     .WithdrawalPage-emptyState {
       color: #fff;
@@ -242,7 +631,7 @@
       cursor: pointer;
       transition: all 0.2s ease;
       font-size: 12px;
-      
+
       &:hover {
         background: rgba(74, 144, 226, 0.2);
         border-color: rgba(74, 144, 226, 0.5);
@@ -296,7 +685,7 @@
     .FundsPage-header {
       .FundsPage-tabs {
         max-width: calc(100% - 50px); // Leave space for close button
-        
+
         .FundsPage-tab {
           padding: 8px 10px;
           font-size: 12px;
@@ -325,7 +714,7 @@
   }
 
   // Animation for smooth tab transitions
-  .FundsPage-content > * {
+  .FundsPage-content>* {
     animation: fadeIn 0.2s ease-in-out;
   }
 
@@ -334,6 +723,7 @@
       opacity: 0;
       transform: translateY(10px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
