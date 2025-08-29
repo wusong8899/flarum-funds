@@ -2,19 +2,23 @@ import app from 'flarum/admin/app';
 import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import type Mithril from 'mithril';
-import { WithdrawalPlatform, WithdrawalRequest, User, PlatformFormData } from './types/AdminTypes';
+import { WithdrawalPlatform, WithdrawalRequest, User, PlatformFormData, DepositPlatform, DepositTransaction } from './types/AdminTypes';
 import GeneralSettingsSection from './sections/GeneralSettingsSection';
 import PlatformManagementSection from './sections/PlatformManagementSection';
 import RequestManagementSection from './sections/RequestManagementSection';
+import DepositManagementSection from './sections/DepositManagementSection';
 import ConfirmDeletePlatformModal from './modals/ConfirmDeletePlatformModal';
 import ConfirmDeleteRequestModal from './modals/ConfirmDeleteRequestModal';
 
 export default class WithdrawalManagementPage extends ExtensionPage {
   private platforms: WithdrawalPlatform[] = [];
   private requests: WithdrawalRequest[] = [];
+  private depositPlatforms: DepositPlatform[] = [];
+  private depositTransactions: DepositTransaction[] = [];
   private users: { [key: number]: User } = {};
   private loading = true;
   private submittingPlatform = false;
+  private activeTab = 'withdrawals';
 
   oninit(vnode: Mithril.VnodeDOM) {
     super.oninit(vnode);
@@ -33,19 +37,52 @@ export default class WithdrawalManagementPage extends ExtensionPage {
           
           <GeneralSettingsSection onSettingChange={this.saveSetting.bind(this)} />
           
-          <PlatformManagementSection
-            platforms={this.platforms}
-            submittingPlatform={this.submittingPlatform}
-            onAddPlatform={this.addPlatform.bind(this)}
-            onTogglePlatformStatus={this.togglePlatformStatus.bind(this)}
-            onDeletePlatform={this.deletePlatform.bind(this)}
-          />
-          
-          <RequestManagementSection
-            requests={this.requests}
-            onUpdateRequestStatus={this.updateRequestStatus.bind(this)}
-            onDeleteRequest={this.deleteRequest.bind(this)}
-          />
+          <div className="AdminTabs">
+            <div className="AdminTabs-nav">
+              <button 
+                className={`AdminTabs-tab ${this.activeTab === 'withdrawals' ? 'active' : ''}`}
+                onclick={() => { this.activeTab = 'withdrawals'; }}
+              >
+                {app.translator.trans('withdrawal.admin.tabs.withdrawals')}
+              </button>
+              <button 
+                className={`AdminTabs-tab ${this.activeTab === 'deposits' ? 'active' : ''}`}
+                onclick={() => { this.activeTab = 'deposits'; }}
+              >
+                {app.translator.trans('withdrawal.admin.tabs.deposits')}
+              </button>
+            </div>
+            
+            <div className="AdminTabs-content">
+              {this.activeTab === 'withdrawals' ? (
+                <div>
+                  <PlatformManagementSection
+                    platforms={this.platforms}
+                    submittingPlatform={this.submittingPlatform}
+                    onAddPlatform={this.addPlatform.bind(this)}
+                    onTogglePlatformStatus={this.togglePlatformStatus.bind(this)}
+                    onDeletePlatform={this.deletePlatform.bind(this)}
+                  />
+                  
+                  <RequestManagementSection
+                    requests={this.requests}
+                    onUpdateRequestStatus={this.updateRequestStatus.bind(this)}
+                    onDeleteRequest={this.deleteRequest.bind(this)}
+                  />
+                </div>
+              ) : (
+                <DepositManagementSection
+                  platforms={this.depositPlatforms}
+                  transactions={this.depositTransactions}
+                  submittingPlatform={this.submittingPlatform}
+                  onAddPlatform={this.addDepositPlatform.bind(this)}
+                  onTogglePlatformStatus={this.toggleDepositPlatformStatus.bind(this)}
+                  onDeletePlatform={this.deleteDepositPlatform.bind(this)}
+                  onUpdateTransactionStatus={this.updateDepositTransactionStatus.bind(this)}
+                />
+              )}
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -226,6 +263,9 @@ export default class WithdrawalManagementPage extends ExtensionPage {
       await this.loadPlatforms();
       // Then load requests which reference platforms
       await this.loadRequests();
+      // Load deposit data
+      await this.loadDepositPlatforms();
+      await this.loadDepositTransactions();
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {
@@ -316,6 +356,188 @@ export default class WithdrawalManagementPage extends ExtensionPage {
         { type: 'error', dismissible: true },
         'Failed to save setting'
       );
+    }
+  }
+
+  // Deposit management methods
+  private async addDepositPlatform(formData: any): Promise<void> {
+    if (this.submittingPlatform) return;
+
+    this.submittingPlatform = true;
+
+    try {
+      const response = await app.request({
+        method: 'POST',
+        url: app.forum.attribute('apiUrl') + '/deposit-platforms',
+        body: {
+          data: {
+            type: 'deposit-platforms',
+            attributes: {
+              name: formData.name,
+              symbol: formData.symbol,
+              network: formData.network,
+              minAmount: parseFloat(formData.minAmount) || 0,
+              maxAmount: formData.maxAmount ? parseFloat(formData.maxAmount) : null,
+              address: formData.address || null,
+              addressTemplate: formData.addressTemplate || null,
+              iconUrl: formData.iconUrl || null,
+              iconClass: formData.iconClass || null,
+              qrCodeTemplate: formData.qrCodeTemplate || null,
+              warningText: formData.warningText || null,
+              isActive: formData.isActive
+            }
+          }
+        }
+      });
+      
+      if (response && response.data) {
+        app.store.pushPayload(response);
+      }
+      
+      await this.loadDepositPlatforms();
+      
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans('withdrawal.admin.deposit.platforms.add_success')
+      );
+    } catch (error) {
+      console.error('Error adding deposit platform:', error);
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        app.translator.trans('withdrawal.admin.deposit.platforms.add_error')
+      );
+    } finally {
+      this.submittingPlatform = false;
+    }
+  }
+
+  private async toggleDepositPlatformStatus(platform: DepositPlatform): Promise<void> {
+    try {
+      const response = await app.request({
+        method: 'PATCH',
+        url: `${app.forum.attribute('apiUrl')}/deposit-platforms/${platform.id}`,
+        body: {
+          data: {
+            type: 'deposit-platforms',
+            attributes: {
+              isActive: !platform.isActive
+            }
+          }
+        }
+      });
+
+      if (response && response.data) {
+        app.store.pushPayload(response);
+      }
+
+      await this.loadDepositPlatforms();
+      
+      const statusKey = !platform.isActive ? 'enable_success' : 'disable_success';
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans(`withdrawal.admin.deposit.platforms.${statusKey}`)
+      );
+    } catch (error) {
+      console.error('Error toggling platform status:', error);
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        app.translator.trans('withdrawal.admin.deposit.platforms.toggle_error')
+      );
+    }
+  }
+
+  private deleteDepositPlatform(platform: DepositPlatform): void {
+    app.modal.show(ConfirmDeletePlatformModal, {
+      platformName: platform.name,
+      onConfirm: async () => {
+        try {
+          await app.request({
+            method: 'DELETE',
+            url: `${app.forum.attribute('apiUrl')}/deposit-platforms/${platform.id}`
+          });
+
+          await this.loadDepositPlatforms();
+          
+          app.alerts.show(
+            { type: 'success', dismissible: true },
+            app.translator.trans('withdrawal.admin.deposit.platforms.delete_success')
+          );
+        } catch (error) {
+          console.error('Error deleting deposit platform:', error);
+          app.alerts.show(
+            { type: 'error', dismissible: true },
+            app.translator.trans('withdrawal.admin.deposit.platforms.delete_error')
+          );
+        }
+      }
+    });
+  }
+
+  private async updateDepositTransactionStatus(transaction: DepositTransaction, status: string): Promise<void> {
+    try {
+      const response = await app.request({
+        method: 'PATCH',
+        url: `${app.forum.attribute('apiUrl')}/deposit-transactions/${transaction.id}`,
+        body: {
+          data: {
+            type: 'deposit-transactions',
+            attributes: {
+              status: status
+            }
+          }
+        }
+      });
+
+      if (response && response.data) {
+        app.store.pushPayload(response);
+      }
+
+      await this.loadDepositTransactions();
+      
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans(`withdrawal.admin.deposit.transactions.${status}_success`)
+      );
+    } catch (error) {
+      console.error('Error updating deposit transaction:', error);
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        app.translator.trans('withdrawal.admin.deposit.transactions.update_error')
+      );
+    }
+  }
+
+  private async loadDepositPlatforms(): Promise<void> {
+    try {
+      const response = await app.request({
+        method: 'GET',
+        url: app.forum.attribute('apiUrl') + '/deposit-platforms'
+      });
+
+      app.store.pushPayload(response);
+      this.depositPlatforms = app.store.all('deposit-platforms');
+      
+      console.log('Loaded deposit platforms:', this.depositPlatforms);
+    } catch (error) {
+      console.error('Error loading deposit platforms:', error);
+      this.depositPlatforms = [];
+    }
+  }
+
+  private async loadDepositTransactions(): Promise<void> {
+    try {
+      const response = await app.request({
+        method: 'GET',
+        url: app.forum.attribute('apiUrl') + '/deposit-transactions'
+      });
+
+      app.store.pushPayload(response);
+      this.depositTransactions = app.store.all('deposit-transactions');
+      
+      console.log('Loaded deposit transactions:', this.depositTransactions);
+    } catch (error) {
+      console.error('Error loading deposit transactions:', error);
+      this.depositTransactions = [];
     }
   }
 }

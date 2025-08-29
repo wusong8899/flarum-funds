@@ -1,7 +1,10 @@
 withdrawal:
   admin:
     page:
-      title: 提款管理
+      title: 资金管理
+    tabs:
+      withdrawals: 提款管理
+      deposits: 存款管理
     settings:
       money_icon_url: 货币显示图标URL
       money_icon_url_help: 输入货币显示图标的图片URL（显示在头部）
@@ -54,6 +57,59 @@ withdrawal:
       delete_cancel_button: 取消
       delete_success: 提款申请已删除
       delete_error: 删除提款申请失败
+    deposit:
+      platforms:
+        title: 存款平台管理
+        name: 平台名称
+        symbol: 货币符号
+        network: 网络类型
+        min_amount: 最小金额
+        max_amount: 最大金额
+        address: 存款地址
+        address_template: 地址模板
+        address_help: 静态存款地址（可选）
+        address_template_help: 地址模板，{user_id} 将替换为用户ID
+        icon_url: 图标图片URL
+        icon_class: 图标CSS类
+        qr_template: 二维码模板
+        qr_template_help: 二维码数据模板，支持 {address} 和 {amount} 变量
+        warning_text: 警告文本
+        is_active: 启用
+        active: 启用
+        inactive: 禁用
+        add_button: 添加平台
+        empty: 未配置存款平台
+        delete: 删除
+        enable: 启用
+        disable: 禁用
+        enable_success: 存款平台已启用
+        disable_success: 存款平台已禁用
+        toggle_error: 切换平台状态失败
+        add_success: 存款平台添加成功
+        add_error: 添加存款平台失败
+        delete_success: 存款平台删除成功
+        delete_error: 删除存款平台失败
+        required_fields_error: 请填写必需字段：平台名称、货币符号和网络类型
+        address_required_error: 必须提供静态地址或地址模板
+      transactions:
+        title: 存款交易管理
+        pending_title: 待处理交易
+        completed_title: 已完成交易
+        no_pending: 暂无待处理的存款交易
+        no_completed: 暂无已完成的存款交易
+        confirm: 确认
+        complete: 完成
+        reject: 拒绝
+        confirmed_success: 存款交易已确认
+        completed_success: 存款交易已完成
+        failed_success: 存款交易已标记为失败
+        update_error: 更新存款交易状态失败
+        status:
+          pending: 待处理
+          confirmed: 已确认
+          completed: 已完成
+          failed: 失败
+          cancelled: 已取消
       approved_success: 申请已通过
       rejected_success: 申请已拒绝
       update_error: 更新申请失败
@@ -117,3 +173,18 @@ withdrawal:
       pending: 待审核
       approved: 已通过
       rejected: 已拒绝
+    deposit:
+      page:
+        title: 存款
+      tabs:
+        deposit: 存款
+        history: 存款历史
+      no_platforms: 暂无可用存款方式
+      no_platforms_description: 管理员还未配置任何存款平台，请稍后再试。
+      select_currency_network: 请先选择货币和网络
+      scan_or_use_address: 扫码或使用以下地址完成存款
+      min_amount: "最小存款金额为: {amount} {currency}"
+      address_copied: 地址已复制到剪贴板
+      copy_failed: 复制失败，请手动复制地址
+      address_load_error: 获取存款地址失败，请重试
+      default_warning: "此地址仅接受 {currency} {network} 协议充值，我们不接受少于 {minAmount} 的存款..."

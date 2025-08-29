@@ -1,0 +1,417 @@
+// Admin Tabs Styles
+.AdminTabs {
+  margin-top: 20px;
+
+  &-nav {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--control-bg);
+    margin-bottom: 20px;
+  }
+
+  &-tab {
+    background: none;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px 6px 0 0;
+    color: var(--muted-color);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+
+    &:hover {
+      background: var(--control-bg);
+      color: var(--body-color);
+    }
+
+    &.active {
+      background: var(--primary-color);
+      color: white;
+      border-bottom-color: var(--primary-color);
+    }
+  }
+
+  &-content {
+    // Content styles are handled by child components
+  }
+}
+
+// Deposit Platform Management Styles
+.DepositManagementSection {
+  .DepositPlatforms {
+    &-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    &-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    &-empty {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted-color);
+      background: var(--control-bg);
+      border-radius: 8px;
+    }
+  }
+
+  .DepositTransactions {
+    margin-top: 40px;
+
+    &-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 20px;
+    }
+
+    &-tab {
+      background: none;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      color: var(--muted-color);
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+
+      &:hover {
+        background: var(--control-bg);
+      }
+
+      &.active {
+        background: var(--primary-color);
+        color: white;
+      }
+    }
+
+    &-empty {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted-color);
+      background: var(--control-bg);
+      border-radius: 8px;
+    }
+  }
+}
+
+// Deposit Platform Form Styles
+.AddDepositPlatformForm {
+  background: var(--control-bg);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+
+  .Form-row {
+    display: flex;
+    gap: 16px;
+
+    .Form-group {
+      flex: 1;
+    }
+  }
+
+  .Form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .helpText {
+    font-size: 12px;
+    color: var(--muted-color);
+    margin-top: 4px;
+  }
+
+  .Form-required {
+    color: #E53E3E;
+    margin-left: 4px;
+  }
+}
+
+// Platform List Item Styles
+.DepositPlatformListItem {
+  background: var(--control-bg);
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: var(--primary-color);
+  }
+
+  &-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+  }
+
+  &-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &-primary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+
+    strong {
+      color: var(--heading-color);
+    }
+  }
+
+  &-displayName {
+    color: var(--muted-color);
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  &-details {
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--muted-color);
+  }
+
+  &-detail {
+    &:not(:last-child)::after {
+      content: '•';
+      margin-left: 12px;
+    }
+  }
+
+  &-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &-img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+  }
+
+  &-currencyIcon {
+    font-weight: bold;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+
+    &.usdt {
+      background: #26A17B;
+      color: white;
+    }
+
+    &.usdc {
+      background: #2775CA;
+      color: white;
+    }
+
+    &.btc {
+      background: #F7931A;
+      color: white;
+    }
+
+    &.eth {
+      background: #627EEA;
+      color: white;
+    }
+  }
+}
+
+// Transaction Item Styles
+.DepositTransactionItem {
+  background: var(--control-bg);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: var(--primary-color);
+  }
+
+  &-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  &-user {
+    display: flex;
+    flex-direction: column;
+
+    strong {
+      color: var(--heading-color);
+    }
+  }
+
+  &-time {
+    font-size: 12px;
+    color: var(--muted-color);
+  }
+
+  &-amount {
+    text-align: right;
+  }
+
+  &-amountValue {
+    font-weight: bold;
+    color: #48BB78;
+    font-size: 16px;
+    display: block;
+  }
+
+  &-status {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    margin-top: 4px;
+
+    &.status-warning {
+      color: #ED8936;
+    }
+
+    &.status-info {
+      color: #4299E1;
+    }
+
+    &.status-success {
+      color: #48BB78;
+    }
+
+    &.status-danger {
+      color: #E53E3E;
+    }
+
+    &.status-secondary {
+      color: var(--muted-color);
+    }
+  }
+
+  &-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted-color);
+  }
+
+  &-platform,
+  &-hash,
+  &-fromAddress,
+  &-confirmations,
+  &-notes {
+    display: flex;
+    gap: 8px;
+  }
+
+  &-label {
+    font-weight: 500;
+    min-width: 80px;
+    color: var(--body-color);
+  }
+
+  &-hashLink {
+    color: var(--primary-color);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &-confirmed {
+    color: #48BB78;
+    margin-left: 4px;
+  }
+
+  &-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+// Mobile responsive
+@media (max-width: 768px) {
+  .AdminTabs-nav {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .AdminTabs-tab {
+    border-radius: 0;
+    border-bottom: 1px solid var(--control-bg);
+
+    &.active {
+      border-radius: 0;
+    }
+  }
+
+  .AddDepositPlatformForm {
+    .Form-row {
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .Form-actions {
+      flex-direction: column;
+    }
+  }
+
+  .DepositPlatformListItem-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+
+    .DepositPlatformListItem-actions {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+
+  .DepositTransactionItem-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .DepositTransactionItem-actions {
+    flex-wrap: wrap;
+  }
+}

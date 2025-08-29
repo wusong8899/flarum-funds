@@ -1,0 +1,507 @@
+// Deposit Page Styles
+.DepositPage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+
+  &-modal {
+    background: var(--body-bg);
+    border-radius: 12px;
+    width: 90vw;
+    max-width: 500px;
+    max-height: 85vh;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  &-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid var(--control-bg);
+
+    .Button--close {
+      padding: 8px;
+      border-radius: 50%;
+    }
+  }
+
+  &-tabs {
+    display: flex;
+    gap: 4px;
+  }
+
+  &-tab {
+    padding: 8px 16px;
+    background: none;
+    border: none;
+    border-radius: 6px;
+    color: var(--muted-color);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+
+    &:hover {
+      background: var(--control-bg);
+    }
+
+    &.active {
+      background: var(--primary-color);
+      color: white;
+    }
+  }
+
+  &-content {
+    padding: 20px;
+    max-height: calc(85vh - 120px);
+    overflow-y: auto;
+  }
+
+  &-emptyState {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted-color);
+
+    h3 {
+      margin: 16px 0 8px;
+      color: var(--heading-color);
+    }
+
+    p {
+      margin: 0;
+      font-size: 14px;
+    }
+  }
+
+  &-emptyIcon {
+    font-size: 48px;
+    color: var(--muted-color);
+    margin-bottom: 16px;
+  }
+
+  // Selectors area
+  &-selectors {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  &-selectPrompt {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted-color);
+    background: var(--control-bg);
+    border-radius: 8px;
+  }
+
+  // Deposit info area
+  &-depositInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &-instructionText {
+    text-align: center;
+    color: var(--muted-color);
+    font-size: 13px;
+    margin: 0;
+  }
+
+  &-minAmountText {
+    text-align: center;
+    color: var(--muted-color);
+    font-size: 12px;
+    margin: -8px 0 0;
+  }
+
+  &-qrContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #2D3748;
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  &-infoPanel {
+    background: rgba(236, 151, 64, 0.1);
+    color: #EC9740;
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    line-height: 1.4;
+
+    .fas {
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+  }
+
+  &-loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted-color);
+  }
+}
+
+// Currency Selector Styles
+.CurrencySelector,
+.NetworkSelector {
+  position: relative;
+  flex: 1;
+  min-width: 140px;
+
+  &-trigger {
+    background: #2D3748;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background: #4A5568;
+    }
+  }
+
+  &.disabled &-trigger {
+    background: #1A202C;
+    cursor: not-allowed;
+    color: var(--muted-color);
+  }
+
+  &-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  &-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  &-label {
+    color: white;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &-arrow {
+    color: var(--muted-color);
+    transition: transform 0.2s;
+  }
+
+  &.open &-arrow {
+    transform: rotate(180deg);
+  }
+
+  &-loading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted-color);
+
+    span {
+      font-size: 12px;
+    }
+  }
+
+  &-placeholder {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted-color);
+  }
+
+  &-selected {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #2D3748;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 4px;
+  }
+
+  &-option {
+    padding: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background: #4A5568;
+    }
+
+    &.selected {
+      background: var(--primary-color);
+      color: white;
+    }
+  }
+
+  &-optionIcon {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &-optionLabel {
+    font-weight: 500;
+    color: white;
+  }
+
+  &-optionDesc {
+    font-size: 11px;
+    color: var(--muted-color);
+    margin-left: auto;
+  }
+
+  // Currency icons
+  &-currencyIcon,
+  &-networkIcon {
+    font-weight: bold;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+
+    &.usdt {
+      background: #26A17B;
+      color: white;
+    }
+
+    &.usdc {
+      background: #2775CA;
+      color: white;
+    }
+
+    &.btc {
+      background: #F7931A;
+      color: white;
+    }
+
+    &.eth {
+      background: #627EEA;
+      color: white;
+    }
+
+    &.trc20 {
+      background: #EB0029;
+      color: white;
+    }
+
+    &.erc20 {
+      background: #627EEA;
+      color: white;
+    }
+
+    &.bsc {
+      background: #F0B90B;
+      color: black;
+    }
+
+    &.polygon {
+      background: #8247E5;
+      color: white;
+    }
+  }
+}
+
+// Address Display Styles
+.AddressDisplay {
+  background: #2D3748;
+  border-radius: 8px;
+  padding: 12px;
+  font-family: 'Consolas', 'Monaco', 'Lucida Console', monospace;
+
+  &-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--muted-color);
+    padding: 20px;
+
+    .fa-spin {
+      animation: fa-spin 1s infinite linear;
+    }
+  }
+
+  &-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &-address {
+    flex: 1;
+    color: white;
+    font-size: 13px;
+    word-break: break-all;
+    line-height: 1.4;
+  }
+
+  &-copyBtn {
+    background: none;
+    border: none;
+    color: var(--muted-color);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: all 0.2s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+  }
+
+  &-placeholder {
+    text-align: center;
+    color: var(--muted-color);
+    padding: 20px;
+  }
+}
+
+// QR Code Display Styles
+.QRCodeDisplay {
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted-color);
+    height: 100%;
+
+    .fa-spin {
+      font-size: 24px;
+      margin-bottom: 8px;
+      animation: fa-spin 1s infinite linear;
+    }
+  }
+
+  &-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted-color);
+    height: 100%;
+    text-align: center;
+
+    .fas {
+      font-size: 24px;
+      margin-bottom: 8px;
+      color: #E53E3E;
+    }
+
+    span {
+      font-size: 12px;
+    }
+  }
+
+  &-qr {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+
+    canvas,
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+}
+
+// Mobile responsive
+@media (max-width: 480px) {
+  .DepositPage {
+    &-modal {
+      width: 95vw;
+      margin: 10px;
+    }
+
+    &-selectors {
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    &-content {
+      padding: 16px;
+    }
+
+    &-header {
+      padding: 16px;
+    }
+  }
+
+  .CurrencySelector,
+  .NetworkSelector {
+    min-width: unset;
+
+    &-label {
+      font-size: 14px;
+    }
+
+    &-dropdown {
+      max-height: 150px;
+    }
+  }
+
+  .AddressDisplay {
+    &-address {
+      font-size: 11px;
+    }
+  }
+}
