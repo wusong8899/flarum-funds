@@ -17,7 +17,7 @@ withdrawal:
       max_amount: 最大金额
       fee: 手续费
       icon_url: 图标图片URL（可选）
-      icon_url_help: 输入图片URL（如：https://example.com/icon.png）
+      icon_url_help: "输入图片URL（如：https://example.com/icon.png）"
       icon_class: 图标CSS类（可选）
       icon_class_help: 输入字体图标类（如：fas fa-coins）
       is_active: 启用
