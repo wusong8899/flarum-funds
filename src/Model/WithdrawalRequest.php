@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $platform_id
  * @property float $amount
  * @property string $account_details
+ * @property string|null $message
  * @property string $status
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
@@ -31,6 +32,7 @@ class WithdrawalRequest extends AbstractModel
         'platform_id',
         'amount',
         'account_details',
+        'message',
         'status'
     ];
 

@@ -4,6 +4,7 @@ import type { WithdrawalPlatform, WithdrawalFormData } from '../types/interfaces
 import PlatformSelector from './PlatformSelector';
 import AmountInput from './AmountInput';
 import AddressInput from './AddressInput';
+import MessageInput from './MessageInput';
 import SubmitButton from './SubmitButton';
 
 interface WithdrawalFormProps {
@@ -50,6 +51,11 @@ export default class WithdrawalForm extends Component<WithdrawalFormProps> {
         saveAddress={formData.saveAddress}
         onAccountDetailsChange={(accountDetails) => onFormDataChange({ accountDetails })}
         onSaveAddressToggle={(saveAddress) => onFormDataChange({ saveAddress })}
+      />,
+      
+      <MessageInput 
+        message={formData.message}
+        onMessageChange={(message) => onFormDataChange({ message })}
       />,
       
       <SubmitButton 

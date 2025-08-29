@@ -1,6 +1,5 @@
 import Stream from 'flarum/common/utils/Stream';
 import DepositPlatform from '../../../common/models/DepositPlatform';
-import DepositAddress from '../../../common/models/DepositAddress';
 import DepositTransaction from '../../../common/models/DepositTransaction';
 
 export interface DepositPageState {
@@ -12,6 +11,7 @@ export interface DepositPageState {
 
 export interface DepositFormData {
   selectedPlatform: Stream<DepositPlatform | null>;
+  userMessage: Stream<string>;
 }
 
 export interface DepositAddressData {

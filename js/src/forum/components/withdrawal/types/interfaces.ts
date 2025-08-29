@@ -16,6 +16,7 @@ export interface WithdrawalRequest {
   attributes: {
     amount: number;
     accountDetails: string;
+    message?: string;
     status: string;
     createdAt: string;
   };
@@ -30,6 +31,7 @@ export interface WithdrawalFormData {
   amount: string;
   selectedPlatform: WithdrawalPlatform | null;
   accountDetails: string;
+  message: string;
   saveAddress: boolean;
 }
 

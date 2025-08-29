@@ -1,5 +1,4 @@
 import Component from 'flarum/common/Component';
-import m from 'mithril';
 import type Mithril from 'mithril';
 
 // Note: You'll need to install qrcode library: npm install qrcode @types/qrcode
@@ -52,7 +51,7 @@ export default class QRCodeDisplay extends Component<QRCodeDisplayAttrs> {
       // Check if QRCode library is available
       if (typeof QRCode !== 'undefined') {
         // Using qrcode.js library
-        new QRCode(this.qrElement, {
+        const qrCodeInstance = new QRCode(this.qrElement, {
           text: attrs.data,
           width: attrs.size || 160,
           height: attrs.size || 160,
@@ -60,6 +59,8 @@ export default class QRCodeDisplay extends Component<QRCodeDisplayAttrs> {
           colorLight: '#ffffff',
           correctLevel: QRCode.CorrectLevel.M
         });
+        // QR code is generated, instance available if needed
+        void qrCodeInstance;
       } else {
         // Fallback: Use a QR code service
         this.generateQRWithService(attrs);
@@ -82,7 +83,7 @@ export default class QRCodeDisplay extends Component<QRCodeDisplayAttrs> {
     img.alt = 'QR Code';
     img.style.width = '100%';
     img.style.height = '100%';
-    img.onerror = () => this.showQRError();
+    img.addEventListener('error', () => this.showQRError());
     
     this.qrElement.appendChild(img);
   }

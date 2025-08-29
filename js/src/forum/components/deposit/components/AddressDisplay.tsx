@@ -1,6 +1,5 @@
 import Component from 'flarum/common/Component';
 import icon from 'flarum/common/helpers/icon';
-import m from 'mithril';
 import type Mithril from 'mithril';
 
 export interface AddressDisplayAttrs {

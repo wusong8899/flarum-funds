@@ -35,7 +35,12 @@ return [
         ->get('/deposit-address', 'deposit.address.get', Controller\GetDepositAddressController::class)
         ->get('/deposit-transactions', 'deposit.transactions.index', Controller\ListDepositTransactionsController::class)
         ->post('/deposit-transactions', 'deposit.transactions.create', Controller\CreateDepositTransactionController::class)
-        ->patch('/deposit-transactions/{id}', 'deposit.transactions.update', Controller\UpdateDepositTransactionController::class),
+        ->patch('/deposit-transactions/{id}', 'deposit.transactions.update', Controller\UpdateDepositTransactionController::class)
+        // Network types routes
+        ->get('/network-types', 'network-types.index', Controller\ListNetworkTypesController::class)
+        ->post('/network-types', 'network-types.create', Controller\CreateNetworkTypeController::class)
+        ->patch('/network-types/{id}', 'network-types.update', Controller\UpdateNetworkTypeController::class)
+        ->delete('/network-types/{id}', 'network-types.delete', Controller\DeleteNetworkTypeController::class),
 
     (new Extend\Model(Flarum\User\User::class))
         ->hasMany('withdrawalRequests', Model\WithdrawalRequest::class)

@@ -6,18 +6,18 @@ import Stream from 'flarum/common/utils/Stream';
 import withAttr from 'flarum/common/utils/withAttr';
 import m from 'mithril';
 import type Mithril from 'mithril';
+import NetworkType from '../../../common/models/NetworkType';
 
 export interface DepositPlatformFormData {
   name: string;
   symbol: string;
   network: string;
+  networkTypeId: number | null;
   minAmount: string;
   maxAmount: string;
   address: string;
-  addressTemplate: string;
   iconUrl: string;
   iconClass: string;
-  qrCodeTemplate: string;
   warningText: string;
   isActive: boolean;
 }
@@ -33,16 +33,23 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
     name: Stream(''),
     symbol: Stream(''),
     network: Stream(''),
+    networkTypeId: Stream<number | null>(null),
     minAmount: Stream(''),
     maxAmount: Stream(''),
     address: Stream(''),
-    addressTemplate: Stream(''),
     iconUrl: Stream(''),
     iconClass: Stream(''),
-    qrCodeTemplate: Stream(''),
     warningText: Stream(''),
     isActive: Stream(true)
   };
+  
+  private networkTypes: NetworkType[] = [];
+  private loadingNetworkTypes = false;
+
+  oninit(vnode: Mithril.Vnode<AddDepositPlatformFormAttrs>) {
+    super.oninit(vnode);
+    this.loadNetworkTypes();
+  }
 
   view(vnode: Mithril.Vnode<AddDepositPlatformFormAttrs>) {
     const { submitting, onCancel } = vnode.attrs;
@@ -83,22 +90,49 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
             <div className="Form-group">
               <label>
                 {app.translator.trans('withdrawal.admin.deposit.platforms.network')}
-                <span className="Form-required">*</span>
               </label>
               <select
                 className="FormControl"
-                value={this.formData.network()}
-                onchange={withAttr('value', this.formData.network)}
-                disabled={submitting}
+                value={this.formData.networkTypeId() || ''}
+                onchange={withAttr('value', (value) => {
+                  const networkTypeId = value ? parseInt(value) : null;
+                  this.formData.networkTypeId(networkTypeId);
+                  
+                  // Auto-fill network field based on selected network type
+                  if (networkTypeId) {
+                    const networkType = this.networkTypes.find(nt => nt.id() === networkTypeId);
+                    if (networkType) {
+                      this.formData.network(networkType.code());
+                    }
+                  } else {
+                    this.formData.network('');
+                  }
+                })}
+                disabled={submitting || this.loadingNetworkTypes}
               >
-                <option value="">Select Network</option>
-                <option value="TRC20">TRC20 (TRON)</option>
-                <option value="ERC20">ERC20 (Ethereum)</option>
-                <option value="BSC">BSC (Binance Smart Chain)</option>
-                <option value="POLYGON">POLYGON</option>
-                <option value="ARBITRUM">ARBITRUM</option>
-                <option value="OPTIMISM">OPTIMISM</option>
+                <option value="">{this.loadingNetworkTypes ? 'Loading...' : 'Select Network (Optional)'}</option>
+                {this.networkTypes.map(networkType => (
+                  <option key={networkType.id()} value={networkType.id()}>
+                    {networkType.name()}
+                  </option>
+                ))}
               </select>
+            </div>
+            
+            <div className="Form-group">
+              <label>
+                {app.translator.trans('withdrawal.admin.deposit.platforms.custom_network')}
+              </label>
+              <input
+                type="text"
+                className="FormControl"
+                placeholder="Custom network name (if not using predefined)"
+                bidi={this.formData.network}
+                disabled={submitting}
+              />
+              <div className="helpText">
+                Leave empty to use the selected network type above, or enter a custom network name.
+              </div>
             </div>
             <div className="Form-group">
               <label>
@@ -149,21 +183,6 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
             </div>
           </div>
 
-          <div className="Form-group">
-            <label>
-              {app.translator.trans('withdrawal.admin.deposit.platforms.address_template')}
-            </label>
-            <input
-              type="text"
-              className="FormControl"
-              placeholder="e.g., TSomeAddress{user_id}"
-              bidi={this.formData.addressTemplate}
-              disabled={submitting}
-            />
-            <div className="helpText">
-              {app.translator.trans('withdrawal.admin.deposit.platforms.address_template_help')}
-            </div>
-          </div>
 
           <div className="Form-row">
             <div className="Form-group">
@@ -192,21 +211,6 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
             </div>
           </div>
 
-          <div className="Form-group">
-            <label>
-              {app.translator.trans('withdrawal.admin.deposit.platforms.qr_template')}
-            </label>
-            <input
-              type="text"
-              className="FormControl"
-              placeholder="{address} or tron:{address}?amount={amount}"
-              bidi={this.formData.qrCodeTemplate}
-              disabled={submitting}
-            />
-            <div className="helpText">
-              {app.translator.trans('withdrawal.admin.deposit.platforms.qr_template_help')}
-            </div>
-          </div>
 
           <div className="Form-group">
             <label>
@@ -249,9 +253,29 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
     );
   }
 
+  private async loadNetworkTypes(): Promise<void> {
+    this.loadingNetworkTypes = true;
+    m.redraw();
+
+    try {
+      const response = await app.request({
+        method: 'GET',
+        url: app.forum.attribute('apiUrl') + '/network-types?filter[is_active]=1',
+      });
+
+      app.store.pushPayload(response);
+      this.networkTypes = app.store.all('network-types') as NetworkType[];
+    } catch (error) {
+      console.error('Failed to load network types:', error);
+    } finally {
+      this.loadingNetworkTypes = false;
+      m.redraw();
+    }
+  }
+
   private async handleSubmit(attrs: AddDepositPlatformFormAttrs): Promise<void> {
     // Basic validation
-    if (!this.formData.name() || !this.formData.symbol() || !this.formData.network()) {
+    if (!this.formData.name() || !this.formData.symbol()) {
       app.alerts.show(
         { type: 'error', dismissible: true },
         app.translator.trans('withdrawal.admin.deposit.platforms.required_fields_error')
@@ -259,7 +283,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
       return;
     }
 
-    if (!this.formData.address() && !this.formData.addressTemplate()) {
+    if (!this.formData.address()) {
       app.alerts.show(
         { type: 'error', dismissible: true },
         app.translator.trans('withdrawal.admin.deposit.platforms.address_required_error')
@@ -271,13 +295,12 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
       name: this.formData.name(),
       symbol: this.formData.symbol(),
       network: this.formData.network(),
+      networkTypeId: this.formData.networkTypeId(),
       minAmount: this.formData.minAmount(),
       maxAmount: this.formData.maxAmount(),
       address: this.formData.address(),
-      addressTemplate: this.formData.addressTemplate(),
       iconUrl: this.formData.iconUrl(),
       iconClass: this.formData.iconClass(),
-      qrCodeTemplate: this.formData.qrCodeTemplate(),
       warningText: this.formData.warningText(),
       isActive: this.formData.isActive()
     };
@@ -289,6 +312,8 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
       Object.keys(this.formData).forEach(key => {
         if (key === 'isActive') {
           this.formData[key](true);
+        } else if (key === 'networkTypeId') {
+          this.formData[key](null);
         } else {
           this.formData[key]('');
         }

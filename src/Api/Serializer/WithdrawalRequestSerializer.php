@@ -23,6 +23,7 @@ class WithdrawalRequestSerializer extends AbstractSerializer
             'id' => $request->id,
             'amount' => (float) $request->amount,
             'accountDetails' => $request->account_details,
+            'message' => $request->message,
             'status' => $request->status,
             'platformId' => $request->platform_id,
             'userId' => $request->user_id,

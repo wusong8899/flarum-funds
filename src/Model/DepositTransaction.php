@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $transaction_hash
  * @property string|null $from_address
  * @property string|null $memo
+ * @property string|null $user_message
  * @property string $status
  * @property array|null $blockchain_data
  * @property int $confirmations
@@ -51,6 +52,7 @@ class DepositTransaction extends AbstractModel
         'transaction_hash',
         'from_address',
         'memo',
+        'user_message',
         'status',
         'blockchain_data',
         'confirmations',

@@ -61,6 +61,33 @@ withdrawal:
         pending: Pending
         approved: Approved
         rejected: Rejected
+    tabs:
+      withdrawals: Withdrawals
+      deposits: Deposits
+      network_types: Network Types
+    network_types:
+      title: Network Type Management
+      name: Network Name
+      code: Network Code
+      description: Description
+      icon_url: Icon URL
+      icon_class: Icon CSS Class
+      sort_order: Sort Order
+      is_active: Active
+      add_button: Add Network Type
+      empty: No network types configured
+      required_fields_error: Name and Code are required
+      created: Network type created successfully
+      updated: Network type updated successfully
+      deleted: Network type deleted successfully
+      create_error: Failed to create network type
+      update_error: Failed to update network type
+      delete_error: Failed to delete network type
+      delete_confirm: Are you sure you want to delete this network type?
+      load_error: Failed to load network types
+    deposit:
+      platforms:
+        custom_network: Custom Network Name
 
   forum:
     header:
@@ -81,6 +108,9 @@ withdrawal:
       address: "{symbol} Address"
       address_placeholder: Enter or paste withdrawal address...
       save_address: Save current address
+      message: Message (Optional)
+      message_placeholder: Enter a message or note for this withdrawal...
+      message_helper: Optional message for your withdrawal request
       submit: Submit
     limits:
       min_max: "Min & Max withdrawal amount:"

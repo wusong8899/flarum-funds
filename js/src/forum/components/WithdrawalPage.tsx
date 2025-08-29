@@ -26,6 +26,7 @@ export default class WithdrawalPage extends Page {
     amount: Stream(''),
     selectedPlatform: Stream<WithdrawalPlatform | null>(null),
     accountDetails: Stream(''),
+    message: Stream(''),
     saveAddress: Stream(false)
   };
 
@@ -274,6 +275,7 @@ export default class WithdrawalPage extends Page {
               platformId: getIdString(selectedPlatform),
               amount: parseFloat(amount),
               accountDetails,
+              message: this.formData.message(),
               saveAddress: this.formData.saveAddress()
             }
           }
@@ -284,6 +286,7 @@ export default class WithdrawalPage extends Page {
 
       this.formData.amount('');
       this.formData.accountDetails('');
+      this.formData.message('');
       if (!this.formData.saveAddress()) {
         this.formData.selectedPlatform(null);
       }

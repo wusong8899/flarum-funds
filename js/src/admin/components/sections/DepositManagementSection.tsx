@@ -1,8 +1,6 @@
 import app from 'flarum/admin/app';
 import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
-import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
-import Switch from 'flarum/common/components/Switch';
 import type Mithril from 'mithril';
 import type { DepositPlatform, DepositTransaction } from '../types/AdminTypes';
 import AddDepositPlatformForm from '../forms/AddDepositPlatformForm';

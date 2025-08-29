@@ -12,6 +12,7 @@ export default class WithdrawalRequest extends Model {
   // Basic attributes
   amount = Model.attribute<number>('amount');
   accountDetails = Model.attribute<string>('accountDetails');
+  message = Model.attribute<string>('message');
   status = Model.attribute<WithdrawalStatus>('status');
   
   // Foreign keys

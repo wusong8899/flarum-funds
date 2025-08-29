@@ -8,12 +8,12 @@ import m from 'mithril';
 import type Mithril from 'mithril';
 
 // Withdrawal imports
-import type { WithdrawalPlatform, WithdrawalFormData, WithdrawalPageState } from './withdrawal/types/interfaces';
+import type { WithdrawalPlatform, WithdrawalFormData } from './withdrawal/types/interfaces';
 import WithdrawalForm from './withdrawal/forms/WithdrawalForm';
 import WithdrawalHistory from './withdrawal/history/WithdrawalHistory';
 
 // Deposit imports
-import type { DepositPageState, DepositFormData, DepositAddressData } from './deposit/types/interfaces';
+import type { DepositFormData, DepositAddressData } from './deposit/types/interfaces';
 import type DepositPlatform from '../common/models/DepositPlatform';
 import CurrencySelector from './deposit/selectors/CurrencySelector';
 import NetworkSelector from './deposit/selectors/NetworkSelector';
@@ -61,6 +61,7 @@ export default class FundsPage extends Page {
     amount: Stream(''),
     selectedPlatform: Stream<WithdrawalPlatform | null>(null),
     accountDetails: Stream(''),
+    message: Stream(''),
     saveAddress: Stream(false)
   };
 
@@ -390,6 +391,7 @@ export default class FundsPage extends Page {
       selectedPlatform: this.withdrawalFormData.selectedPlatform(),
       amount: this.withdrawalFormData.amount(),
       accountDetails: this.withdrawalFormData.accountDetails(),
+      message: this.withdrawalFormData.message(),
       saveAddress: this.withdrawalFormData.saveAddress()
     };
   }
@@ -403,6 +405,9 @@ export default class FundsPage extends Page {
     }
     if (data.accountDetails !== undefined) {
       this.withdrawalFormData.accountDetails(data.accountDetails);
+    }
+    if (data.message !== undefined) {
+      this.withdrawalFormData.message(data.message);
     }
     if (data.saveAddress !== undefined) {
       this.withdrawalFormData.saveAddress(data.saveAddress);
@@ -521,6 +526,7 @@ export default class FundsPage extends Page {
               platformId: getIdString(selectedPlatform),
               amount: parseFloat(amount),
               accountDetails,
+              message: this.withdrawalFormData.message(),
               saveAddress: this.withdrawalFormData.saveAddress()
             }
           }
@@ -531,6 +537,7 @@ export default class FundsPage extends Page {
 
       this.withdrawalFormData.amount('');
       this.withdrawalFormData.accountDetails('');
+      this.withdrawalFormData.message('');
       if (!this.withdrawalFormData.saveAddress()) {
         this.withdrawalFormData.selectedPlatform(null);
       }
@@ -568,7 +575,7 @@ export default class FundsPage extends Page {
                 errorMessage = firstError.detail;
               }
             }
-          } catch (parseError) {
+          } catch {
             errorMessage = app.translator.trans('withdrawal.forum.server_error');
           }
         }

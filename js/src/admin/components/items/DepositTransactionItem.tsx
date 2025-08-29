@@ -4,7 +4,6 @@ import Button from 'flarum/common/components/Button';
 import icon from 'flarum/common/helpers/icon';
 import humanTime from 'flarum/common/helpers/humanTime';
 import username from 'flarum/common/helpers/username';
-import m from 'mithril';
 import type Mithril from 'mithril';
 import type { DepositTransaction } from '../types/AdminTypes';
 

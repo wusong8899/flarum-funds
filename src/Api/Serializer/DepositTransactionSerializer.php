@@ -25,6 +25,7 @@ class DepositTransactionSerializer extends AbstractSerializer
             'transactionHash' => $transaction->transaction_hash,
             'fromAddress' => $transaction->from_address,
             'memo' => $transaction->memo,
+            'userMessage' => $transaction->user_message,
             'status' => $transaction->status,
             'statusColor' => $transaction->status_color,
             'blockchainData' => $transaction->blockchain_data,

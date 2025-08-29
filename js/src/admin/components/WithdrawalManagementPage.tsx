@@ -7,6 +7,7 @@ import GeneralSettingsSection from './sections/GeneralSettingsSection';
 import PlatformManagementSection from './sections/PlatformManagementSection';
 import RequestManagementSection from './sections/RequestManagementSection';
 import DepositManagementSection from './sections/DepositManagementSection';
+import NetworkTypeManagementSection from './sections/NetworkTypeManagementSection';
 import ConfirmDeletePlatformModal from './modals/ConfirmDeletePlatformModal';
 import ConfirmDeleteRequestModal from './modals/ConfirmDeleteRequestModal';
 
@@ -51,6 +52,12 @@ export default class WithdrawalManagementPage extends ExtensionPage {
               >
                 {app.translator.trans('withdrawal.admin.tabs.deposits')}
               </button>
+              <button 
+                className={`AdminTabs-tab ${this.activeTab === 'network-types' ? 'active' : ''}`}
+                onclick={() => { this.activeTab = 'network-types'; }}
+              >
+                {app.translator.trans('withdrawal.admin.tabs.network_types')}
+              </button>
             </div>
             
             <div className="AdminTabs-content">
@@ -70,7 +77,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
                     onDeleteRequest={this.deleteRequest.bind(this)}
                   />
                 </div>
-              ) : (
+              ) : this.activeTab === 'deposits' ? (
                 <DepositManagementSection
                   platforms={this.depositPlatforms}
                   transactions={this.depositTransactions}
@@ -80,7 +87,9 @@ export default class WithdrawalManagementPage extends ExtensionPage {
                   onDeletePlatform={this.deleteDepositPlatform.bind(this)}
                   onUpdateTransactionStatus={this.updateDepositTransactionStatus.bind(this)}
                 />
-              )}
+              ) : this.activeTab === 'network-types' ? (
+                <NetworkTypeManagementSection />
+              ) : null}
             </div>
           </div>
         </div>

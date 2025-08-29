@@ -117,6 +117,33 @@ withdrawal:
         pending: 待审核
         approved: 已通过
         rejected: 已拒绝
+    tabs:
+      withdrawals: 提款
+      deposits: 存款
+      network_types: 网络类型
+    network_types:
+      title: 网络类型管理
+      name: 网络名称
+      code: 网络代码
+      description: 描述
+      icon_url: 图标URL
+      icon_class: 图标CSS类
+      sort_order: 排序顺序
+      is_active: 启用
+      add_button: 添加网络类型
+      empty: 未配置网络类型
+      required_fields_error: 名称和代码是必需的
+      created: 网络类型创建成功
+      updated: 网络类型更新成功
+      deleted: 网络类型删除成功
+      create_error: 创建网络类型失败
+      update_error: 更新网络类型失败
+      delete_error: 删除网络类型失败
+      delete_confirm: 您确定要删除此网络类型吗？
+      load_error: 加载网络类型失败
+    deposit:
+      platforms:
+        custom_network: 自定义网络名称
 
   forum:
     header:
@@ -140,6 +167,9 @@ withdrawal:
       address: "{symbol}地址"
       address_placeholder: 输入或粘贴取款地址...
       save_address: 保存当前地址
+      message: 留言（可选）
+      message_placeholder: 为此次提款输入留言或备注...
+      message_helper: 为您的提款申请添加可选留言
       submit: 提交
     limits:
       min_max: "最小与最大取款金额:"

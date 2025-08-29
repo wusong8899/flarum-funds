@@ -1,7 +1,6 @@
 import Component from 'flarum/common/Component';
 import icon from 'flarum/common/helpers/icon';
 import humanTime from 'flarum/common/helpers/humanTime';
-import m from 'mithril';
 import type Mithril from 'mithril';
 import type DepositTransaction from '../../../common/models/DepositTransaction';
 import type DepositPlatform from '../../../common/models/DepositPlatform';

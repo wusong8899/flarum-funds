@@ -2,8 +2,6 @@ import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
 import HeaderPrimary from 'flarum/forum/components/HeaderPrimary';
 import Navigation from 'flarum/common/components/Navigation';
-import WithdrawalPage from './components/WithdrawalPage';
-import DepositPage from './components/DepositPage';
 import FundsPage from './components/FundsPage';
 import WithdrawalPlatform from '../common/models/WithdrawalPlatform';
 import WithdrawalRequest from '../common/models/WithdrawalRequest';

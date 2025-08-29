@@ -50,6 +50,7 @@ class CreateWithdrawalRequestController extends AbstractCreateController
         $amount = (float) Arr::get($attributes, 'amount', 0);
         $platformId = (int) Arr::get($attributes, 'platformId', 0);
         $accountDetails = (string) Arr::get($attributes, 'accountDetails', '');
+        $message = Arr::get($attributes, 'message', null);
 
         // Find the withdrawal platform
         $platform = WithdrawalPlatform::find($platformId);
@@ -70,6 +71,7 @@ class CreateWithdrawalRequestController extends AbstractCreateController
         $withdrawalRequest->platform_id = $platformId;
         $withdrawalRequest->amount = $amount;
         $withdrawalRequest->account_details = $accountDetails;
+        $withdrawalRequest->message = $message;
         $withdrawalRequest->status = WithdrawalRequest::STATUS_PENDING;
         $withdrawalRequest->save();
 

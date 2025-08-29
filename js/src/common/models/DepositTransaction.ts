@@ -10,6 +10,7 @@ export default class DepositTransaction extends Model {
   transactionHash = Model.attribute('transactionHash');
   fromAddress = Model.attribute('fromAddress');
   memo = Model.attribute('memo');
+  userMessage = Model.attribute('userMessage');
   status = Model.attribute('status');
   statusColor = Model.attribute('statusColor');
   blockchainData = Model.attribute('blockchainData');

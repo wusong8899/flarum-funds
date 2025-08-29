@@ -6,19 +6,19 @@ namespace wusong8899\Withdrawal\Model;
 
 use Flarum\Database\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
  * @property string $name
  * @property string $symbol
- * @property string $network
+ * @property string|null $network
+ * @property int|null $network_type_id
  * @property float $min_amount
  * @property float|null $max_amount
  * @property string|null $address
- * @property string|null $address_template
  * @property string|null $icon_url
  * @property string|null $icon_class
- * @property string|null $qr_code_template
  * @property string|null $warning_text
  * @property array|null $network_config
  * @property bool $is_active
@@ -35,19 +35,19 @@ class DepositPlatform extends AbstractModel
         'name',
         'symbol',
         'network',
+        'network_type_id',
         'min_amount',
         'max_amount',
         'address',
-        'address_template',
         'icon_url',
         'icon_class',
-        'qr_code_template',
         'warning_text',
         'network_config',
         'is_active'
     ];
 
     protected $casts = [
+        'network_type_id' => 'integer',
         'min_amount' => 'decimal:8',
         'max_amount' => 'decimal:8',
         'network_config' => 'json',
@@ -66,47 +66,25 @@ class DepositPlatform extends AbstractModel
         return $this->hasMany(DepositTransaction::class, 'platform_id');
     }
 
+    public function networkType(): BelongsTo
+    {
+        return $this->belongsTo(NetworkType::class, 'network_type_id');
+    }
+
     /**
      * Get the display name for the platform (currency + network)
      */
     public function getDisplayNameAttribute(): string
     {
-        return "{$this->symbol} ({$this->network})";
+        $network = $this->network ?: ($this->networkType ? $this->networkType->name : 'Unknown');
+        return "{$this->symbol}" . ($network ? " ({$network})" : '');
     }
 
     /**
-     * Generate a deposit address for a specific user
+     * Get deposit address (simplified - no templates)
      */
-    public function generateDepositAddress(int $userId): string
+    public function getDepositAddress(): ?string
     {
-        if ($this->address) {
-            // Use shared address
-            return $this->address;
-        }
-
-        if ($this->address_template) {
-            // Generate user-specific address using template
-            return str_replace('{user_id}', (string) $userId, $this->address_template);
-        }
-
-        // Fallback - this should be configured properly
-        throw new \InvalidArgumentException("No address or address template configured for platform {$this->id}");
-    }
-
-    /**
-     * Get QR code data for deposit
-     */
-    public function getQrCodeData(string $address, ?float $amount = null): string
-    {
-        if ($this->qr_code_template) {
-            $data = str_replace('{address}', $address, $this->qr_code_template);
-            if ($amount) {
-                $data = str_replace('{amount}', (string) $amount, $data);
-            }
-            return $data;
-        }
-
-        // Default to just the address
-        return $address;
+        return $this->address;
     }
 }

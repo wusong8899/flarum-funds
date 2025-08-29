@@ -3,7 +3,6 @@ import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
 import Switch from 'flarum/common/components/Switch';
 import icon from 'flarum/common/helpers/icon';
-import m from 'mithril';
 import type Mithril from 'mithril';
 import type { DepositPlatform } from '../types/AdminTypes';
 
