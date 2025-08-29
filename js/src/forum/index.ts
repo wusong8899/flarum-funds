@@ -4,6 +4,7 @@ import HeaderPrimary from 'flarum/forum/components/HeaderPrimary';
 import Navigation from 'flarum/common/components/Navigation';
 import WithdrawalPage from './components/WithdrawalPage';
 import DepositPage from './components/DepositPage';
+import FundsPage from './components/FundsPage';
 import WithdrawalPlatform from '../common/models/WithdrawalPlatform';
 import WithdrawalRequest from '../common/models/WithdrawalRequest';
 import DepositPlatform from '../common/models/DepositPlatform';
@@ -22,8 +23,12 @@ app.initializers.add('wusong8899-withdrawal', () => {
   app.store.models['deposit-addresses'] = DepositAddress;
   app.store.models['deposit-transactions'] = DepositTransaction;
 
-  app.routes.withdrawal = { path: '/withdrawal', component: WithdrawalPage };
-  app.routes.deposit = { path: '/deposit', component: DepositPage };
+  // New unified funds page
+  app.routes.funds = { path: '/funds', component: FundsPage };
+  
+  // Legacy routes for backward compatibility - redirect to funds page
+  app.routes.withdrawal = { path: '/withdrawal', component: FundsPage };
+  app.routes.deposit = { path: '/deposit', component: FundsPage };
 
 
   // Add money display to header primary (desktop)

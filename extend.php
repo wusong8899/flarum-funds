@@ -8,6 +8,7 @@ return [
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
         ->css(__DIR__.'/less/forum.less')
+        ->route('/funds', 'funds.index')
         ->route('/withdrawal', 'withdrawal.index')
         ->route('/deposit', 'deposit.index'),
 

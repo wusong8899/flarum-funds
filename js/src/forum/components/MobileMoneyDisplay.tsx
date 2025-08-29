@@ -68,12 +68,12 @@ export default class MobileMoneyDisplay extends Component<ComponentAttrs> {
     console.log('MobileMoneyDisplay clicked!'); // 调试日志
     
     try {
-      // 直接导航到提现页面
-      window.location.href = '/withdrawal';
+      // Navigate to unified funds page with withdrawal tab
+      window.location.href = '/funds?tab=withdrawal';
     } catch (error) {
       console.error('Navigation error:', error);
       // 备用方案
-      window.location.href = '/withdrawal';
+      window.location.href = '/funds?tab=withdrawal';
     }
   }
 }

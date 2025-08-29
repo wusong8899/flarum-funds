@@ -52,13 +52,24 @@ export default class MoneyDisplay extends Component<ComponentAttrs> {
           <i className="fas fa-wallet" />
         </div>
 
-        <div
-          className="clientCustomizeWithdrawalButton"
-          onclick={this.handleWithdrawalClick.bind(this)}
-          title="提款"
-        >
-          <i className="fas fa-money-bill-transfer" />
-          <span style={{ marginLeft: '4px', fontSize: '12px' }}>提款</span>
+        <div className="clientCustomizeWithdrawalButtons">
+          <div
+            className="clientCustomizeWithdrawalButton"
+            onclick={this.handleWithdrawalClick.bind(this)}
+            title="提款"
+          >
+            <i className="fas fa-money-bill-transfer" />
+            <span style={{ marginLeft: '4px', fontSize: '12px' }}>提款</span>
+          </div>
+          <div
+            className="clientCustomizeDepositButton"
+            onclick={this.handleDepositClick.bind(this)}
+            title="存款"
+            style={{ marginLeft: '8px' }}
+          >
+            <i className="fas fa-coins" />
+            <span style={{ marginLeft: '4px', fontSize: '12px' }}>存款</span>
+          </div>
         </div>
       </div>
     );
@@ -70,7 +81,17 @@ export default class MoneyDisplay extends Component<ComponentAttrs> {
   private handleWithdrawalClick(e: Event): void {
     e.preventDefault();
     e.stopPropagation();
-    // Navigate to withdrawal page
-    window.location.href = '/withdrawal';
+    // Navigate to funds page with withdrawal tab
+    window.location.href = '/funds?tab=withdrawal';
+  }
+
+  /**
+   * Handle deposit button click
+   */
+  private handleDepositClick(e: Event): void {
+    e.preventDefault();
+    e.stopPropagation();
+    // Navigate to funds page with deposit tab
+    window.location.href = '/funds?tab=deposit';
   }
 }

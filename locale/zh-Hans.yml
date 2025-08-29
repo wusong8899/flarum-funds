@@ -124,6 +124,9 @@ withdrawal:
     page:
       title: 提款
       description: 提交提款申请，将您的资金转至外部平台
+    funds:
+      title: 资金管理
+      description: 管理您的提款和存款
     tabs:
       withdrawal: 提款
       history: 申请记录
