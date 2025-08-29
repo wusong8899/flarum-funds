@@ -3,9 +3,12 @@
 use Flarum\Database\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
+use Carbon\Carbon;
 
 return [
     'up' => function (Builder $schema) {
+        $now = Carbon::now();
+        
         // Insert default network types
         $schema->getConnection()->table('network_types')->insert([
             [
@@ -20,8 +23,8 @@ return [
                 ]),
                 'is_active' => true,
                 'sort_order' => 10,
-                'created_at' => now(),
-                'updated_at' => now()
+                'created_at' => $now,
+                'updated_at' => $now
             ],
             [
                 'name' => 'Ethereum (ERC20)',
@@ -35,8 +38,8 @@ return [
                 ]),
                 'is_active' => true,
                 'sort_order' => 20,
-                'created_at' => now(),
-                'updated_at' => now()
+                'created_at' => $now,
+                'updated_at' => $now
             ],
             [
                 'name' => 'Binance Smart Chain (BEP20)',
@@ -50,8 +53,8 @@ return [
                 ]),
                 'is_active' => true,
                 'sort_order' => 30,
-                'created_at' => now(),
-                'updated_at' => now()
+                'created_at' => $now,
+                'updated_at' => $now
             ],
             [
                 'name' => 'Polygon',
@@ -65,8 +68,8 @@ return [
                 ]),
                 'is_active' => true,
                 'sort_order' => 40,
-                'created_at' => now(),
-                'updated_at' => now()
+                'created_at' => $now,
+                'updated_at' => $now
             ],
             [
                 'name' => 'Arbitrum',
@@ -80,8 +83,8 @@ return [
                 ]),
                 'is_active' => true,
                 'sort_order' => 50,
-                'created_at' => now(),
-                'updated_at' => now()
+                'created_at' => $now,
+                'updated_at' => $now
             ],
             [
                 'name' => 'Optimism',
@@ -95,8 +98,8 @@ return [
                 ]),
                 'is_active' => true,
                 'sort_order' => 60,
-                'created_at' => now(),
-                'updated_at' => now()
+                'created_at' => $now,
+                'updated_at' => $now
             ]
         ]);
     },
