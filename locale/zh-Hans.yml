@@ -5,6 +5,7 @@ withdrawal:
     tabs:
       withdrawals: 提款管理
       deposits: 存款管理
+      network_types: 网络类型
     settings:
       money_icon_url: 货币显示图标URL
       money_icon_url_help: 输入货币显示图标的图片URL（显示在头部）
@@ -117,10 +118,6 @@ withdrawal:
         pending: 待审核
         approved: 已通过
         rejected: 已拒绝
-    tabs:
-      withdrawals: 提款
-      deposits: 存款
-      network_types: 网络类型
     network_types:
       title: 网络类型管理
       name: 网络名称
