@@ -19,7 +19,7 @@ export default class ConfirmDeletePlatformModal extends Modal<ConfirmDeletePlatf
   content() {
     return (
       <div className="Modal-body">
-        <p>{app.translator.trans('withdrawal.admin.platforms.delete_confirm_message', { name: this.attrs.platformName })}</p>
+        <p>{app.translator.trans('withdrawal.admin.platforms.delete_confirm_message', { name: this.attrs.platformName() })}</p>
         <div className="Form-group">
           <Button 
             className="Button Button--primary" 
