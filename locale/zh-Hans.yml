@@ -92,6 +92,7 @@ withdrawal:
         delete_error: 删除存款平台失败
         required_fields_error: 请填写必需字段：平台名称、货币符号和网络类型
         address_required_error: 必须提供静态地址或地址模板
+        custom_network: 自定义网络名称
       transactions:
         title: 存款交易管理
         pending_title: 待处理交易
@@ -138,9 +139,6 @@ withdrawal:
       delete_error: 删除网络类型失败
       delete_confirm: 您确定要删除此网络类型吗？
       load_error: 加载网络类型失败
-    deposit:
-      platforms:
-        custom_network: 自定义网络名称
 
   forum:
     header:
