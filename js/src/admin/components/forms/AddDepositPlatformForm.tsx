@@ -3,6 +3,7 @@ import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
 import Switch from 'flarum/common/components/Switch';
 import Stream from 'flarum/common/utils/Stream';
+import withAttr from 'flarum/common/utils/withAttr';
 import m from 'mithril';
 import type Mithril from 'mithril';
 
@@ -86,7 +87,8 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
               </label>
               <select
                 className="FormControl"
-                bidi={this.formData.network}
+                value={this.formData.network()}
+                onchange={withAttr('value', this.formData.network)}
                 disabled={submitting}
               >
                 <option value="">Select Network</option>
