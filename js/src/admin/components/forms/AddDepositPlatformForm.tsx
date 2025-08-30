@@ -314,7 +314,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
         const minVal = parseFloat(this.formData.minAmount());
         const maxVal = parseFloat(this.formData.maxAmount());
         if (!isNaN(minVal) && !isNaN(maxVal) && maxVal < minVal) {
-          validator.addError('maxAmount', app.translator.trans('withdrawal.admin.platforms.max_min_error'));
+          validator.custom(false, 'maxAmount', app.translator.trans('withdrawal.admin.platforms.max_min_error'));
         }
       }
 
@@ -327,7 +327,13 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
         validator.url(this.formData.qrCodeImageUrl(), 'qrCodeImageUrl', app.translator.trans('withdrawal.admin.deposit.platforms.qr_code_image_url'));
       }
 
-      return validator.isValid();
+      const result = validator.getResult();
+      
+      if (!result.isValid && result.firstErrorMessage) {
+        app.alerts.show({ type: 'error', dismissible: true }, result.firstErrorMessage);
+      }
+
+      return result.isValid;
     } catch (error) {
       if (error instanceof Error) {
         app.alerts.show({ type: 'error', dismissible: true }, error.message);
