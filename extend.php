@@ -1,7 +1,7 @@
 <?php
 
 use Flarum\Extend;
-use Wusong8899\Withdrawal\Api\Controller;
+use wusong8899\Withdrawal\Api\Controller;
 use wusong8899\Withdrawal\Model;
 
 return [
