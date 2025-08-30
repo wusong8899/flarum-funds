@@ -67,9 +67,9 @@ export default class DepositPlatformManagementSection extends Component<DepositP
                 <GenericPlatformListItem
                   key={typeof platform.id === 'function' ? platform.id() : platform.id}
                   platform={platform}
+                  type="deposit"
                   onToggleStatus={() => onTogglePlatformStatus(platform)}
                   onDelete={() => onDeletePlatform(platform)}
-                  typePrefix="deposit"
                 />
               ))}
             </div>

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace wusong8899\Withdrawal\Validator;
 
 use Flarum\Foundation\AbstractValidator;

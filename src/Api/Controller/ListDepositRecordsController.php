@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace wusong8899\Withdrawal\Api\Controller;
 
 use Flarum\Api\Controller\AbstractListController;
