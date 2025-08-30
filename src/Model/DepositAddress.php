@@ -8,6 +8,7 @@ use Flarum\Database\AbstractModel;
 use Flarum\User\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -64,7 +65,7 @@ class DepositAddress extends AbstractModel
      */
     public function markAsUsed(): void
     {
-        $this->update(['last_used_at' => now()]);
+        $this->update(['last_used_at' => Carbon::now()]);
     }
 
     /**

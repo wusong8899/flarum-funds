@@ -8,7 +8,7 @@ use Carbon\Carbon;
 return [
     'up' => function (Builder $schema) {
         $now = Carbon::now();
-        
+
         // Insert default network types
         $schema->getConnection()->table('network_types')->insert([
             [

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace wusong8899\Withdrawal\Model;
 
+use Carbon\Carbon;
 use Flarum\Database\AbstractModel;
 use Flarum\User\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -118,9 +119,9 @@ class DepositTransaction extends AbstractModel
      */
     public function canBeCompleted(): bool
     {
-        return $this->status === self::STATUS_CONFIRMED && 
-               $this->hasEnoughConfirmations() && 
-               $this->credited_amount > 0;
+        return $this->status === self::STATUS_CONFIRMED &&
+            $this->hasEnoughConfirmations() &&
+            $this->credited_amount > 0;
     }
 
     /**
@@ -130,7 +131,7 @@ class DepositTransaction extends AbstractModel
     {
         $this->update([
             'status' => self::STATUS_PENDING,
-            'detected_at' => now()
+            'detected_at' => Carbon::now()
         ]);
     }
 
@@ -141,7 +142,7 @@ class DepositTransaction extends AbstractModel
     {
         $this->update([
             'status' => self::STATUS_CONFIRMED,
-            'confirmed_at' => now()
+            'confirmed_at' => Carbon::now()
         ]);
     }
 
@@ -164,7 +165,7 @@ class DepositTransaction extends AbstractModel
         // Mark transaction as completed
         $this->update([
             'status' => self::STATUS_COMPLETED,
-            'completed_at' => now(),
+            'completed_at' => Carbon::now(),
             'processed_by' => $processedBy?->id
         ]);
     }
