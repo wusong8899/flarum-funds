@@ -73,8 +73,9 @@ export default class HistoryItem extends Component<HistoryItemProps> {
   }
 
   private getPlatformId(request: WithdrawalRequest): string | number {
+    const platform = request.platform();
     return getAttr(request, 'platformId') || 
-          request.platform()?.id() || '';
+          (platform && typeof platform === 'object' ? platform.id() : '') || '';
   }
 
   private getPlatformName(platform: WithdrawalPlatform | null): string {

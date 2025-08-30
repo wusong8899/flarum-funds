@@ -1,9 +1,9 @@
-import Modal from 'flarum/common/components/Modal';
+import Modal, { IInternalModalAttrs } from 'flarum/common/components/Modal';
 import Button from 'flarum/common/components/Button';
 import icon from 'flarum/common/helpers/icon';
 import app from 'flarum/common/app';
 
-export interface ConfirmModalAttrs {
+export interface ConfirmModalAttrs extends IInternalModalAttrs {
   title: string;
   message: string;
   confirmText?: string;
