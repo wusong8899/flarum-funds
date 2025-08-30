@@ -10,6 +10,7 @@ import GeneralSettingsSection from './sections/GeneralSettingsSection';
 import PlatformManagementSection from './sections/PlatformManagementSection';
 import RequestManagementSection from './sections/RequestManagementSection';
 import DepositRecordManagementSection from './sections/DepositRecordManagementSection';
+import DepositPlatformManagementSection from './sections/DepositPlatformManagementSection';
 import ConfirmModal from '../../common/components/shared/ConfirmModal';
 import { 
   createWithdrawalPlatformOperations,
@@ -24,6 +25,12 @@ import Component from 'flarum/common/Component';
 class WithdrawalTabPlaceholder extends Component {
   view() {
     return <div>Withdrawals Content</div>;
+  }
+}
+
+class DepositsTabPlaceholder extends Component {
+  view() {
+    return <div>Deposits Content</div>;
   }
 }
 
@@ -57,15 +64,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
         {
           key: 'deposits',
           label: app.translator.trans('withdrawal.admin.tabs.deposits').toString(),
-          component: DepositRecordManagementSection,
-          props: () => ({
-            platforms: this.depositPlatforms,
-            records: this.depositRecords,
-            loading: this.loading,
-            onApproveRecord: this.approveDepositRecord.bind(this),
-            onRejectRecord: this.rejectDepositRecord.bind(this),
-            onDeleteRecord: this.deleteDepositRecord.bind(this),
-          })
+          component: DepositsTabPlaceholder
         }
       ],
       
@@ -76,7 +75,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
     };
   }
 
-  // Override renderActiveTabContent to handle the complex withdrawals and deposit-records tabs  
+  // Override renderActiveTabContent to handle the complex withdrawals and deposits tabs  
   protected renderActiveTabContent(): Mithril.Children {
     if (this.activeTab === 'withdrawals') {
       return (
@@ -98,6 +97,28 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
       );
     }
     
+    if (this.activeTab === 'deposits') {
+      return (
+        <div>
+          <DepositPlatformManagementSection
+            platforms={this.depositPlatforms}
+            submittingPlatform={this.submittingPlatform}
+            onAddPlatform={this.addDepositPlatform.bind(this)}
+            onTogglePlatformStatus={this.toggleDepositPlatformStatus.bind(this)}
+            onDeletePlatform={this.deleteDepositPlatform.bind(this)}
+          />
+          
+          <DepositRecordManagementSection
+            platforms={this.depositPlatforms}
+            records={this.depositRecords}
+            loading={this.loading}
+            onApproveRecord={this.approveDepositRecord.bind(this)}
+            onRejectRecord={this.rejectDepositRecord.bind(this)}
+            onDeleteRecord={this.deleteDepositRecord.bind(this)}
+          />
+        </div>
+      );
+    }
     
     // For other tabs, use the parent implementation
     return super.renderActiveTabContent();
