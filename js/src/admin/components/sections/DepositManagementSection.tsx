@@ -5,7 +5,7 @@ import type Mithril from 'mithril';
 import type DepositPlatform from '../../../common/models/DepositPlatform';
 import type { DepositTransaction } from '../types/AdminTypes';
 import AddDepositPlatformForm from '../forms/AddDepositPlatformForm';
-import DepositPlatformListItem from '../items/DepositPlatformListItem';
+import GenericPlatformListItem from '../shared/GenericPlatformListItem';
 import DepositTransactionItem from '../items/DepositTransactionItem';
 
 export interface DepositManagementSectionAttrs {
@@ -66,9 +66,11 @@ export default class DepositManagementSection extends Component<DepositManagemen
                 </p>
               ) : (
                 platforms.map(platform => (
-                  <DepositPlatformListItem
+                  <GenericPlatformListItem
                     key={platform.id}
                     platform={platform}
+                    type="deposit"
+                    style="list"
                     onToggleStatus={() => onTogglePlatformStatus(platform)}
                     onDelete={() => onDeletePlatform(platform)}
                   />

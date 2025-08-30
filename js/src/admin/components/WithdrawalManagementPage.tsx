@@ -11,6 +11,7 @@ import RequestManagementSection from './sections/RequestManagementSection';
 import DepositManagementSection from './sections/DepositManagementSection';
 import NetworkTypeManagementSection from './sections/NetworkTypeManagementSection';
 import ConfirmModal from '../../common/components/shared/ConfirmModal';
+import { ApiRequestUtils } from '../../common/utils/apiRequestUtils';
 
 export default class WithdrawalManagementPage extends ExtensionPage {
   private platforms: WithdrawalPlatform[] = [];
@@ -110,43 +111,26 @@ export default class WithdrawalManagementPage extends ExtensionPage {
     this.submittingPlatform = true;
 
     try {
-      const response = await app.request({
-        method: 'POST',
-        url: app.forum.attribute('apiUrl') + '/withdrawal-platforms',
-        body: {
-          data: {
-            type: 'withdrawal-platforms',
-            attributes: {
-              name: formData.name,
-              symbol: formData.symbol,
-              network: formData.network || null,
-              minAmount: parseFloat(formData.minAmount),
-              maxAmount: parseFloat(formData.maxAmount),
-              fee: parseFloat(formData.fee || '0'),
-              iconUrl: formData.iconUrl || null,
-              iconClass: formData.iconClass || null,
-              isActive: true
-            }
-          }
+      const platformData = {
+        type: 'withdrawal-platforms',
+        attributes: {
+          name: formData.name,
+          symbol: formData.symbol,
+          network: formData.network || null,
+          minAmount: parseFloat(formData.minAmount),
+          maxAmount: parseFloat(formData.maxAmount),
+          fee: parseFloat(formData.fee || '0'),
+          iconUrl: formData.iconUrl || null,
+          iconClass: formData.iconClass || null,
+          isActive: true
         }
-      });
+      };
       
-      if (response && response.data) {
-        app.store.pushPayload(response);
-      }
-      
+      await ApiRequestUtils.PlatformAPI.createWithdrawalPlatform(platformData);
       await this.loadPlatforms();
-      
-      app.alerts.show(
-        { type: 'success', dismissible: true },
-        app.translator.trans('withdrawal.admin.platforms.add_success')
-      );
     } catch (error) {
       console.error('Error adding platform:', error);
-      app.alerts.show(
-        { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.admin.platforms.add_error')
-      );
+      // Error handling is done by the API utility
     } finally {
       this.submittingPlatform = false;
       m.redraw();
@@ -305,9 +289,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
 
   private async loadPlatforms(): Promise<void> {
     try {
-      const response = await app.store.find('withdrawal-platforms');
-      this.platforms = Array.isArray(response) ? response.filter(p => p !== null) : (response ? [response] : []);
-      
+      this.platforms = await ApiRequestUtils.PlatformAPI.loadWithdrawalPlatforms();
       console.log('Loaded platforms:', this.platforms);
     } catch (error) {
       console.error('Error loading platforms:', error);
@@ -317,11 +299,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
 
   private async loadRequests(): Promise<void> {
     try {
-      const response = await app.store.find('withdrawal-requests', {
-        include: 'user,platform'
-      });
-      this.requests = Array.isArray(response) ? response.filter(r => r !== null) : (response ? [response] : []);
-      
+      this.requests = await ApiRequestUtils.RequestAPI.loadWithdrawalRequests();
       console.log('Loaded requests:', this.requests);
     } catch (error) {
       console.error('Error loading requests:', error);

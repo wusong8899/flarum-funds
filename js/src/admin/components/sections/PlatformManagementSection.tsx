@@ -3,7 +3,7 @@ import Component from 'flarum/common/Component';
 import type Mithril from 'mithril';
 import { WithdrawalPlatform, PlatformFormData } from '../types/AdminTypes';
 import AddPlatformForm from '../forms/AddPlatformForm';
-import PlatformListItem from '../items/PlatformListItem';
+import GenericPlatformListItem from '../shared/GenericPlatformListItem';
 
 export interface PlatformManagementSectionAttrs {
   platforms: WithdrawalPlatform[];
@@ -31,9 +31,11 @@ export default class PlatformManagementSection extends Component<PlatformManagem
             <p>{app.translator.trans('withdrawal.admin.platforms.empty')}</p>
           ) : (
             platforms.map((platform) => (
-              <PlatformListItem
+              <GenericPlatformListItem
                 key={typeof platform.id === 'function' ? platform.id() : platform.id}
                 platform={platform}
+                type="withdrawal"
+                style="card"
                 onToggleStatus={onTogglePlatformStatus}
                 onDelete={onDeletePlatform}
               />
