@@ -124,11 +124,11 @@ export default class DepositTransactionItem extends Component<DepositTransaction
     if (status === 'pending') {
       actions.push(
         <Button
-          key="confirm"
+          key="approve"
           className="Button Button--primary Button--sm"
-          onclick={() => onUpdateStatus('confirmed')}
+          onclick={() => onUpdateStatus('approved')}
         >
-          {app.translator.trans('withdrawal.admin.deposit.transactions.confirm')}
+          {app.translator.trans('withdrawal.admin.deposit.records.approve')}
         </Button>
       );
     }
@@ -150,9 +150,9 @@ export default class DepositTransactionItem extends Component<DepositTransaction
         <Button
           key="reject"
           className="Button Button--danger Button--sm"
-          onclick={() => onUpdateStatus('failed')}
+          onclick={() => onUpdateStatus('rejected')}
         >
-          {app.translator.trans('withdrawal.admin.deposit.transactions.reject')}
+          {app.translator.trans('withdrawal.admin.deposit.records.reject')}
         </Button>
       );
     }
