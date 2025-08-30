@@ -16,7 +16,8 @@ import {
   createWithdrawalPlatformOperations,
   createDepositPlatformOperations,
   createWithdrawalRequestOperations,
-  createDepositTransactionOperations
+  createDepositTransactionOperations,
+  createDepositRecordOperations
 } from '../utils/platformOperations';
 import { assertApiPayload } from '../../common/types/api';
 import Component from 'flarum/common/Component';
@@ -72,7 +73,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
             onAddPlatform: this.addDepositPlatform.bind(this),
             onTogglePlatformStatus: this.toggleDepositPlatformStatus.bind(this),
             onDeletePlatform: this.deleteDepositPlatform.bind(this),
-            onUpdateTransactionStatus: this.updateDepositTransactionStatus.bind(this),
+            onUpdateTransactionStatus: this.updateDepositRecordStatus.bind(this),
           })
         },
         {
@@ -229,6 +230,17 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
       m.redraw();
     } catch (error) {
       console.error('Error updating deposit transaction:', error);
+    }
+  }
+
+  private async updateDepositRecordStatus(record: GenericTransaction, status: string): Promise<void> {
+    const depositRecordOperations = createDepositRecordOperations();
+    try {
+      await depositRecordOperations.updateStatus(record, status);
+      await this.loadDepositRecords();
+      m.redraw();
+    } catch (error) {
+      console.error('Error updating deposit record:', error);
     }
   }
 

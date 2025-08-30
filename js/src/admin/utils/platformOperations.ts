@@ -195,3 +195,36 @@ export const createDepositTransactionOperations = (): TransactionOperations<any>
     });
   }
 });
+
+// Deposit record operations
+export const createDepositRecordOperations = (): TransactionOperations<any> => ({
+  async updateStatus(record: any, status: string) {
+    const recordId = typeof record.id === 'function' ? record.id() : record.id;
+    
+    return apiPatch(`/deposit-records/${recordId}`, {
+      data: {
+        type: 'deposit-records',
+        attributes: {
+          status: status
+        }
+      }
+    }, {
+      showSuccessAlert: true,
+      successMessage: app.translator.trans(`withdrawal.admin.deposit.records.${status}_success`).toString(),
+      errorMessage: app.translator.trans('withdrawal.admin.deposit.records.update_error').toString(),
+      onSuccess: (response) => {
+        app.store.pushPayload(response);
+      }
+    });
+  },
+
+  async load() {
+    return apiGet('/deposit-records', undefined, {
+      errorMessage: app.translator.trans('withdrawal.admin.deposit.records.load_error').toString(),
+      transformResponse: (response) => {
+        app.store.pushPayload(response);
+        return app.store.all('deposit-records');
+      }
+    });
+  }
+});
