@@ -92,6 +92,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
             <div className="Form-group">
               <label>
                 {app.translator.trans('withdrawal.admin.deposit.platforms.network')}
+                <span className="Form-required">*</span>
               </label>
               <select
                 className="FormControl"
@@ -112,7 +113,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
                 })}
                 disabled={submitting || this.loadingNetworkTypes}
               >
-                <option value="">{this.loadingNetworkTypes ? 'Loading...' : 'Select Network (Optional)'}</option>
+                <option value="">{this.loadingNetworkTypes ? 'Loading...' : 'Select Network Type *'}</option>
                 {this.networkTypes.map(networkType => (
                   <option key={networkType.id()} value={networkType.id()}>
                     {networkType.name()}
@@ -172,11 +173,12 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
           <div className="Form-group">
             <label>
               {app.translator.trans('withdrawal.admin.deposit.platforms.address')}
+              <span className="Form-required">*</span>
             </label>
             <input
               type="text"
               className="FormControl"
-              placeholder="Static deposit address (optional)"
+              placeholder="Enter deposit address for this platform"
               bidi={this.formData.address}
               disabled={submitting}
             />
@@ -291,19 +293,11 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
   }
 
   private async handleSubmit(attrs: AddDepositPlatformFormAttrs): Promise<void> {
-    // Basic validation
-    if (!this.formData.name() || !this.formData.symbol()) {
+    // Basic validation - all required fields
+    if (!this.formData.name() || !this.formData.symbol() || !this.formData.network() || !this.formData.address()) {
       app.alerts.show(
         { type: 'error', dismissible: true },
         app.translator.trans('withdrawal.admin.deposit.platforms.required_fields_error')
-      );
-      return;
-    }
-
-    if (!this.formData.address()) {
-      app.alerts.show(
-        { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.platforms.address_required_error')
       );
       return;
     }

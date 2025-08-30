@@ -68,16 +68,12 @@ withdrawal:
         network: 网络类型
         min_amount: 最小金额
         max_amount: 最大金额
-        address: 存款地址
-        address_template: 地址模板
-        address_help: 静态存款地址（可选）
-        address_template_help: 地址模板，{user_id} 将替换为用户ID
+        address: 存款地址（必填）
+        address_help: 输入该平台的存款地址
         qr_code_image_url: 二维码图片URL
         qr_code_image_help: 输入二维码图片的URL（可选）
         icon_url: 图标图片URL
         icon_class: 图标CSS类
-        qr_template: 二维码模板
-        qr_template_help: 二维码数据模板，支持 {address} 和 {amount} 变量
         warning_text: 警告文本
         is_active: 启用
         active: 启用
@@ -94,8 +90,7 @@ withdrawal:
         add_error: 添加存款平台失败
         delete_success: 存款平台删除成功
         delete_error: 删除存款平台失败
-        required_fields_error: "请填写必需字段：平台名称、货币符号和网络类型"
-        address_required_error: 必须提供静态地址或地址模板
+        required_fields_error: "请填写必需字段：平台名称、货币符号、网络类型和存款地址"
         custom_network: 自定义网络名称
       transactions:
         title: 存款交易管理
