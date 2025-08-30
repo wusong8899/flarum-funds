@@ -1,5 +1,5 @@
 import app from 'flarum/admin/app';
-import WithdrawalManagementPage from './components/WithdrawalManagementPage';
+import UnifiedManagementPage from './components/UnifiedManagementPage';
 import WithdrawalPlatform from '../common/models/WithdrawalPlatform';
 import WithdrawalRequest from '../common/models/WithdrawalRequest';
 import DepositPlatform from '../common/models/DepositPlatform';
@@ -16,5 +16,5 @@ app.initializers.add('wusong8899-withdrawal', () => {
 
   app.extensionData
     .for('wusong8899-withdrawal')
-    .registerPage(WithdrawalManagementPage);
+    .registerPage(UnifiedManagementPage);
 });

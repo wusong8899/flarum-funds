@@ -137,6 +137,8 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
                 Leave empty to use the selected network type above, or enter a custom network name.
               </div>
             </div>
+          </div>
+          <div className="Form-row">
             <div className="Form-group">
               <label>
                 {app.translator.trans('withdrawal.admin.deposit.platforms.min_amount')}
@@ -151,9 +153,6 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
                 disabled={submitting}
               />
             </div>
-          </div>
-
-          <div className="Form-row">
             <div className="Form-group">
               <label>
                 {app.translator.trans('withdrawal.admin.deposit.platforms.max_amount')}

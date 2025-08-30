@@ -3,7 +3,7 @@ import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import m from 'mithril';
 import type Mithril from 'mithril';
-import ConfirmModal from '../../common/components/shared/ConfirmModal';
+import ConfirmModal from '../../../common/components/shared/ConfirmModal';
 
 // Generic interfaces for platform management
 export interface GenericPlatform {

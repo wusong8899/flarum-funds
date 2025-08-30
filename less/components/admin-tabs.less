@@ -214,81 +214,8 @@
   gap: 12px;
 }
 
-// Platform List Item Styles - Deposit
-.DepositPlatformListItem {
-  .platform-list-item-styles();
-
-  &-content {
-    .platform-list-item-content-styles();
-  }
-
-  &-icon {
-    .platform-list-item-icon-styles();
-  }
-
-  &-info {
-    .platform-list-item-info-styles();
-  }
-
-  &-primary {
-    .platform-list-item-primary-styles();
-  }
-
-  &-displayName {
-    .platform-list-item-display-name-styles();
-  }
-
-  &-details {
-    .platform-list-item-details-styles();
-  }
-
-  &-detail {
-    .platform-list-item-detail-styles();
-  }
-
-  &-actions {
-    .platform-list-item-actions-styles();
-  }
-
-  &-img {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-  }
-
-  &-currencyIcon {
-    font-weight: bold;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-
-    &.usdt {
-      background: #26A17B;
-      color: white;
-    }
-
-    &.usdc {
-      background: #2775CA;
-      color: white;
-    }
-
-    &.btc {
-      background: #F7931A;
-      color: white;
-    }
-
-    &.eth {
-      background: #627EEA;
-      color: white;
-    }
-  }
-}
-
-// Platform List Item Styles - Withdrawal  
+// Dynamic Platform List Item Styles (used by GenericPlatformListItem)
+.DepositPlatformListItem,
 .WithdrawalPlatformListItem {
   .platform-list-item-styles();
 
