@@ -222,7 +222,7 @@ export default class GenericPlatformListItem extends Component<GenericPlatformLi
       return icon(iconClass);
     }
 
-    // Default currency icons
+    // Default currency icons - now uses generic class names that work for both types
     switch (symbol) {
       case 'USDT':
         return <span className="PlatformListItem-currencyIcon usdt">₮</span>;

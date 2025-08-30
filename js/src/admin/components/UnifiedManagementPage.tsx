@@ -29,7 +29,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
   protected getConfig(): GenericManagementPageConfig<GenericPlatform, GenericTransaction> {
     return {
       pageTitle: app.translator.trans('withdrawal.admin.page.title'),
-      extensionId: 'withdrawal',
+      extensionId: 'WithdrawalManagement',
       
       // Primary platform operations (withdrawal)
       platformOperations: createWithdrawalPlatformOperations(),

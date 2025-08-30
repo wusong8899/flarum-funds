@@ -37,6 +37,12 @@
   }
 }
 
+// Management Page Base Styles
+.WithdrawalManagementPage,
+.DepositManagementPage {
+  // These inherit base page styles from admin.less
+}
+
 // Deposit Platform Management Styles
 .DepositManagementSection {
   .DepositPlatforms {
@@ -135,8 +141,8 @@
   }
 }
 
-// Platform List Item Styles
-.DepositPlatformListItem {
+// Generic Platform List Item Styles (Base)
+%PlatformListItem {
   background: var(--control-bg);
   border-radius: 8px;
   padding: 16px;
@@ -242,6 +248,54 @@
       background: #627EEA;
       color: white;
     }
+  }
+}
+
+// Platform List Item Styles - Deposit
+.DepositPlatformListItem {
+  @extend %PlatformListItem;
+}
+
+// Platform List Item Styles - Withdrawal  
+.WithdrawalPlatformListItem {
+  @extend %PlatformListItem;
+}
+
+// Generic icon styles that work for both withdrawal and deposit platforms
+.PlatformListItem-img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.PlatformListItem-currencyIcon {
+  font-weight: bold;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+
+  &.usdt {
+    background: #26A17B;
+    color: white;
+  }
+
+  &.usdc {
+    background: #2775CA;
+    color: white;
+  }
+
+  &.btc {
+    background: #F7931A;
+    color: white;
+  }
+
+  &.eth {
+    background: #627EEA;
+    color: white;
   }
 }
 
@@ -394,12 +448,14 @@
     }
   }
 
-  .DepositPlatformListItem-content {
+  .DepositPlatformListItem-content,
+  .WithdrawalPlatformListItem-content {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
 
-    .DepositPlatformListItem-actions {
+    .DepositPlatformListItem-actions,
+    .WithdrawalPlatformListItem-actions {
       width: 100%;
       justify-content: space-between;
     }

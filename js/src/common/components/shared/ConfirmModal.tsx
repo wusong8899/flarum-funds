@@ -1,6 +1,7 @@
 import Modal from 'flarum/common/components/Modal';
 import Button from 'flarum/common/components/Button';
 import icon from 'flarum/common/helpers/icon';
+import app from 'flarum/common/app';
 
 export interface ConfirmModalAttrs {
   title: string;
@@ -59,7 +60,7 @@ export default class ConfirmModal extends Modal<ConfirmModalAttrs> {
               className="Button"
               onclick={() => {
                 onCancel();
-                this.hide();
+                app.modal.close();
               }}
             >
               {cancelText}
@@ -68,7 +69,7 @@ export default class ConfirmModal extends Modal<ConfirmModalAttrs> {
               className={`Button Button--${dangerous ? 'danger' : 'primary'}`}
               onclick={() => {
                 onConfirm();
-                this.hide();
+                app.modal.close();
               }}
             >
               {confirmText}
