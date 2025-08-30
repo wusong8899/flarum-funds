@@ -1,6 +1,7 @@
 import Component from 'flarum/common/Component';
 import type Mithril from 'mithril';
-import type { WithdrawalPlatform, WithdrawalFormData } from '../types/interfaces';
+import type { WithdrawalFormData } from '../types/interfaces';
+import WithdrawalPlatform from '../../../../common/models/WithdrawalPlatform';
 import PlatformSelector from './PlatformSelector';
 import AmountInput from './AmountInput';
 import AddressInput from './AddressInput';

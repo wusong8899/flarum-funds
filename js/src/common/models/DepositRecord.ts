@@ -1,7 +1,8 @@
 import Model from 'flarum/common/Model';
 
 export default class DepositRecord extends Model {
-  id = Model.attribute<number>('id');
+  // Fixed: id() should return string to match Flarum's base Model interface
+  id = Model.attribute<string>('id');
   userId = Model.attribute<number>('userId');
   platformId = Model.attribute<number>('platformId');
   platformAccount = Model.attribute<string>('platformAccount');

@@ -2,9 +2,10 @@ import app from 'flarum/forum/app';
 import Component from 'flarum/common/Component';
 import icon from 'flarum/common/helpers/icon';
 import type Mithril from 'mithril';
-import type DepositPlatform from '../../../common/models/DepositPlatform';
+import DepositPlatform from '../../../../common/models/DepositPlatform';
 import { getAttr } from '../../withdrawal/utils/modelHelpers';
 import { ICONS } from '../../withdrawal/utils/constants';
+import m from 'mithril';
 
 interface DepositPlatformDropdownProps {
   platforms: DepositPlatform[];
@@ -82,7 +83,7 @@ export default class DepositPlatformDropdown extends Component<DepositPlatformDr
 
   private getPlatformDisplayName(platform: DepositPlatform | null): string {
     if (!platform) {
-      return app.translator.trans('withdrawal.forum.deposit.select_platform');
+      return app.translator.trans('withdrawal.forum.deposit.select_platform').toString();
     }
     
     const name = getAttr(platform, 'name') || '';
@@ -137,14 +138,14 @@ export default class DepositPlatformDropdown extends Component<DepositPlatformDr
       parts.push(app.translator.trans('withdrawal.forum.deposit.min_amount_short', {
         amount: minAmount,
         symbol: symbol
-      }));
+      }).toString());
     }
     
     if (fee && fee > 0) {
       parts.push(app.translator.trans('withdrawal.forum.deposit.fee_short', {
         fee: fee,
         symbol: symbol
-      }));
+      }).toString());
     }
     
     if (parts.length > 0) {

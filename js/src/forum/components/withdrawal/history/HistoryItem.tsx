@@ -1,7 +1,9 @@
 import app from 'flarum/forum/app';
 import Component from 'flarum/common/Component';
 import type Mithril from 'mithril';
-import type { WithdrawalPlatform, WithdrawalRequest, StatusType } from '../types/interfaces';
+import type { StatusType } from '../types/interfaces';
+import WithdrawalPlatform from '../../../../common/models/WithdrawalPlatform';
+import WithdrawalRequest from '../../../../common/models/WithdrawalRequest';
 import PlatformIcon from '../common/PlatformIcon';
 import StatusBadge from '../common/StatusBadge';
 import { getAttr, findPlatformById, getDateFromAttr, getIdString } from '../utils/modelHelpers';
@@ -72,7 +74,7 @@ export default class HistoryItem extends Component<HistoryItemProps> {
 
   private getPlatformId(request: WithdrawalRequest): string | number {
     return getAttr(request, 'platformId') || 
-           (request.relationships?.platform?.data?.id) || '';
+          (request.relationships?.platform?.data?.id) || '';
   }
 
   private getPlatformName(platform: WithdrawalPlatform | null): string {

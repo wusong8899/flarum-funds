@@ -89,7 +89,7 @@ function parseError(error: any): ApiError {
   // Handle network/timeout errors
   if (error.name === 'TypeError' || error.message === 'Failed to fetch') {
     return {
-      message: app.translator.trans('core.lib.error.network_error'),
+      message: app.translator.trans('core.lib.error.network_error').toString(),
       status: 0
     };
   }
@@ -113,7 +113,7 @@ function parseError(error: any): ApiError {
       if (error.response.includes('<b>Fatal error</b>') || 
           error.response.includes('<!DOCTYPE')) {
         return {
-          message: app.translator.trans('core.lib.error.generic_error'),
+          message: app.translator.trans('core.lib.error.generic_error').toString(),
           status: error.status || 500
         };
       }
@@ -130,7 +130,7 @@ function parseError(error: any): ApiError {
 
   // Fallback for unknown errors
   return {
-    message: app.translator.trans('core.lib.error.generic_error'),
+    message: app.translator.trans('core.lib.error.generic_error').toString(),
     status: 500
   };
 }
@@ -246,7 +246,7 @@ export const PlatformAPI = {
    */
   async loadWithdrawalPlatforms(params?: Record<string, any>) {
     return apiGet('/withdrawal-platforms', params, {
-      errorMessage: app.translator.trans('withdrawal.admin.platforms.load_error'),
+      errorMessage: app.translator.trans('withdrawal.admin.platforms.load_error').toString(),
       transformResponse: (response) => {
         app.store.pushPayload(response);
         return app.store.all('withdrawal-platforms');
@@ -260,8 +260,8 @@ export const PlatformAPI = {
   async createWithdrawalPlatform(data: any) {
     return apiPost('/withdrawal-platforms', { data }, {
       showSuccessAlert: true,
-      successMessage: app.translator.trans('withdrawal.admin.platforms.add_success'),
-      errorMessage: app.translator.trans('withdrawal.admin.platforms.add_error'),
+      successMessage: app.translator.trans('withdrawal.admin.platforms.add_success').toString(),
+      errorMessage: app.translator.trans('withdrawal.admin.platforms.add_error').toString(),
       onSuccess: (response) => {
         app.store.pushPayload(response);
       }
@@ -278,7 +278,7 @@ export const RequestAPI = {
    */
   async loadWithdrawalRequests(params?: Record<string, any>) {
     return apiGet('/withdrawal-requests', { include: 'user,platform', ...params }, {
-      errorMessage: app.translator.trans('withdrawal.admin.requests.load_error'),
+      errorMessage: app.translator.trans('withdrawal.admin.requests.load_error').toString(),
       transformResponse: (response) => {
         app.store.pushPayload(response);
         return Array.isArray(response.data) 

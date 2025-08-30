@@ -254,22 +254,30 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
     const validator = new FormValidator();
     
     try {
+      // Fixed: Convert NestedStringArray to string for FormValidator
+      const nameLabel = app.translator.trans('withdrawal.admin.deposit.platforms.name').toString();
+      const symbolLabel = app.translator.trans('withdrawal.admin.deposit.platforms.symbol').toString();
+      const addressLabel = app.translator.trans('withdrawal.admin.deposit.platforms.address').toString();
+      
       validator
-        .required(this.formData.name(), 'name', app.translator.trans('withdrawal.admin.deposit.platforms.name'))
-        .required(this.formData.symbol(), 'symbol', app.translator.trans('withdrawal.admin.deposit.platforms.symbol'))
-        .required(this.formData.address(), 'address', app.translator.trans('withdrawal.admin.deposit.platforms.address'));
+        .required(this.formData.name(), 'name', nameLabel)
+        .required(this.formData.symbol(), 'symbol', symbolLabel)
+        .required(this.formData.address(), 'address', addressLabel);
 
       // Optional numeric fields validation
       if (this.formData.minAmount() && this.formData.minAmount().trim()) {
-        validator.numberRange(this.formData.minAmount(), 0, undefined, 'minAmount', app.translator.trans('withdrawal.admin.deposit.platforms.min_amount'));
+        const minAmountLabel = app.translator.trans('withdrawal.admin.deposit.platforms.min_amount').toString();
+        validator.numberRange(this.formData.minAmount(), 0, undefined, 'minAmount', minAmountLabel);
       }
       
       if (this.formData.maxAmount() && this.formData.maxAmount().trim()) {
-        validator.numberRange(this.formData.maxAmount(), 0, undefined, 'maxAmount', app.translator.trans('withdrawal.admin.deposit.platforms.max_amount'));
+        const maxAmountLabel = app.translator.trans('withdrawal.admin.deposit.platforms.max_amount').toString();
+        validator.numberRange(this.formData.maxAmount(), 0, undefined, 'maxAmount', maxAmountLabel);
       }
 
       if (this.formData.fee() && this.formData.fee().trim()) {
-        validator.numberRange(this.formData.fee(), 0, undefined, 'fee', app.translator.trans('withdrawal.admin.deposit.platforms.fee'));
+        const feeLabel = app.translator.trans('withdrawal.admin.deposit.platforms.fee').toString();
+        validator.numberRange(this.formData.fee(), 0, undefined, 'fee', feeLabel);
       }
 
       // Custom validation for max >= min if both are provided
@@ -277,17 +285,20 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
         const minVal = parseFloat(this.formData.minAmount());
         const maxVal = parseFloat(this.formData.maxAmount());
         if (!isNaN(minVal) && !isNaN(maxVal) && maxVal < minVal) {
-          validator.custom(false, 'maxAmount', app.translator.trans('withdrawal.admin.platforms.max_min_error'));
+          const errorMessage = app.translator.trans('withdrawal.admin.platforms.max_min_error').toString();
+          validator.custom(false, 'maxAmount', errorMessage);
         }
       }
 
       // Optional URL validations
       if (this.formData.iconUrl() && this.formData.iconUrl().trim()) {
-        validator.url(this.formData.iconUrl(), 'iconUrl', app.translator.trans('withdrawal.admin.deposit.platforms.icon_url'));
+        const iconUrlLabel = app.translator.trans('withdrawal.admin.deposit.platforms.icon_url').toString();
+        validator.url(this.formData.iconUrl(), 'iconUrl', iconUrlLabel);
       }
       
       if (this.formData.qrCodeImageUrl() && this.formData.qrCodeImageUrl().trim()) {
-        validator.url(this.formData.qrCodeImageUrl(), 'qrCodeImageUrl', app.translator.trans('withdrawal.admin.deposit.platforms.qr_code_image_url'));
+        const qrCodeLabel = app.translator.trans('withdrawal.admin.deposit.platforms.qr_code_image_url').toString();
+        validator.url(this.formData.qrCodeImageUrl(), 'qrCodeImageUrl', qrCodeLabel);
       }
 
       const result = validator.getResult();
@@ -298,17 +309,18 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
 
       return result.isValid;
     } catch (error) {
-      if (error instanceof Error) {
-        app.alerts.show({ type: 'error', dismissible: true }, error.message);
-      }
+      console.error('Form validation error:', error);
+      app.alerts.show({ type: 'error', dismissible: true }, 'Validation failed');
       return false;
     }
   }
 
-  private async handleSubmit(attrs: AddDepositPlatformFormAttrs): Promise<void> {
-    if (attrs.submitting) return;
+  private async handleSubmit(attrs: AddDepositPlatformFormAttrs, e: Event): Promise<void> {
+    e.preventDefault();
 
-    if (!this.validateForm()) return;
+    if (!this.validateForm()) {
+      return;
+    }
 
     const formData: DepositPlatformFormData = {
       name: this.formData.name(),
@@ -325,22 +337,6 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
       isActive: this.formData.isActive()
     };
 
-    try {
-      await attrs.onSubmit(formData);
-      
-      // Reset form
-      Object.keys(this.formData).forEach(key => {
-        if (key === 'isActive') {
-          this.formData[key](true);
-        } else {
-          this.formData[key]('');
-        }
-      });
-
-      attrs.onCancel();
-    } catch (error) {
-      // Error handling is done in parent component
-      console.error('Form submission error:', error);
-    }
+    await attrs.onSubmit(formData);
   }
 }

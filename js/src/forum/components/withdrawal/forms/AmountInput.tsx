@@ -3,7 +3,7 @@ import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
 import icon from 'flarum/common/helpers/icon';
 import type Mithril from 'mithril';
-import type { WithdrawalPlatform } from '../types/interfaces';
+import WithdrawalPlatform from '../../../../common/models/WithdrawalPlatform';
 import { getAttr } from '../utils/modelHelpers';
 import { DEFAULTS, ICONS } from '../utils/constants';
 

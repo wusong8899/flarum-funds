@@ -8,7 +8,8 @@ import m from 'mithril';
 import type Mithril from 'mithril';
 
 // Withdrawal imports
-import type { WithdrawalPlatform, WithdrawalFormData } from './withdrawal/types/interfaces';
+import type { WithdrawalFormData } from './withdrawal/types/interfaces';
+import WithdrawalPlatform from '../../common/models/WithdrawalPlatform';
 import WithdrawalForm from './withdrawal/forms/WithdrawalForm';
 import TransactionHistory from './shared/TransactionHistory';
 
@@ -23,6 +24,7 @@ import type { DepositRecordFormData } from './deposit/forms/DepositRecordForm';
 
 // Utilities
 import { getAttr, getIdString, getDateFromAttr } from './withdrawal/utils/modelHelpers';
+import { extractErrorMessage, assertApiPayload, type FlarumApiError } from '../../common/types/api';
 
 type TabType = 'withdrawal' | 'deposit' | 'withdrawal-history' | 'deposit-history';
 
@@ -46,8 +48,8 @@ interface FundsPageState {
   activeTab: Stream<TabType>;
 }
 
-export default class FundsPage extends Page {
-  private state: FundsPageState = {
+export default class FundsPage extends Page<any, FundsPageState> {
+  state: FundsPageState = {
     withdrawalPlatforms: [],
     withdrawalRequests: [],
     userBalance: 0,
@@ -71,9 +73,10 @@ export default class FundsPage extends Page {
     saveAddress: Stream(false)
   };
 
-  // Deposit form data and address
+  // Deposit form data and address - Fixed: Added missing userMessage property
   private depositFormData: DepositFormData = {
-    selectedPlatform: Stream<DepositPlatform | null>(null)
+    selectedPlatform: Stream<DepositPlatform | null>(null),
+    userMessage: Stream('')
   };
 
   private depositAddressData: DepositAddressData = {
@@ -134,7 +137,9 @@ export default class FundsPage extends Page {
         break;
     }
     
-    app.setTitle(app.translator.trans(titleKey));
+    // Fixed: Convert NestedStringArray to string using toString()
+    const title = app.translator.trans(titleKey);
+    app.setTitle(typeof title === 'string' ? title : title.toString());
   }
 
   view() {
@@ -288,7 +293,7 @@ export default class FundsPage extends Page {
         <DepositPlatformDropdown
           platforms={this.availablePlatforms}
           selectedPlatform={this.depositFormData.selectedPlatform()}
-          onPlatformSelect={(platform) => this.handlePlatformSelect(platform)}
+          onPlatformSelect={(platform: DepositPlatform) => this.handlePlatformSelect(platform)}
         />
       </div>
     );
@@ -348,7 +353,7 @@ export default class FundsPage extends Page {
         })()}
         
         {/* Only show image container if platform has qrCodeImageUrl */}
-        {this.depositAddressData.platform && this.depositAddressData.platform.qrCodeImageUrl() && (
+        {this.depositAddressData.platform && this.depositAddressData.platform.qrCodeImageUrl && this.depositAddressData.platform.qrCodeImageUrl() && (
           <div className="FundsPage-imageContainer">
             <ImageDisplay
               platform={this.depositAddressData.platform}
@@ -438,8 +443,10 @@ export default class FundsPage extends Page {
 
   // Withdrawal methods (copied from WithdrawalPage)
   private getWithdrawalFormDataForComponent() {
+    // Fixed: Added null check to prevent invoking null objects
+    const selectedPlatform = this.withdrawalFormData.selectedPlatform();
     return {
-      selectedPlatform: this.withdrawalFormData.selectedPlatform(),
+      selectedPlatform: selectedPlatform,
       amount: this.withdrawalFormData.amount(),
       accountDetails: this.withdrawalFormData.accountDetails(),
       message: this.withdrawalFormData.message(),
@@ -584,7 +591,7 @@ export default class FundsPage extends Page {
         }
       });
 
-      app.store.pushPayload(response);
+      app.store.pushPayload(assertApiPayload(response));
 
       this.withdrawalFormData.amount('');
       this.withdrawalFormData.accountDetails('');
@@ -601,36 +608,13 @@ export default class FundsPage extends Page {
         app.translator.trans('withdrawal.forum.submit_success')
       );
 
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Withdrawal request failed:', error);
       
-      let errorMessage = app.translator.trans('withdrawal.forum.error');
-      
-      if (error && error.response && error.response.errors) {
-        const errors = error.response.errors;
-        if (Array.isArray(errors) && errors.length > 0) {
-          const firstError = errors[0];
-          if (firstError.detail) {
-            errorMessage = firstError.detail;
-          }
-        }
-      } else if (error && error.responseText) {
-        if (error.responseText.includes('<b>Fatal error</b>') || error.responseText.includes('<!DOCTYPE')) {
-          errorMessage = app.translator.trans('withdrawal.forum.server_error');
-        } else {
-          try {
-            const response = JSON.parse(error.responseText);
-            if (response.errors && Array.isArray(response.errors) && response.errors.length > 0) {
-              const firstError = response.errors[0];
-              if (firstError.detail) {
-                errorMessage = firstError.detail;
-              }
-            }
-          } catch {
-            errorMessage = app.translator.trans('withdrawal.forum.server_error');
-          }
-        }
-      }
+      const errorMessage = extractErrorMessage(
+        error as FlarumApiError, 
+        app.translator.trans('withdrawal.forum.error').toString()
+      );
       
       app.alerts.show(
         { type: 'error', dismissible: true },
@@ -700,7 +684,7 @@ export default class FundsPage extends Page {
         }
       });
 
-      app.store.pushPayload(response);
+      app.store.pushPayload(assertApiPayload(response));
 
       // Hide form and show success message
       this.state.showDepositRecordForm = false;
@@ -713,36 +697,13 @@ export default class FundsPage extends Page {
       // Reload deposit history
       this.loadDepositRecords();
 
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Deposit record submission failed:', error);
       
-      let errorMessage = app.translator.trans('withdrawal.forum.deposit.record.submit_error');
-      
-      if (error && error.response && error.response.errors) {
-        const errors = error.response.errors;
-        if (Array.isArray(errors) && errors.length > 0) {
-          const firstError = errors[0];
-          if (firstError.detail) {
-            errorMessage = firstError.detail;
-          }
-        }
-      } else if (error && error.responseText) {
-        if (error.responseText.includes('<b>Fatal error</b>') || error.responseText.includes('<!DOCTYPE')) {
-          errorMessage = app.translator.trans('withdrawal.forum.deposit.record.server_error');
-        } else {
-          try {
-            const response = JSON.parse(error.responseText);
-            if (response.errors && Array.isArray(response.errors) && response.errors.length > 0) {
-              const firstError = response.errors[0];
-              if (firstError.detail) {
-                errorMessage = firstError.detail;
-              }
-            }
-          } catch {
-            errorMessage = app.translator.trans('withdrawal.forum.deposit.record.server_error');
-          }
-        }
-      }
+      const errorMessage = extractErrorMessage(
+        error as FlarumApiError, 
+        app.translator.trans('withdrawal.forum.deposit.record.submit_error').toString()
+      );
       
       app.alerts.show(
         { type: 'error', dismissible: true },
@@ -785,8 +746,8 @@ export default class FundsPage extends Page {
       })
     ]);
 
-    app.store.pushPayload(platformsResponse);
-    app.store.pushPayload(requestsResponse);
+    app.store.pushPayload(assertApiPayload(platformsResponse));
+    app.store.pushPayload(assertApiPayload(requestsResponse));
 
     this.state.withdrawalPlatforms = app.store.all('withdrawal-platforms');
     this.state.withdrawalRequests = app.store.all('withdrawal-requests');
@@ -808,9 +769,9 @@ export default class FundsPage extends Page {
       })
     ]);
 
-    app.store.pushPayload(platformsResponse);
-    app.store.pushPayload(transactionsResponse);
-    app.store.pushPayload(recordsResponse);
+    app.store.pushPayload(assertApiPayload(platformsResponse));
+    app.store.pushPayload(assertApiPayload(transactionsResponse));
+    app.store.pushPayload(assertApiPayload(recordsResponse));
     
     this.state.depositPlatforms = app.store.all('deposit-platforms');
     this.state.depositTransactions = app.store.all('deposit-transactions');
@@ -827,7 +788,7 @@ export default class FundsPage extends Page {
         url: app.forum.attribute('apiUrl') + '/deposit-records'
       });
 
-      app.store.pushPayload(response);
+      app.store.pushPayload(assertApiPayload(response));
       this.state.depositRecords = app.store.all('deposit-records');
       
     } catch (error) {
@@ -840,21 +801,26 @@ export default class FundsPage extends Page {
       this.state.loadingBalance = true;
       
       if (forceRefresh && app.session.user) {
+        const userId = app.session.user.id();
+        if (!userId) {
+          throw new Error('User ID not available');
+        }
+        
         const response = await app.request({
           method: 'GET',
-          url: `${app.forum.attribute('apiUrl')}/users/${app.session.user.id()}`
+          url: `${app.forum.attribute('apiUrl')}/users/${userId}`
         });
         
-        app.store.pushPayload(response);
+        app.store.pushPayload(assertApiPayload(response));
         
-        const updatedUser = app.store.getById('users', app.session.user.id());
+        const updatedUser = app.store.getById('users', userId);
         if (updatedUser) {
           this.state.userBalance = parseFloat(updatedUser.attribute('money')) || 0;
         } else {
           this.state.userBalance = 0;
         }
       } else {
-        this.state.userBalance = parseFloat(app.session.user?.attribute('money')) || 0;
+        this.state.userBalance = parseFloat(app.session.user?.attribute('money') || '0');
       }
       
       this.state.loadingBalance = false;
@@ -873,7 +839,7 @@ export default class FundsPage extends Page {
         url: app.forum.attribute('apiUrl') + '/withdrawal-requests'
       });
 
-      app.store.pushPayload(response);
+      app.store.pushPayload(assertApiPayload(response));
       this.state.withdrawalRequests = app.store.all('withdrawal-requests');
     } catch (error) {
       console.error('Error loading withdrawal requests:', error);
@@ -885,7 +851,7 @@ export default class FundsPage extends Page {
     m.redraw();
 
     try {
-      const response = await app.request({
+      const response: any = await app.request({
         method: 'GET',
         url: app.forum.attribute('apiUrl') + '/deposit-address',
         params: {

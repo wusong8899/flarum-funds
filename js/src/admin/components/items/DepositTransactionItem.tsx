@@ -6,6 +6,7 @@ import humanTime from 'flarum/common/helpers/humanTime';
 import username from 'flarum/common/helpers/username';
 import type Mithril from 'mithril';
 import type { DepositTransaction } from '../types/AdminTypes';
+import type User from 'flarum/common/models/User';
 
 export interface DepositTransactionItemAttrs {
   transaction: DepositTransaction;
@@ -21,7 +22,7 @@ export default class DepositTransactionItem extends Component<DepositTransaction
       <div className="DepositTransactionItem">
         <div className="DepositTransactionItem-header">
           <div className="DepositTransactionItem-user">
-            <strong>{username(transaction.user)}</strong>
+            <strong>{username(transaction.user as User)}</strong>
             <span className="DepositTransactionItem-time">
               {humanTime(transaction.createdAt)}
             </span>
@@ -165,15 +166,16 @@ export default class DepositTransactionItem extends Component<DepositTransaction
   private getStatusText(status: string): string {
     switch (status) {
       case 'pending':
-        return app.translator.trans('withdrawal.admin.deposit.transactions.status.pending');
+        // Fixed: Convert NestedStringArray to string
+        return app.translator.trans('withdrawal.admin.deposit.transactions.status.pending').toString();
       case 'confirmed':
-        return app.translator.trans('withdrawal.admin.deposit.transactions.status.confirmed');
+        return app.translator.trans('withdrawal.admin.deposit.transactions.status.confirmed').toString();
       case 'completed':
-        return app.translator.trans('withdrawal.admin.deposit.transactions.status.completed');
+        return app.translator.trans('withdrawal.admin.deposit.transactions.status.completed').toString();
       case 'failed':
-        return app.translator.trans('withdrawal.admin.deposit.transactions.status.failed');
+        return app.translator.trans('withdrawal.admin.deposit.transactions.status.failed').toString();
       case 'cancelled':
-        return app.translator.trans('withdrawal.admin.deposit.transactions.status.cancelled');
+        return app.translator.trans('withdrawal.admin.deposit.transactions.status.cancelled').toString();
       default:
         return status;
     }

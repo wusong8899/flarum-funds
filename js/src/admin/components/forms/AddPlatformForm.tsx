@@ -132,30 +132,44 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
     const validator = new FormValidator();
     
     try {
+      // Fixed: Convert NestedStringArray to string for FormValidator
+      const nameLabel = app.translator.trans('withdrawal.admin.platforms.name').toString();
+      const symbolLabel = app.translator.trans('withdrawal.admin.platforms.symbol').toString();
+      const minAmountLabel = app.translator.trans('withdrawal.admin.platforms.min_amount').toString();
+      const maxAmountLabel = app.translator.trans('withdrawal.admin.platforms.max_amount').toString();
+      const feeLabel = app.translator.trans('withdrawal.admin.platforms.fee').toString();
+      
       validator
-        .required(this.name(), 'name', app.translator.trans('withdrawal.admin.platforms.name'))
-        .required(this.symbol(), 'symbol', app.translator.trans('withdrawal.admin.platforms.symbol'))
-        .numberRange(this.minAmount(), 0, undefined, 'minAmount', app.translator.trans('withdrawal.admin.platforms.min_amount'))
-        .numberRange(this.maxAmount(), 0, undefined, 'maxAmount', app.translator.trans('withdrawal.admin.platforms.max_amount'))
-        .numberRange(this.fee(), 0, undefined, 'fee', app.translator.trans('withdrawal.admin.platforms.fee'));
+        .required(this.name(), 'name', nameLabel)
+        .required(this.symbol(), 'symbol', symbolLabel)
+        .numberRange(this.minAmount(), 0, undefined, 'minAmount', minAmountLabel)
+        .numberRange(this.maxAmount(), 0, undefined, 'maxAmount', maxAmountLabel)
+        .numberRange(this.fee(), 0, undefined, 'fee', feeLabel);
 
       // Custom validation for max >= min
       const minVal = parseFloat(this.minAmount());
       const maxVal = parseFloat(this.maxAmount());
       if (maxVal < minVal) {
-        validator.addError('maxAmount', app.translator.trans('withdrawal.admin.platforms.max_min_error'));
+        const errorMessage = app.translator.trans('withdrawal.admin.platforms.max_min_error').toString();
+        validator.custom(false, 'maxAmount', errorMessage);
       }
 
       // Optional URL validation
       if (this.iconUrl() && this.iconUrl().trim()) {
-        validator.url(this.iconUrl(), 'iconUrl', app.translator.trans('withdrawal.admin.platforms.icon_url'));
+        const iconUrlLabel = app.translator.trans('withdrawal.admin.platforms.icon_url').toString();
+        validator.url(this.iconUrl(), 'iconUrl', iconUrlLabel);
       }
 
-      return validator.isValid();
-    } catch (error) {
-      if (error instanceof Error) {
-        app.alerts.show({ type: 'error', dismissible: true }, error.message);
+      const result = validator.getResult();
+      
+      if (!result.isValid && result.firstErrorMessage) {
+        app.alerts.show({ type: 'error', dismissible: true }, result.firstErrorMessage);
       }
+
+      return result.isValid;
+    } catch (error) {
+      console.error('Form validation error:', error);
+      app.alerts.show({ type: 'error', dismissible: true }, 'Validation failed');
       return false;
     }
   }

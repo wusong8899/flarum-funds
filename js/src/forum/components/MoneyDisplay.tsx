@@ -11,9 +11,9 @@ export default class MoneyDisplay extends Component<ComponentAttrs> {
       return null;
     }
 
-    const moneyName = app.forum.attribute('antoinefr-money.moneyname') || '[money]';
-    const userMoneyText = moneyName.replace('[money]', app.session.user.attribute("money"));
-    const iconUrl = app.forum.attribute('wusong8899-withdrawal.moneyIconUrl');
+    const moneyName: string = app.forum.attribute('antoinefr-money.moneyname') || '[money]';
+    const userMoneyText: string = moneyName.replace('[money]', app.session.user.attribute("money"));
+    const iconUrl: string | null = app.forum.attribute('wusong8899-withdrawal.moneyIconUrl');
 
     return (
       <div

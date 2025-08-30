@@ -1,38 +1,13 @@
-export interface WithdrawalPlatform {
-  id: number;
-  attributes: {
-    name: string;
-    symbol: string;
-    minAmount: number;
-    maxAmount: number;
-    fee: number;
-    iconUrl?: string;
-    iconClass?: string;
-  };
-}
-
-export interface WithdrawalRequest {
-  id: number;
-  attributes: {
-    amount: number;
-    accountDetails: string;
-    message?: string;
-    status: string;
-    createdAt: string;
-  };
-  relationships: {
-    platform: {
-      data: { id: number };
-    };
-  };
-}
+import Stream from 'flarum/common/utils/Stream';
+import WithdrawalPlatform from '../../../../common/models/WithdrawalPlatform';
+import WithdrawalRequest from '../../../../common/models/WithdrawalRequest';
 
 export interface WithdrawalFormData {
-  amount: string;
-  selectedPlatform: WithdrawalPlatform | null;
-  accountDetails: string;
-  message: string;
-  saveAddress: boolean;
+  amount: Stream<string>;
+  selectedPlatform: Stream<WithdrawalPlatform | null>;
+  accountDetails: Stream<string>;
+  message: Stream<string>;
+  saveAddress: Stream<boolean>;
 }
 
 export interface WithdrawalPageState {
@@ -42,8 +17,7 @@ export interface WithdrawalPageState {
   submitting: boolean;
   loadingBalance: boolean;
   userBalance: number;
-  showDropdown: boolean;
-  activeTab: 'withdrawal' | 'history';
+  activeTab: Stream<'withdrawal' | 'history'>;
 }
 
 export type StatusType = 'pending' | 'approved' | 'rejected';

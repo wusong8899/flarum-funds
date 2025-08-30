@@ -1,5 +1,5 @@
 import Component from 'flarum/common/Component';
-import DepositPlatform from '../../../common/models/DepositPlatform';
+import DepositPlatform from '../../../../common/models/DepositPlatform';
 import type Mithril from 'mithril';
 
 export interface ImageDisplayAttrs {

@@ -7,9 +7,7 @@ import icon from 'flarum/common/helpers/icon';
 import m from 'mithril';
 import type Mithril from 'mithril';
 import type { DepositPageState, DepositFormData, DepositAddressData } from './deposit/types/interfaces';
-import type DepositPlatform from '../common/models/DepositPlatform';
-import CurrencySelector from './deposit/selectors/CurrencySelector';
-import NetworkSelector from './deposit/selectors/NetworkSelector';
+import type DepositPlatform from '../../common/models/DepositPlatform';
 import AddressDisplay from './deposit/components/AddressDisplay';
 import ImageDisplay from './deposit/components/QRCodeDisplay';
 import TransactionHistory from './shared/TransactionHistory';
@@ -19,10 +17,10 @@ import {
   handleCurrencyChange, 
   handleNetworkChange,
   type PlatformSelectionState 
-} from '../common/utils/platformSelectionLogic';
+} from '../../common/utils/platformSelectionLogic';
 
-export default class DepositPage extends Page {
-  private state: DepositPageState = {
+export default class DepositPage extends Page<any, DepositPageState> {
+  state: DepositPageState = {
     platforms: [],
     transactions: [],
     loading: true,
@@ -30,7 +28,8 @@ export default class DepositPage extends Page {
   };
 
   private formData: DepositFormData = {
-    selectedPlatform: Stream<DepositPlatform | null>(null)
+    selectedPlatform: Stream<DepositPlatform | null>(null),
+    userMessage: Stream('')
   };
 
   private addressData: DepositAddressData = {
@@ -52,7 +51,7 @@ export default class DepositPage extends Page {
   oninit(vnode: Mithril.VnodeDOM) {
     super.oninit(vnode);
 
-    app.setTitle(app.translator.trans('withdrawal.forum.deposit.page.title'));
+    app.setTitle(app.translator.trans('withdrawal.forum.deposit.page.title').toString());
 
     this.loadPlatforms();
     this.loadTransactions();

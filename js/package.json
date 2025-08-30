@@ -6,6 +6,7 @@
     "flarum-tsconfig": "^1.0.0",
     "mithril": "^2.3.4",
     "oxlint": "^1.11.2",
+    "typescript": "^5.9.2",
     "vite": "^7.1.2",
     "vite-plugin-oxlint": "^1.4.0"
   },

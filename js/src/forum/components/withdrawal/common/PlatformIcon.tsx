@@ -1,6 +1,6 @@
 import icon from 'flarum/common/helpers/icon';
 import type Mithril from 'mithril';
-import type { WithdrawalPlatform } from '../types/interfaces';
+import WithdrawalPlatform from '../../../../common/models/WithdrawalPlatform';
 import { getAttr } from '../utils/modelHelpers';
 import { ICONS } from '../utils/constants';
 

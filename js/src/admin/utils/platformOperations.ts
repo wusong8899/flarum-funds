@@ -22,8 +22,8 @@ export const createWithdrawalPlatformOperations = (): PlatformOperations<any> =>
     
     return apiPost('/withdrawal-platforms', { data: platformData }, {
       showSuccessAlert: true,
-      successMessage: app.translator.trans('withdrawal.admin.platforms.add_success'),
-      errorMessage: app.translator.trans('withdrawal.admin.platforms.add_error'),
+      successMessage: app.translator.trans('withdrawal.admin.platforms.add_success').toString(),
+      errorMessage: app.translator.trans('withdrawal.admin.platforms.add_error').toString(),
       onSuccess: (response) => {
         app.store.pushPayload(response);
       }
@@ -55,7 +55,7 @@ export const createWithdrawalPlatformOperations = (): PlatformOperations<any> =>
 
   async load() {
     return apiGet('/withdrawal-platforms', undefined, {
-      errorMessage: app.translator.trans('withdrawal.admin.platforms.load_error'),
+      errorMessage: app.translator.trans('withdrawal.admin.platforms.load_error').toString(),
       transformResponse: (response) => {
         app.store.pushPayload(response);
         return app.store.all('withdrawal-platforms');
@@ -86,8 +86,8 @@ export const createDepositPlatformOperations = (): PlatformOperations<any> => ({
     
     return apiPost('/deposit-platforms', { data: platformData }, {
       showSuccessAlert: true,
-      successMessage: app.translator.trans('withdrawal.admin.deposit.platforms.add_success'),
-      errorMessage: app.translator.trans('withdrawal.admin.deposit.platforms.add_error'),
+      successMessage: app.translator.trans('withdrawal.admin.deposit.platforms.add_success').toString(),
+      errorMessage: app.translator.trans('withdrawal.admin.deposit.platforms.add_error').toString(),
       onSuccess: (response) => {
         app.store.pushPayload(response);
       }
@@ -107,8 +107,8 @@ export const createDepositPlatformOperations = (): PlatformOperations<any> => ({
       }
     }, {
       showSuccessAlert: true,
-      successMessage: app.translator.trans(`withdrawal.admin.deposit.platforms.${!currentStatus ? 'enable' : 'disable'}_success`),
-      errorMessage: app.translator.trans('withdrawal.admin.deposit.platforms.toggle_error'),
+      successMessage: app.translator.trans(`withdrawal.admin.deposit.platforms.${!currentStatus ? 'enable' : 'disable'}_success`).toString(),
+      errorMessage: app.translator.trans('withdrawal.admin.deposit.platforms.toggle_error').toString(),
       onSuccess: (response) => {
         app.store.pushPayload(response);
       }
@@ -119,13 +119,13 @@ export const createDepositPlatformOperations = (): PlatformOperations<any> => ({
     const platformId = typeof platform.id === 'function' ? platform.id() : platform.id;
     
     return apiDelete(`/deposit-platforms/${platformId}`, {
-      errorMessage: app.translator.trans('withdrawal.admin.deposit.platforms.delete_error')
+      errorMessage: app.translator.trans('withdrawal.admin.deposit.platforms.delete_error').toString()
     });
   },
 
   async load() {
     return apiGet('/deposit-platforms', undefined, {
-      errorMessage: app.translator.trans('withdrawal.admin.deposit.platforms.load_error'),
+      errorMessage: app.translator.trans('withdrawal.admin.deposit.platforms.load_error').toString(),
       transformResponse: (response) => {
         app.store.pushPayload(response);
         return app.store.all('deposit-platforms');
@@ -145,14 +145,14 @@ export const createWithdrawalRequestOperations = (): TransactionOperations<any> 
       
       app.alerts.show(
         { type: 'success', dismissible: true },
-        app.translator.trans(`withdrawal.admin.requests.${status}_success`)
+        app.translator.trans(`withdrawal.admin.requests.${status}_success`).toString()
       );
     }
   },
 
   async load() {
     return apiGet('/withdrawal-requests', { include: 'user,platform' }, {
-      errorMessage: app.translator.trans('withdrawal.admin.requests.load_error'),
+      errorMessage: app.translator.trans('withdrawal.admin.requests.load_error').toString(),
       transformResponse: (response) => {
         app.store.pushPayload(response);
         return Array.isArray(response.data) 
@@ -177,8 +177,8 @@ export const createDepositTransactionOperations = (): TransactionOperations<any>
       }
     }, {
       showSuccessAlert: true,
-      successMessage: app.translator.trans(`withdrawal.admin.deposit.transactions.${status}_success`),
-      errorMessage: app.translator.trans('withdrawal.admin.deposit.transactions.update_error'),
+      successMessage: app.translator.trans(`withdrawal.admin.deposit.transactions.${status}_success`).toString(),
+      errorMessage: app.translator.trans('withdrawal.admin.deposit.transactions.update_error').toString(),
       onSuccess: (response) => {
         app.store.pushPayload(response);
       }
@@ -187,7 +187,7 @@ export const createDepositTransactionOperations = (): TransactionOperations<any>
 
   async load() {
     return apiGet('/deposit-transactions', undefined, {
-      errorMessage: app.translator.trans('withdrawal.admin.deposit.transactions.load_error'),
+      errorMessage: app.translator.trans('withdrawal.admin.deposit.transactions.load_error').toString(),
       transformResponse: (response) => {
         app.store.pushPayload(response);
         return app.store.all('deposit-transactions');

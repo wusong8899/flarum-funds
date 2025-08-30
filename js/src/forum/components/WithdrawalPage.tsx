@@ -6,13 +6,15 @@ import Stream from 'flarum/common/utils/Stream';
 import icon from 'flarum/common/helpers/icon';
 import m from 'mithril';
 import type Mithril from 'mithril';
-import type { WithdrawalPlatform, WithdrawalFormData, WithdrawalPageState } from './withdrawal/types/interfaces';
+import type { WithdrawalFormData, WithdrawalPageState } from './withdrawal/types/interfaces';
+import WithdrawalPlatform from '../../common/models/WithdrawalPlatform';
 import WithdrawalForm from './withdrawal/forms/WithdrawalForm';
 import TransactionHistory from './shared/TransactionHistory';
 import { getAttr, getIdString } from './withdrawal/utils/modelHelpers';
+import { extractErrorMessage, assertApiPayload, type FlarumApiError } from '../../common/types/api';
 
-export default class WithdrawalPage extends Page {
-  private state: WithdrawalPageState = {
+export default class WithdrawalPage extends Page<any, any> {
+  state: WithdrawalPageState = {
     platforms: [],
     requests: [],
     loading: true,
@@ -33,7 +35,7 @@ export default class WithdrawalPage extends Page {
   oninit(vnode: Mithril.VnodeDOM) {
     super.oninit(vnode);
 
-    app.setTitle(app.translator.trans('withdrawal.forum.page.title'));
+    app.setTitle(app.translator.trans('withdrawal.forum.page.title').toString());
 
     this.loadData();
     this.loadUserBalance();
@@ -283,7 +285,7 @@ export default class WithdrawalPage extends Page {
         }
       });
 
-      app.store.pushPayload(response);
+      app.store.pushPayload(assertApiPayload(response));
 
       this.formData.amount('');
       this.formData.accountDetails('');
@@ -300,45 +302,13 @@ export default class WithdrawalPage extends Page {
         app.translator.trans('withdrawal.forum.submit_success')
       );
 
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Withdrawal request failed:', error);
       
-      // 尝试解析后端验证错误消息
-      let errorMessage = app.translator.trans('withdrawal.forum.error');
-      
-      if (error && error.response && error.response.errors) {
-        const errors = error.response.errors;
-        if (Array.isArray(errors) && errors.length > 0) {
-          // 获取第一个错误的详细信息
-          const firstError = errors[0];
-          if (firstError.detail) {
-            errorMessage = firstError.detail;
-          } else if (firstError.source && firstError.source.pointer) {
-            // 尝试从source.pointer获取字段名
-            const field = firstError.source.pointer.split('/').pop();
-            errorMessage = `${field}: ${firstError.title || firstError.detail || 'Validation error'}`;
-          }
-        }
-      } else if (error && error.responseText) {
-        // 检查是否是HTML错误响应（PHP Fatal Error）
-        if (error.responseText.includes('<b>Fatal error</b>') || error.responseText.includes('<!DOCTYPE')) {
-          errorMessage = app.translator.trans('withdrawal.forum.server_error');
-        } else {
-          try {
-            const response = JSON.parse(error.responseText);
-            if (response.errors && Array.isArray(response.errors) && response.errors.length > 0) {
-              const firstError = response.errors[0];
-              if (firstError.detail) {
-                errorMessage = firstError.detail;
-              }
-            }
-          } catch (parseError) {
-            console.error('Failed to parse error response:', parseError);
-            // 如果解析失败，使用通用错误消息
-            errorMessage = app.translator.trans('withdrawal.forum.server_error');
-          }
-        }
-      }
+      const errorMessage = extractErrorMessage(
+        error as FlarumApiError, 
+        app.translator.trans('withdrawal.forum.error').toString()
+      );
       
       app.alerts.show(
         { type: 'error', dismissible: true },
@@ -367,8 +337,8 @@ export default class WithdrawalPage extends Page {
       console.log('Platforms response:', platformsResponse);
       console.log('Requests response:', requestsResponse);
 
-      app.store.pushPayload(platformsResponse);
-      app.store.pushPayload(requestsResponse);
+      app.store.pushPayload(assertApiPayload(platformsResponse));
+      app.store.pushPayload(assertApiPayload(requestsResponse));
 
       this.state.platforms = app.store.all('withdrawal-platforms');
       this.state.requests = app.store.all('withdrawal-requests');
@@ -390,16 +360,21 @@ export default class WithdrawalPage extends Page {
       this.state.loadingBalance = true;
       
       if (forceRefresh && app.session.user) {
+        const userId = app.session.user.id();
+        if (!userId) {
+          throw new Error('User ID not available');
+        }
+        
         // 从服务器获取最新用户数据
         const response = await app.request({
           method: 'GET',
-          url: `${app.forum.attribute('apiUrl')}/users/${app.session.user.id()}`
+          url: `${app.forum.attribute('apiUrl')}/users/${userId}`
         });
         
-        app.store.pushPayload(response);
+        app.store.pushPayload(assertApiPayload(response));
         
         // 更新当前用户实例
-        const updatedUser = app.store.getById('users', app.session.user.id());
+        const updatedUser = app.store.getById('users', userId);
         if (updatedUser) {
           this.state.userBalance = parseFloat(updatedUser.attribute('money')) || 0;
         } else {
@@ -407,7 +382,7 @@ export default class WithdrawalPage extends Page {
         }
       } else {
         // 使用当前缓存的用户数据
-        this.state.userBalance = parseFloat(app.session.user?.attribute('money')) || 0;
+        this.state.userBalance = parseFloat(app.session.user?.attribute('money') || '0');
       }
       
       this.state.loadingBalance = false;
@@ -426,7 +401,7 @@ export default class WithdrawalPage extends Page {
         url: app.forum.attribute('apiUrl') + '/withdrawal-requests'
       });
 
-      app.store.pushPayload(response);
+      app.store.pushPayload(assertApiPayload(response));
       this.state.requests = app.store.all('withdrawal-requests');
     } catch (error) {
       console.error('Error loading withdrawal requests:', error);

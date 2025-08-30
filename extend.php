@@ -6,15 +6,15 @@ use wusong8899\Withdrawal\Model;
 
 return [
     (new Extend\Frontend('forum'))
-        ->js(__DIR__.'/js/dist/forum.js')
-        ->css(__DIR__.'/less/forum.less')
+        ->js(__DIR__ . '/js/dist/forum.js')
+        ->css(__DIR__ . '/less/forum.less')
         ->route('/funds', 'funds.index')
         ->route('/withdrawal', 'withdrawal.index')
         ->route('/deposit', 'deposit.index'),
 
     (new Extend\Frontend('admin'))
-        ->js(__DIR__.'/js/dist/admin.js')
-        ->css(__DIR__.'/less/admin.less'),
+        ->js(__DIR__ . '/js/dist/admin.js')
+        ->css(__DIR__ . '/less/admin.less'),
 
     new Extend\Locales(__DIR__ . '/locale'),
 
@@ -50,7 +50,7 @@ return [
         ->hasMany('withdrawalRequests', Model\WithdrawalRequest::class)
         ->hasMany('depositAddresses', Model\DepositAddress::class)
         ->hasMany('depositTransactions', Model\DepositTransaction::class)
-        ->hasMany('depositRecords', \Wusong8899\Withdrawal\Models\DepositRecord::class),
+        ->hasMany('depositRecords', \wusong8899\Withdrawal\Models\DepositRecord::class),
 
     // Register API serializers for our models
     (new Extend\ApiController(\Flarum\Api\Controller\ListUsersController::class))

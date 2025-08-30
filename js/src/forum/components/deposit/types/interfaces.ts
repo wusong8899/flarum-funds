@@ -1,6 +1,6 @@
 import Stream from 'flarum/common/utils/Stream';
-import DepositPlatform from '../../../common/models/DepositPlatform';
-import DepositTransaction from '../../../common/models/DepositTransaction';
+import DepositPlatform from '../../../../common/models/DepositPlatform';
+import DepositTransaction from '../../../../common/models/DepositTransaction';
 
 export interface DepositPageState {
   platforms: DepositPlatform[];

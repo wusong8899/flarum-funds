@@ -11,7 +11,7 @@ export default class MobileMoneyDisplay extends Component<ComponentAttrs> {
     // Note: Mobile detection and user authentication are now handled in index.ts
     // This component assumes it should render when called
     const userMoney = app.session.user?.attribute('money') || 0;
-    const iconUrl = app.forum.attribute('wusong8899-withdrawal.moneyIconUrl');
+    const iconUrl: string | null = app.forum.attribute('wusong8899-withdrawal.moneyIconUrl');
 
     return (
       <div className="Navigation-mobileMoneyDisplay">

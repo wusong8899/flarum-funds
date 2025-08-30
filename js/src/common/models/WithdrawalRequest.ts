@@ -2,7 +2,7 @@ import Model from 'flarum/common/Model';
 import User from 'flarum/common/models/User';
 import WithdrawalPlatform from './WithdrawalPlatform';
 import { WithdrawalStatus, WITHDRAWAL_STATUS } from '../types';
-
+import app from 'flarum/common/app';
 /**
  * WithdrawalRequest model for Flarum
  * 
@@ -52,7 +52,7 @@ export default class WithdrawalRequest extends Model {
   // Display helpers
   statusLabel(): string {
     const status = this.status();
-    return app.translator.trans(`withdrawal.forum.status.${status}`);
+    return app.translator.trans(`withdrawal.forum.status.${status}`).toString();
   }
   
   statusColor(): string {

@@ -28,6 +28,6 @@ export default class StatusBadge extends Component<StatusBadgeProps> {
   }
 
   private getStatusLabel(status: StatusType): string {
-    return app.translator.trans(`withdrawal.forum.status.${status}`);
+    return app.translator.trans(`withdrawal.forum.status.${status}`).toString();
   }
 }

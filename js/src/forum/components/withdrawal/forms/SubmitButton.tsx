@@ -2,7 +2,7 @@ import app from 'flarum/forum/app';
 import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
 import type Mithril from 'mithril';
-import type { WithdrawalPlatform } from '../types/interfaces';
+import WithdrawalPlatform from '../../../../common/models/WithdrawalPlatform';
 import { getAttr } from '../utils/modelHelpers';
 import { DEFAULTS } from '../utils/constants';
 

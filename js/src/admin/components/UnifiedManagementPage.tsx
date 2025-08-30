@@ -29,7 +29,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
 
   protected getConfig(): GenericManagementPageConfig<GenericPlatform, GenericTransaction> {
     return {
-      pageTitle: app.translator.trans('withdrawal.admin.page.title'),
+      pageTitle: app.translator.trans('withdrawal.admin.page.title').toString(),
       extensionId: 'WithdrawalManagement',
       
       // Primary platform operations (withdrawal)
@@ -43,12 +43,12 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
       tabs: [
         {
           key: 'withdrawals',
-          label: app.translator.trans('withdrawal.admin.tabs.withdrawals'),
+          label: app.translator.trans('withdrawal.admin.tabs.withdrawals').toString(),
           component: 'div', // Will be replaced by custom content
         },
         {
           key: 'deposits',
-          label: app.translator.trans('withdrawal.admin.tabs.deposits'),
+          label: app.translator.trans('withdrawal.admin.tabs.deposits').toString(),
           component: DepositManagementSection,
           props: () => ({
             platforms: this.depositPlatforms,
@@ -62,7 +62,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
         },
         {
           key: 'deposit-records',
-          label: app.translator.trans('withdrawal.admin.tabs.deposit_records'),
+          label: app.translator.trans('withdrawal.admin.tabs.deposit_records').toString(),
           component: 'div', // Will be replaced by custom content
         }
       ],

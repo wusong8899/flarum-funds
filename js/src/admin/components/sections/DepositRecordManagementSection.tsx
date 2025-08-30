@@ -296,11 +296,11 @@ export default class DepositRecordManagementSection extends Component<
   private getStatusText(status: string): string {
     switch (status) {
       case 'pending':
-        return app.translator.trans('withdrawal.admin.deposit.records.status.pending');
+        return app.translator.trans('withdrawal.admin.deposit.records.status.pending').toString();
       case 'approved':
-        return app.translator.trans('withdrawal.admin.deposit.records.status.approved');
+        return app.translator.trans('withdrawal.admin.deposit.records.status.approved').toString();
       case 'rejected':
-        return app.translator.trans('withdrawal.admin.deposit.records.status.rejected');
+        return app.translator.trans('withdrawal.admin.deposit.records.status.rejected').toString();
       default:
         return 'Unknown';
     }
@@ -315,13 +315,13 @@ export default class DepositRecordManagementSection extends Component<
       prompt(
         app.translator.trans('withdrawal.admin.deposit.records.approve_prompt', {
           amount: defaultAmount
-        }),
+        }).toString(),
         defaultAmount.toString()
       ) || defaultAmount.toString()
     );
 
     const notes = prompt(
-      app.translator.trans('withdrawal.admin.deposit.records.approve_notes_prompt')
+      app.translator.trans('withdrawal.admin.deposit.records.approve_notes_prompt').toString()
     );
 
     if (isNaN(creditedAmount) || creditedAmount <= 0) {
@@ -356,7 +356,7 @@ export default class DepositRecordManagementSection extends Component<
 
   private async handleReject(record: DepositRecord, attrs: DepositRecordManagementSectionAttrs): Promise<void> {
     const reason = prompt(
-      app.translator.trans('withdrawal.admin.deposit.records.reject_reason_prompt')
+      app.translator.trans('withdrawal.admin.deposit.records.reject_reason_prompt').toString()
     );
 
     if (!reason || reason.trim() === '') {

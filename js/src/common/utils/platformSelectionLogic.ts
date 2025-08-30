@@ -1,4 +1,4 @@
-import { getAttr } from '../../forum/withdrawal/utils/modelHelpers';
+import { getAttr } from '../../forum/components/withdrawal/utils/modelHelpers';
 import type DepositPlatform from '../models/DepositPlatform';
 import type WithdrawalPlatform from '../models/WithdrawalPlatform';
 
