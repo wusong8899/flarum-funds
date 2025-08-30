@@ -6,9 +6,9 @@ use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
 use Flarum\User\Exception\PermissionDeniedException;
+use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer;
@@ -17,6 +17,19 @@ use wusong8899\Withdrawal\Models\DepositRecord;
 class UpdateDepositRecordController extends AbstractShowController
 {
     public $serializer = DepositRecordSerializer::class;
+
+    /**
+     * @var ConnectionInterface
+     */
+    protected $db;
+
+    /**
+     * @param ConnectionInterface $db
+     */
+    public function __construct(ConnectionInterface $db)
+    {
+        $this->db = $db;
+    }
 
     public $include = [
         'user',
@@ -79,7 +92,7 @@ class UpdateDepositRecordController extends AbstractShowController
             }
         }
 
-        DB::transaction(function () use ($record, $admin, $creditedAmount, $notes) {
+        $this->db->transaction(function () use ($record, $admin, $creditedAmount, $notes) {
             // Lock user record to prevent race conditions
             $user = $record->user()->lockForUpdate()->first();
 
