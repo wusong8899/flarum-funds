@@ -65,7 +65,7 @@ withdrawal:
         title: 存款平台管理
         name: 平台名称
         symbol: 货币符号
-        network: 网络类型
+        network: 网络类型（可选）
         min_amount: 最小金额
         max_amount: 最大金额
         address: 存款地址（必填）
@@ -90,8 +90,8 @@ withdrawal:
         add_error: 添加存款平台失败
         delete_success: 存款平台删除成功
         delete_error: 删除存款平台失败
-        required_fields_error: "请填写必需字段：平台名称、货币符号、网络类型和存款地址"
-        custom_network: 自定义网络名称
+        required_fields_error: "请填写必需字段：平台名称、货币符号和存款地址"
+        custom_network: 自定义网络名称（可选）
       transactions:
         title: 存款交易管理
         pending_title: 待处理交易
