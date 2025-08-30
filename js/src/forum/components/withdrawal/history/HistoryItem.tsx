@@ -74,7 +74,7 @@ export default class HistoryItem extends Component<HistoryItemProps> {
 
   private getPlatformId(request: WithdrawalRequest): string | number {
     return getAttr(request, 'platformId') || 
-          (request.relationships?.platform?.data?.id) || '';
+          request.platform()?.id() || '';
   }
 
   private getPlatformName(platform: WithdrawalPlatform | null): string {

@@ -50,7 +50,7 @@ export default class DepositRecordManagementSection extends Component<
   DepositRecordManagementSectionAttrs,
   DepositRecordManagementSectionState
 > {
-  private state: DepositRecordManagementSectionState = {
+  public state: DepositRecordManagementSectionState = {
     processingRecords: new Set()
   };
 

@@ -11,6 +11,7 @@ import type DepositPlatform from '../../common/models/DepositPlatform';
 import AddressDisplay from './deposit/components/AddressDisplay';
 import ImageDisplay from './deposit/components/QRCodeDisplay';
 import TransactionHistory from './shared/TransactionHistory';
+import DepositPlatformDropdown from './deposit/selectors/DepositPlatformDropdown';
 import { getAttr } from './withdrawal/utils/modelHelpers';
 import { 
   createPlatformSelectionState, 
@@ -18,6 +19,7 @@ import {
   handleNetworkChange,
   type PlatformSelectionState 
 } from '../../common/utils/platformSelectionLogic';
+import { assertApiPayload } from '../../common/types/api';
 
 export default class DepositPage extends Page<any, DepositPageState> {
   state: DepositPageState = {
@@ -138,18 +140,10 @@ export default class DepositPage extends Page<any, DepositPageState> {
   private renderSelectors(): Mithril.Children {
     return (
       <div className="DepositPage-selectors">
-        <CurrencySelector
-          currencies={this.currencies}
-          selected={this.selectedCurrency()}
-          onSelect={(currency) => this.handleCurrencyChange(currency)}
-          loading={this.state.loading}
-        />
-        <NetworkSelector
-          networks={this.networks}
-          selected={this.selectedNetwork()}
-          onSelect={(network) => this.handleNetworkChange(network)}
-          loading={this.state.loading || !this.selectedCurrency()}
-          disabled={!this.selectedCurrency()}
+        <DepositPlatformDropdown
+          platforms={this.state.platforms}
+          selectedPlatform={this.selectedPlatform()}
+          onPlatformSelect={(platform: DepositPlatform) => this.handlePlatformSelect(platform)}
         />
       </div>
     );
@@ -259,6 +253,10 @@ export default class DepositPage extends Page<any, DepositPageState> {
     }
   }
 
+  private selectedPlatform(): DepositPlatform | null {
+    return this.formData.selectedPlatform();
+  }
+
   private handlePlatformSelect(platform: DepositPlatform): void {
     this.formData.selectedPlatform(platform);
     this.loadDepositAddress(platform);
@@ -290,7 +288,7 @@ export default class DepositPage extends Page<any, DepositPageState> {
         url: app.forum.attribute('apiUrl') + '/deposit-platforms'
       });
 
-      app.store.pushPayload(response);
+      app.store.pushPayload(assertApiPayload(response));
       this.state.platforms = app.store.all('deposit-platforms');
       
       // 使用共享逻辑创建平台选择状态
@@ -313,7 +311,7 @@ export default class DepositPage extends Page<any, DepositPageState> {
         url: app.forum.attribute('apiUrl') + '/deposit-transactions'
       });
 
-      app.store.pushPayload(response);
+      app.store.pushPayload(assertApiPayload(response));
       this.state.transactions = app.store.all('deposit-transactions');
     } catch (error) {
       console.error('Error loading deposit transactions:', error);
@@ -333,7 +331,8 @@ export default class DepositPage extends Page<any, DepositPageState> {
         }
       });
 
-      const addressData = response.data;
+      const apiResponse = assertApiPayload(response);
+      const addressData = apiResponse.data;
       this.addressData = {
         address: addressData.attributes.address,
         addressTag: addressData.attributes.addressTag,

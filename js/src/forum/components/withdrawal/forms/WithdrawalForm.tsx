@@ -34,7 +34,7 @@ export default class WithdrawalForm extends Component<WithdrawalFormProps> {
       <PlatformSelector 
         platforms={platforms}
         selectedPlatform={formData.selectedPlatform}
-        onPlatformSelect={(platform) => onFormDataChange({ selectedPlatform: platform })}
+        onPlatformSelect={(platform: any) => onFormDataChange({ selectedPlatform: platform })}
         onAmountChange={() => onFormDataChange({ amount: '' })}
       />,
       
@@ -42,7 +42,7 @@ export default class WithdrawalForm extends Component<WithdrawalFormProps> {
         amount={formData.amount}
         selectedPlatform={formData.selectedPlatform}
         loadingBalance={loadingBalance}
-        onAmountChange={(amount) => onFormDataChange({ amount })}
+        onAmountChange={(amount: any) => onFormDataChange({ amount })}
         onFillAllAmount={onFillAllAmount}
       />,
       
@@ -50,13 +50,13 @@ export default class WithdrawalForm extends Component<WithdrawalFormProps> {
         accountDetails={formData.accountDetails}
         selectedPlatform={formData.selectedPlatform}
         saveAddress={formData.saveAddress}
-        onAccountDetailsChange={(accountDetails) => onFormDataChange({ accountDetails })}
-        onSaveAddressToggle={(saveAddress) => onFormDataChange({ saveAddress })}
+        onAccountDetailsChange={(accountDetails: any) => onFormDataChange({ accountDetails })}
+        onSaveAddressToggle={(saveAddress: any) => onFormDataChange({ saveAddress })}
       />,
       
       <MessageInput 
         message={formData.message}
-        onMessageChange={(message) => onFormDataChange({ message })}
+        onMessageChange={(message: any) => onFormDataChange({ message })}
       />,
       
       <SubmitButton 

@@ -35,7 +35,7 @@ export default class PlatformIcon {
           src={iconUrl} 
           alt={name || 'Platform'}
           className={`platform-icon-image ${sizeClass} ${className}`}
-          onerror={(e) => {
+          onerror={(e: Event) => {
             // Fallback to iconClass or default icon if image fails to load
             const target = e.target as HTMLImageElement;
             target.style.display = 'none';

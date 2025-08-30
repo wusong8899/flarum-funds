@@ -18,6 +18,21 @@ import {
   createWithdrawalRequestOperations,
   createDepositTransactionOperations
 } from '../utils/platformOperations';
+import { assertApiPayload } from '../../common/types/api';
+import Component from 'flarum/common/Component';
+
+// Simple placeholder components for custom tabs
+class WithdrawalTabPlaceholder extends Component {
+  view() {
+    return <div>Withdrawals Content</div>;
+  }
+}
+
+class DepositRecordTabPlaceholder extends Component {
+  view() {
+    return <div>Deposit Records Content</div>;
+  }
+}
 
 export default class UnifiedManagementPage extends GenericManagementPage<GenericPlatform, GenericTransaction> {
   
@@ -44,7 +59,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
         {
           key: 'withdrawals',
           label: app.translator.trans('withdrawal.admin.tabs.withdrawals').toString(),
-          component: 'div', // Will be replaced by custom content
+          component: WithdrawalTabPlaceholder
         },
         {
           key: 'deposits',
@@ -63,7 +78,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
         {
           key: 'deposit-records',
           label: app.translator.trans('withdrawal.admin.tabs.deposit_records').toString(),
-          component: 'div', // Will be replaced by custom content
+          component: DepositRecordTabPlaceholder
         }
       ],
       
@@ -336,8 +351,8 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
         url: app.forum.attribute('apiUrl') + '/deposit-records'
       });
 
-      app.store.pushPayload(response);
-      this.depositRecords = app.store.all('deposit-records');
+      app.store.pushPayload(assertApiPayload(response));
+      this.depositRecords = app.store.all('deposit-records') as GenericTransaction[];
       console.log('Loaded deposit records:', this.depositRecords);
     } catch (error) {
       console.error('Error loading deposit records:', error);
@@ -365,7 +380,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
         }
       });
 
-      app.store.pushPayload(response);
+      app.store.pushPayload(assertApiPayload(response));
       await this.loadDepositRecords();
       m.redraw();
     } catch (error) {
@@ -393,7 +408,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
         }
       });
 
-      app.store.pushPayload(response);
+      app.store.pushPayload(assertApiPayload(response));
       await this.loadDepositRecords();
       m.redraw();
     } catch (error) {

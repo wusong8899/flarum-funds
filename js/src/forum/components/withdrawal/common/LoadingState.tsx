@@ -1,11 +1,10 @@
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
-import type Mithril from 'mithril';
 
 interface LoadingStateProps {
   className?: string;
 }
 
-export default function LoadingState(props: LoadingStateProps): Mithril.Children {
+export default function LoadingState(props: LoadingStateProps): JSX.Element {
   const { className = '' } = props;
   
   return (

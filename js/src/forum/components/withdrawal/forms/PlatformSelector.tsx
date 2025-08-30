@@ -91,7 +91,7 @@ export default class PlatformSelector extends Component<PlatformSelectorProps, P
       <div className="WithdrawalPage-dropdownMenu">
         {validPlatforms.map(platform => (
           <div 
-            key={platform.id}
+            key={platform.id()}
             className="WithdrawalPage-dropdownItem"
             onclick={() => this.selectPlatform(platform)}
           >
