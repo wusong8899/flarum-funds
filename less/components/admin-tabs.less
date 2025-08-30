@@ -141,8 +141,8 @@
   }
 }
 
-// Generic Platform List Item Styles (Base)
-%PlatformListItem {
+// Generic Platform List Item Styles (LESS mixin)
+.platform-list-item-styles() {
   background: var(--control-bg);
   border-radius: 8px;
   padding: 16px;
@@ -152,65 +152,102 @@
   &:hover {
     border-color: var(--primary-color);
   }
+}
+
+.platform-list-item-content-styles() {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.platform-list-item-icon-styles() {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.platform-list-item-info-styles() {
+  flex: 1;
+  min-width: 0;
+}
+
+.platform-list-item-primary-styles() {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+
+  strong {
+    color: var(--heading-color);
+  }
+}
+
+.platform-list-item-display-name-styles() {
+  color: var(--muted-color);
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.platform-list-item-details-styles() {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--muted-color);
+}
+
+.platform-list-item-detail-styles() {
+  &:not(:last-child)::after {
+    content: '•';
+    margin-left: 12px;
+  }
+}
+
+.platform-list-item-actions-styles() {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+// Platform List Item Styles - Deposit
+.DepositPlatformListItem {
+  .platform-list-item-styles();
 
   &-content {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+    .platform-list-item-content-styles();
   }
 
   &-icon {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+    .platform-list-item-icon-styles();
   }
 
   &-info {
-    flex: 1;
-    min-width: 0;
+    .platform-list-item-info-styles();
   }
 
   &-primary {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 4px;
-
-    strong {
-      color: var(--heading-color);
-    }
+    .platform-list-item-primary-styles();
   }
 
   &-displayName {
-    color: var(--muted-color);
-    font-size: 12px;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 2px 6px;
-    border-radius: 4px;
+    .platform-list-item-display-name-styles();
   }
 
   &-details {
-    display: flex;
-    gap: 12px;
-    font-size: 12px;
-    color: var(--muted-color);
+    .platform-list-item-details-styles();
   }
 
   &-detail {
-    &:not(:last-child)::after {
-      content: '•';
-      margin-left: 12px;
-    }
+    .platform-list-item-detail-styles();
   }
 
   &-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    .platform-list-item-actions-styles();
   }
 
   &-img {
@@ -251,14 +288,78 @@
   }
 }
 
-// Platform List Item Styles - Deposit
-.DepositPlatformListItem {
-  @extend %PlatformListItem;
-}
-
 // Platform List Item Styles - Withdrawal  
 .WithdrawalPlatformListItem {
-  @extend %PlatformListItem;
+  .platform-list-item-styles();
+
+  &-content {
+    .platform-list-item-content-styles();
+  }
+
+  &-icon {
+    .platform-list-item-icon-styles();
+  }
+
+  &-info {
+    .platform-list-item-info-styles();
+  }
+
+  &-primary {
+    .platform-list-item-primary-styles();
+  }
+
+  &-displayName {
+    .platform-list-item-display-name-styles();
+  }
+
+  &-details {
+    .platform-list-item-details-styles();
+  }
+
+  &-detail {
+    .platform-list-item-detail-styles();
+  }
+
+  &-actions {
+    .platform-list-item-actions-styles();
+  }
+
+  &-img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+  }
+
+  &-currencyIcon {
+    font-weight: bold;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+
+    &.usdt {
+      background: #26A17B;
+      color: white;
+    }
+
+    &.usdc {
+      background: #2775CA;
+      color: white;
+    }
+
+    &.btc {
+      background: #F7931A;
+      color: white;
+    }
+
+    &.eth {
+      background: #627EEA;
+      color: white;
+    }
+  }
 }
 
 // Generic icon styles that work for both withdrawal and deposit platforms

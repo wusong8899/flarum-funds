@@ -42,8 +42,8 @@
     }
   }
 
-  // Generic platform card styles (using LESS placeholder)
-  %PlatformCard {
+  // Generic platform card styles (LESS mixin)
+  .platform-card-styles() {
     display: flex;
     align-items: center;
     gap: 15px;
@@ -52,26 +52,130 @@
     background: var(--body-bg);
     border-radius: 4px;
     border: 1px solid var(--control-bg);
+  }
 
-    &-info {
-      flex: 1;
+  .platform-card-info-styles() {
+    flex: 1;
+  }
 
-      &-primary {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 5px;
+  .platform-card-primary-styles() {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+  }
 
-        &-status {
-          font-size: 1.2em;
-          line-height: 1;
+  .platform-card-status-styles() {
+    font-size: 1.2em;
+    line-height: 1;
 
-          &.inactive {
-            opacity: 0.5;
-          }
+    &.inactive {
+      opacity: 0.5;
+    }
+  }
+
+  .platform-card-name-styles() {
+    font-weight: bold;
+  }
+
+  .platform-card-details-styles() {
+    display: flex;
+    gap: 20px;
+    font-size: 0.9em;
+    color: var(--muted-color);
+  }
+
+  .platform-card-amounts-styles() {
+    font-family: monospace;
+  }
+
+  .platform-card-actions-styles() {
+    display: flex;
+    gap: 10px;
+
+    .Button {
+      padding: 6px 12px;
+      font-size: 0.9em;
+    }
+  }
+
+  // Withdrawal Platform Card
+  .withdrawalPlatform {
+    .platform-card-styles();
+
+    .withdrawalPlatform-info {
+      .platform-card-info-styles();
+    }
+
+    .withdrawalPlatform-primary {
+      .platform-card-primary-styles();
+    }
+
+    .withdrawalPlatform-status {
+      .platform-card-status-styles();
+    }
+
+    .withdrawalPlatform-name {
+      .platform-card-name-styles();
+    }
+
+    .withdrawalPlatform-symbol,
+    .withdrawalPlatform-network {
+      background: var(--primary-color);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.9em;
+      font-weight: bold;
+    }
+
+    .withdrawalPlatform-details {
+      .platform-card-details-styles();
+    }
+
+    .withdrawalPlatform-amounts {
+      .platform-card-amounts-styles();
+    }
+
+    .withdrawalPlatform-actions {
+      .platform-card-actions-styles();
+    }
+
+    .platform-id {
+      background: var(--control-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.9em;
+      color: var(--muted-color);
+    }
+  }
+
+  // Legacy support for old class names
+  .WithdrawalPlatform {
+    .platform-card-styles();
+
+    .WithdrawalPlatform-info {
+      .platform-card-info-styles();
+
+      .WithdrawalPlatform-primary {
+        .platform-card-primary-styles();
+
+        .WithdrawalPlatform-status {
+          .platform-card-status-styles();
         }
 
-        &-name {
+        .WithdrawalPlatform-name {
+          .platform-card-name-styles();
+        }
+
+        .WithdrawalPlatform-symbol,
+        .WithdrawalPlatform-network {
+          background: var(--primary-color);
+          color: white;
+          padding: 2px 8px;
+          border-radius: 12px;
+          font-size: 0.9em;
           font-weight: bold;
         }
 
@@ -83,157 +187,71 @@
           font-size: 0.9em;
           color: var(--muted-color);
         }
+      }
 
-        &-symbol,
-        &-network {
-          background: var(--primary-color);
-          color: white;
-          padding: 2px 8px;
-          border-radius: 12px;
-          font-size: 0.9em;
-          font-weight: bold;
+      .WithdrawalPlatform-details {
+        .platform-card-details-styles();
+
+        .WithdrawalPlatform-amounts {
+          .platform-card-amounts-styles();
         }
       }
-
-      &-details {
-        display: flex;
-        gap: 20px;
-        font-size: 0.9em;
-        color: var(--muted-color);
-
-        &-amounts {
-          font-family: monospace;
-        }
-      }
-    }
-
-    &-actions {
-      display: flex;
-      gap: 10px;
-
-      .Button {
-        padding: 6px 12px;
-        font-size: 0.9em;
-      }
-    }
-  }
-
-  // Withdrawal Platform Card
-  .withdrawalPlatform {
-    @extend %PlatformCard;
-
-    .withdrawalPlatform-info {
-      @extend %PlatformCard-info;
-    }
-
-    .withdrawalPlatform-primary {
-      @extend %PlatformCard-info-primary;
-    }
-
-    .withdrawalPlatform-status {
-      @extend %PlatformCard-info-primary-status;
-    }
-
-    .withdrawalPlatform-name {
-      @extend %PlatformCard-info-primary-name;
-    }
-
-    .withdrawalPlatform-symbol {
-      @extend %PlatformCard-info-primary-symbol;
-    }
-
-    .withdrawalPlatform-network {
-      @extend %PlatformCard-info-primary-network;
-    }
-
-    .withdrawalPlatform-details {
-      @extend %PlatformCard-info-details;
-    }
-
-    .withdrawalPlatform-amounts {
-      @extend %PlatformCard-info-details-amounts;
-    }
-
-    .withdrawalPlatform-actions {
-      @extend %PlatformCard-actions;
-    }
-  }
-
-  // Legacy support for old class names
-  .WithdrawalPlatform {
-    @extend .withdrawalPlatform;
-
-    .WithdrawalPlatform-info {
-      @extend .withdrawalPlatform-info;
-    }
-
-    .WithdrawalPlatform-primary {
-      @extend .withdrawalPlatform-primary;
-    }
-
-    .WithdrawalPlatform-status {
-      @extend .withdrawalPlatform-status;
-    }
-
-    .WithdrawalPlatform-name {
-      @extend .withdrawalPlatform-name;
-    }
-
-    .WithdrawalPlatform-symbol {
-      @extend .withdrawalPlatform-symbol;
-    }
-
-    .WithdrawalPlatform-details {
-      @extend .withdrawalPlatform-details;
-    }
-
-    .WithdrawalPlatform-amounts {
-      @extend .withdrawalPlatform-amounts;
     }
 
     .WithdrawalPlatform-actions {
-      @extend .withdrawalPlatform-actions;
+      .platform-card-actions-styles();
     }
   }
 
   // Deposit Platform Card
   .depositPlatform {
-    @extend %PlatformCard;
+    .platform-card-styles();
 
     .depositPlatform-info {
-      @extend %PlatformCard-info;
+      .platform-card-info-styles();
     }
 
     .depositPlatform-primary {
-      @extend %PlatformCard-info-primary;
+      .platform-card-primary-styles();
     }
 
     .depositPlatform-status {
-      @extend %PlatformCard-info-primary-status;
+      .platform-card-status-styles();
     }
 
     .depositPlatform-name {
-      @extend %PlatformCard-info-primary-name;
+      .platform-card-name-styles();
     }
 
-    .depositPlatform-symbol {
-      @extend %PlatformCard-info-primary-symbol;
-    }
-
+    .depositPlatform-symbol,
     .depositPlatform-network {
-      @extend %PlatformCard-info-primary-network;
+      background: var(--primary-color);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.9em;
+      font-weight: bold;
     }
 
     .depositPlatform-details {
-      @extend %PlatformCard-info-details;
+      .platform-card-details-styles();
     }
 
     .depositPlatform-amounts {
-      @extend %PlatformCard-info-details-amounts;
+      .platform-card-amounts-styles();
     }
 
     .depositPlatform-actions {
-      @extend %PlatformCard-actions;
+      .platform-card-actions-styles();
+    }
+
+    .platform-id {
+      background: var(--control-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.9em;
+      color: var(--muted-color);
     }
   }
 
