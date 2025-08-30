@@ -126,14 +126,28 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
     if (this.submittingPlatform) return;
 
     this.submittingPlatform = true;
+    m.redraw();
 
     try {
       await depositOperations.create(formData);
       await this.loadDepositPlatforms();
+      
+      // Show success message
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans('withdrawal.admin.deposit.platforms.add_success')
+      );
     } catch (error) {
       console.error('Error adding deposit platform:', error);
+      
+      // Show error message
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        app.translator.trans('withdrawal.admin.deposit.platforms.add_error')
+      );
     } finally {
       this.submittingPlatform = false;
+      m.redraw();
     }
   }
 
@@ -142,6 +156,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
     try {
       await depositOperations.toggleStatus(platform);
       await this.loadDepositPlatforms();
+      m.redraw();
     } catch (error) {
       console.error('Error toggling deposit platform status:', error);
     }
@@ -174,6 +189,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
             app.translator.trans('withdrawal.admin.deposit.platforms.delete_error')
           );
         }
+        m.redraw();
       },
       onCancel: () => {
         app.modal.close();
@@ -186,6 +202,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
     try {
       await depositTransactionOperations.updateStatus(transaction, status);
       await this.loadDepositTransactions();
+      m.redraw();
     } catch (error) {
       console.error('Error updating deposit transaction:', error);
     }
