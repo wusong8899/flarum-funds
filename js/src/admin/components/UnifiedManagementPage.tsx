@@ -154,7 +154,16 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
     m.redraw();
 
     try {
-      await platformService.create('deposit', formData);
+      // Convert numeric fields from strings to numbers
+      const attributes = {
+        ...formData,
+        minAmount: parseFloat(formData.minAmount) || 0,
+        maxAmount: formData.maxAmount ? parseFloat(formData.maxAmount) : null,
+        fee: formData.fee ? parseFloat(formData.fee) : 0,
+        isActive: formData.isActive !== undefined ? formData.isActive : true
+      };
+      
+      await platformService.create('deposit', attributes);
       await this.loadDepositPlatforms();
       
       app.alerts.show(
