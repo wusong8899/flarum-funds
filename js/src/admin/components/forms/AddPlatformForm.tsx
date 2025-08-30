@@ -4,6 +4,7 @@ import Button from 'flarum/common/components/Button';
 import Stream from 'flarum/common/utils/Stream';
 import type Mithril from 'mithril';
 import { PlatformFormData } from '../types/AdminTypes';
+import { FormValidator } from '../../../common/utils/formValidators';
 import m from 'mithril';
 
 export interface AddPlatformFormAttrs {
@@ -116,7 +117,7 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
             <Button
               className="Button Button--primary"
               loading={this.attrs.submitting}
-              disabled={!this.canSubmit()}
+              disabled={this.attrs.submitting}
               onclick={this.handleSubmit.bind(this)}
             >
               {app.translator.trans('withdrawal.admin.platforms.add_button')}
@@ -127,22 +128,42 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
     );
   }
 
-  private canSubmit(): boolean {
-    return !!(
-      this.name() &&
-      this.name().trim() &&
-      this.symbol() &&
-      this.symbol().trim() &&
-      this.minAmount() &&
-      this.maxAmount() &&
-      parseFloat(this.minAmount()) > 0 &&
-      parseFloat(this.maxAmount()) > 0 &&
-      parseFloat(this.maxAmount()) >= parseFloat(this.minAmount())
-    );
+  private validateForm(): boolean {
+    const validator = new FormValidator();
+    
+    try {
+      validator
+        .required(this.name(), 'name', app.translator.trans('withdrawal.admin.platforms.name'))
+        .required(this.symbol(), 'symbol', app.translator.trans('withdrawal.admin.platforms.symbol'))
+        .numberRange(this.minAmount(), 0, undefined, 'minAmount', app.translator.trans('withdrawal.admin.platforms.min_amount'))
+        .numberRange(this.maxAmount(), 0, undefined, 'maxAmount', app.translator.trans('withdrawal.admin.platforms.max_amount'))
+        .numberRange(this.fee(), 0, undefined, 'fee', app.translator.trans('withdrawal.admin.platforms.fee'));
+
+      // Custom validation for max >= min
+      const minVal = parseFloat(this.minAmount());
+      const maxVal = parseFloat(this.maxAmount());
+      if (maxVal < minVal) {
+        validator.addError('maxAmount', app.translator.trans('withdrawal.admin.platforms.max_min_error'));
+      }
+
+      // Optional URL validation
+      if (this.iconUrl() && this.iconUrl().trim()) {
+        validator.url(this.iconUrl(), 'iconUrl', app.translator.trans('withdrawal.admin.platforms.icon_url'));
+      }
+
+      return validator.isValid();
+    } catch (error) {
+      if (error instanceof Error) {
+        app.alerts.show({ type: 'error', dismissible: true }, error.message);
+      }
+      return false;
+    }
   }
 
   private async handleSubmit(): Promise<void> {
-    if (!this.canSubmit() || this.attrs.submitting) return;
+    if (this.attrs.submitting) return;
+
+    if (!this.validateForm()) return;
 
     const formData: PlatformFormData = {
       name: this.name(),

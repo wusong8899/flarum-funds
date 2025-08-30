@@ -12,7 +12,7 @@ import CurrencySelector from './deposit/selectors/CurrencySelector';
 import NetworkSelector from './deposit/selectors/NetworkSelector';
 import AddressDisplay from './deposit/components/AddressDisplay';
 import ImageDisplay from './deposit/components/QRCodeDisplay';
-import DepositHistory from './deposit/history/DepositHistory';
+import TransactionHistory from './shared/TransactionHistory';
 import { getAttr } from './withdrawal/utils/modelHelpers';
 import { 
   createPlatformSelectionState, 
@@ -212,10 +212,11 @@ export default class DepositPage extends Page {
 
   private renderHistoryTab(): Mithril.Children {
     return (
-      <DepositHistory
+      <TransactionHistory
         transactions={this.state.transactions}
         platforms={this.state.platforms}
         loading={false}
+        type="deposit"
       />
     );
   }

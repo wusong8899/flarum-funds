@@ -10,7 +10,7 @@ import type Mithril from 'mithril';
 // Withdrawal imports
 import type { WithdrawalPlatform, WithdrawalFormData } from './withdrawal/types/interfaces';
 import WithdrawalForm from './withdrawal/forms/WithdrawalForm';
-import WithdrawalHistory from './withdrawal/history/WithdrawalHistory';
+import TransactionHistory from './shared/TransactionHistory';
 
 // Deposit imports
 import type { DepositFormData, DepositAddressData } from './deposit/types/interfaces';
@@ -20,7 +20,6 @@ import NetworkSelector from './deposit/selectors/NetworkSelector';
 import PlatformSelector from './deposit/selectors/PlatformSelector';
 import AddressDisplay from './deposit/components/AddressDisplay';
 import ImageDisplay from './deposit/components/QRCodeDisplay';
-import DepositHistory from './deposit/history/DepositHistory';
 
 // Utilities
 import { getAttr, getIdString } from './withdrawal/utils/modelHelpers';
@@ -390,10 +389,11 @@ export default class FundsPage extends Page {
   private renderWithdrawalHistoryTab(): Mithril.Children {
     return (
       <div className="FundsPage-withdrawalTab">
-        <WithdrawalHistory
-          requests={this.state.withdrawalRequests}
+        <TransactionHistory
+          transactions={this.state.withdrawalRequests}
           platforms={this.state.withdrawalPlatforms}
           loading={false}
+          type="withdrawal"
         />
       </div>
     );
@@ -401,10 +401,11 @@ export default class FundsPage extends Page {
 
   private renderDepositHistoryTab(): Mithril.Children {
     return (
-      <DepositHistory
+      <TransactionHistory
         transactions={this.state.depositTransactions}
         platforms={this.state.depositPlatforms}
         loading={false}
+        type="deposit"
       />
     );
   }

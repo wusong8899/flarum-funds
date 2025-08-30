@@ -10,8 +10,7 @@ import PlatformManagementSection from './sections/PlatformManagementSection';
 import RequestManagementSection from './sections/RequestManagementSection';
 import DepositManagementSection from './sections/DepositManagementSection';
 import NetworkTypeManagementSection from './sections/NetworkTypeManagementSection';
-import ConfirmDeletePlatformModal from './modals/ConfirmDeletePlatformModal';
-import ConfirmDeleteRequestModal from './modals/ConfirmDeleteRequestModal';
+import ConfirmModal from '../../common/components/shared/ConfirmModal';
 
 export default class WithdrawalManagementPage extends ExtensionPage {
   private platforms: WithdrawalPlatform[] = [];
@@ -182,8 +181,13 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   private deletePlatform(platform: WithdrawalPlatform): void {
     const platformName = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
     
-    app.modal.show(ConfirmDeletePlatformModal, {
-      platformName: platformName,
+    app.modal.show(ConfirmModal, {
+      title: app.translator.trans('withdrawal.admin.platforms.delete_confirm_title'),
+      message: app.translator.trans('withdrawal.admin.platforms.delete_confirm_message', { name: platformName }),
+      confirmText: app.translator.trans('withdrawal.admin.platforms.delete_confirm_button'),
+      cancelText: app.translator.trans('withdrawal.admin.platforms.delete_cancel_button'),
+      dangerous: true,
+      icon: 'fas fa-trash',
       onConfirm: async () => {
         try {
           const platformId = typeof platform.id === 'function' ? platform.id() : platform.id;
@@ -205,6 +209,9 @@ export default class WithdrawalManagementPage extends ExtensionPage {
             app.translator.trans('withdrawal.admin.platforms.delete_error')
           );
         }
+      },
+      onCancel: () => {
+        app.modal.close();
       }
     });
   }
@@ -246,8 +253,13 @@ export default class WithdrawalManagementPage extends ExtensionPage {
       }
     }
     
-    app.modal.show(ConfirmDeleteRequestModal, {
-      requestInfo: `${userName} - ${amount}`,
+    app.modal.show(ConfirmModal, {
+      title: app.translator.trans('withdrawal.admin.requests.delete_confirm_title'),
+      message: app.translator.trans('withdrawal.admin.requests.delete_confirm_message', { info: `${userName} - ${amount}` }),
+      confirmText: app.translator.trans('withdrawal.admin.requests.delete_confirm_button'),
+      cancelText: app.translator.trans('withdrawal.admin.requests.delete_cancel_button'),
+      dangerous: true,
+      icon: 'fas fa-trash',
       onConfirm: async () => {
         try {
           const record = app.store.getById('withdrawal-requests', requestId);
@@ -267,6 +279,9 @@ export default class WithdrawalManagementPage extends ExtensionPage {
             app.translator.trans('withdrawal.admin.requests.delete_error')
           );
         }
+      },
+      onCancel: () => {
+        app.modal.close();
       }
     });
   }
@@ -460,8 +475,13 @@ export default class WithdrawalManagementPage extends ExtensionPage {
   }
 
   private deleteDepositPlatform(platform: DepositPlatform): void {
-    app.modal.show(ConfirmDeletePlatformModal, {
-      platformName: platform.name(),
+    app.modal.show(ConfirmModal, {
+      title: app.translator.trans('withdrawal.admin.platforms.delete_confirm_title'),
+      message: app.translator.trans('withdrawal.admin.platforms.delete_confirm_message', { name: platform.name() }),
+      confirmText: app.translator.trans('withdrawal.admin.platforms.delete_confirm_button'),
+      cancelText: app.translator.trans('withdrawal.admin.platforms.delete_cancel_button'),
+      dangerous: true,
+      icon: 'fas fa-trash',
       onConfirm: async () => {
         try {
           await app.request({
@@ -482,6 +502,9 @@ export default class WithdrawalManagementPage extends ExtensionPage {
             app.translator.trans('withdrawal.admin.deposit.platforms.delete_error')
           );
         }
+      },
+      onCancel: () => {
+        app.modal.close();
       }
     });
   }

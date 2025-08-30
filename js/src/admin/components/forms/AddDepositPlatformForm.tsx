@@ -7,6 +7,7 @@ import withAttr from 'flarum/common/utils/withAttr';
 import m from 'mithril';
 import type Mithril from 'mithril';
 import NetworkType from '../../../common/models/NetworkType';
+import { FormValidator } from '../../../common/utils/formValidators';
 
 export interface DepositPlatformFormData {
   name: string;
@@ -291,15 +292,55 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
     }
   }
 
-  private async handleSubmit(attrs: AddDepositPlatformFormAttrs): Promise<void> {
-    // Basic validation - required fields (network is now optional)
-    if (!this.formData.name() || !this.formData.symbol() || !this.formData.address()) {
-      app.alerts.show(
-        { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.platforms.required_fields_error')
-      );
-      return;
+  private validateForm(): boolean {
+    const validator = new FormValidator();
+    
+    try {
+      validator
+        .required(this.formData.name(), 'name', app.translator.trans('withdrawal.admin.deposit.platforms.name'))
+        .required(this.formData.symbol(), 'symbol', app.translator.trans('withdrawal.admin.deposit.platforms.symbol'))
+        .required(this.formData.address(), 'address', app.translator.trans('withdrawal.admin.deposit.platforms.address'));
+
+      // Optional numeric fields validation
+      if (this.formData.minAmount() && this.formData.minAmount().trim()) {
+        validator.numberRange(this.formData.minAmount(), 0, undefined, 'minAmount', app.translator.trans('withdrawal.admin.deposit.platforms.min_amount'));
+      }
+      
+      if (this.formData.maxAmount() && this.formData.maxAmount().trim()) {
+        validator.numberRange(this.formData.maxAmount(), 0, undefined, 'maxAmount', app.translator.trans('withdrawal.admin.deposit.platforms.max_amount'));
+      }
+
+      // Custom validation for max >= min if both are provided
+      if (this.formData.minAmount() && this.formData.maxAmount()) {
+        const minVal = parseFloat(this.formData.minAmount());
+        const maxVal = parseFloat(this.formData.maxAmount());
+        if (!isNaN(minVal) && !isNaN(maxVal) && maxVal < minVal) {
+          validator.addError('maxAmount', app.translator.trans('withdrawal.admin.platforms.max_min_error'));
+        }
+      }
+
+      // Optional URL validations
+      if (this.formData.iconUrl() && this.formData.iconUrl().trim()) {
+        validator.url(this.formData.iconUrl(), 'iconUrl', app.translator.trans('withdrawal.admin.deposit.platforms.icon_url'));
+      }
+      
+      if (this.formData.qrCodeImageUrl() && this.formData.qrCodeImageUrl().trim()) {
+        validator.url(this.formData.qrCodeImageUrl(), 'qrCodeImageUrl', app.translator.trans('withdrawal.admin.deposit.platforms.qr_code_image_url'));
+      }
+
+      return validator.isValid();
+    } catch (error) {
+      if (error instanceof Error) {
+        app.alerts.show({ type: 'error', dismissible: true }, error.message);
+      }
+      return false;
     }
+  }
+
+  private async handleSubmit(attrs: AddDepositPlatformFormAttrs): Promise<void> {
+    if (attrs.submitting) return;
+
+    if (!this.validateForm()) return;
 
     const formData: DepositPlatformFormData = {
       name: this.formData.name(),

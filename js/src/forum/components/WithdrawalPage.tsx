@@ -8,7 +8,7 @@ import m from 'mithril';
 import type Mithril from 'mithril';
 import type { WithdrawalPlatform, WithdrawalFormData, WithdrawalPageState } from './withdrawal/types/interfaces';
 import WithdrawalForm from './withdrawal/forms/WithdrawalForm';
-import WithdrawalHistory from './withdrawal/history/WithdrawalHistory';
+import TransactionHistory from './shared/TransactionHistory';
 import { getAttr, getIdString } from './withdrawal/utils/modelHelpers';
 
 export default class WithdrawalPage extends Page {
@@ -122,10 +122,11 @@ export default class WithdrawalPage extends Page {
 
   private renderHistoryTab(): Mithril.Children {
     return (
-      <WithdrawalHistory
-        requests={this.state.requests}
+      <TransactionHistory
+        transactions={this.state.requests}
         platforms={this.state.platforms}
         loading={false}
+        type="withdrawal"
       />
     );
   }
