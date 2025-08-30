@@ -4,6 +4,7 @@ import Button from 'flarum/common/components/Button';
 import Stream from 'flarum/common/utils/Stream';
 import type Mithril from 'mithril';
 import { PlatformFormData } from '../types/AdminTypes';
+import m from 'mithril';
 
 export interface AddPlatformFormAttrs {
   onSubmit: (formData: PlatformFormData) => Promise<void>;

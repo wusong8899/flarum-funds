@@ -1,18 +1,18 @@
 import Model from 'flarum/common/Model';
 
 export default class DepositPlatform extends Model {
-  name = Model.attribute('name');
-  symbol = Model.attribute('symbol');
-  network = Model.attribute('network');
+  name = Model.attribute<string>('name');
+  symbol = Model.attribute<string>('symbol');
+  network = Model.attribute<string>('network');
   networkTypeId = Model.attribute('networkTypeId');
-  displayName = Model.attribute('displayName');
+  displayName = Model.attribute<string>('displayName');
   minAmount = Model.attribute('minAmount');
   maxAmount = Model.attribute('maxAmount');
   address = Model.attribute('address');
-  qrCodeImageUrl = Model.attribute('qrCodeImageUrl');
-  iconUrl = Model.attribute('iconUrl');
-  iconClass = Model.attribute('iconClass');
-  warningText = Model.attribute('warningText');
+  qrCodeImageUrl = Model.attribute<string>('qrCodeImageUrl');
+  iconUrl = Model.attribute<string>('iconUrl');
+  iconClass = Model.attribute<string>('iconClass');
+  warningText = Model.attribute<string>('warningText');
   networkConfig = Model.attribute('networkConfig');
   isActive = Model.attribute('isActive');
   createdAt = Model.attribute('createdAt', Model.transformDate);
