@@ -3,10 +3,8 @@ import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
 import icon from 'flarum/common/helpers/icon';
 import humanTime from 'flarum/common/helpers/humanTime';
-import username from 'flarum/common/helpers/username';
 import type Mithril from 'mithril';
 import type { DepositTransaction } from '../types/AdminTypes';
-import type User from 'flarum/common/models/User';
 
 export interface DepositTransactionItemAttrs {
   transaction: DepositTransaction;
@@ -22,7 +20,7 @@ export default class DepositTransactionItem extends Component<DepositTransaction
       <div className="DepositTransactionItem">
         <div className="DepositTransactionItem-header">
           <div className="DepositTransactionItem-user">
-            <strong>{username(transaction.user as User)}</strong>
+            <strong>{this.getUserDisplayName(transaction.user)}</strong>
             <span className="DepositTransactionItem-time">
               {humanTime(transaction.createdAt)}
             </span>
@@ -184,5 +182,27 @@ export default class DepositTransactionItem extends Component<DepositTransaction
   private formatHash(hash: string): string {
     if (hash.length <= 16) return hash;
     return `${hash.substring(0, 8)}...${hash.substring(hash.length - 8)}`;
+  }
+
+  private getUserDisplayName(user: any): string {
+    if (!user) return 'Unknown User';
+    
+    // Handle Flarum User model (has displayName method)
+    if (typeof user.displayName === 'function') {
+      return user.displayName();
+    }
+    
+    // Handle plain User object from AdminTypes
+    if (user.attributes && user.attributes.displayName) {
+      return user.attributes.displayName;
+    }
+    
+    // Handle direct displayName property
+    if (user.displayName) {
+      return user.displayName;
+    }
+    
+    // Fallback to ID or 'Unknown'
+    return user.id ? `User #${user.id}` : 'Unknown User';
   }
 }
