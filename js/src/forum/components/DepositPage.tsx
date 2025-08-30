@@ -11,7 +11,7 @@ import type DepositPlatform from '../common/models/DepositPlatform';
 import CurrencySelector from './deposit/selectors/CurrencySelector';
 import NetworkSelector from './deposit/selectors/NetworkSelector';
 import AddressDisplay from './deposit/components/AddressDisplay';
-import QRCodeDisplay from './deposit/components/QRCodeDisplay';
+import ImageDisplay from './deposit/components/QRCodeDisplay';
 import DepositHistory from './deposit/history/DepositHistory';
 import { getAttr } from './withdrawal/utils/modelHelpers';
 
@@ -29,7 +29,6 @@ export default class DepositPage extends Page {
 
   private addressData: DepositAddressData = {
     address: '',
-    qrCodeData: '',
     platform: null as any,
     loading: false
   };
@@ -184,9 +183,9 @@ export default class DepositPage extends Page {
           })}
         </p>
         
-        <div className="DepositPage-qrContainer">
-          <QRCodeDisplay
-            data={this.addressData.qrCodeData}
+        <div className="DepositPage-imageContainer">
+          <ImageDisplay
+            platform={this.addressData.platform}
             loading={this.addressData.loading}
             size={160}
           />
@@ -332,7 +331,6 @@ export default class DepositPage extends Page {
       this.addressData = {
         address: addressData.attributes.address,
         addressTag: addressData.attributes.addressTag,
-        qrCodeData: addressData.attributes.qrCodeData,
         platform,
         loading: false
       };

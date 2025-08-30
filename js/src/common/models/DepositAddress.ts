@@ -6,7 +6,6 @@ export default class DepositAddress extends Model {
   address = Model.attribute('address');
   addressTag = Model.attribute('addressTag');
   fullAddress = Model.attribute('fullAddress');
-  qrCodeData = Model.attribute('qrCodeData');
   isActive = Model.attribute('isActive');
   lastUsedAt = Model.attribute('lastUsedAt', Model.transformDate);
   createdAt = Model.attribute('createdAt', Model.transformDate);

@@ -123,7 +123,7 @@
     margin: -8px 0 0;
   }
 
-  &-qrContainer {
+  &-imageContainer {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -405,8 +405,8 @@
   }
 }
 
-// QR Code Display Styles
-.QRCodeDisplay {
+// Image Display Styles
+.ImageDisplay {
   background: white;
   padding: 12px;
   border-radius: 8px;
@@ -444,23 +444,38 @@
       color: #E53E3E;
     }
 
-    span {
+    div {
       font-size: 12px;
+      margin-top: 4px;
     }
   }
 
-  &-qr {
+  &-placeholder {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    color: var(--muted-color);
     height: 100%;
+    text-align: center;
 
-    canvas,
-    img {
-      max-width: 100%;
-      max-height: 100%;
+    .fas {
+      font-size: 32px;
+      margin-bottom: 8px;
+      opacity: 0.5;
     }
+
+    div {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+  }
+
+  &-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
   }
 }
 

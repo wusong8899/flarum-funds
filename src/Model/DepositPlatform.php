@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float $min_amount
  * @property float|null $max_amount
  * @property string|null $address
+ * @property string|null $qr_code_image_url
  * @property string|null $icon_url
  * @property string|null $icon_class
  * @property string|null $warning_text
@@ -39,6 +40,7 @@ class DepositPlatform extends AbstractModel
         'min_amount',
         'max_amount',
         'address',
+        'qr_code_image_url',
         'icon_url',
         'icon_class',
         'warning_text',
@@ -86,5 +88,23 @@ class DepositPlatform extends AbstractModel
     public function getDepositAddress(): ?string
     {
         return $this->address;
+    }
+
+    /**
+     * Generate deposit address for a specific user ID
+     * Only supports shared addresses (templates removed)
+     * 
+     * @param int $userId
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    public function generateDepositAddress(int $userId): string
+    {
+        if ($this->address) {
+            // Shared address - return as-is
+            return $this->address;
+        }
+
+        throw new \InvalidArgumentException("No address configured for platform: {$this->name}");
     }
 }

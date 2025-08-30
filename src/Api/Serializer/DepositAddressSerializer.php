@@ -17,17 +17,11 @@ class DepositAddressSerializer extends AbstractSerializer
      */
     protected function getDefaultAttributes($address): array
     {
-        $platform = $address->platform;
-        
-        // Generate QR code data
-        $qrCodeData = $platform ? $platform->getQrCodeData($address->address) : $address->address;
-
         return [
             'id' => $address->id,
             'address' => $address->address,
             'addressTag' => $address->address_tag,
             'fullAddress' => $address->full_address,
-            'qrCodeData' => $qrCodeData,
             'isActive' => $address->is_active,
             'lastUsedAt' => $address->last_used_at,
             'createdAt' => $address->created_at,

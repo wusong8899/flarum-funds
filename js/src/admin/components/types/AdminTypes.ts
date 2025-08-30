@@ -61,10 +61,9 @@ export interface DepositPlatform {
   minAmount: number;
   maxAmount?: number;
   address?: string;
-  addressTemplate?: string;
+  qrCodeImageUrl?: string;
   iconUrl?: string;
   iconClass?: string;
-  qrCodeTemplate?: string;
   warningText?: string;
   networkConfig?: any;
   isActive: boolean;

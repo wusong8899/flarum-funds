@@ -9,6 +9,7 @@ export default class DepositPlatform extends Model {
   minAmount = Model.attribute('minAmount');
   maxAmount = Model.attribute('maxAmount');
   address = Model.attribute('address');
+  qrCodeImageUrl = Model.attribute('qrCodeImageUrl');
   iconUrl = Model.attribute('iconUrl');
   iconClass = Model.attribute('iconClass');
   warningText = Model.attribute('warningText');

@@ -389,10 +389,9 @@ export default class WithdrawalManagementPage extends ExtensionPage {
               minAmount: parseFloat(formData.minAmount) || 0,
               maxAmount: formData.maxAmount ? parseFloat(formData.maxAmount) : null,
               address: formData.address || null,
-              addressTemplate: formData.addressTemplate || null,
+              qrCodeImageUrl: formData.qrCodeImageUrl || null,
               iconUrl: formData.iconUrl || null,
               iconClass: formData.iconClass || null,
-              qrCodeTemplate: formData.qrCodeTemplate || null,
               warningText: formData.warningText || null,
               isActive: formData.isActive
             }

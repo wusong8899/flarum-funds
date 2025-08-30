@@ -18,7 +18,7 @@ import type DepositPlatform from '../common/models/DepositPlatform';
 import CurrencySelector from './deposit/selectors/CurrencySelector';
 import NetworkSelector from './deposit/selectors/NetworkSelector';
 import AddressDisplay from './deposit/components/AddressDisplay';
-import QRCodeDisplay from './deposit/components/QRCodeDisplay';
+import ImageDisplay from './deposit/components/QRCodeDisplay';
 import DepositHistory from './deposit/history/DepositHistory';
 
 // Utilities
@@ -72,7 +72,6 @@ export default class FundsPage extends Page {
 
   private depositAddressData: DepositAddressData = {
     address: '',
-    qrCodeData: '',
     platform: null as any,
     loading: false
   };
@@ -337,9 +336,9 @@ export default class FundsPage extends Page {
           })}
         </p>
         
-        <div className="FundsPage-qrContainer">
-          <QRCodeDisplay
-            data={this.depositAddressData.qrCodeData}
+        <div className="FundsPage-imageContainer">
+          <ImageDisplay
+            platform={this.depositAddressData.platform}
             loading={this.depositAddressData.loading}
             size={160}
           />
@@ -777,7 +776,6 @@ export default class FundsPage extends Page {
       this.depositAddressData = {
         address: addressData.attributes.address,
         addressTag: addressData.attributes.addressTag,
-        qrCodeData: addressData.attributes.qrCodeData,
         platform,
         loading: false
       };

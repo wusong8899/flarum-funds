@@ -57,9 +57,9 @@ class UpdateDepositPlatformController extends AbstractShowController
             'maxAmount' => 'sometimes|nullable|numeric|min:0',
             'address' => 'sometimes|nullable|string|max:500',
             'addressTemplate' => 'sometimes|nullable|string|max:500',
+            'qrCodeImageUrl' => 'sometimes|nullable|url|max:500',
             'iconUrl' => 'sometimes|nullable|url|max:500',
             'iconClass' => 'sometimes|nullable|string|max:100',
-            'qrCodeTemplate' => 'sometimes|nullable|string|max:1000',
             'warningText' => 'sometimes|nullable|string|max:1000',
             'isActive' => 'sometimes|boolean',
         ];

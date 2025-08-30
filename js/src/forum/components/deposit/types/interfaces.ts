@@ -17,7 +17,6 @@ export interface DepositFormData {
 export interface DepositAddressData {
   address: string;
   addressTag?: string;
-  qrCodeData: string;
   platform: DepositPlatform;
   loading: boolean;
 }
