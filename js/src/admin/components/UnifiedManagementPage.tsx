@@ -158,8 +158,8 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
       const attributes = {
         ...formData,
         minAmount: parseFloat(formData.minAmount) || 0,
-        maxAmount: formData.maxAmount ? parseFloat(formData.maxAmount) : null,
-        fee: formData.fee ? parseFloat(formData.fee) : 0,
+        maxAmount: formData.maxAmount && formData.maxAmount.trim() ? parseFloat(formData.maxAmount) : null,
+        fee: formData.fee && formData.fee.trim() ? parseFloat(formData.fee) : 0,
         isActive: formData.isActive !== undefined ? formData.isActive : true
       };
       
