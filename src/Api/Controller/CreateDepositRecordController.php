@@ -23,6 +23,13 @@ class CreateDepositRecordController extends AbstractCreateController
         'platform'
     ];
 
+    protected $validator;
+
+    public function __construct(DepositRecordValidator $validator)
+    {
+        $this->validator = $validator;
+    }
+
     protected function data(ServerRequestInterface $request, Document $document)
     {
         $actor = RequestUtil::getActor($request);
@@ -45,14 +52,13 @@ class CreateDepositRecordController extends AbstractCreateController
             ->first();
 
         if (!$platform) {
-            throw ValidationException::withMessages([
+            throw new ValidationException([
                 'platformId' => 'Selected deposit platform is not available.'
             ]);
         }
 
         // Validate input data
-        $validator = new DepositRecordValidator();
-        $validator->assertValid($data);
+        $this->validator->assertValid($data);
 
         // Validate amount against platform limits
         $amount = (float) Arr::get($data, 'amount');
@@ -60,13 +66,13 @@ class CreateDepositRecordController extends AbstractCreateController
         $maxAmount = $platform->max_amount ?? PHP_FLOAT_MAX;
 
         if ($amount < $minAmount) {
-            throw ValidationException::withMessages([
+            throw new ValidationException([
                 'amount' => "Amount must be at least {$minAmount} {$platform->symbol}"
             ]);
         }
 
         if ($amount > $maxAmount) {
-            throw ValidationException::withMessages([
+            throw new ValidationException([
                 'amount' => "Amount cannot exceed {$maxAmount} {$platform->symbol}"
             ]);
         }

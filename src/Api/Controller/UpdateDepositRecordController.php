@@ -43,7 +43,7 @@ class UpdateDepositRecordController extends AbstractShowController
 
         // Check if record is still pending
         if (!$record->isPending()) {
-            throw ValidationException::withMessages([
+            throw new ValidationException([
                 'status' => 'This deposit record has already been processed.'
             ]);
         }
@@ -56,7 +56,7 @@ class UpdateDepositRecordController extends AbstractShowController
         } elseif ($status === DepositRecord::STATUS_REJECTED) {
             $this->rejectRecord($record, $actor, $adminNotes);
         } else {
-            throw ValidationException::withMessages([
+            throw new ValidationException([
                 'status' => 'Invalid status. Must be either approved or rejected.'
             ]);
         }
@@ -73,7 +73,7 @@ class UpdateDepositRecordController extends AbstractShowController
         if ($creditedAmount !== null) {
             $creditedAmount = (float) $creditedAmount;
             if ($creditedAmount <= 0) {
-                throw ValidationException::withMessages([
+                throw new ValidationException([
                     'creditedAmount' => 'Credited amount must be greater than zero.'
                 ]);
             }
@@ -99,7 +99,7 @@ class UpdateDepositRecordController extends AbstractShowController
     private function rejectRecord(DepositRecord $record, $admin, string $reason): void
     {
         if (empty($reason)) {
-            throw ValidationException::withMessages([
+            throw new ValidationException([
                 'adminNotes' => 'Rejection reason is required when rejecting a deposit record.'
             ]);
         }

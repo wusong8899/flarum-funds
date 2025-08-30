@@ -8,6 +8,7 @@ use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Http\RequestUtil;
 use Illuminate\Support\Arr;
 use Flarum\Foundation\ValidationException;
+use Illuminate\Contracts\Validation\Factory as ValidatorFactory;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use wusong8899\Withdrawal\Api\Serializer\DepositTransactionSerializer;
@@ -69,10 +70,11 @@ class UpdateDepositTransactionController extends AbstractShowController
             'adminNotes' => 'sometimes|nullable|string|max:1000',
         ];
 
-        $validator = app('validator')->make($attributes, $rules);
+        $validatorFactory = resolve(ValidatorFactory::class);
+        $validator = $validatorFactory->make($attributes, $rules);
 
         if ($validator->fails()) {
-            throw ValidationException::withMessages($validator->errors()->toArray());
+            throw new ValidationException($validator->errors()->toArray());
         }
 
         // Check for duplicate transaction hash
@@ -83,7 +85,7 @@ class UpdateDepositTransactionController extends AbstractShowController
                 ->exists();
 
             if ($exists) {
-                throw ValidationException::withMessages([
+                throw new ValidationException([
                     'transactionHash' => ['A transaction with this hash already exists for this platform.']
                 ]);
             }
@@ -104,7 +106,7 @@ class UpdateDepositTransactionController extends AbstractShowController
                     try {
                         $transaction->complete($actor);
                     } catch (\InvalidArgumentException $e) {
-                        throw ValidationException::withMessages([
+                        throw new ValidationException([
                             'status' => [$e->getMessage()]
                         ]);
                     }
@@ -117,7 +119,7 @@ class UpdateDepositTransactionController extends AbstractShowController
                 break;
 
             default:
-                throw ValidationException::withMessages([
+                throw new ValidationException([
                     'status' => ['Invalid status transition.']
                 ]);
         }

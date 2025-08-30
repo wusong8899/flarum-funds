@@ -63,7 +63,7 @@ class CreateWithdrawalRequestController extends AbstractCreateController
             throw $e;
         } catch (\Exception $e) {
             // Handle unexpected errors
-            throw ValidationException::withMessages(['general' => ['An unexpected error occurred: ' . $e->getMessage()]]);
+            throw new ValidationException(['general' => ['An unexpected error occurred: ' . $e->getMessage()]]);
         }
 
         $withdrawalRequest = new WithdrawalRequest();

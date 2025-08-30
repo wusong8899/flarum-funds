@@ -8,6 +8,7 @@ use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Http\RequestUtil;
 use Illuminate\Support\Arr;
 use Flarum\Foundation\ValidationException;
+use Illuminate\Contracts\Validation\Factory as ValidatorFactory;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use wusong8899\Withdrawal\Api\Serializer\DepositPlatformSerializer;
@@ -60,10 +61,11 @@ class CreateDepositPlatformController extends AbstractCreateController
             'isActive' => 'boolean',
         ];
 
-        $validator = app('validator')->make($attributes, $rules);
+        $validatorFactory = resolve(ValidatorFactory::class);
+        $validator = $validatorFactory->make($attributes, $rules);
 
         if ($validator->fails()) {
-            throw ValidationException::withMessages($validator->errors()->toArray());
+            throw new ValidationException($validator->errors()->toArray());
         }
 
         // Check if platform with same symbol+network already exists (only if network is provided)
@@ -73,7 +75,7 @@ class CreateDepositPlatformController extends AbstractCreateController
                 ->exists();
 
             if ($exists) {
-                throw ValidationException::withMessages([
+                throw new ValidationException([
                     'symbol' => ['A platform with this currency and network combination already exists.']
                 ]);
             }
@@ -81,7 +83,7 @@ class CreateDepositPlatformController extends AbstractCreateController
 
         // Validate that address is provided
         if (empty($attributes['address'])) {
-            throw ValidationException::withMessages([
+            throw new ValidationException([
                 'address' => ['A static address must be provided.']
             ]);
         }

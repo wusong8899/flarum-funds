@@ -26,7 +26,7 @@ class GetDepositAddressController extends AbstractShowController
         $platformId = Arr::get($request->getQueryParams(), 'platform_id');
 
         if (!$platformId) {
-            throw ValidationException::withMessages([
+            throw new ValidationException([
                 'platform_id' => ['Platform ID is required']
             ]);
         }

@@ -46,7 +46,7 @@ class UpdateWithdrawalRequestController extends AbstractShowController
         $withdrawalRequest = WithdrawalRequest::findOrFail($id);
 
         if (!$withdrawalRequest->isPending()) {
-            throw ValidationException::withMessages([
+            throw new ValidationException([
                 'status' => 'Only pending requests can be updated'
             ]);
         }
@@ -59,7 +59,7 @@ class UpdateWithdrawalRequestController extends AbstractShowController
             $withdrawalRequest->reject();
             $withdrawalRequest->save();
         } else {
-            throw ValidationException::withMessages([
+            throw new ValidationException([
                 'status' => 'Invalid status'
             ]);
         }
@@ -88,7 +88,7 @@ class UpdateWithdrawalRequestController extends AbstractShowController
 
             // Re-check balance to handle concurrent requests
             if ($user->money < $totalAmount) {
-                throw ValidationException::withMessages([
+                throw new ValidationException([
                     'amount' => "User has insufficient balance. Required: {$totalAmount} (including {$fee} fee), Available: {$user->money}"
                 ]);
             }

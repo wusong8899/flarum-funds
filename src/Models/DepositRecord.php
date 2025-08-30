@@ -6,6 +6,7 @@ use Flarum\Database\AbstractModel;
 use Flarum\User\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Carbon\Carbon;
+use wusong8899\Withdrawal\Model\DepositPlatform;
 
 /**
  * DepositRecord Model
