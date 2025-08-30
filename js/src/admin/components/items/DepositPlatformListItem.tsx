@@ -3,6 +3,7 @@ import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
 import Switch from 'flarum/common/components/Switch';
 import icon from 'flarum/common/helpers/icon';
+import m from 'mithril';
 import type Mithril from 'mithril';
 import type DepositPlatform from '../../../common/models/DepositPlatform';
 
@@ -49,7 +50,10 @@ export default class DepositPlatformListItem extends Component<DepositPlatformLi
           <div className="DepositPlatformListItem-actions">
             <Switch 
               state={platform.isActive()} 
-              onchange={onToggleStatus}
+              onchange={async () => {
+                await onToggleStatus();
+                m.redraw();
+              }}
             >
               {platform.isActive() 
                 ? app.translator.trans('withdrawal.admin.deposit.platforms.active')
@@ -60,7 +64,10 @@ export default class DepositPlatformListItem extends Component<DepositPlatformLi
             <Button
               className="Button Button--icon Button--flat"
               icon="fas fa-trash"
-              onclick={onDelete}
+              onclick={async () => {
+                await onDelete();
+                m.redraw();
+              }}
               title={app.translator.trans('withdrawal.admin.deposit.platforms.delete')}
             />
           </div>
