@@ -12,7 +12,7 @@ use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer;
-use wusong8899\Withdrawal\Models\DepositRecord;
+use wusong8899\Withdrawal\Model\DepositRecord;
 
 class UpdateDepositRecordController extends AbstractShowController
 {

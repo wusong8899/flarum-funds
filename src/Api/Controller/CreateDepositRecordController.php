@@ -10,7 +10,7 @@ use Illuminate\Validation\ValidationException;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer;
-use wusong8899\Withdrawal\Models\DepositRecord;
+use wusong8899\Withdrawal\Model\DepositRecord;
 use wusong8899\Withdrawal\Model\DepositPlatform;
 use wusong8899\Withdrawal\Validator\DepositRecordValidator;
 

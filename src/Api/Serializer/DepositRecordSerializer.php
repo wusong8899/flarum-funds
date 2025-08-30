@@ -4,7 +4,7 @@ namespace wusong8899\Withdrawal\Api\Serializer;
 
 use Flarum\Api\Serializer\AbstractSerializer;
 use Flarum\Api\Serializer\UserSerializer;
-use wusong8899\Withdrawal\Models\DepositRecord;
+use wusong8899\Withdrawal\Model\DepositRecord;
 
 class DepositRecordSerializer extends AbstractSerializer
 {

@@ -8,7 +8,7 @@ use Flarum\User\Exception\PermissionDeniedException;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer;
-use wusong8899\Withdrawal\Models\DepositRecord;
+use wusong8899\Withdrawal\Model\DepositRecord;
 use Illuminate\Database\Eloquent\Builder;
 
 class ListDepositRecordsController extends AbstractListController
