@@ -25,6 +25,7 @@ class DepositPlatformSerializer extends AbstractSerializer
             'displayName' => $platform->display_name,
             'minAmount' => $platform->min_amount,
             'maxAmount' => $platform->max_amount,
+            'fee' => (float) $platform->fee,
             'address' => $platform->address,
             'qrCodeImageUrl' => $platform->qr_code_image_url,
             'iconUrl' => $platform->icon_url,

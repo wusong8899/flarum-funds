@@ -370,6 +370,21 @@ export default class FundsPage extends Page {
           })}
         </p>
         
+        {(() => {
+          const fee = getAttr(platform, 'fee') || 0;
+          if (fee > 0) {
+            return (
+              <p className="FundsPage-feeText">
+                {app.translator.trans('withdrawal.forum.deposit.fee', {
+                  fee: fee,
+                  currency: getAttr(platform, 'symbol')
+                })}
+              </p>
+            );
+          }
+          return null;
+        })()}
+        
         <div className="FundsPage-imageContainer">
           <ImageDisplay
             platform={this.depositAddressData.platform}

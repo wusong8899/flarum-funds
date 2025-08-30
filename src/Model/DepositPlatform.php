@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $network_type_id
  * @property float $min_amount
  * @property float|null $max_amount
+ * @property float $fee
  * @property string|null $address
  * @property string|null $qr_code_image_url
  * @property string|null $icon_url
@@ -39,6 +40,7 @@ class DepositPlatform extends AbstractModel
         'network_type_id',
         'min_amount',
         'max_amount',
+        'fee',
         'address',
         'qr_code_image_url',
         'icon_url',
@@ -52,6 +54,7 @@ class DepositPlatform extends AbstractModel
         'network_type_id' => 'integer',
         'min_amount' => 'decimal:8',
         'max_amount' => 'decimal:8',
+        'fee' => 'decimal:8',
         'network_config' => 'json',
         'is_active' => 'boolean',
         'created_at' => 'datetime',

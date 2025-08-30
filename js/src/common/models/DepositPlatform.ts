@@ -8,6 +8,7 @@ export default class DepositPlatform extends Model {
   displayName = Model.attribute<string>('displayName');
   minAmount = Model.attribute('minAmount');
   maxAmount = Model.attribute('maxAmount');
+  fee = Model.attribute('fee');
   address = Model.attribute('address');
   qrCodeImageUrl = Model.attribute<string>('qrCodeImageUrl');
   iconUrl = Model.attribute<string>('iconUrl');

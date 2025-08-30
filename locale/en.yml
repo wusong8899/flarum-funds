@@ -96,6 +96,8 @@ withdrawal:
         network: Network Type (Optional)
         min_amount: Minimum Amount
         max_amount: Maximum Amount
+        fee: Fee
+        fee_help: Fee charged for this deposit platform (optional, defaults to 0)
         address: Deposit Address (Required)
         address_help: Enter the deposit address for this platform
         qr_code_image_url: QR Code Image URL
@@ -187,6 +189,18 @@ withdrawal:
       approved: Approved
       rejected: Rejected
     deposit:
+      page:
+        title: Deposit
+      tabs:
+        deposit: Deposit
+        history: History
+      no_platforms: No deposit platforms available
+      no_platforms_description: Please contact the administrator to configure deposit platforms.
+      select_currency_network: Please select a currency and network to view deposit information.
+      scan_or_use_address: Scan the QR code or copy the deposit address below.
+      min_amount: "Minimum deposit: {amount} {currency}"
+      fee: "Deposit fee: {fee} {currency}"
+      default_warning: "Please ensure you are depositing {currency} on the {network} network. Minimum deposit is {minAmount}."
       history:
         title: Deposit History
         transactions: transactions

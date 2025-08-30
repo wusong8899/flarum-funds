@@ -67,7 +67,7 @@ export default class GenericPlatformListItem extends Component<GenericPlatformLi
           <div className={`${type}Platform-details`}>
             <span className={`${type}Platform-amounts`}>
               Min: {platformData.minAmount} | Max: {platformData.maxAmount}
-              {type === 'withdrawal' && ` | Fee: ${platformData.fee}`}
+              {` | Fee: ${platformData.fee}`}
               {type === 'deposit' && ` | Address: ${platformData.address ? 'Static' : 'Template'}`}
             </span>
             {platformData.createdDate && (
@@ -127,7 +127,7 @@ export default class GenericPlatformListItem extends Component<GenericPlatformLi
                   Max: {platformData.maxAmount} {platformData.symbol}
                 </span>
               )}
-              {type === 'withdrawal' && platformData.fee && (
+              {platformData.fee && (
                 <span className={`${type}PlatformListItem-detail`}>
                   Fee: {platformData.fee} {platformData.symbol}
                 </span>

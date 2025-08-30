@@ -12,6 +12,7 @@ export interface DepositPlatformFormData {
   network: string;
   minAmount: string;
   maxAmount: string;
+  fee: string;
   address: string;
   qrCodeImageUrl: string;
   iconUrl: string;
@@ -33,6 +34,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
     network: Stream(''),
     minAmount: Stream(''),
     maxAmount: Stream(''),
+    fee: Stream(''),
     address: Stream(''),
     qrCodeImageUrl: Stream(''),
     iconUrl: Stream(''),
@@ -125,6 +127,23 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
                 bidi={this.formData.maxAmount}
                 disabled={submitting}
               />
+            </div>
+            <div className="Form-group">
+              <label>
+                {app.translator.trans('withdrawal.admin.deposit.platforms.fee')}
+              </label>
+              <input
+                type="number"
+                step="0.00000001"
+                min="0"
+                className="FormControl"
+                placeholder="0.0"
+                bidi={this.formData.fee}
+                disabled={submitting}
+              />
+              <div className="helpText">
+                {app.translator.trans('withdrawal.admin.deposit.platforms.fee_help')}
+              </div>
             </div>
           </div>
 
@@ -249,6 +268,10 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
         validator.numberRange(this.formData.maxAmount(), 0, undefined, 'maxAmount', app.translator.trans('withdrawal.admin.deposit.platforms.max_amount'));
       }
 
+      if (this.formData.fee() && this.formData.fee().trim()) {
+        validator.numberRange(this.formData.fee(), 0, undefined, 'fee', app.translator.trans('withdrawal.admin.deposit.platforms.fee'));
+      }
+
       // Custom validation for max >= min if both are provided
       if (this.formData.minAmount() && this.formData.maxAmount()) {
         const minVal = parseFloat(this.formData.minAmount());
@@ -293,6 +316,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
       network: this.formData.network(),
       minAmount: this.formData.minAmount(),
       maxAmount: this.formData.maxAmount(),
+      fee: this.formData.fee(),
       address: this.formData.address(),
       qrCodeImageUrl: this.formData.qrCodeImageUrl(),
       iconUrl: this.formData.iconUrl(),

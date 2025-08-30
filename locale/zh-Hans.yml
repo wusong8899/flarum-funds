@@ -69,6 +69,8 @@ withdrawal:
         network: 网络类型（可选）
         min_amount: 最小金额
         max_amount: 最大金额
+        fee: 手续费
+        fee_help: 该存款平台的手续费（可选，默认为0）
         address: 存款地址（必填）
         address_help: 输入该平台的存款地址
         qr_code_image_url: 二维码图片URL
@@ -213,6 +215,7 @@ withdrawal:
       select_currency_network: 请先选择货币和网络
       scan_or_use_address: 扫码或使用以下地址完成存款
       min_amount: "最小存款金额为: {amount} {currency}"
+      fee: "存款手续费: {fee} {currency}"
       address_copied: 地址已复制到剪贴板
       copy_failed: 复制失败，请手动复制地址
       address_load_error: 获取存款地址失败，请重试
