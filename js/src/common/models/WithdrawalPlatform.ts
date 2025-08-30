@@ -10,6 +10,8 @@ export default class WithdrawalPlatform extends Model {
   // Basic attributes
   name = Model.attribute<string>('name');
   symbol = Model.attribute<string>('symbol');
+  network = Model.attribute<string | null>('network');
+  displayName = Model.attribute<string>('displayName');
   minAmount = Model.attribute<number>('minAmount');
   maxAmount = Model.attribute<number>('maxAmount');
   fee = Model.attribute<number>('fee');
@@ -31,10 +33,8 @@ export default class WithdrawalPlatform extends Model {
   }
   
   // Helper methods
-  displayName(): string {
-    const symbol = this.symbol();
-    const name = this.name();
-    return symbol ? `${name} (${symbol})` : name;
+  getDisplayName(): string {
+    return this.displayName() || this.name();
   }
   
   isValidAmount(amount: number): boolean {

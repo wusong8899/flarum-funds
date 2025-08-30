@@ -18,7 +18,8 @@ export default class PlatformListItem extends Component<PlatformListItemAttrs> {
     // Handle both Model instances and plain objects
     const platformId = typeof platform.id === 'function' ? platform.id() : platform.id;
     const platformName = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
-    const symbol = (typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol) || 'N/A';
+    const network = (typeof platform.network === 'function' ? platform.network() : platform.attributes?.network) || null;
+    const displayName = (typeof platform.displayName === 'function' ? platform.displayName() : platform.attributes?.displayName) || platformName;
     const minAmount = (typeof platform.minAmount === 'function' ? platform.minAmount() : platform.attributes?.minAmount) || 'N/A';
     const maxAmount = (typeof platform.maxAmount === 'function' ? platform.maxAmount() : platform.attributes?.maxAmount) || 'N/A';
     const fee = (typeof platform.fee === 'function' ? platform.fee() : platform.attributes?.fee) || 'N/A';
@@ -42,9 +43,9 @@ export default class PlatformListItem extends Component<PlatformListItemAttrs> {
             <span className={`WithdrawalPlatform-status ${isActive ? 'active' : 'inactive'}`}>
               {isActive ? '🟢' : '🔴'}
             </span>
-            <span className="WithdrawalPlatform-name">{platformName}</span>
+            <span className="WithdrawalPlatform-name">{displayName}</span>
             <span className="platform-id">#{platformId}</span>
-            <span className={`WithdrawalPlatform-symbol ${symbol}`}>{symbol}</span>
+            {network && <span className="WithdrawalPlatform-network">({network})</span>}
           </div>
           <div className="WithdrawalPlatform-details">
             <span className="WithdrawalPlatform-amounts">

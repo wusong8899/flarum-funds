@@ -68,7 +68,7 @@ export default class PlatformSelector extends Component<PlatformSelectorProps, P
     if (!platform) {
       return '请选择平台';
     }
-    return getAttr(platform, 'name') || '请选择平台';
+    return getAttr(platform, 'displayName') || getAttr(platform, 'name') || '请选择平台';
   }
 
   private renderPlatformDropdown(): Mithril.Children {
@@ -99,7 +99,7 @@ export default class PlatformSelector extends Component<PlatformSelectorProps, P
               <PlatformIcon platform={platform} size="small" />
             </div>
             <div className="WithdrawalPage-platformName">
-              {getAttr(platform, 'name')}
+              {getAttr(platform, 'displayName') || getAttr(platform, 'name')}
             </div>
           </div>
         ))}

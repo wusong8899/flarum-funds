@@ -119,6 +119,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
             attributes: {
               name: formData.name,
               symbol: formData.symbol,
+              network: formData.network || null,
               minAmount: parseFloat(formData.minAmount),
               maxAmount: parseFloat(formData.maxAmount),
               fee: parseFloat(formData.fee || '0'),

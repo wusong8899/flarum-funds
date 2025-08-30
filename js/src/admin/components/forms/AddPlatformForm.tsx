@@ -14,6 +14,7 @@ export interface AddPlatformFormAttrs {
 export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
   private name = Stream('');
   private symbol = Stream('');
+  private network = Stream('');
   private minAmount = Stream('');
   private maxAmount = Stream('');
   private fee = Stream('');
@@ -42,6 +43,16 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
                 placeholder="BTC, ETH, USDT..."
                 bidi={this.symbol}
               />
+            </div>
+            <div className="Form-col">
+              <label>{app.translator.trans('withdrawal.admin.platforms.network')}</label>
+              <input
+                type="text"
+                className="FormControl"
+                placeholder="TRC20, ERC20, BSC... (optional)"
+                bidi={this.network}
+              />
+              <small className="helpText">{app.translator.trans('withdrawal.admin.platforms.network_help')}</small>
             </div>
           </div>
           
@@ -136,6 +147,7 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
     const formData: PlatformFormData = {
       name: this.name(),
       symbol: this.symbol(),
+      network: this.network(),
       minAmount: this.minAmount(),
       maxAmount: this.maxAmount(),
       fee: this.fee(),
@@ -154,6 +166,7 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
   private clearForm(): void {
     this.name('');
     this.symbol('');
+    this.network('');
     this.minAmount('');
     this.maxAmount('');
     this.fee('');

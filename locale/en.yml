@@ -9,6 +9,8 @@ withdrawal:
       title: Withdrawal Platforms
       name: Platform Name
       symbol: Currency Symbol
+      network: Network (Optional)
+      network_help: Enter network name (e.g., TRC20, ERC20, BSC) - leave empty if not applicable
       min_amount: Minimum Amount
       max_amount: Maximum Amount
       fee: Fee

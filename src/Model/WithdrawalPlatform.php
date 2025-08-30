@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id
  * @property string $name
  * @property string|null $symbol
+ * @property string|null $network
  * @property float $min_amount
  * @property float $max_amount
  * @property float $fee
@@ -29,6 +30,7 @@ class WithdrawalPlatform extends AbstractModel
     protected $fillable = [
         'name',
         'symbol',
+        'network',
         'min_amount',
         'max_amount',
         'fee',
@@ -49,5 +51,19 @@ class WithdrawalPlatform extends AbstractModel
     public function withdrawalRequests(): HasMany
     {
         return $this->hasMany(WithdrawalRequest::class, 'platform_id');
+    }
+
+    /**
+     * Get the display name for the platform (symbol + network)
+     */
+    public function getDisplayNameAttribute(): string
+    {
+        $display = $this->symbol ?: $this->name;
+        
+        if ($this->network) {
+            $display .= " ({$this->network})";
+        }
+        
+        return $display;
     }
 }

@@ -13,6 +13,8 @@ withdrawal:
       title: 提款平台
       name: 平台名称
       symbol: 货币符号
+      network: 网络（可选）
+      network_help: 输入网络名称（如：TRC20、ERC20、BSC）- 如不适用可留空
       min_amount: 最小金额
       max_amount: 最大金额
       fee: 手续费

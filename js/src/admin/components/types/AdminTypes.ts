@@ -3,6 +3,8 @@ export interface WithdrawalPlatform {
   attributes: {
     name: string;
     symbol?: string;
+    network?: string;
+    displayName?: string;
     minAmount?: number;
     maxAmount?: number;
     fee?: number;
@@ -44,6 +46,7 @@ export interface User {
 export interface PlatformFormData {
   name: string;
   symbol: string;
+  network: string;
   minAmount: string;
   maxAmount: string;
   fee: string;

@@ -21,6 +21,8 @@ class WithdrawalPlatformSerializer extends AbstractSerializer
             'id' => $platform->id,
             'name' => $platform->name,
             'symbol' => $platform->symbol,
+            'network' => $platform->network,
+            'displayName' => $platform->display_name,
             'minAmount' => (float) $platform->min_amount,
             'maxAmount' => (float) $platform->max_amount,
             'fee' => (float) $platform->fee,
