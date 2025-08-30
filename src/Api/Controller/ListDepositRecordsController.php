@@ -63,6 +63,7 @@ class ListDepositRecordsController extends AbstractListController
 
         $document->addPaginationLinks(
             $request->getUri()->withQuery(''),
+            $request->getQueryParams(),
             $offset,
             $limit,
             $hasMoreResults
