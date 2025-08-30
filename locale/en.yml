@@ -95,6 +95,8 @@ withdrawal:
         max_amount: Maximum Amount
         address: Deposit Address
         address_help: Static deposit address (optional)
+        qr_code_image_url: QR Code Image URL
+        qr_code_image_help: Enter QR code image URL (optional)
         icon_url: Icon Image URL
         icon_class: Icon CSS Class
         warning_text: Warning Text

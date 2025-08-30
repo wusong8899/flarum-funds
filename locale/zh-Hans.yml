@@ -70,6 +70,8 @@ withdrawal:
         address_template: 地址模板
         address_help: 静态存款地址（可选）
         address_template_help: 地址模板，{user_id} 将替换为用户ID
+        qr_code_image_url: 二维码图片URL
+        qr_code_image_help: 输入二维码图片的URL（可选）
         icon_url: 图标图片URL
         icon_class: 图标CSS类
         qr_template: 二维码模板

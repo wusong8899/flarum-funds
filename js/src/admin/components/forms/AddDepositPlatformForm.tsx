@@ -16,6 +16,7 @@ export interface DepositPlatformFormData {
   minAmount: string;
   maxAmount: string;
   address: string;
+  qrCodeImageUrl: string;
   iconUrl: string;
   iconClass: string;
   warningText: string;
@@ -37,6 +38,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
     minAmount: Stream(''),
     maxAmount: Stream(''),
     address: Stream(''),
+    qrCodeImageUrl: Stream(''),
     iconUrl: Stream(''),
     iconClass: Stream(''),
     warningText: Stream(''),
@@ -94,7 +96,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
               <select
                 className="FormControl"
                 value={this.formData.networkTypeId() || ''}
-                onchange={withAttr('value', (value) => {
+                onchange={withAttr('value', (value: string) => {
                   const networkTypeId = value ? parseInt(value) : null;
                   this.formData.networkTypeId(networkTypeId);
                   
@@ -183,6 +185,21 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
             </div>
           </div>
 
+          <div className="Form-group">
+            <label>
+              {app.translator.trans('withdrawal.admin.deposit.platforms.qr_code_image_url')}
+            </label>
+            <input
+              type="url"
+              className="FormControl"
+              placeholder="https://example.com/qr-code.png"
+              bidi={this.formData.qrCodeImageUrl}
+              disabled={submitting}
+            />
+            <div className="helpText">
+              {app.translator.trans('withdrawal.admin.deposit.platforms.qr_code_image_help')}
+            </div>
+          </div>
 
           <div className="Form-row">
             <div className="Form-group">
@@ -299,6 +316,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
       minAmount: this.formData.minAmount(),
       maxAmount: this.formData.maxAmount(),
       address: this.formData.address(),
+      qrCodeImageUrl: this.formData.qrCodeImageUrl(),
       iconUrl: this.formData.iconUrl(),
       iconClass: this.formData.iconClass(),
       warningText: this.formData.warningText(),
