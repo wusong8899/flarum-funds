@@ -1,6 +1,7 @@
 import app from 'flarum/admin/app';
 import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
+import m from 'mithril';
 import type Mithril from 'mithril';
 import { WithdrawalPlatform, WithdrawalRequest, User, PlatformFormData, DepositTransaction } from './types/AdminTypes';
 import type DepositPlatform from '../../common/models/DepositPlatform';
@@ -162,6 +163,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
       if (record) {
         await record.save({ isActive: !currentStatus });
         await this.loadPlatforms();
+        m.redraw();
         
         app.alerts.show(
           { type: 'success', dismissible: true },
@@ -189,6 +191,7 @@ export default class WithdrawalManagementPage extends ExtensionPage {
           if (record) {
             await record.delete();
             await this.loadPlatforms();
+            m.redraw();
             
             app.alerts.show(
               { type: 'success', dismissible: true },
