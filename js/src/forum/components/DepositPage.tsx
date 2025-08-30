@@ -308,13 +308,13 @@ export default class DepositPage extends Page<any, DepositPageState> {
     try {
       const response = await app.request({
         method: 'GET',
-        url: app.forum.attribute('apiUrl') + '/deposit-transactions'
+        url: app.forum.attribute('apiUrl') + '/deposit-records'
       });
 
       app.store.pushPayload(assertApiPayload(response));
-      this.state.transactions = app.store.all('deposit-transactions');
+      this.state.transactions = app.store.all('deposit-records');
     } catch (error) {
-      console.error('Error loading deposit transactions:', error);
+      console.error('Error loading deposit records:', error);
     }
   }
 

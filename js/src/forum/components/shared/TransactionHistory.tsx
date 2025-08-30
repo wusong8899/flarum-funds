@@ -5,7 +5,6 @@ import humanTime from 'flarum/common/helpers/humanTime';
 import type Mithril from 'mithril';
 import WithdrawalRequest from '../../../common/models/WithdrawalRequest';
 import WithdrawalPlatform from '../../../common/models/WithdrawalPlatform';
-import type DepositTransaction from '../../../common/models/DepositTransaction';
 import type DepositPlatform from '../../../common/models/DepositPlatform';
 import type DepositRecord from '../../../common/models/DepositRecord';
 import { getAttr, findPlatformById, getDateFromAttr, getIdString } from '../withdrawal/utils/modelHelpers';
@@ -14,20 +13,16 @@ import StatusBadge from '../withdrawal/common/StatusBadge';
 import EmptyState from '../withdrawal/common/EmptyState';
 import LoadingState from '../withdrawal/common/LoadingState';
 
-// Generic transaction type that can represent withdrawal, deposit transactions, or deposit records
+// Generic transaction type that can represent withdrawal requests or deposit records
 interface Transaction {
   id?: () => string | number;
   amount?: () => number;
   status?: () => string;
   createdAt?: () => Date;
-  accountDetails?: () => string;
-  transactionHash?: () => string;
-  explorerUrl?: () => string;
-  completedAt?: () => Date;
-  confirmations?: () => number;
-  requiredConfirmations?: () => number;
   platform?: () => any;
   platformId?: () => string | number;
+  // Withdrawal request specific fields
+  accountDetails?: () => string;
   // Deposit record specific fields
   platformAccount?: () => string;
   realName?: () => string;
@@ -41,7 +36,7 @@ interface Transaction {
 }
 
 interface TransactionHistoryAttrs {
-  transactions: (WithdrawalRequest | DepositTransaction | DepositRecord)[];
+  transactions: (WithdrawalRequest | DepositRecord)[];
   platforms: (WithdrawalPlatform | DepositPlatform)[];
   loading: boolean;
   type: 'withdrawal' | 'deposit';
@@ -89,13 +84,8 @@ export default class TransactionHistory extends Component<TransactionHistoryAttr
     const createdAt = getDateFromAttr(transaction, 'createdAt');
 
     if (type === 'deposit') {
-      // Check if this is a deposit record (has platformAccount) or deposit transaction (has transactionHash)
-      const platformAccount = getAttr(transaction, 'platformAccount');
-      if (platformAccount) {
-        return this.renderDepositRecord(transaction, platform, amount, status, statusColor, createdAt, transactionId);
-      } else {
-        return this.renderDepositTransaction(transaction, platform, amount, status, statusColor, createdAt, transactionId);
-      }
+      // Only deposit records now
+      return this.renderDepositRecord(transaction, platform, amount, status, statusColor, createdAt, transactionId);
     } else {
       return this.renderWithdrawalTransaction(transaction, platform, amount, status, createdAt, transactionId);
     }
@@ -269,96 +259,6 @@ export default class TransactionHistory extends Component<TransactionHistoryAttr
     );
   }
 
-  private renderDepositTransaction(
-    transaction: Transaction,
-    platform: any,
-    amount: number,
-    status: string,
-    statusColor: string,
-    createdAt: Date,
-    transactionId: string
-  ): Mithril.Children {
-    const transactionHash = getAttr(transaction, 'transactionHash');
-    const explorerUrl = getAttr(transaction, 'explorerUrl');
-    const completedAt = getAttr(transaction, 'completedAt');
-    const confirmations = getAttr(transaction, 'confirmations') || 0;
-    const requiredConfirmations = getAttr(transaction, 'requiredConfirmations') || 1;
-
-    return (
-      <div key={transactionId} className="DepositHistory-item">
-        <div className="DepositHistory-itemHeader">
-          <div className="DepositHistory-itemPlatform">
-            {platform && (
-              <>
-                <div className="DepositHistory-itemIcon">
-                  {this.renderPlatformIcon(platform)}
-                </div>
-                <div className="DepositHistory-itemInfo">
-                  <span className="DepositHistory-itemCurrency">
-                    {getAttr(platform, 'symbol')}
-                  </span>
-                  <span className="DepositHistory-itemNetwork">
-                    {getAttr(platform, 'network')}
-                  </span>
-                </div>
-              </>
-            )}
-          </div>
-          
-          <div className="DepositHistory-itemAmount">
-            <span className="DepositHistory-itemAmountValue">
-              +{amount} {platform ? getAttr(platform, 'symbol') : ''}
-            </span>
-            <div className={`DepositHistory-itemStatus status-${statusColor}`}>
-              {this.getStatusIcon(status)}
-              {this.getStatusText(status)}
-            </div>
-          </div>
-        </div>
-
-        <div className="DepositHistory-itemDetails">
-          <div className="DepositHistory-itemMeta">
-            <span className="DepositHistory-itemTime">
-              {createdAt ? humanTime(createdAt) : 'Unknown time'}
-            </span>
-            
-            {status === 'confirmed' || status === 'completed' ? (
-              <span className="DepositHistory-itemConfirmations">
-                {confirmations}/{requiredConfirmations} confirmations
-              </span>
-            ) : null}
-          </div>
-
-          {transactionHash && (
-            <div className="DepositHistory-itemHash">
-              <span className="DepositHistory-itemHashLabel">Transaction:</span>
-              {explorerUrl ? (
-                <a 
-                  href={explorerUrl} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="DepositHistory-itemHashLink"
-                >
-                  {this.formatHash(transactionHash)}
-                  {icon('fas fa-external-link-alt')}
-                </a>
-              ) : (
-                <span className="DepositHistory-itemHashText">
-                  {this.formatHash(transactionHash)}
-                </span>
-              )}
-            </div>
-          )}
-
-          {completedAt && (
-            <div className="DepositHistory-itemCompleted">
-              <span>Credited: {humanTime(completedAt)}</span>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
 
   private getTransactionId(transaction: Transaction): string {
     if (typeof transaction.id === 'function') {

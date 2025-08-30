@@ -120,15 +120,6 @@ withdrawal:
         required_fields_error: "Please fill required fields: platform name, currency symbol and deposit address"
         enable_success: Deposit platform enabled successfully
         disable_success: Deposit platform disabled successfully
-      transactions:
-        title: Deposit Transaction Management
-        pending_title: Pending Transactions
-        completed_title: Completed Transactions
-        no_pending: No pending transactions
-        no_completed: No completed transactions
-        complete_success: Transaction completed successfully
-        complete_error: Failed to complete transaction
-        update_error: Failed to update transaction
       records:
         title: Deposit Record Management
         total_count: "{count} records total"
@@ -208,7 +199,7 @@ withdrawal:
       final_amount: "Final Amount: ${amount}"
     history:
       title: Withdrawal History
-      transactions: transactions
+      transactions: requests
       empty:
         title: No withdrawal requests yet
         description: You haven't made any withdrawal requests. Click the Withdrawal tab to submit your first request.
@@ -252,7 +243,7 @@ withdrawal:
         deposit_time_help: When you made the deposit (auto-filled with current time)
         screenshot_url: Screenshot URL
         screenshot_url_placeholder: "https://example.com/screenshot.png"
-        screenshot_url_help: Optional screenshot of your deposit transaction
+        screenshot_url_help: Optional screenshot of your deposit record
         user_message: Message
         user_message_placeholder: Any additional notes or information
         cancel: Cancel
@@ -267,7 +258,7 @@ withdrawal:
           amount_too_high: "Amount {amount} exceeds maximum {max} {symbol}"
       history:
         title: Deposit History
-        transactions: transactions
+        transactions: records
         empty:
           title: No deposits yet
-          description: Your deposit transactions will appear here once you make a deposit.
+          description: Your deposit records will appear here once you make a deposit.

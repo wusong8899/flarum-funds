@@ -74,28 +74,3 @@ export interface DepositPlatform {
   updatedAt: Date;
 }
 
-export interface DepositTransaction {
-  id: number;
-  amount: number;
-  fee: number;
-  creditedAmount?: number;
-  transactionHash?: string;
-  fromAddress?: string;
-  memo?: string;
-  status: string;
-  statusColor: string;
-  confirmations: number;
-  requiredConfirmations: number;
-  hasEnoughConfirmations: boolean;
-  canBeCompleted: boolean;
-  explorerUrl?: string;
-  adminNotes?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  detectedAt?: Date;
-  confirmedAt?: Date;
-  completedAt?: Date;
-  user: User;
-  platform: DepositPlatform;
-  processedBy?: User;
-}

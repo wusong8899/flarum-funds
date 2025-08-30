@@ -68,43 +68,6 @@
     }
   }
 
-  .DepositTransactions {
-    margin-top: 40px;
-
-    &-tabs {
-      display: flex;
-      gap: 4px;
-      margin-bottom: 20px;
-    }
-
-    &-tab {
-      background: none;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      color: var(--muted-color);
-      cursor: pointer;
-      font-weight: 500;
-      transition: all 0.2s;
-
-      &:hover {
-        background: var(--control-bg);
-      }
-
-      &.active {
-        background: var(--primary-color);
-        color: white;
-      }
-    }
-
-    &-empty {
-      text-align: center;
-      padding: 40px;
-      color: var(--muted-color);
-      background: var(--control-bg);
-      border-radius: 8px;
-    }
-  }
 }
 
 // Deposit Platform Form Styles
@@ -327,127 +290,6 @@
   }
 }
 
-// Transaction Item Styles
-.DepositTransactionItem {
-  background: var(--control-bg);
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 12px;
-  border: 1px solid transparent;
-  transition: all 0.2s;
-
-  &:hover {
-    border-color: var(--primary-color);
-  }
-
-  &-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-  }
-
-  &-user {
-    display: flex;
-    flex-direction: column;
-
-    strong {
-      color: var(--heading-color);
-    }
-  }
-
-  &-time {
-    font-size: 12px;
-    color: var(--muted-color);
-  }
-
-  &-amount {
-    text-align: right;
-  }
-
-  &-amountValue {
-    font-weight: bold;
-    color: #48BB78;
-    font-size: 16px;
-    display: block;
-  }
-
-  &-status {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 12px;
-    margin-top: 4px;
-
-    &.status-warning {
-      color: #ED8936;
-    }
-
-    &.status-info {
-      color: #4299E1;
-    }
-
-    &.status-success {
-      color: #48BB78;
-    }
-
-    &.status-danger {
-      color: #E53E3E;
-    }
-
-    &.status-secondary {
-      color: var(--muted-color);
-    }
-  }
-
-  &-details {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    font-size: 12px;
-    color: var(--muted-color);
-  }
-
-  &-platform,
-  &-hash,
-  &-fromAddress,
-  &-confirmations,
-  &-notes {
-    display: flex;
-    gap: 8px;
-  }
-
-  &-label {
-    font-weight: 500;
-    min-width: 80px;
-    color: var(--body-color);
-  }
-
-  &-hashLink {
-    color: var(--primary-color);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  &-confirmed {
-    color: #48BB78;
-    margin-left: 4px;
-  }
-
-  &-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-}
 
 // Mobile responsive
 @media (max-width: 768px) {
@@ -489,13 +331,4 @@
     }
   }
 
-  .DepositTransactionItem-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .DepositTransactionItem-actions {
-    flex-wrap: wrap;
-  }
 }

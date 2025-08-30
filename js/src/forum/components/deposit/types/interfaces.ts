@@ -1,10 +1,9 @@
 import Stream from 'flarum/common/utils/Stream';
 import DepositPlatform from '../../../../common/models/DepositPlatform';
-import DepositTransaction from '../../../../common/models/DepositTransaction';
 
 export interface DepositPageState {
   platforms: DepositPlatform[];
-  transactions: DepositTransaction[];
+  transactions: any[]; // Deposit records for history display
   loading: boolean;
   activeTab: Stream<'deposit' | 'history'>;
 }

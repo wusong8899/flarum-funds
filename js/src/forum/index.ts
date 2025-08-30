@@ -7,7 +7,6 @@ import WithdrawalPlatform from '../common/models/WithdrawalPlatform';
 import WithdrawalRequest from '../common/models/WithdrawalRequest';
 import DepositPlatform from '../common/models/DepositPlatform';
 import DepositAddress from '../common/models/DepositAddress';
-import DepositTransaction from '../common/models/DepositTransaction';
 import DepositRecord from '../common/models/DepositRecord';
 import MoneyDisplay from './components/MoneyDisplay';
 import MobileMoneyDisplay from './components/MobileMoneyDisplay';
@@ -20,7 +19,6 @@ app.initializers.add('wusong8899-withdrawal', () => {
   app.store.models['withdrawal-requests'] = WithdrawalRequest;
   app.store.models['deposit-platforms'] = DepositPlatform;
   app.store.models['deposit-addresses'] = DepositAddress;
-  app.store.models['deposit-transactions'] = DepositTransaction;
   app.store.models['deposit-records'] = DepositRecord;
 
   // New unified funds page

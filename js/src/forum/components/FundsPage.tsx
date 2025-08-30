@@ -38,7 +38,6 @@ interface FundsPageState {
   
   // Deposit state
   depositPlatforms: DepositPlatform[];
-  depositTransactions: any[];
   depositRecords: any[];
   showDepositRecordForm: boolean;
   submittingDepositRecord: boolean;
@@ -56,7 +55,6 @@ export default class FundsPage extends Page<any, FundsPageState> {
     loadingBalance: true,
     submitting: false,
     depositPlatforms: [],
-    depositTransactions: [],
     depositRecords: [],
     showDepositRecordForm: false,
     submittingDepositRecord: false,
@@ -411,8 +409,8 @@ export default class FundsPage extends Page<any, FundsPageState> {
   }
 
   private renderDepositHistoryTab(): Mithril.Children {
-    // Combine deposit transactions and deposit records
-    const allDepositHistory = [...this.state.depositTransactions, ...this.state.depositRecords];
+    // Use only deposit records for history
+    const allDepositHistory = [...this.state.depositRecords];
     
     // Sort by creation date (newest first)
     allDepositHistory.sort((a, b) => {
@@ -754,14 +752,10 @@ export default class FundsPage extends Page<any, FundsPageState> {
   }
 
   private async loadDepositData(): Promise<void> {
-    const [platformsResponse, transactionsResponse, recordsResponse] = await Promise.all([
+    const [platformsResponse, recordsResponse] = await Promise.all([
       app.request({
         method: 'GET',
         url: app.forum.attribute('apiUrl') + '/deposit-platforms'
-      }),
-      app.request({
-        method: 'GET',
-        url: app.forum.attribute('apiUrl') + '/deposit-transactions'
       }),
       app.request({
         method: 'GET',
@@ -770,11 +764,9 @@ export default class FundsPage extends Page<any, FundsPageState> {
     ]);
 
     app.store.pushPayload(assertApiPayload(platformsResponse));
-    app.store.pushPayload(assertApiPayload(transactionsResponse));
     app.store.pushPayload(assertApiPayload(recordsResponse));
     
     this.state.depositPlatforms = app.store.all('deposit-platforms');
-    this.state.depositTransactions = app.store.all('deposit-transactions');
     this.state.depositRecords = app.store.all('deposit-records');
     
     // Filter active platforms

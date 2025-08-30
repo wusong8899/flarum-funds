@@ -66,10 +66,6 @@ class DepositPlatform extends AbstractModel
         return $this->hasMany(DepositAddress::class, 'platform_id');
     }
 
-    public function depositTransactions(): HasMany
-    {
-        return $this->hasMany(DepositTransaction::class, 'platform_id');
-    }
 
     public function networkType(): BelongsTo
     {

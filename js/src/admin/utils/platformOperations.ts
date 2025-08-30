@@ -163,38 +163,6 @@ export const createWithdrawalRequestOperations = (): TransactionOperations<any> 
   }
 });
 
-// Deposit transaction operations
-export const createDepositTransactionOperations = (): TransactionOperations<any> => ({
-  async updateStatus(transaction: any, status: string) {
-    const transactionId = typeof transaction.id === 'function' ? transaction.id() : transaction.id;
-    
-    return apiPatch(`/deposit-transactions/${transactionId}`, {
-      data: {
-        type: 'deposit-transactions',
-        attributes: {
-          status: status
-        }
-      }
-    }, {
-      showSuccessAlert: true,
-      successMessage: app.translator.trans(`withdrawal.admin.deposit.transactions.${status}_success`).toString(),
-      errorMessage: app.translator.trans('withdrawal.admin.deposit.transactions.update_error').toString(),
-      onSuccess: (response) => {
-        app.store.pushPayload(response);
-      }
-    });
-  },
-
-  async load() {
-    return apiGet('/deposit-transactions', undefined, {
-      errorMessage: app.translator.trans('withdrawal.admin.deposit.transactions.load_error').toString(),
-      transformResponse: (response) => {
-        app.store.pushPayload(response);
-        return app.store.all('deposit-transactions');
-      }
-    });
-  }
-});
 
 // Deposit record operations
 export const createDepositRecordOperations = (): TransactionOperations<any> => ({

@@ -55,10 +55,6 @@ class DepositAddress extends AbstractModel
         return $this->belongsTo(DepositPlatform::class);
     }
 
-    public function depositTransactions(): HasMany
-    {
-        return $this->hasMany(DepositTransaction::class, 'address_id');
-    }
 
     /**
      * Update the last used timestamp

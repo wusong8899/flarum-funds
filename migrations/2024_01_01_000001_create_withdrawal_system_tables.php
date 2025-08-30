@@ -129,39 +129,10 @@ return [
             });
         }
 
-        // Create deposit_transactions table
-        if (!$schema->hasTable('deposit_transactions')) {
-            $schema->create('deposit_transactions', function (Blueprint $table) {
-                $table->increments('id');
-                $table->unsignedInteger('user_id');
-                $table->unsignedInteger('platform_id');
-                $table->string('tx_hash')->nullable(); // Transaction hash
-                $table->decimal('amount', 20, 8);
-                $table->decimal('fee', 20, 8)->default(0); // Transaction fee
-                $table->string('from_address')->nullable();
-                $table->string('to_address')->nullable();
-                $table->enum('status', ['pending', 'confirmed', 'completed', 'failed', 'cancelled'])->default('pending');
-                $table->integer('confirmations')->default(0);
-                $table->text('notes')->nullable();
-                $table->timestamp('processed_at')->nullable();
-                $table->timestamps();
-
-                // Foreign keys
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                $table->foreign('platform_id')->references('id')->on('deposit_platforms')->onDelete('cascade');
-
-                // Indexes
-                $table->index(['user_id', 'status']);
-                $table->index(['platform_id']);
-                $table->index(['status']);
-                $table->index(['tx_hash']);
-            });
-        }
     },
 
     'down' => function (Builder $schema) {
         // Drop tables in reverse order due to foreign key dependencies
-        $schema->dropIfExists('deposit_transactions');
         $schema->dropIfExists('deposit_addresses');
         $schema->dropIfExists('deposit_platforms');
         $schema->dropIfExists('withdrawal_requests');

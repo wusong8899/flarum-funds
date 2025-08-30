@@ -9,14 +9,12 @@ import GenericManagementPage, {
 import GeneralSettingsSection from './sections/GeneralSettingsSection';
 import PlatformManagementSection from './sections/PlatformManagementSection';
 import RequestManagementSection from './sections/RequestManagementSection';
-import DepositManagementSection from './sections/DepositManagementSection';
 import DepositRecordManagementSection from './sections/DepositRecordManagementSection';
 import ConfirmModal from '../../common/components/shared/ConfirmModal';
 import { 
   createWithdrawalPlatformOperations,
   createDepositPlatformOperations,
   createWithdrawalRequestOperations,
-  createDepositTransactionOperations,
   createDepositRecordOperations
 } from '../utils/platformOperations';
 import { assertApiPayload } from '../../common/types/api';
@@ -29,17 +27,11 @@ class WithdrawalTabPlaceholder extends Component {
   }
 }
 
-class DepositRecordTabPlaceholder extends Component {
-  view() {
-    return <div>Deposit Records Content</div>;
-  }
-}
 
 export default class UnifiedManagementPage extends GenericManagementPage<GenericPlatform, GenericTransaction> {
   
   // Additional state for complex scenarios
   private depositPlatforms: GenericPlatform[] = [];
-  private depositTransactions: GenericTransaction[] = [];
   private depositRecords: GenericTransaction[] = [];
   private users: { [key: number]: any } = {};
 
@@ -65,21 +57,15 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
         {
           key: 'deposits',
           label: app.translator.trans('withdrawal.admin.tabs.deposits').toString(),
-          component: DepositManagementSection,
+          component: DepositRecordManagementSection,
           props: () => ({
             platforms: this.depositPlatforms,
-            transactions: this.depositRecords,
-            submittingPlatform: this.submittingPlatform,
-            onAddPlatform: this.addDepositPlatform.bind(this),
-            onTogglePlatformStatus: this.toggleDepositPlatformStatus.bind(this),
-            onDeletePlatform: this.deleteDepositPlatform.bind(this),
-            onUpdateTransactionStatus: this.updateDepositRecordStatus.bind(this),
+            records: this.depositRecords,
+            loading: this.loading,
+            onApproveRecord: this.approveDepositRecord.bind(this),
+            onRejectRecord: this.rejectDepositRecord.bind(this),
+            onDeleteRecord: this.deleteDepositRecord.bind(this),
           })
-        },
-        {
-          key: 'deposit-records',
-          label: app.translator.trans('withdrawal.admin.tabs.deposit_records').toString(),
-          component: DepositRecordTabPlaceholder
         }
       ],
       
@@ -112,18 +98,6 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
       );
     }
     
-    if (this.activeTab === 'deposit-records') {
-      return (
-        <DepositRecordManagementSection
-          records={this.depositRecords as any}
-          platforms={this.depositPlatforms}
-          loading={this.loading}
-          onApproveRecord={this.approveDepositRecord.bind(this)}
-          onRejectRecord={this.rejectDepositRecord.bind(this)}
-          onDeleteRecord={this.deleteDepositRecord.bind(this)}
-        />
-      );
-    }
     
     // For other tabs, use the parent implementation
     return super.renderActiveTabContent();
@@ -141,7 +115,6 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
       
       // Load deposit data
       await this.loadDepositPlatforms();
-      await this.loadDepositTransactions();
       await this.loadDepositRecords();
     } catch (error) {
       console.error('Error loading data:', error);
@@ -222,16 +195,6 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
     });
   }
 
-  private async updateDepositTransactionStatus(transaction: GenericTransaction, status: string): Promise<void> {
-    const depositTransactionOperations = createDepositTransactionOperations();
-    try {
-      await depositTransactionOperations.updateStatus(transaction, status);
-      await this.loadDepositTransactions();
-      m.redraw();
-    } catch (error) {
-      console.error('Error updating deposit transaction:', error);
-    }
-  }
 
   private async updateDepositRecordStatus(record: GenericTransaction, status: string): Promise<void> {
     const depositRecordOperations = createDepositRecordOperations();
@@ -305,16 +268,6 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
     }
   }
 
-  private async loadDepositTransactions(): Promise<void> {
-    const depositTransactionOperations = createDepositTransactionOperations();
-    try {
-      this.depositTransactions = await depositTransactionOperations.load();
-      console.log('Loaded deposit transactions:', this.depositTransactions);
-    } catch (error) {
-      console.error('Error loading deposit transactions:', error);
-      this.depositTransactions = [];
-    }
-  }
 
   private async loadUserData(): Promise<void> {
     // Skip if no requests
