@@ -70,7 +70,7 @@ export default abstract class GenericManagementPage<
   // State management
   protected platforms: TPlatform[] = [];
   protected transactions: TTransaction[] = [];
-  protected loading = true;
+  loading = true;
   protected submittingPlatform = false;
   protected activeTab: string;
   
