@@ -1,14 +1,14 @@
 <?php
 
-namespace Wusong8899\Withdrawal\Api\Controller;
+namespace wusong8899\Withdrawal\Api\Controller;
 
 use Flarum\Api\Controller\AbstractListController;
 use Flarum\Http\RequestUtil;
 use Flarum\User\Exception\PermissionDeniedException;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use Wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer;
-use Wusong8899\Withdrawal\Models\DepositRecord;
+use wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer;
+use wusong8899\Withdrawal\Models\DepositRecord;
 use Illuminate\Database\Eloquent\Builder;
 
 class ListDepositRecordsController extends AbstractListController

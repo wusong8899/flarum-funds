@@ -1,6 +1,6 @@
 <?php
 
-namespace Wusong8899\Withdrawal\Api\Controller;
+namespace wusong8899\Withdrawal\Api\Controller;
 
 use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Http\RequestUtil;
@@ -9,10 +9,10 @@ use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use Wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer;
-use Wusong8899\Withdrawal\Models\DepositRecord;
-use Wusong8899\Withdrawal\Model\DepositPlatform;
-use Wusong8899\Withdrawal\Validator\DepositRecordValidator;
+use wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer;
+use wusong8899\Withdrawal\Models\DepositRecord;
+use wusong8899\Withdrawal\Model\DepositPlatform;
+use wusong8899\Withdrawal\Validator\DepositRecordValidator;
 
 class CreateDepositRecordController extends AbstractCreateController
 {

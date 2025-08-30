@@ -1,10 +1,10 @@
 <?php
 
-namespace Wusong8899\Withdrawal\Api\Serializer;
+namespace wusong8899\Withdrawal\Api\Serializer;
 
 use Flarum\Api\Serializer\AbstractSerializer;
 use Flarum\Api\Serializer\UserSerializer;
-use Wusong8899\Withdrawal\Models\DepositRecord;
+use wusong8899\Withdrawal\Models\DepositRecord;
 
 class DepositRecordSerializer extends AbstractSerializer
 {

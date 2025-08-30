@@ -1,6 +1,6 @@
 <?php
 
-namespace Wusong8899\Withdrawal\Validator;
+namespace wusong8899\Withdrawal\Validator;
 
 use Flarum\Foundation\AbstractValidator;
 

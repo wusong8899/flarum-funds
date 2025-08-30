@@ -1,6 +1,6 @@
 <?php
 
-namespace Wusong8899\Withdrawal\Models;
+namespace wusong8899\Withdrawal\Models;
 
 use Flarum\Database\AbstractModel;
 use Flarum\User\User;

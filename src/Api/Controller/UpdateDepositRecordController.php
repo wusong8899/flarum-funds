@@ -1,6 +1,6 @@
 <?php
 
-namespace Wusong8899\Withdrawal\Api\Controller;
+namespace wusong8899\Withdrawal\Api\Controller;
 
 use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Foundation\ValidationException;
@@ -11,8 +11,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use Wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer;
-use Wusong8899\Withdrawal\Models\DepositRecord;
+use wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer;
+use wusong8899\Withdrawal\Models\DepositRecord;
 
 class UpdateDepositRecordController extends AbstractShowController
 {
