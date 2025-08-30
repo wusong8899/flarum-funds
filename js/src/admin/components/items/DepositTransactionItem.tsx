@@ -16,23 +16,43 @@ export default class DepositTransactionItem extends Component<DepositTransaction
   view(vnode: Mithril.Vnode<DepositTransactionItemAttrs>) {
     const { transaction, showActions, onUpdateStatus } = vnode.attrs;
 
+    // Extract data safely from Flarum model or plain object
+    const amount = this.getAttribute(transaction, 'amount') || 0;
+    const status = this.getAttribute(transaction, 'status') || 'pending';
+    const createdAt = this.getAttribute(transaction, 'createdAt') || this.getAttribute(transaction, 'depositTime');
+    const user = this.getRelationship(transaction, 'user');
+    const platform = this.getRelationship(transaction, 'platform');
+    const adminNotes = this.getAttribute(transaction, 'adminNotes');
+    const transactionHash = this.getAttribute(transaction, 'transactionHash');
+    const explorerUrl = this.getAttribute(transaction, 'explorerUrl');
+    const fromAddress = this.getAttribute(transaction, 'fromAddress');
+    const confirmations = this.getAttribute(transaction, 'confirmations');
+    const requiredConfirmations = this.getAttribute(transaction, 'requiredConfirmations');
+    const hasEnoughConfirmations = this.getAttribute(transaction, 'hasEnoughConfirmations');
+    const canBeCompleted = this.getAttribute(transaction, 'canBeCompleted');
+    
+    // Get platform info safely
+    const platformName = platform ? this.getAttribute(platform, 'name') || 'Unknown Platform' : 'Unknown Platform';
+    const platformSymbol = platform ? this.getAttribute(platform, 'symbol') || 'N/A' : 'N/A';
+    const platformNetwork = platform ? this.getAttribute(platform, 'network') || '' : '';
+
     return (
       <div className="DepositTransactionItem">
         <div className="DepositTransactionItem-header">
           <div className="DepositTransactionItem-user">
-            <strong>{this.getUserDisplayName(transaction.user)}</strong>
+            <strong>{this.getUserDisplayName(user)}</strong>
             <span className="DepositTransactionItem-time">
-              {humanTime(transaction.createdAt)}
+              {createdAt ? humanTime(createdAt) : 'N/A'}
             </span>
           </div>
           
           <div className="DepositTransactionItem-amount">
             <span className="DepositTransactionItem-amountValue">
-              {transaction.amount} {transaction.platform.symbol}
+              {amount} {platformSymbol}
             </span>
-            <div className={`DepositTransactionItem-status status-${transaction.statusColor}`}>
-              {this.getStatusIcon(transaction.status)}
-              {this.getStatusText(transaction.status)}
+            <div className={`DepositTransactionItem-status status-${this.getStatusColor(status)}`}>
+              {this.getStatusIcon(status)}
+              {this.getStatusText(status)}
             </div>
           </div>
         </div>
@@ -40,68 +60,68 @@ export default class DepositTransactionItem extends Component<DepositTransaction
         <div className="DepositTransactionItem-details">
           <div className="DepositTransactionItem-platform">
             <span className="DepositTransactionItem-label">Platform:</span>
-            <span>{transaction.platform.name} ({transaction.platform.network})</span>
+            <span>{platformName}{platformNetwork ? ` (${platformNetwork})` : ''}</span>
           </div>
 
-          {transaction.transactionHash && (
+          {transactionHash && (
             <div className="DepositTransactionItem-hash">
               <span className="DepositTransactionItem-label">Hash:</span>
-              {transaction.explorerUrl ? (
+              {explorerUrl ? (
                 <a 
-                  href={transaction.explorerUrl} 
+                  href={explorerUrl} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="DepositTransactionItem-hashLink"
                 >
-                  {this.formatHash(transaction.transactionHash)}
+                  {this.formatHash(transactionHash)}
                   {icon('fas fa-external-link-alt')}
                 </a>
               ) : (
                 <span className="DepositTransactionItem-hashText">
-                  {this.formatHash(transaction.transactionHash)}
+                  {this.formatHash(transactionHash)}
                 </span>
               )}
             </div>
           )}
 
-          {transaction.fromAddress && (
+          {fromAddress && (
             <div className="DepositTransactionItem-fromAddress">
               <span className="DepositTransactionItem-label">From:</span>
               <span className="DepositTransactionItem-address">
-                {this.formatHash(transaction.fromAddress)}
+                {this.formatHash(fromAddress)}
               </span>
             </div>
           )}
 
-          {transaction.confirmations !== undefined && (
+          {confirmations !== undefined && (
             <div className="DepositTransactionItem-confirmations">
               <span className="DepositTransactionItem-label">Confirmations:</span>
               <span>
-                {transaction.confirmations}/{transaction.requiredConfirmations}
-                {transaction.hasEnoughConfirmations && 
+                {confirmations}/{requiredConfirmations}
+                {hasEnoughConfirmations && 
                   <span className="DepositTransactionItem-confirmed"> ✓</span>
                 }
               </span>
             </div>
           )}
 
-          {transaction.adminNotes && (
+          {adminNotes && (
             <div className="DepositTransactionItem-notes">
               <span className="DepositTransactionItem-label">Notes:</span>
-              <span>{transaction.adminNotes}</span>
+              <span>{adminNotes}</span>
             </div>
           )}
         </div>
 
-        {showActions && this.renderActions(transaction, onUpdateStatus)}
+        {showActions && this.renderActions(status, canBeCompleted, onUpdateStatus)}
       </div>
     );
   }
 
-  private renderActions(transaction: DepositTransaction, onUpdateStatus: (status: string) => void): Mithril.Children {
+  private renderActions(status: string, canBeCompleted: boolean, onUpdateStatus: (status: string) => void): Mithril.Children {
     const actions = [];
 
-    if (transaction.status === 'pending') {
+    if (status === 'pending') {
       actions.push(
         <Button
           key="confirm"
@@ -113,7 +133,7 @@ export default class DepositTransactionItem extends Component<DepositTransaction
       );
     }
 
-    if (transaction.status === 'confirmed' && transaction.canBeCompleted) {
+    if (status === 'confirmed' && canBeCompleted) {
       actions.push(
         <Button
           key="complete"
@@ -125,7 +145,7 @@ export default class DepositTransactionItem extends Component<DepositTransaction
       );
     }
 
-    if (transaction.status === 'pending' || transaction.status === 'confirmed') {
+    if (status === 'pending' || status === 'confirmed') {
       actions.push(
         <Button
           key="reject"
@@ -204,5 +224,64 @@ export default class DepositTransactionItem extends Component<DepositTransaction
     
     // Fallback to ID or 'Unknown'
     return user.id ? `User #${user.id}` : 'Unknown User';
+  }
+
+  private getAttribute(obj: any, attr: string): any {
+    if (!obj) return null;
+    
+    // Handle Flarum Model instances (method-based access)
+    if (typeof obj[attr] === 'function') {
+      return obj[attr]();
+    }
+    
+    // Handle plain objects with attributes property
+    if (obj.attributes && obj.attributes.hasOwnProperty(attr)) {
+      return obj.attributes[attr];
+    }
+    
+    // Handle direct property access
+    if (obj.hasOwnProperty(attr)) {
+      return obj[attr];
+    }
+    
+    return null;
+  }
+
+  private getRelationship(obj: any, relationName: string): any {
+    if (!obj) return null;
+    
+    // Handle Flarum Model instances (method-based access)
+    if (typeof obj[relationName] === 'function') {
+      return obj[relationName]();
+    }
+    
+    // Handle plain objects with relationships
+    if (obj.relationships && obj.relationships[relationName]) {
+      return obj.relationships[relationName].data;
+    }
+    
+    // Handle direct property access
+    if (obj[relationName]) {
+      return obj[relationName];
+    }
+    
+    return null;
+  }
+
+  private getStatusColor(status: string): string {
+    switch (status) {
+      case 'pending':
+        return 'warning';
+      case 'confirmed':
+        return 'info';
+      case 'completed':
+        return 'success';
+      case 'failed':
+        return 'danger';
+      case 'cancelled':
+        return 'secondary';
+      default:
+        return 'secondary';
+    }
   }
 }
