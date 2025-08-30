@@ -8,16 +8,16 @@ export default class DepositRecord extends Model {
   platformAccount = Model.attribute<string>('platformAccount');
   realName = Model.attribute<string>('realName');
   amount = Model.attribute<number>('amount');
-  depositTime = Model.attribute<Date>('depositTime', Model.transformDate);
+  depositTime = Model.attribute('depositTime', Model.transformDate);
   screenshotUrl = Model.attribute<string>('screenshotUrl');
   userMessage = Model.attribute<string>('userMessage');
   status = Model.attribute<string>('status');
-  processedAt = Model.attribute<Date>('processedAt', Model.transformDate);
+  processedAt = Model.attribute('processedAt', Model.transformDate);
   processedBy = Model.attribute<number>('processedBy');
   adminNotes = Model.attribute<string>('adminNotes');
   creditedAmount = Model.attribute<number>('creditedAmount');
-  createdAt = Model.attribute<Date>('createdAt', Model.transformDate);
-  updatedAt = Model.attribute<Date>('updatedAt', Model.transformDate);
+  createdAt = Model.attribute('createdAt', Model.transformDate);
+  updatedAt = Model.attribute('updatedAt', Model.transformDate);
 
   // Relationships
   user = Model.hasOne('user');
