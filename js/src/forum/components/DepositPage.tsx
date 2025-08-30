@@ -14,6 +14,12 @@ import AddressDisplay from './deposit/components/AddressDisplay';
 import ImageDisplay from './deposit/components/QRCodeDisplay';
 import DepositHistory from './deposit/history/DepositHistory';
 import { getAttr } from './withdrawal/utils/modelHelpers';
+import { 
+  createPlatformSelectionState, 
+  handleCurrencyChange, 
+  handleNetworkChange,
+  type PlatformSelectionState 
+} from '../common/utils/platformSelectionLogic';
 
 export default class DepositPage extends Page {
   private state: DepositPageState = {
@@ -37,6 +43,11 @@ export default class DepositPage extends Page {
   private networks: string[] = [];
   private selectedCurrency = Stream<string>('');
   private selectedNetwork = Stream<string>('');
+  private platformState: PlatformSelectionState<DepositPlatform> = {
+    currencyGroups: {},
+    availablePlatforms: [],
+    currencies: []
+  };
 
   oninit(vnode: Mithril.VnodeDOM) {
     super.oninit(vnode);
@@ -215,14 +226,42 @@ export default class DepositPage extends Page {
 
   private handleCurrencyChange(currency: string): void {
     this.selectedCurrency(currency);
-    this.selectedNetwork(''); // Reset network selection
-    this.formData.selectedPlatform(null); // Reset platform selection
-    this.updateNetworks();
+    this.selectedNetwork('');
+    this.formData.selectedPlatform(null);
+    this.addressData.address = '';
+    this.addressData.loading = false;
+    
+    // 使用共享逻辑处理货币变更
+    const result = handleCurrencyChange(this.platformState.currencyGroups, currency);
+    this.networks = result.networks;
+    
+    // 自动选择平台（如果适用）
+    if (result.autoSelectedPlatform) {
+      this.handlePlatformSelect(result.autoSelectedPlatform);
+    }
   }
 
   private handleNetworkChange(network: string): void {
     this.selectedNetwork(network);
-    this.updateSelectedPlatform();
+    this.formData.selectedPlatform(null);
+    this.addressData.address = '';
+    this.addressData.loading = false;
+    
+    // 使用共享逻辑处理网络变更
+    const autoSelectedPlatform = handleNetworkChange(
+      this.platformState.currencyGroups, 
+      this.selectedCurrency(), 
+      network
+    );
+    
+    if (autoSelectedPlatform) {
+      this.handlePlatformSelect(autoSelectedPlatform);
+    }
+  }
+
+  private handlePlatformSelect(platform: DepositPlatform): void {
+    this.formData.selectedPlatform(platform);
+    this.loadDepositAddress(platform);
   }
 
   private handleCopyAddress(): void {
@@ -241,39 +280,8 @@ export default class DepositPage extends Page {
     }
   }
 
-  private updateNetworks(): void {
-    const currency = this.selectedCurrency();
-    if (!currency) {
-      this.networks = [];
-      return;
-    }
+  // 这个方法现在由 handleCurrencyChange 中的共享逻辑处理，无需单独调用
 
-    this.networks = this.state.platforms
-      .filter(platform => getAttr(platform, 'symbol') === currency && getAttr(platform, 'isActive'))
-      .map(platform => getAttr(platform, 'network'))
-      .filter((network, index, arr) => arr.indexOf(network) === index); // Remove duplicates
-  }
-
-  private updateSelectedPlatform(): void {
-    const currency = this.selectedCurrency();
-    const network = this.selectedNetwork();
-    
-    if (!currency || !network) {
-      this.formData.selectedPlatform(null);
-      return;
-    }
-
-    const platform = this.state.platforms.find(p => 
-      getAttr(p, 'symbol') === currency && 
-      getAttr(p, 'network') === network && 
-      getAttr(p, 'isActive')
-    );
-
-    if (platform) {
-      this.formData.selectedPlatform(platform);
-      this.loadDepositAddress(platform);
-    }
-  }
 
   private async loadPlatforms(): Promise<void> {
     try {
@@ -285,11 +293,9 @@ export default class DepositPage extends Page {
       app.store.pushPayload(response);
       this.state.platforms = app.store.all('deposit-platforms');
       
-      // Extract unique currencies
-      this.currencies = this.state.platforms
-        .filter(platform => getAttr(platform, 'isActive'))
-        .map(platform => getAttr(platform, 'symbol'))
-        .filter((currency, index, arr) => arr.indexOf(currency) === index);
+      // 使用共享逻辑创建平台选择状态
+      this.platformState = createPlatformSelectionState(this.state.platforms);
+      this.currencies = this.platformState.currencies;
 
       this.state.loading = false;
       m.redraw();
