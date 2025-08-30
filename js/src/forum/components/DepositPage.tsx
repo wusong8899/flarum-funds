@@ -9,7 +9,7 @@ import type Mithril from 'mithril';
 import type { DepositPageState, DepositFormData, DepositAddressData } from './deposit/types/interfaces';
 import type DepositPlatform from '../../common/models/DepositPlatform';
 import AddressDisplay from './deposit/components/AddressDisplay';
-import ImageDisplay from './deposit/components/QRCodeDisplay';
+import ImageDisplay from './deposit/components/ImageDisplay';
 import TransactionHistory from './shared/TransactionHistory';
 import DepositPlatformDropdown from './deposit/selectors/DepositPlatformDropdown';
 import { getAttr } from './withdrawal/utils/modelHelpers';

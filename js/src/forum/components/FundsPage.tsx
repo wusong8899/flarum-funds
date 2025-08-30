@@ -18,7 +18,7 @@ import type { DepositFormData, DepositAddressData } from './deposit/types/interf
 import type DepositPlatform from '../../common/models/DepositPlatform';
 import DepositPlatformDropdown from './deposit/selectors/DepositPlatformDropdown';
 import AddressDisplay from './deposit/components/AddressDisplay';
-import ImageDisplay from './deposit/components/QRCodeDisplay';
+import ImageDisplay from './deposit/components/ImageDisplay';
 import DepositRecordForm from './deposit/forms/DepositRecordForm';
 import type { DepositRecordFormData } from './deposit/forms/DepositRecordForm';
 
@@ -732,6 +732,9 @@ export default class FundsPage extends Page<any, FundsPageState> {
     }
   }
 
+  /**
+   * Load withdrawal platforms and user requests from API
+   */
   private async loadWithdrawalData(): Promise<void> {
     const [platformsResponse, requestsResponse] = await Promise.all([
       app.request({
@@ -751,6 +754,9 @@ export default class FundsPage extends Page<any, FundsPageState> {
     this.state.withdrawalRequests = app.store.all('withdrawal-requests');
   }
 
+  /**
+   * Load deposit platforms and user records from API
+   */
   private async loadDepositData(): Promise<void> {
     const [platformsResponse, recordsResponse] = await Promise.all([
       app.request({

@@ -46,7 +46,7 @@ return [
     (new Extend\Model(Flarum\User\User::class))
         ->hasMany('withdrawalRequests', Model\WithdrawalRequest::class)
         ->hasMany('depositAddresses', Model\DepositAddress::class)
-        ->hasMany('depositRecords', \wusong8899\Withdrawal\Models\DepositRecord::class),
+        ->hasMany('depositRecords', Model\DepositRecord::class),
 
     // Register API serializers for our models
     (new Extend\ApiController(\Flarum\Api\Controller\ListUsersController::class))

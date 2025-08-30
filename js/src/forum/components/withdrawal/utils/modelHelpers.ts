@@ -39,7 +39,7 @@ export const findPlatformById = (platforms: any[], platformId: string | number):
 };
 
 /**
- * Safe date creation from model attribute
+ * Safely extract and convert date attribute to Date object
  */
 export const getDateFromAttr = (obj: any, attr: string): Date => {
   const dateStr = getAttr(obj, attr);

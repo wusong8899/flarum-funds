@@ -92,7 +92,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
           <RequestManagementSection
             requests={this.transactions as any}
             onUpdateRequestStatus={this.updateTransactionStatus.bind(this)}
-            onDeleteRequest={this.deleteRequest.bind(this)}
+            onDeleteRequest={this.deleteWithdrawalRequest.bind(this)}
           />
         </div>
       );
@@ -103,7 +103,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
     return super.renderActiveTabContent();
   }
 
-  // Override loadData to handle complex data loading
+  // Override loadData to handle unified withdrawal and deposit data loading
   protected async loadData(): Promise<void> {
     try {
       // Load withdrawal data (handled by parent)
@@ -207,8 +207,8 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
     }
   }
 
-  // Deletion method for requests (different from transactions)
-  private deleteRequest(request: any): void {
+  // Deletion method for withdrawal requests  
+  private deleteWithdrawalRequest(request: any): void {
     const requestId = typeof request.id === 'function' ? request.id() : request.id;
     const amount = typeof request.amount === 'function' ? request.amount() : (request.attributes?.amount || 0);
     
