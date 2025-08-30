@@ -1,0 +1,367 @@
+// DepositRecordForm Component Styles
+// Based on FundsPage-withdrawalTab design patterns
+
+.DepositRecordForm {
+  background: #1a1a1a;
+  border-radius: 16px;
+  padding: 0;
+  color: #fff;
+  max-width: 480px;
+  margin: 0 auto;
+
+  .DepositRecordForm-header {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid #333;
+
+    .DepositRecordForm-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+
+      i {
+        color: #4A90E2;
+        font-size: 20px;
+      }
+    }
+
+    .DepositRecordForm-platformInfo {
+      color: #888;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+  }
+
+  .DepositRecordForm-form {
+    padding: 20px;
+
+    .DepositRecordForm-field {
+      margin-bottom: 24px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .DepositRecordForm-label {
+        color: #fff;
+        font-weight: 500;
+        font-size: 16px;
+        margin-bottom: 12px;
+        display: block;
+
+        .DepositRecordForm-required {
+          color: #ff6b6b;
+          margin-left: 4px;
+        }
+
+        .DepositRecordForm-optional {
+          color: #888;
+          font-weight: 400;
+          font-size: 14px;
+          margin-left: 4px;
+        }
+      }
+
+      .DepositRecordForm-input {
+        width: 100%;
+        background: #2a2a2a;
+        border: 1px solid #3a3a3a;
+        border-radius: 8px;
+        padding: 14px 16px;
+        color: #fff;
+        font-size: 16px;
+        outline: none;
+        transition: all 0.2s ease;
+        box-sizing: border-box;
+
+        &:focus {
+          border-color: #4A90E2;
+          box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+
+        &::placeholder {
+          color: #666;
+        }
+
+        &[type="number"] {
+          -moz-appearance: textfield;
+          
+          &::-webkit-outer-spin-button,
+          &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+          }
+        }
+
+        &[type="datetime-local"] {
+          &::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+          }
+        }
+
+        &:disabled {
+          background: #1a1a1a;
+          border-color: #2a2a2a;
+          color: #666;
+          cursor: not-allowed;
+        }
+      }
+
+      .DepositRecordForm-textarea {
+        width: 100%;
+        background: #2a2a2a;
+        border: 1px solid #3a3a3a;
+        border-radius: 8px;
+        padding: 14px 16px;
+        color: #fff;
+        font-size: 14px;
+        outline: none;
+        transition: all 0.2s ease;
+        resize: vertical;
+        font-family: inherit;
+        line-height: 1.4;
+        min-height: 80px;
+        box-sizing: border-box;
+
+        &:focus {
+          border-color: #4A90E2;
+          box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+
+        &::placeholder {
+          color: #666;
+        }
+
+        &:disabled {
+          background: #1a1a1a;
+          border-color: #2a2a2a;
+          color: #666;
+          cursor: not-allowed;
+        }
+      }
+
+      .DepositRecordForm-help {
+        color: #888;
+        font-size: 12px;
+        margin-top: 8px;
+        line-height: 1.4;
+      }
+
+      .DepositRecordForm-limits {
+        margin-top: 12px;
+        
+        .DepositRecordForm-limit {
+          display: inline-block;
+          background: rgba(74, 144, 226, 0.1);
+          border: 1px solid rgba(74, 144, 226, 0.3);
+          border-radius: 6px;
+          padding: 4px 8px;
+          color: #4A90E2;
+          font-size: 12px;
+          margin-right: 8px;
+          margin-bottom: 4px;
+        }
+      }
+    }
+  }
+
+  .DepositRecordForm-actions {
+    padding: 0 20px 20px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+
+    .DepositRecordForm-cancelButton {
+      flex: 1;
+      background: #3a3a3a;
+      border: 1px solid #4a4a4a;
+      border-radius: 12px;
+      padding: 14px 20px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover:not(:disabled) {
+        background: #4a4a4a;
+        border-color: #5a5a5a;
+      }
+
+      &:disabled {
+        background: #2a2a2a;
+        border-color: #3a3a3a;
+        color: #666;
+        cursor: not-allowed;
+      }
+    }
+
+    .DepositRecordForm-submitButton {
+      flex: 2;
+      background: #4A90E2;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+
+      &:hover:not(:disabled) {
+        background: #3a7bc8;
+        transform: translateY(-1px);
+      }
+
+      &:disabled {
+        background: #3a3a3a;
+        color: #666;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      &.loading {
+        color: transparent;
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 16px;
+          height: 16px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          border-top-color: #fff;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
+      }
+    }
+  }
+
+  // Mobile responsive adjustments
+  @media (max-width: 768px) {
+    max-width: 100%;
+    border-radius: 12px;
+
+    .DepositRecordForm-header {
+      padding: 16px 16px 12px;
+
+      .DepositRecordForm-title {
+        font-size: 16px;
+
+        i {
+          font-size: 18px;
+        }
+      }
+
+      .DepositRecordForm-platformInfo {
+        font-size: 13px;
+      }
+    }
+
+    .DepositRecordForm-form {
+      padding: 16px;
+
+      .DepositRecordForm-field {
+        margin-bottom: 20px;
+
+        .DepositRecordForm-label {
+          font-size: 15px;
+          margin-bottom: 10px;
+        }
+
+        .DepositRecordForm-input,
+        .DepositRecordForm-textarea {
+          padding: 12px 14px;
+          font-size: 15px;
+        }
+
+        .DepositRecordForm-help {
+          font-size: 11px;
+        }
+
+        .DepositRecordForm-limits {
+          .DepositRecordForm-limit {
+            font-size: 11px;
+            padding: 3px 6px;
+          }
+        }
+      }
+    }
+
+    .DepositRecordForm-actions {
+      padding: 0 16px 16px;
+      gap: 10px;
+
+      .DepositRecordForm-cancelButton,
+      .DepositRecordForm-submitButton {
+        padding: 12px 16px;
+        font-size: 13px;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .DepositRecordForm-header {
+      padding: 12px 12px 10px;
+
+      .DepositRecordForm-title {
+        font-size: 15px;
+        gap: 10px;
+
+        i {
+          font-size: 16px;
+        }
+      }
+    }
+
+    .DepositRecordForm-form {
+      padding: 12px;
+
+      .DepositRecordForm-field {
+        margin-bottom: 18px;
+
+        .DepositRecordForm-label {
+          font-size: 14px;
+          margin-bottom: 8px;
+        }
+
+        .DepositRecordForm-input,
+        .DepositRecordForm-textarea {
+          padding: 10px 12px;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .DepositRecordForm-actions {
+      padding: 0 12px 12px;
+      flex-direction: column;
+      gap: 8px;
+
+      .DepositRecordForm-cancelButton,
+      .DepositRecordForm-submitButton {
+        flex: 1;
+        padding: 10px 14px;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+// Animation keyframes
+@keyframes spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
