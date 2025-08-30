@@ -2,13 +2,12 @@
 
 use Flarum\Database\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 return [
-    'up' => function () {
-        // Only create table if it doesn't exist
-        if (!Schema::hasTable('wusong8899_deposit_records')) {
-            Schema::create('wusong8899_deposit_records', function (Blueprint $table) {
+    'up' => function ($schema) {
+        // Check if table already exists
+        if (!$schema->hasTable('wusong8899_deposit_records')) {
+            $schema->create('wusong8899_deposit_records', function (Blueprint $table) {
                 $table->increments('id');
                 $table->unsignedInteger('user_id');
                 $table->unsignedInteger('platform_id');
@@ -30,6 +29,11 @@ return [
                 
                 $table->timestamps();
                 
+                // Foreign key constraints
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                $table->foreign('platform_id')->references('id')->on('deposit_platforms')->onDelete('cascade');
+                $table->foreign('processed_by')->references('id')->on('users')->onDelete('set null');
+                
                 // Indexes for performance
                 $table->index(['user_id', 'status']);
                 $table->index(['platform_id']);
@@ -38,32 +42,8 @@ return [
                 $table->index(['created_at']);
             });
         }
-        
-        // Add foreign key constraints if table exists but constraints are missing
-        if (Schema::hasTable('wusong8899_deposit_records')) {
-            Schema::table('wusong8899_deposit_records', function (Blueprint $table) {
-                // Check if foreign keys don't exist and add them
-                try {
-                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                } catch (Exception $e) {
-                    // Foreign key already exists, ignore
-                }
-                
-                try {
-                    $table->foreign('platform_id')->references('id')->on('deposit_platforms')->onDelete('cascade');
-                } catch (Exception $e) {
-                    // Foreign key already exists, ignore
-                }
-                
-                try {
-                    $table->foreign('processed_by')->references('id')->on('users')->onDelete('set null');
-                } catch (Exception $e) {
-                    // Foreign key already exists, ignore
-                }
-            });
-        }
     },
-    'down' => function () {
-        Schema::dropIfExists('wusong8899_deposit_records');
+    'down' => function ($schema) {
+        $schema->dropIfExists('wusong8899_deposit_records');
     }
 ];
