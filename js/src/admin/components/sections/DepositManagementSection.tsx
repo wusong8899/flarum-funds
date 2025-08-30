@@ -33,8 +33,14 @@ export default class DepositManagementSection extends Component<DepositManagemen
       onUpdateTransactionStatus
     } = vnode.attrs;
 
-    const pendingTransactions = transactions.filter(t => t.status === 'pending' || t.status === 'confirmed');
-    const completedTransactions = transactions.filter(t => t.status === 'completed' || t.status === 'failed' || t.status === 'cancelled');
+    const pendingTransactions = transactions.filter(t => {
+      const status = typeof t.status === 'function' ? t.status() : t.status;
+      return status === 'pending' || status === 'confirmed';
+    });
+    const completedTransactions = transactions.filter(t => {
+      const status = typeof t.status === 'function' ? t.status() : t.status;
+      return status === 'completed' || status === 'failed' || status === 'cancelled';
+    });
 
     return (
       <div className="DepositManagementSection">
@@ -67,7 +73,7 @@ export default class DepositManagementSection extends Component<DepositManagemen
               ) : (
                 platforms.map(platform => (
                   <GenericPlatformListItem
-                    key={platform.id}
+                    key={typeof platform.id === 'function' ? platform.id() : platform.id}
                     platform={platform}
                     type="deposit"
                     style="list"
@@ -109,7 +115,7 @@ export default class DepositManagementSection extends Component<DepositManagemen
                   ) : (
                     pendingTransactions.map(transaction => (
                       <DepositTransactionItem
-                        key={transaction.id}
+                        key={typeof transaction.id === 'function' ? transaction.id() : transaction.id}
                         transaction={transaction}
                         onUpdateStatus={(status) => onUpdateTransactionStatus(transaction, status)}
                         showActions={true}
@@ -126,7 +132,7 @@ export default class DepositManagementSection extends Component<DepositManagemen
                   ) : (
                     completedTransactions.map(transaction => (
                       <DepositTransactionItem
-                        key={transaction.id}
+                        key={typeof transaction.id === 'function' ? transaction.id() : transaction.id}
                         transaction={transaction}
                         onUpdateStatus={(status) => onUpdateTransactionStatus(transaction, status)}
                         showActions={false}

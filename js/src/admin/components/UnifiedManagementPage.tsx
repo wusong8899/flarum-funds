@@ -67,7 +67,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
           component: DepositManagementSection,
           props: () => ({
             platforms: this.depositPlatforms,
-            transactions: this.depositTransactions,
+            transactions: this.depositRecords,
             submittingPlatform: this.submittingPlatform,
             onAddPlatform: this.addDepositPlatform.bind(this),
             onTogglePlatformStatus: this.toggleDepositPlatformStatus.bind(this),
