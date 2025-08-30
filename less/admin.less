@@ -1,95 +1,275 @@
-.WithdrawalManagementPage {
-  .WithdrawalManagementPage-section {
-    margin-bottom: 40px;
-    padding: 20px;
-    background: var(--control-bg);
-    border-radius: 6px;
+.WithdrawalManagementPage-section {
+  margin-bottom: 40px;
+  padding: 20px;
+  background: var(--control-bg);
+  border-radius: 6px;
 
-    h3 {
-      margin-top: 0;
-      margin-bottom: 20px;
-      color: var(--heading-color);
-      border-bottom: 1px solid var(--control-bg);
-      padding-bottom: 10px;
-    }
-
-    h4 {
-      margin-top: 20px;
-      margin-bottom: 15px;
-      color: var(--text-color);
-    }
+  h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--heading-color);
+    border-bottom: 1px solid var(--control-bg);
+    padding-bottom: 10px;
   }
 
-  .WithdrawalManagementPage-addPlatform {
-    .Form-group {
-      display: flex;
-      gap: 10px;
-      align-items: center;
+  h4 {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    color: var(--text-color);
+  }
+}
 
-      .FormControl {
-        flex: 1;
-        padding: 8px 12px;
-        border: 1px solid var(--control-bg);
+.WithdrawalManagementPage-addPlatform {
+  .Form-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+    .FormControl {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid var(--control-bg);
+      border-radius: 4px;
+      background: var(--body-bg);
+      color: var(--text-color);
+
+      &:focus {
+        border-color: var(--primary-color);
+        outline: none;
+      }
+    }
+  }
+}
+
+// Generic platform card styles (LESS mixin)
+.platform-card-styles() {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: var(--body-bg);
+  border-radius: 4px;
+  border: 1px solid var(--control-bg);
+}
+
+.platform-card-info-styles() {
+  flex: 1;
+}
+
+.platform-card-primary-styles() {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.platform-card-status-styles() {
+  font-size: 1.2em;
+  line-height: 1;
+
+  &.inactive {
+    opacity: 0.5;
+  }
+}
+
+.platform-card-name-styles() {
+  font-weight: bold;
+}
+
+.platform-card-details-styles() {
+  display: flex;
+  gap: 20px;
+  font-size: 0.9em;
+  color: var(--muted-color);
+}
+
+.platform-card-amounts-styles() {
+  font-family: monospace;
+}
+
+.platform-card-actions-styles() {
+  display: flex;
+  gap: 10px;
+
+  .Button {
+    padding: 6px 12px;
+    font-size: 0.9em;
+  }
+}
+
+// Withdrawal Platform Card
+.withdrawalPlatform {
+  .platform-card-styles();
+
+  .withdrawalPlatform-info {
+    .platform-card-info-styles();
+  }
+
+  .withdrawalPlatform-primary {
+    .platform-card-primary-styles();
+  }
+
+  .withdrawalPlatform-status {
+    .platform-card-status-styles();
+  }
+
+  .withdrawalPlatform-name {
+    .platform-card-name-styles();
+  }
+
+  .withdrawalPlatform-symbol,
+  .withdrawalPlatform-network {
+    background: var(--primary-color);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.9em;
+    font-weight: bold;
+  }
+
+  .withdrawalPlatform-details {
+    .platform-card-details-styles();
+  }
+
+  .withdrawalPlatform-amounts {
+    .platform-card-amounts-styles();
+  }
+
+  .withdrawalPlatform-actions {
+    .platform-card-actions-styles();
+  }
+
+  .platform-id {
+    background: var(--control-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9em;
+    color: var(--muted-color);
+  }
+}
+
+
+// Note: Platform styling now handled by admin-tabs.less (GenericPlatformListItem)
+
+.WithdrawalRequest {
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  border: 1px solid var(--control-bg);
+  background: var(--body-bg);
+
+  &.status-pending {
+    border-left: 4px solid var(--warning-color);
+  }
+
+  &.status-approved {
+    border-left: 4px solid var(--success-color);
+  }
+
+  &.status-rejected {
+    border-left: 4px solid var(--danger-color);
+  }
+
+  .WithdrawalRequest-info {
+    margin-bottom: 15px;
+
+    .WithdrawalRequest-user {
+      margin-bottom: 10px;
+
+      strong {
+        color: var(--primary-color);
+        margin-right: 10px;
+      }
+
+      .request-id {
+        background: var(--control-bg);
+        padding: 2px 6px;
         border-radius: 4px;
-        background: var(--body-bg);
-        color: var(--text-color);
+        font-family: monospace;
+        font-size: 0.9em;
+        color: var(--muted-color);
+      }
+    }
 
-        &:focus {
-          border-color: var(--primary-color);
-          outline: none;
+    .WithdrawalRequest-details {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+
+      .amount {
+        font-weight: bold;
+        font-size: 1.1em;
+        color: var(--success-color);
+      }
+
+      .platform {
+        background: var(--control-bg);
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.9em;
+      }
+
+      .symbol {
+        background: var(--primary-color);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+
+      .date {
+        color: var(--muted-color);
+        font-size: 0.9em;
+      }
+    }
+
+    .WithdrawalRequest-account {
+      margin-bottom: 10px;
+
+      strong {
+        margin-right: 8px;
+      }
+
+      span {
+        background: var(--control-bg);
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-family: monospace;
+        word-break: break-all;
+      }
+    }
+
+    .WithdrawalRequest-status {
+      .Badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.8em;
+        font-weight: bold;
+        width: fit-content;
+
+        &.Badge--pending {
+          background: #f39c12;
+          color: white;
+        }
+
+        &.Badge--approved {
+          background: #27ae60;
+          color: white;
+        }
+
+        &.Badge--rejected {
+          background: #e74c3c;
+          color: white;
         }
       }
     }
   }
 
-  // Generic platform card styles (LESS mixin)
-  .platform-card-styles() {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 10px;
-    margin-bottom: 10px;
-    background: var(--body-bg);
-    border-radius: 4px;
-    border: 1px solid var(--control-bg);
-  }
-
-  .platform-card-info-styles() {
-    flex: 1;
-  }
-
-  .platform-card-primary-styles() {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 5px;
-  }
-
-  .platform-card-status-styles() {
-    font-size: 1.2em;
-    line-height: 1;
-
-    &.inactive {
-      opacity: 0.5;
-    }
-  }
-
-  .platform-card-name-styles() {
-    font-weight: bold;
-  }
-
-  .platform-card-details-styles() {
-    display: flex;
-    gap: 20px;
-    font-size: 0.9em;
-    color: var(--muted-color);
-  }
-
-  .platform-card-amounts-styles() {
-    font-family: monospace;
-  }
-
-  .platform-card-actions-styles() {
+  .WithdrawalRequest-actions {
     display: flex;
     gap: 10px;
 
@@ -98,213 +278,31 @@
       font-size: 0.9em;
     }
   }
+}
 
-  // Withdrawal Platform Card
-  .withdrawalPlatform {
-    .platform-card-styles();
+.Form {
+  .Form-group {
+    margin-bottom: 20px;
 
-    .withdrawalPlatform-info {
-      .platform-card-info-styles();
-    }
-
-    .withdrawalPlatform-primary {
-      .platform-card-primary-styles();
-    }
-
-    .withdrawalPlatform-status {
-      .platform-card-status-styles();
-    }
-
-    .withdrawalPlatform-name {
-      .platform-card-name-styles();
-    }
-
-    .withdrawalPlatform-symbol,
-    .withdrawalPlatform-network {
-      background: var(--primary-color);
-      color: white;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 0.9em;
+    label {
+      display: block;
       font-weight: bold;
+      margin-bottom: 8px;
+      color: var(--text-color);
     }
 
-    .withdrawalPlatform-details {
-      .platform-card-details-styles();
-    }
-
-    .withdrawalPlatform-amounts {
-      .platform-card-amounts-styles();
-    }
-
-    .withdrawalPlatform-actions {
-      .platform-card-actions-styles();
-    }
-
-    .platform-id {
-      background: var(--control-bg);
-      padding: 2px 6px;
+    .FormControl {
+      width: fit-content;
+      max-width: 300px;
+      padding: 8px 12px;
+      border: 1px solid var(--control-bg);
       border-radius: 4px;
-      font-family: monospace;
-      font-size: 0.9em;
-      color: var(--muted-color);
-    }
-  }
+      background: var(--body-bg);
+      color: var(--text-color);
 
-
-  // Note: Platform styling now handled by admin-tabs.less (GenericPlatformListItem)
-
-  .WithdrawalRequest {
-    padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 4px;
-    border: 1px solid var(--control-bg);
-    background: var(--body-bg);
-
-    &.status-pending {
-      border-left: 4px solid var(--warning-color);
-    }
-
-    &.status-approved {
-      border-left: 4px solid var(--success-color);
-    }
-
-    &.status-rejected {
-      border-left: 4px solid var(--danger-color);
-    }
-
-    .WithdrawalRequest-info {
-      margin-bottom: 15px;
-
-      .WithdrawalRequest-user {
-        margin-bottom: 10px;
-
-        strong {
-          color: var(--primary-color);
-          margin-right: 10px;
-        }
-
-        .request-id {
-          background: var(--control-bg);
-          padding: 2px 6px;
-          border-radius: 4px;
-          font-family: monospace;
-          font-size: 0.9em;
-          color: var(--muted-color);
-        }
-      }
-
-      .WithdrawalRequest-details {
-        display: flex;
-        gap: 20px;
-        flex-wrap: wrap;
-        margin-bottom: 10px;
-
-        .amount {
-          font-weight: bold;
-          font-size: 1.1em;
-          color: var(--success-color);
-        }
-
-        .platform {
-          background: var(--control-bg);
-          padding: 2px 8px;
-          border-radius: 12px;
-          font-size: 0.9em;
-        }
-
-        .symbol {
-          background: var(--primary-color);
-          color: white;
-          padding: 2px 8px;
-          border-radius: 12px;
-          font-size: 0.9em;
-          font-weight: bold;
-        }
-
-        .date {
-          color: var(--muted-color);
-          font-size: 0.9em;
-        }
-      }
-
-      .WithdrawalRequest-account {
-        margin-bottom: 10px;
-
-        strong {
-          margin-right: 8px;
-        }
-
-        span {
-          background: var(--control-bg);
-          padding: 4px 8px;
-          border-radius: 4px;
-          font-family: monospace;
-          word-break: break-all;
-        }
-      }
-
-      .WithdrawalRequest-status {
-        .Badge {
-          padding: 4px 8px;
-          border-radius: 12px;
-          font-size: 0.8em;
-          font-weight: bold;
-          width: fit-content;
-
-          &.Badge--pending {
-            background: #f39c12;
-            color: white;
-          }
-
-          &.Badge--approved {
-            background: #27ae60;
-            color: white;
-          }
-
-          &.Badge--rejected {
-            background: #e74c3c;
-            color: white;
-          }
-        }
-      }
-    }
-
-    .WithdrawalRequest-actions {
-      display: flex;
-      gap: 10px;
-
-      .Button {
-        padding: 6px 12px;
-        font-size: 0.9em;
-      }
-    }
-  }
-
-  .Form {
-    .Form-group {
-      margin-bottom: 20px;
-
-      label {
-        display: block;
-        font-weight: bold;
-        margin-bottom: 8px;
-        color: var(--text-color);
-      }
-
-      .FormControl {
-        width: 100%;
-        max-width: 300px;
-        padding: 8px 12px;
-        border: 1px solid var(--control-bg);
-        border-radius: 4px;
-        background: var(--body-bg);
-        color: var(--text-color);
-
-        &:focus {
-          border-color: var(--primary-color);
-          outline: none;
-        }
+      &:focus {
+        border-color: var(--primary-color);
+        outline: none;
       }
     }
   }
