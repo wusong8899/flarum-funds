@@ -1,13 +1,14 @@
 import app from 'flarum/admin/app';
-import { apiPost, apiPatch, apiDelete, apiGet } from '../../common/utils/apiRequestUtils';
 import type { PlatformOperations, TransactionOperations } from '../components/shared/GenericManagementPage';
 
-// Withdrawal platform operations
+// Withdrawal platform operations - now using service layer
 export const createWithdrawalPlatformOperations = (): PlatformOperations<any> => ({
   async create(formData: any) {
-    const platformData = {
-      type: 'withdrawal-platforms',
-      attributes: {
+    try {
+      // Import PlatformService dynamically to avoid circular dependencies
+      const { platformService } = await import('../../common/services/PlatformService');
+      
+      const attributes = {
         name: formData.name,
         symbol: formData.symbol,
         network: formData.network || null,
@@ -17,59 +18,91 @@ export const createWithdrawalPlatformOperations = (): PlatformOperations<any> =>
         iconUrl: formData.iconUrl || null,
         iconClass: formData.iconClass || null,
         isActive: true
-      }
-    };
-    
-    return apiPost('/withdrawal-platforms', { data: platformData }, {
-      showSuccessAlert: true,
-      successMessage: app.translator.trans('withdrawal.admin.platforms.add_success').toString(),
-      errorMessage: app.translator.trans('withdrawal.admin.platforms.add_error').toString(),
-      onSuccess: (response) => {
-        app.store.pushPayload(response);
-      }
-    });
-  },
-
-  async toggleStatus(platform: any) {
-    const platformId = typeof platform.id === 'function' ? platform.id() : platform.id;
-    const currentStatus = (typeof platform.isActive === 'function' ? platform.isActive() : platform.attributes?.isActive) ?? false;
-    const record = app.store.getById('withdrawal-platforms', platformId);
-    
-    if (record) {
-      await record.save({ isActive: !currentStatus });
+      };
+      
+      const result = await platformService.create('withdrawal', attributes);
       
       app.alerts.show(
         { type: 'success', dismissible: true },
-        app.translator.trans(`withdrawal.admin.platforms.${!currentStatus ? 'enable' : 'disable'}_success`)
+        app.translator.trans('withdrawal.admin.platforms.add_success').toString()
       );
+      
+      return result;
+    } catch (error) {
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        error instanceof Error ? error.message : app.translator.trans('withdrawal.admin.platforms.add_error').toString()
+      );
+      throw error;
+    }
+  },
+
+  async toggleStatus(platform: any) {
+    try {
+      // Import PlatformService dynamically
+      const { platformService } = await import('../../common/services/PlatformService');
+      
+      const result = await platformService.toggleStatus(platform);
+      const newStatus = result.isActive();
+      
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans(`withdrawal.admin.platforms.${newStatus ? 'enable' : 'disable'}_success`)
+      );
+      
+      return result;
+    } catch (error) {
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        error instanceof Error ? error.message : 'Failed to toggle platform status'
+      );
+      throw error;
     }
   },
 
   async delete(platform: any) {
-    const platformId = typeof platform.id === 'function' ? platform.id() : platform.id;
-    const record = app.store.getById('withdrawal-platforms', platformId);
-    if (record) {
-      await record.delete();
+    try {
+      // Import PlatformService dynamically
+      const { platformService } = await import('../../common/services/PlatformService');
+      
+      await platformService.delete(platform);
+      
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans('withdrawal.admin.platforms.delete_success').toString()
+      );
+    } catch (error) {
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        error instanceof Error ? error.message : 'Failed to delete platform'
+      );
+      throw error;
     }
   },
 
   async load() {
-    return apiGet('/withdrawal-platforms', undefined, {
-      errorMessage: app.translator.trans('withdrawal.admin.platforms.load_error').toString(),
-      transformResponse: (response) => {
-        app.store.pushPayload(response);
-        return app.store.all('withdrawal-platforms');
-      }
-    });
+    try {
+      // Import PlatformService dynamically
+      const { platformService } = await import('../../common/services/PlatformService');
+      return await platformService.find('withdrawal');
+    } catch (error) {
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        app.translator.trans('withdrawal.admin.platforms.load_error').toString()
+      );
+      throw error;
+    }
   }
 });
 
-// Deposit platform operations
+// Deposit platform operations - now using service layer
 export const createDepositPlatformOperations = (): PlatformOperations<any> => ({
   async create(formData: any) {
-    const platformData = {
-      type: 'deposit-platforms',
-      attributes: {
+    try {
+      // Import PlatformService dynamically
+      const { platformService } = await import('../../common/services/PlatformService');
+      
+      const attributes = {
         name: formData.name,
         symbol: formData.symbol,
         network: formData.network,
@@ -81,118 +114,157 @@ export const createDepositPlatformOperations = (): PlatformOperations<any> => ({
         iconClass: formData.iconClass || null,
         warningText: formData.warningText || null,
         isActive: formData.isActive
-      }
-    };
-    
-    return apiPost('/deposit-platforms', { data: platformData }, {
-      showSuccessAlert: true,
-      successMessage: app.translator.trans('withdrawal.admin.deposit.platforms.add_success').toString(),
-      errorMessage: app.translator.trans('withdrawal.admin.deposit.platforms.add_error').toString(),
-      onSuccess: (response) => {
-        app.store.pushPayload(response);
-      }
-    });
+      };
+      
+      const result = await platformService.create('deposit', attributes);
+      
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans('withdrawal.admin.deposit.platforms.add_success').toString()
+      );
+      
+      return result;
+    } catch (error) {
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        error instanceof Error ? error.message : app.translator.trans('withdrawal.admin.deposit.platforms.add_error').toString()
+      );
+      throw error;
+    }
   },
 
   async toggleStatus(platform: any) {
-    const platformId = typeof platform.id === 'function' ? platform.id() : platform.id;
-    const currentStatus = (typeof platform.isActive === 'function' ? platform.isActive() : platform.attributes?.isActive) ?? false;
-    
-    return apiPatch(`/deposit-platforms/${platformId}`, {
-      data: {
-        type: 'deposit-platforms',
-        attributes: {
-          isActive: !currentStatus
-        }
-      }
-    }, {
-      showSuccessAlert: true,
-      successMessage: app.translator.trans(`withdrawal.admin.deposit.platforms.${!currentStatus ? 'enable' : 'disable'}_success`).toString(),
-      errorMessage: app.translator.trans('withdrawal.admin.deposit.platforms.toggle_error').toString(),
-      onSuccess: (response) => {
-        app.store.pushPayload(response);
-      }
-    });
+    try {
+      // Import PlatformService dynamically
+      const { platformService } = await import('../../common/services/PlatformService');
+      
+      const result = await platformService.toggleStatus(platform);
+      const newStatus = result.isActive();
+      
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans(`withdrawal.admin.deposit.platforms.${newStatus ? 'enable' : 'disable'}_success`).toString()
+      );
+      
+      return result;
+    } catch (error) {
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        error instanceof Error ? error.message : app.translator.trans('withdrawal.admin.deposit.platforms.toggle_error').toString()
+      );
+      throw error;
+    }
   },
 
   async delete(platform: any) {
-    const platformId = typeof platform.id === 'function' ? platform.id() : platform.id;
-    
-    return apiDelete(`/deposit-platforms/${platformId}`, {
-      errorMessage: app.translator.trans('withdrawal.admin.deposit.platforms.delete_error').toString()
-    });
+    try {
+      // Import PlatformService dynamically
+      const { platformService } = await import('../../common/services/PlatformService');
+      
+      await platformService.delete(platform);
+      
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans('withdrawal.admin.deposit.platforms.delete_success').toString()
+      );
+    } catch (error) {
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        error instanceof Error ? error.message : app.translator.trans('withdrawal.admin.deposit.platforms.delete_error').toString()
+      );
+      throw error;
+    }
   },
 
   async load() {
-    return apiGet('/deposit-platforms', undefined, {
-      errorMessage: app.translator.trans('withdrawal.admin.deposit.platforms.load_error').toString(),
-      transformResponse: (response) => {
-        app.store.pushPayload(response);
-        return app.store.all('deposit-platforms');
-      }
-    });
+    try {
+      // Import PlatformService dynamically
+      const { platformService } = await import('../../common/services/PlatformService');
+      return await platformService.find('deposit');
+    } catch (error) {
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        app.translator.trans('withdrawal.admin.deposit.platforms.load_error').toString()
+      );
+      throw error;
+    }
   }
 });
 
-// Withdrawal request operations
+// Withdrawal request operations - now using service layer
 export const createWithdrawalRequestOperations = (): TransactionOperations<any> => ({
   async updateStatus(request: any, status: string) {
-    const requestId = typeof request.id === 'function' ? request.id() : request.id;
-    const record = app.store.getById('withdrawal-requests', requestId);
-    
-    if (record) {
-      await record.save({ status });
+    try {
+      // Import WithdrawalService dynamically
+      const { withdrawalService } = await import('../../common/services/WithdrawalService');
+      
+      const result = await withdrawalService.update(request, { status });
       
       app.alerts.show(
         { type: 'success', dismissible: true },
         app.translator.trans(`withdrawal.admin.requests.${status}_success`).toString()
       );
+      
+      return result;
+    } catch (error) {
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        error instanceof Error ? error.message : `Failed to update request status to ${status}`
+      );
+      throw error;
     }
   },
 
   async load() {
-    return apiGet('/withdrawal-requests', { include: 'user,platform' }, {
-      errorMessage: app.translator.trans('withdrawal.admin.requests.load_error').toString(),
-      transformResponse: (response) => {
-        app.store.pushPayload(response);
-        return Array.isArray(response.data) 
-          ? response.data.filter((r: any) => r !== null)
-          : (response.data ? [response.data] : []);
-      }
-    });
+    try {
+      // Import WithdrawalService dynamically
+      const { withdrawalService } = await import('../../common/services/WithdrawalService');
+      return await withdrawalService.find({ include: 'user,platform' });
+    } catch (error) {
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        app.translator.trans('withdrawal.admin.requests.load_error').toString()
+      );
+      throw error;
+    }
   }
 });
 
-
-// Deposit record operations
+// Deposit record operations - now using service layer
 export const createDepositRecordOperations = (): TransactionOperations<any> => ({
   async updateStatus(record: any, status: string) {
-    const recordId = typeof record.id === 'function' ? record.id() : record.id;
-    
-    return apiPatch(`/deposit-records/${recordId}`, {
-      data: {
-        type: 'deposit-records',
-        attributes: {
-          status: status
-        }
-      }
-    }, {
-      showSuccessAlert: true,
-      successMessage: app.translator.trans(`withdrawal.admin.deposit.records.${status}_success`).toString(),
-      errorMessage: app.translator.trans('withdrawal.admin.deposit.records.update_error').toString(),
-      onSuccess: (response) => {
-        app.store.pushPayload(response);
-      }
-    });
+    try {
+      // Import DepositService dynamically
+      const { depositService } = await import('../../common/services/DepositService');
+      
+      const result = await depositService.update(record, { status });
+      
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans(`withdrawal.admin.deposit.records.${status}_success`).toString()
+      );
+      
+      return result;
+    } catch (error) {
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        error instanceof Error ? error.message : app.translator.trans('withdrawal.admin.deposit.records.update_error').toString()
+      );
+      throw error;
+    }
   },
 
   async load() {
-    return apiGet('/deposit-records', undefined, {
-      errorMessage: app.translator.trans('withdrawal.admin.deposit.records.load_error').toString(),
-      transformResponse: (response) => {
-        app.store.pushPayload(response);
-        return app.store.all('deposit-records');
-      }
-    });
+    try {
+      // Import DepositService dynamically
+      const { depositService } = await import('../../common/services/DepositService');
+      return await depositService.find();
+    } catch (error) {
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        app.translator.trans('withdrawal.admin.deposit.records.load_error').toString()
+      );
+      throw error;
+    }
   }
 });

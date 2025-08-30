@@ -295,23 +295,18 @@ export default abstract class GenericManagementPage<
     }
   }
 
-  // Settings management
+  // Settings management using SettingsService
   protected async saveSetting(key: string, value: string): Promise<void> {
     try {
-      await app.request({
-        method: 'POST',
-        url: app.forum.attribute('apiUrl') + '/settings',
-        body: { [key]: value }
-      });
-      
-      // Update the forum attribute immediately so the UI reflects the change
-      app.forum.pushAttributes({ [key]: value });
+      // Import SettingsService dynamically to avoid circular dependencies
+      const { settingsService } = await import('../../../common/services/SettingsService');
+      await settingsService.saveSetting(key, value);
       
     } catch (error) {
       console.error('Error saving setting:', error);
       app.alerts.show(
         { type: 'error', dismissible: true },
-        'Failed to save setting'
+        error instanceof Error ? error.message : 'Failed to save setting'
       );
     }
   }

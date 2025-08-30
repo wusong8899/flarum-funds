@@ -13,13 +13,13 @@ import ImageDisplay from './deposit/components/ImageDisplay';
 import TransactionHistory from './shared/TransactionHistory';
 import DepositPlatformDropdown from './deposit/selectors/DepositPlatformDropdown';
 import { getAttr } from './withdrawal/utils/modelHelpers';
+import { depositService } from '../../common/services';
 import { 
   createPlatformSelectionState, 
   handleCurrencyChange, 
   handleNetworkChange,
   type PlatformSelectionState 
 } from '../../common/utils/platformSelectionLogic';
-import { assertApiPayload } from '../../common/types/api';
 
 export default class DepositPage extends Page<any, DepositPageState> {
   state: DepositPageState = {
@@ -283,13 +283,7 @@ export default class DepositPage extends Page<any, DepositPageState> {
 
   private async loadPlatforms(): Promise<void> {
     try {
-      const response = await app.request({
-        method: 'GET',
-        url: app.forum.attribute('apiUrl') + '/deposit-platforms'
-      });
-
-      app.store.pushPayload(assertApiPayload(response));
-      this.state.platforms = app.store.all('deposit-platforms');
+      this.state.platforms = await depositService.getPlatforms();
       
       // 使用共享逻辑创建平台选择状态
       this.platformState = createPlatformSelectionState(this.state.platforms);
@@ -306,13 +300,7 @@ export default class DepositPage extends Page<any, DepositPageState> {
 
   private async loadTransactions(): Promise<void> {
     try {
-      const response = await app.request({
-        method: 'GET',
-        url: app.forum.attribute('apiUrl') + '/deposit-records'
-      });
-
-      app.store.pushPayload(assertApiPayload(response));
-      this.state.transactions = app.store.all('deposit-records');
+      this.state.transactions = await depositService.getUserHistory();
     } catch (error) {
       console.error('Error loading deposit records:', error);
     }
@@ -323,19 +311,9 @@ export default class DepositPage extends Page<any, DepositPageState> {
     m.redraw();
 
     try {
-      const response = await app.request({
-        method: 'GET',
-        url: app.forum.attribute('apiUrl') + '/deposit-address',
-        params: {
-          platform_id: getAttr(platform, 'id')
-        }
-      });
-
-      const apiResponse = assertApiPayload(response);
-      const addressData = apiResponse.data;
+      const address = await depositService.generateAddress(getAttr(platform, 'id'));
       this.addressData = {
-        address: addressData.attributes.address,
-        addressTag: addressData.attributes.addressTag,
+        address,
         platform,
         loading: false
       };

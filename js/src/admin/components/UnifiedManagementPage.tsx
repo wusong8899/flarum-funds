@@ -14,11 +14,12 @@ import DepositPlatformManagementSection from './sections/DepositPlatformManageme
 import ConfirmModal from '../../common/components/shared/ConfirmModal';
 import { 
   createWithdrawalPlatformOperations,
-  createDepositPlatformOperations,
-  createWithdrawalRequestOperations,
-  createDepositRecordOperations
+  createWithdrawalRequestOperations
 } from '../utils/platformOperations';
-import { assertApiPayload } from '../../common/types/api';
+
+// Import services
+import { depositService, platformService } from '../../common/services';
+import { ServiceError } from '../../common/types/services';
 import Component from 'flarum/common/Component';
 
 // Simple placeholder components for custom tabs
@@ -147,22 +148,31 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
 
   // Deposit platform management methods
   private async addDepositPlatform(formData: any): Promise<void> {
-    const depositOperations = createDepositPlatformOperations();
     if (this.submittingPlatform) return;
 
     this.submittingPlatform = true;
     m.redraw();
 
     try {
-      await depositOperations.create(formData);
+      await platformService.create('deposit', formData);
       await this.loadDepositPlatforms();
+      
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans('withdrawal.admin.deposit.platforms.add_success')
+      );
     } catch (error) {
       console.error('Error adding deposit platform:', error);
       
-      // Show error message
+      let errorMessage = app.translator.trans('withdrawal.admin.deposit.platforms.add_error').toString();
+      
+      if (error instanceof ServiceError) {
+        errorMessage = error.message;
+      }
+      
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.platforms.add_error')
+        errorMessage
       );
     } finally {
       this.submittingPlatform = false;
@@ -171,18 +181,33 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
   }
 
   private async toggleDepositPlatformStatus(platform: GenericPlatform): Promise<void> {
-    const depositOperations = createDepositPlatformOperations();
     try {
-      await depositOperations.toggleStatus(platform);
+      await platformService.toggleStatus(platform);
       await this.loadDepositPlatforms();
+      
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans('withdrawal.admin.deposit.platforms.status_updated')
+      );
+      
       m.redraw();
     } catch (error) {
       console.error('Error toggling deposit platform status:', error);
+      
+      let errorMessage = app.translator.trans('withdrawal.admin.deposit.platforms.status_error').toString();
+      
+      if (error instanceof ServiceError) {
+        errorMessage = error.message;
+      }
+      
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        errorMessage
+      );
     }
   }
 
   private async deleteDepositPlatform(platform: GenericPlatform): Promise<void> {
-    const depositOperations = createDepositPlatformOperations();
     const platformName = (typeof platform.name === 'function' ? platform.name() : platform.name) || 'Unknown Platform';
     
     app.modal.show(ConfirmModal, {
@@ -194,7 +219,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
       icon: 'fas fa-trash',
       onConfirm: async () => {
         try {
-          await depositOperations.delete(platform);
+          await platformService.delete(platform);
           await this.loadDepositPlatforms();
           
           app.alerts.show(
@@ -203,9 +228,16 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
           );
         } catch (error) {
           console.error('Error deleting deposit platform:', error);
+          
+          let errorMessage = app.translator.trans('withdrawal.admin.deposit.platforms.delete_error').toString();
+          
+          if (error instanceof ServiceError) {
+            errorMessage = error.message;
+          }
+          
           app.alerts.show(
             { type: 'error', dismissible: true },
-            app.translator.trans('withdrawal.admin.deposit.platforms.delete_error')
+            errorMessage
           );
         }
         m.redraw();
@@ -218,13 +250,29 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
 
 
   private async updateDepositRecordStatus(record: GenericTransaction, status: string): Promise<void> {
-    const depositRecordOperations = createDepositRecordOperations();
     try {
-      await depositRecordOperations.updateStatus(record, status);
+      await depositService.update(record as any, { status });
       await this.loadDepositRecords();
+      
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans('withdrawal.admin.deposit.records.status_updated')
+      );
+      
       m.redraw();
     } catch (error) {
       console.error('Error updating deposit record:', error);
+      
+      let errorMessage = app.translator.trans('withdrawal.admin.deposit.records.status_error').toString();
+      
+      if (error instanceof ServiceError) {
+        errorMessage = error.message;
+      }
+      
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        errorMessage
+      );
     }
   }
 
@@ -279,9 +327,11 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
 
   // Additional data loading methods
   private async loadDepositPlatforms(): Promise<void> {
-    const depositOperations = createDepositPlatformOperations();
     try {
-      this.depositPlatforms = await depositOperations.load();
+      this.depositPlatforms = await platformService.find('deposit', {
+        include: 'networkType',
+        sort: 'name'
+      });
       console.log('Loaded deposit platforms:', this.depositPlatforms);
     } catch (error) {
       console.error('Error loading deposit platforms:', error);
@@ -332,13 +382,13 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
   // Deposit record management methods
   private async loadDepositRecords(): Promise<void> {
     try {
-      const response = await app.request({
-        method: 'GET',
-        url: app.forum.attribute('apiUrl') + '/deposit-records'
+      // For admin, get all deposit records (not just user's own)
+      const records = await depositService.find({
+        include: 'user,platform',
+        sort: '-createdAt'
       });
-
-      app.store.pushPayload(assertApiPayload(response));
-      this.depositRecords = app.store.all('deposit-records') as GenericTransaction[];
+      
+      this.depositRecords = records as GenericTransaction[];
       console.log('Loaded deposit records:', this.depositRecords);
     } catch (error) {
       console.error('Error loading deposit records:', error);
@@ -347,74 +397,104 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
   }
 
   private async approveDepositRecord(record: any, creditedAmount?: number, notes?: string): Promise<void> {
-    const recordId = typeof record.id === 'function' ? record.id() : record.id;
-    
     try {
-      const response = await app.request({
-        method: 'PATCH',
-        url: `${app.forum.attribute('apiUrl')}/deposit-records/${recordId}`,
-        body: {
-          data: {
-            type: 'deposit-records',
-            id: recordId,
-            attributes: {
-              status: 'approved',
-              creditedAmount: creditedAmount,
-              adminNotes: notes
-            }
-          }
-        }
-      });
-
-      app.store.pushPayload(assertApiPayload(response));
+      const attributes: any = {
+        status: 'approved'
+      };
+      
+      if (creditedAmount !== undefined) {
+        attributes.creditedAmount = creditedAmount;
+      }
+      
+      if (notes) {
+        attributes.adminNotes = notes;
+      }
+      
+      await depositService.update(record, attributes);
       await this.loadDepositRecords();
+      
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans('withdrawal.admin.deposit.records.approve_success')
+      );
+      
       m.redraw();
     } catch (error) {
       console.error('Error approving deposit record:', error);
+      
+      let errorMessage = app.translator.trans('withdrawal.admin.deposit.records.approve_error').toString();
+      
+      if (error instanceof ServiceError) {
+        errorMessage = error.message;
+      }
+      
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        errorMessage
+      );
+      
       throw error;
     }
   }
 
   private async rejectDepositRecord(record: any, reason: string): Promise<void> {
-    const recordId = typeof record.id === 'function' ? record.id() : record.id;
-    
     try {
-      const response = await app.request({
-        method: 'PATCH',
-        url: `${app.forum.attribute('apiUrl')}/deposit-records/${recordId}`,
-        body: {
-          data: {
-            type: 'deposit-records',
-            id: recordId,
-            attributes: {
-              status: 'rejected',
-              adminNotes: reason
-            }
-          }
-        }
+      await depositService.update(record, {
+        status: 'rejected',
+        adminNotes: reason
       });
-
-      app.store.pushPayload(assertApiPayload(response));
+      
       await this.loadDepositRecords();
+      
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans('withdrawal.admin.deposit.records.reject_success')
+      );
+      
       m.redraw();
     } catch (error) {
       console.error('Error rejecting deposit record:', error);
+      
+      let errorMessage = app.translator.trans('withdrawal.admin.deposit.records.reject_error').toString();
+      
+      if (error instanceof ServiceError) {
+        errorMessage = error.message;
+      }
+      
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        errorMessage
+      );
+      
       throw error;
     }
   }
 
   private async deleteDepositRecord(record: any): Promise<void> {
-    const recordId = typeof record.id === 'function' ? record.id() : record.id;
-    
     try {
-      const storeRecord = app.store.getById('deposit-records', recordId);
-      if (storeRecord) {
-        await storeRecord.delete();
-        await this.loadDepositRecords();
-        m.redraw();
-      }
+      await depositService.delete(record);
+      await this.loadDepositRecords();
+      
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans('withdrawal.admin.deposit.records.delete_success')
+      );
+      
+      m.redraw();
     } catch (error) {
       console.error('Error deleting deposit record:', error);
+      
+      let errorMessage = app.translator.trans('withdrawal.admin.deposit.records.delete_error').toString();
+      
+      if (error instanceof ServiceError) {
+        errorMessage = error.message;
+      }
+      
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        errorMessage
+      );
+      
       throw error;
     }
   }

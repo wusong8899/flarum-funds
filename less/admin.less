@@ -150,6 +150,57 @@
   }
 }
 
+// Deposit Platform Card (matching withdrawal platform styles)
+.depositPlatform {
+  .platform-card-styles();
+
+  .depositPlatform-info {
+    .platform-card-info-styles();
+  }
+
+  .depositPlatform-primary {
+    .platform-card-primary-styles();
+  }
+
+  .depositPlatform-status {
+    .platform-card-status-styles();
+  }
+
+  .depositPlatform-name {
+    .platform-card-name-styles();
+  }
+
+  .depositPlatform-symbol,
+  .depositPlatform-network {
+    background: var(--primary-color);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.9em;
+    font-weight: bold;
+  }
+
+  .depositPlatform-details {
+    .platform-card-details-styles();
+  }
+
+  .depositPlatform-amounts {
+    .platform-card-amounts-styles();
+  }
+
+  .depositPlatform-actions {
+    .platform-card-actions-styles();
+  }
+
+  .platform-id {
+    background: var(--control-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9em;
+    color: var(--muted-color);
+  }
+}
 
 // Note: Platform styling now handled by admin-tabs.less (GenericPlatformListItem)
 

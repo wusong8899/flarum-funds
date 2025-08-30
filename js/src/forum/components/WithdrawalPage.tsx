@@ -11,7 +11,9 @@ import WithdrawalPlatform from '../../common/models/WithdrawalPlatform';
 import WithdrawalForm from './withdrawal/forms/WithdrawalForm';
 import TransactionHistory from './shared/TransactionHistory';
 import { getAttr, getIdString } from './withdrawal/utils/modelHelpers';
-import { extractErrorMessage, assertApiPayload, type FlarumApiError } from '../../common/types/api';
+import { extractErrorMessage, type FlarumApiError } from '../../common/types/api';
+import { withdrawalService } from '../../common/services';
+import { ServiceError } from '../../common/types/services';
 
 export default class WithdrawalPage extends Page<any, any> {
   state: WithdrawalPageState = {
@@ -268,24 +270,13 @@ export default class WithdrawalPage extends Page<any, any> {
     this.state.submitting = true;
 
     try {
-      const response = await app.request({
-        method: 'POST',
-        url: app.forum.attribute('apiUrl') + '/withdrawal-requests',
-        body: {
-          data: {
-            type: 'withdrawal-requests',
-            attributes: {
-              platformId: getIdString(selectedPlatform),
-              amount: parseFloat(amount),
-              accountDetails,
-              message: this.formData.message(),
-              saveAddress: this.formData.saveAddress()
-            }
-          }
-        }
+      await withdrawalService.submitRequest({
+        platformId: parseInt(getIdString(selectedPlatform)),
+        amount: parseFloat(amount),
+        accountDetails,
+        message: this.formData.message(),
+        saveAddress: this.formData.saveAddress()
       });
-
-      app.store.pushPayload(assertApiPayload(response));
 
       this.formData.amount('');
       this.formData.accountDetails('');
@@ -305,10 +296,12 @@ export default class WithdrawalPage extends Page<any, any> {
     } catch (error: unknown) {
       console.error('Withdrawal request failed:', error);
       
-      const errorMessage = extractErrorMessage(
-        error as FlarumApiError, 
-        app.translator.trans('withdrawal.forum.error').toString()
-      );
+      const errorMessage = error instanceof ServiceError 
+        ? error.message 
+        : extractErrorMessage(
+            error as FlarumApiError, 
+            app.translator.trans('withdrawal.forum.error').toString()
+          );
       
       app.alerts.show(
         { type: 'error', dismissible: true },
@@ -323,25 +316,13 @@ export default class WithdrawalPage extends Page<any, any> {
     try {
       console.log('Starting to load withdrawal data...');
       
-      const [platformsResponse, requestsResponse] = await Promise.all([
-        app.request({
-          method: 'GET',
-          url: app.forum.attribute('apiUrl') + '/withdrawal-platforms'
-        }),
-        app.request({
-          method: 'GET', 
-          url: app.forum.attribute('apiUrl') + '/withdrawal-requests'
-        })
+      const [platforms, requests] = await Promise.all([
+        withdrawalService.getPlatforms(),
+        withdrawalService.getUserHistory()
       ]);
 
-      console.log('Platforms response:', platformsResponse);
-      console.log('Requests response:', requestsResponse);
-
-      app.store.pushPayload(assertApiPayload(platformsResponse));
-      app.store.pushPayload(assertApiPayload(requestsResponse));
-
-      this.state.platforms = app.store.all('withdrawal-platforms');
-      this.state.requests = app.store.all('withdrawal-requests');
+      this.state.platforms = platforms;
+      this.state.requests = requests;
       
       console.log('Loaded platforms:', this.state.platforms);
       console.log('Loaded requests:', this.state.requests);
@@ -366,15 +347,8 @@ export default class WithdrawalPage extends Page<any, any> {
         }
         
         // 从服务器获取最新用户数据
-        const response = await app.request({
-          method: 'GET',
-          url: `${app.forum.attribute('apiUrl')}/users/${userId}`
-        });
+        const updatedUser = await app.store.find('users', userId);
         
-        app.store.pushPayload(assertApiPayload(response));
-        
-        // 更新当前用户实例
-        const updatedUser = app.store.getById('users', userId);
         if (updatedUser) {
           this.state.userBalance = parseFloat(updatedUser.attribute('money')) || 0;
         } else {
@@ -396,13 +370,7 @@ export default class WithdrawalPage extends Page<any, any> {
 
   private async loadWithdrawalRequests(): Promise<void> {
     try {
-      const response = await app.request({
-        method: 'GET',
-        url: app.forum.attribute('apiUrl') + '/withdrawal-requests'
-      });
-
-      app.store.pushPayload(assertApiPayload(response));
-      this.state.requests = app.store.all('withdrawal-requests');
+      this.state.requests = await withdrawalService.getUserHistory();
     } catch (error) {
       console.error('Error loading withdrawal requests:', error);
     }

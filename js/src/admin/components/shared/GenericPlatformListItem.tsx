@@ -172,16 +172,16 @@ export default class GenericPlatformListItem extends Component<GenericPlatformLi
   private extractPlatformData(platform: GenericPlatform) {
     // Handle both Model instances and plain objects
     const id = typeof platform.id === 'function' ? platform.id() : platform.id;
-    const name = (typeof platform.name === 'function' ? platform.name() : platform.attributes?.name) || 'Unknown Platform';
-    const symbol = (typeof platform.symbol === 'function' ? platform.symbol() : platform.attributes?.symbol) || '';
-    const network = (typeof platform.network === 'function' ? platform.network() : platform.attributes?.network) || null;
-    const displayName = (typeof platform.displayName === 'function' ? platform.displayName() : platform.attributes?.displayName) || name;
-    const minAmount = (typeof platform.minAmount === 'function' ? platform.minAmount() : platform.attributes?.minAmount) || 'N/A';
-    const maxAmount = (typeof platform.maxAmount === 'function' ? platform.maxAmount() : platform.attributes?.maxAmount) || 'N/A';
-    const fee = (typeof platform.fee === 'function' ? platform.fee() : platform.attributes?.fee) || 'N/A';
-    const address = (typeof platform.address === 'function' ? platform.address() : platform.attributes?.address) || null;
-    const isActive = (typeof platform.isActive === 'function' ? platform.isActive() : platform.attributes?.isActive) ?? false;
-    const createdDate = (typeof platform.createdAt === 'function' ? platform.createdAt() : platform.attributes?.createdAt) || null;
+    const name = (typeof platform.name === 'function' ? platform.name() : platform.data?.attributes?.name) || 'Unknown Platform';
+    const symbol = (typeof platform.symbol === 'function' ? platform.symbol() : platform.data?.attributes?.symbol) || '';
+    const network = (typeof platform.network === 'function' ? platform.network() : platform.data?.attributes?.network) || null;
+    const displayName = (typeof platform.displayName === 'function' ? platform.displayName() : platform.data?.attributes?.displayName) || name;
+    const minAmount = (typeof platform.minAmount === 'function' ? platform.minAmount() : platform.data?.attributes?.minAmount) || 'N/A';
+    const maxAmount = (typeof platform.maxAmount === 'function' ? platform.maxAmount() : platform.data?.attributes?.maxAmount) || 'N/A';
+    const fee = (typeof platform.fee === 'function' ? platform.fee() : platform.data?.attributes?.fee) || 'N/A';
+    const address = (typeof platform.address === 'function' ? platform.address() : platform.data?.attributes?.address) || null;
+    const isActive = (typeof platform.isActive === 'function' ? platform.isActive() : platform.data?.attributes?.isActive) ?? false;
+    const createdDate = (typeof platform.createdAt === 'function' ? platform.createdAt() : platform.data?.attributes?.createdAt) || null;
     
     let dateDisplay: Mithril.Children = 'N/A';
     if (createdDate) {
