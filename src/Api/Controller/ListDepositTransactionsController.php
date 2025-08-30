@@ -22,7 +22,7 @@ class ListDepositTransactionsController extends AbstractListController
     protected function data(ServerRequestInterface $request, Document $document): iterable
     {
         $actor = RequestUtil::getActor($request);
-        
+
         $query = DepositTransaction::query();
 
         if (!$actor->isAdmin()) {
@@ -54,11 +54,11 @@ class ListDepositTransactionsController extends AbstractListController
         // Apply pagination
         $limit = $this->extractLimit($request);
         $offset = $this->extractOffset($request);
-        
+
         if ($limit) {
             $query->limit($limit);
         }
-        
+
         if ($offset) {
             $query->offset($offset);
         }

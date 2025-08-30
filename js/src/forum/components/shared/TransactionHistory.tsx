@@ -6,13 +6,14 @@ import type Mithril from 'mithril';
 import type { WithdrawalPlatform, WithdrawalRequest } from '../withdrawal/types/interfaces';
 import type DepositTransaction from '../../common/models/DepositTransaction';
 import type DepositPlatform from '../../common/models/DepositPlatform';
+import type DepositRecord from '../../common/models/DepositRecord';
 import { getAttr, findPlatformById, getDateFromAttr, getIdString } from '../withdrawal/utils/modelHelpers';
 import PlatformIcon from '../withdrawal/common/PlatformIcon';
 import StatusBadge from '../withdrawal/common/StatusBadge';
 import EmptyState from '../withdrawal/common/EmptyState';
 import LoadingState from '../withdrawal/common/LoadingState';
 
-// Generic transaction type that can represent either withdrawal or deposit
+// Generic transaction type that can represent withdrawal, deposit transactions, or deposit records
 interface Transaction {
   id?: () => string | number;
   amount?: () => number;
@@ -26,11 +27,20 @@ interface Transaction {
   requiredConfirmations?: () => number;
   platform?: () => any;
   platformId?: () => string | number;
+  // Deposit record specific fields
+  platformAccount?: () => string;
+  realName?: () => string;
+  depositTime?: () => Date;
+  screenshotUrl?: () => string;
+  userMessage?: () => string;
+  processedAt?: () => Date;
+  adminNotes?: () => string;
+  creditedAmount?: () => number;
   [key: string]: any;
 }
 
 interface TransactionHistoryAttrs {
-  transactions: (WithdrawalRequest | DepositTransaction)[];
+  transactions: (WithdrawalRequest | DepositTransaction | DepositRecord)[];
   platforms: (WithdrawalPlatform | DepositPlatform)[];
   loading: boolean;
   type: 'withdrawal' | 'deposit';
@@ -78,7 +88,13 @@ export default class TransactionHistory extends Component<TransactionHistoryAttr
     const createdAt = getDateFromAttr(transaction, 'createdAt');
 
     if (type === 'deposit') {
-      return this.renderDepositTransaction(transaction, platform, amount, status, statusColor, createdAt, transactionId);
+      // Check if this is a deposit record (has platformAccount) or deposit transaction (has transactionHash)
+      const platformAccount = getAttr(transaction, 'platformAccount');
+      if (platformAccount) {
+        return this.renderDepositRecord(transaction, platform, amount, status, statusColor, createdAt, transactionId);
+      } else {
+        return this.renderDepositTransaction(transaction, platform, amount, status, statusColor, createdAt, transactionId);
+      }
     } else {
       return this.renderWithdrawalTransaction(transaction, platform, amount, status, createdAt, transactionId);
     }
@@ -129,6 +145,124 @@ export default class TransactionHistory extends Component<TransactionHistoryAttr
               {accountDetails}
             </span>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  private renderDepositRecord(
+    transaction: Transaction,
+    platform: any,
+    amount: number,
+    status: string,
+    statusColor: string,
+    createdAt: Date,
+    transactionId: string
+  ): Mithril.Children {
+    const platformAccount = getAttr(transaction, 'platformAccount');
+    const realName = getAttr(transaction, 'realName');
+    const depositTime = getDateFromAttr(transaction, 'depositTime');
+    const screenshotUrl = getAttr(transaction, 'screenshotUrl');
+    const userMessage = getAttr(transaction, 'userMessage');
+    const processedAt = getDateFromAttr(transaction, 'processedAt');
+    const adminNotes = getAttr(transaction, 'adminNotes');
+    const creditedAmount = getAttr(transaction, 'creditedAmount');
+
+    return (
+      <div key={transactionId} className="DepositRecord-item">
+        <div className="DepositRecord-itemHeader">
+          <div className="DepositRecord-itemPlatform">
+            {platform && (
+              <>
+                <div className="DepositRecord-itemIcon">
+                  {this.renderPlatformIcon(platform)}
+                </div>
+                <div className="DepositRecord-itemInfo">
+                  <span className="DepositRecord-itemCurrency">
+                    {getAttr(platform, 'symbol')} {getAttr(platform, 'network') && `(${getAttr(platform, 'network')})`}
+                  </span>
+                  <span className="DepositRecord-itemType">
+                    Manual Deposit
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
+          
+          <div className="DepositRecord-itemAmount">
+            <span className="DepositRecord-itemAmountValue">
+              +{amount} {platform ? getAttr(platform, 'symbol') : ''}
+            </span>
+            <div className={`DepositRecord-itemStatus status-${statusColor}`}>
+              {this.getStatusIcon(status)}
+              {this.getStatusText(status)}
+            </div>
+          </div>
+        </div>
+
+        <div className="DepositRecord-itemDetails">
+          <div className="DepositRecord-itemMeta">
+            <span className="DepositRecord-itemTime">
+              Submitted: {createdAt ? humanTime(createdAt) : 'Unknown time'}
+            </span>
+            
+            {depositTime && (
+              <span className="DepositRecord-itemDepositTime">
+                Deposit Time: {depositTime.toLocaleDateString()} {depositTime.toLocaleTimeString()}
+              </span>
+            )}
+          </div>
+
+          <div className="DepositRecord-itemInfo">
+            <div className="DepositRecord-itemRow">
+              <span className="DepositRecord-itemLabel">Platform Account:</span>
+              <span className="DepositRecord-itemValue">{platformAccount}</span>
+            </div>
+            
+            {realName && (
+              <div className="DepositRecord-itemRow">
+                <span className="DepositRecord-itemLabel">Real Name:</span>
+                <span className="DepositRecord-itemValue">{realName}</span>
+              </div>
+            )}
+            
+            {userMessage && (
+              <div className="DepositRecord-itemRow">
+                <span className="DepositRecord-itemLabel">Message:</span>
+                <span className="DepositRecord-itemValue">{userMessage}</span>
+              </div>
+            )}
+            
+            {screenshotUrl && (
+              <div className="DepositRecord-itemRow">
+                <span className="DepositRecord-itemLabel">Screenshot:</span>
+                <a href={screenshotUrl} target="_blank" rel="noopener noreferrer" className="DepositRecord-itemLink">
+                  View Screenshot {icon('fas fa-external-link-alt')}
+                </a>
+              </div>
+            )}
+          </div>
+
+          {processedAt && (
+            <div className="DepositRecord-itemProcessed">
+              <div className="DepositRecord-itemProcessedTime">
+                Processed: {humanTime(processedAt)}
+              </div>
+              
+              {creditedAmount && creditedAmount !== amount && (
+                <div className="DepositRecord-itemCredited">
+                  Credited Amount: {creditedAmount} {platform ? getAttr(platform, 'symbol') : ''}
+                </div>
+              )}
+              
+              {adminNotes && (
+                <div className="DepositRecord-itemNotes">
+                  <span className="DepositRecord-itemLabel">Admin Notes:</span>
+                  <span className="DepositRecord-itemValue">{adminNotes}</span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     );

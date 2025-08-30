@@ -96,7 +96,7 @@ class DepositPlatform extends AbstractModel
     /**
      * Generate deposit address for a specific user ID
      * Only supports shared addresses (templates removed)
-     * 
+     *
      * @param int $userId
      * @return string
      * @throws \InvalidArgumentException

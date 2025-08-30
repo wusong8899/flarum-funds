@@ -18,7 +18,7 @@ class ListDepositPlatformsController extends AbstractListController
     protected function data(ServerRequestInterface $request, Document $document): iterable
     {
         $actor = RequestUtil::getActor($request);
-        
+
         // Regular users only see active platforms
         if (!$actor->isAdmin()) {
             return DepositPlatform::where('is_active', true)
@@ -26,7 +26,7 @@ class ListDepositPlatformsController extends AbstractListController
                 ->orderBy('network')
                 ->get();
         }
-        
+
         // Admins see all platforms
         return DepositPlatform::orderBy('name')
             ->orderBy('network')

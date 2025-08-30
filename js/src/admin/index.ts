@@ -4,6 +4,7 @@ import WithdrawalPlatform from '../common/models/WithdrawalPlatform';
 import WithdrawalRequest from '../common/models/WithdrawalRequest';
 import DepositPlatform from '../common/models/DepositPlatform';
 import DepositTransaction from '../common/models/DepositTransaction';
+import DepositRecord from '../common/models/DepositRecord';
 
 app.initializers.add('wusong8899-withdrawal', () => {
   // Register models in store
@@ -11,6 +12,7 @@ app.initializers.add('wusong8899-withdrawal', () => {
   app.store.models['withdrawal-requests'] = WithdrawalRequest;
   app.store.models['deposit-platforms'] = DepositPlatform;
   app.store.models['deposit-transactions'] = DepositTransaction;
+  app.store.models['deposit-records'] = DepositRecord;
 
   app.extensionData
     .for('wusong8899-withdrawal')

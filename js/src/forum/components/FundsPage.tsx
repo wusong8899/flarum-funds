@@ -14,13 +14,15 @@ import TransactionHistory from './shared/TransactionHistory';
 
 // Deposit imports
 import type { DepositFormData, DepositAddressData } from './deposit/types/interfaces';
-import type DepositPlatform from '../common/models/DepositPlatform';
+import type DepositPlatform from '../../common/models/DepositPlatform';
 import DepositPlatformDropdown from './deposit/selectors/DepositPlatformDropdown';
 import AddressDisplay from './deposit/components/AddressDisplay';
 import ImageDisplay from './deposit/components/QRCodeDisplay';
+import DepositRecordForm from './deposit/forms/DepositRecordForm';
+import type { DepositRecordFormData } from './deposit/forms/DepositRecordForm';
 
 // Utilities
-import { getAttr, getIdString } from './withdrawal/utils/modelHelpers';
+import { getAttr, getIdString, getDateFromAttr } from './withdrawal/utils/modelHelpers';
 
 type TabType = 'withdrawal' | 'deposit' | 'withdrawal-history' | 'deposit-history';
 
@@ -35,6 +37,9 @@ interface FundsPageState {
   // Deposit state
   depositPlatforms: DepositPlatform[];
   depositTransactions: any[];
+  depositRecords: any[];
+  showDepositRecordForm: boolean;
+  submittingDepositRecord: boolean;
   
   // Shared state
   loading: boolean;
@@ -50,6 +55,9 @@ export default class FundsPage extends Page {
     submitting: false,
     depositPlatforms: [],
     depositTransactions: [],
+    depositRecords: [],
+    showDepositRecordForm: false,
+    submittingDepositRecord: false,
     loading: true,
     activeTab: Stream('withdrawal')
   };
@@ -339,17 +347,46 @@ export default class FundsPage extends Page {
           return null;
         })()}
         
-        <div className="FundsPage-imageContainer">
-          <ImageDisplay
-            platform={this.depositAddressData.platform}
-            loading={this.depositAddressData.loading}
-            size={160}
-          />
-        </div>
+        {/* Only show image container if platform has qrCodeImageUrl */}
+        {this.depositAddressData.platform && this.depositAddressData.platform.qrCodeImageUrl() && (
+          <div className="FundsPage-imageContainer">
+            <ImageDisplay
+              platform={this.depositAddressData.platform}
+              loading={this.depositAddressData.loading}
+              size={160}
+            />
+          </div>
+        )}
         
         <div className="FundsPage-infoPanel">
           <i className="fas fa-info-circle"></i>
           <span>{warningText}</span>
+        </div>
+
+        {/* Deposit Record Submission Section */}
+        <div className="FundsPage-recordSection">
+          <div className="FundsPage-recordHeader">
+            <h4>{app.translator.trans('withdrawal.forum.deposit.record.section_title')}</h4>
+            <Button
+              className="Button Button--primary FundsPage-recordButton"
+              onclick={this.handleToggleDepositRecordForm.bind(this)}
+              disabled={this.state.submittingDepositRecord}
+            >
+              {this.state.showDepositRecordForm 
+                ? app.translator.trans('withdrawal.forum.deposit.record.hide_form')
+                : app.translator.trans('withdrawal.forum.deposit.record.show_form')
+              }
+            </Button>
+          </div>
+          
+          {this.state.showDepositRecordForm && (
+            <DepositRecordForm
+              platform={platform}
+              onSubmit={this.handleDepositRecordSubmit.bind(this)}
+              onCancel={this.handleCancelDepositRecordForm.bind(this)}
+              submitting={this.state.submittingDepositRecord}
+            />
+          )}
         </div>
       </div>
     );
@@ -369,9 +406,19 @@ export default class FundsPage extends Page {
   }
 
   private renderDepositHistoryTab(): Mithril.Children {
+    // Combine deposit transactions and deposit records
+    const allDepositHistory = [...this.state.depositTransactions, ...this.state.depositRecords];
+    
+    // Sort by creation date (newest first)
+    allDepositHistory.sort((a, b) => {
+      const dateA = getDateFromAttr(a, 'createdAt') || new Date(0);
+      const dateB = getDateFromAttr(b, 'createdAt') || new Date(0);
+      return dateB.getTime() - dateA.getTime();
+    });
+
     return (
       <TransactionHistory
-        transactions={this.state.depositTransactions}
+        transactions={allDepositHistory}
         platforms={this.state.depositPlatforms}
         loading={false}
         type="deposit"
@@ -617,6 +664,96 @@ export default class FundsPage extends Page {
     }
   }
 
+  private handleToggleDepositRecordForm(): void {
+    this.state.showDepositRecordForm = !this.state.showDepositRecordForm;
+    m.redraw();
+  }
+
+  private handleCancelDepositRecordForm(): void {
+    this.state.showDepositRecordForm = false;
+    m.redraw();
+  }
+
+  private async handleDepositRecordSubmit(data: DepositRecordFormData): Promise<void> {
+    if (this.state.submittingDepositRecord) return;
+
+    this.state.submittingDepositRecord = true;
+    m.redraw();
+
+    try {
+      const response = await app.request({
+        method: 'POST',
+        url: app.forum.attribute('apiUrl') + '/deposit-records',
+        body: {
+          data: {
+            type: 'deposit-records',
+            attributes: {
+              platformId: data.platformId,
+              platformAccount: data.platformAccount,
+              realName: data.realName,
+              amount: data.amount,
+              depositTime: data.depositTime.toISOString(),
+              screenshotUrl: data.screenshotUrl,
+              userMessage: data.userMessage
+            }
+          }
+        }
+      });
+
+      app.store.pushPayload(response);
+
+      // Hide form and show success message
+      this.state.showDepositRecordForm = false;
+      
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans('withdrawal.forum.deposit.record.submit_success')
+      );
+
+      // Reload deposit history
+      this.loadDepositRecords();
+
+    } catch (error) {
+      console.error('Deposit record submission failed:', error);
+      
+      let errorMessage = app.translator.trans('withdrawal.forum.deposit.record.submit_error');
+      
+      if (error && error.response && error.response.errors) {
+        const errors = error.response.errors;
+        if (Array.isArray(errors) && errors.length > 0) {
+          const firstError = errors[0];
+          if (firstError.detail) {
+            errorMessage = firstError.detail;
+          }
+        }
+      } else if (error && error.responseText) {
+        if (error.responseText.includes('<b>Fatal error</b>') || error.responseText.includes('<!DOCTYPE')) {
+          errorMessage = app.translator.trans('withdrawal.forum.deposit.record.server_error');
+        } else {
+          try {
+            const response = JSON.parse(error.responseText);
+            if (response.errors && Array.isArray(response.errors) && response.errors.length > 0) {
+              const firstError = response.errors[0];
+              if (firstError.detail) {
+                errorMessage = firstError.detail;
+              }
+            }
+          } catch {
+            errorMessage = app.translator.trans('withdrawal.forum.deposit.record.server_error');
+          }
+        }
+      }
+      
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        errorMessage
+      );
+    } finally {
+      this.state.submittingDepositRecord = false;
+      m.redraw();
+    }
+  }
+
 
   // Data loading methods
   private async loadAllData(): Promise<void> {
@@ -656,7 +793,7 @@ export default class FundsPage extends Page {
   }
 
   private async loadDepositData(): Promise<void> {
-    const [platformsResponse, transactionsResponse] = await Promise.all([
+    const [platformsResponse, transactionsResponse, recordsResponse] = await Promise.all([
       app.request({
         method: 'GET',
         url: app.forum.attribute('apiUrl') + '/deposit-platforms'
@@ -664,17 +801,38 @@ export default class FundsPage extends Page {
       app.request({
         method: 'GET',
         url: app.forum.attribute('apiUrl') + '/deposit-transactions'
+      }),
+      app.request({
+        method: 'GET',
+        url: app.forum.attribute('apiUrl') + '/deposit-records'
       })
     ]);
 
     app.store.pushPayload(platformsResponse);
     app.store.pushPayload(transactionsResponse);
+    app.store.pushPayload(recordsResponse);
     
     this.state.depositPlatforms = app.store.all('deposit-platforms');
     this.state.depositTransactions = app.store.all('deposit-transactions');
+    this.state.depositRecords = app.store.all('deposit-records');
     
     // Filter active platforms
     this.availablePlatforms = this.state.depositPlatforms.filter(platform => getAttr(platform, 'isActive'));
+  }
+
+  private async loadDepositRecords(): Promise<void> {
+    try {
+      const response = await app.request({
+        method: 'GET',
+        url: app.forum.attribute('apiUrl') + '/deposit-records'
+      });
+
+      app.store.pushPayload(response);
+      this.state.depositRecords = app.store.all('deposit-records');
+      
+    } catch (error) {
+      console.error('Error loading deposit records:', error);
+    }
   }
 
   private async loadUserBalance(forceRefresh = false): Promise<void> {

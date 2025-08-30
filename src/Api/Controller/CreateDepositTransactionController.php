@@ -24,7 +24,7 @@ class CreateDepositTransactionController extends AbstractCreateController
     protected function data(ServerRequestInterface $request, Document $document): DepositTransaction
     {
         $actor = RequestUtil::getActor($request);
-        
+
         // Only admins can manually create deposit transactions
         // Regular users' deposits are detected automatically by blockchain monitoring
         $actor->assertAdmin();
@@ -34,7 +34,7 @@ class CreateDepositTransactionController extends AbstractCreateController
         $this->validateData($attributes);
 
         $platform = DepositPlatform::findOrFail($attributes['platformId']);
-        
+
         // Find or create deposit address
         $depositAddress = null;
         if (isset($attributes['addressId'])) {

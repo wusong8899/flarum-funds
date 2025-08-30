@@ -67,6 +67,7 @@ withdrawal:
     tabs:
       withdrawals: Withdrawals
       deposits: Deposits
+      deposit_records: Deposit Records
       network_types: Network Types
     network_types:
       title: Network Type Management
@@ -128,6 +129,35 @@ withdrawal:
         complete_success: Transaction completed successfully
         complete_error: Failed to complete transaction
         update_error: Failed to update transaction
+      records:
+        title: Deposit Record Management
+        total_count: "{count} records total"
+        pending_count: "{count} pending"
+        empty:
+          title: No deposit records
+          description: User-submitted deposit records will appear here for review.
+        approve: Approve
+        reject: Reject
+        delete: Delete
+        approve_prompt: "Enter credited amount (default: {amount}):"
+        approve_notes_prompt: "Admin notes (optional):"
+        invalid_amount: Please enter a valid amount greater than zero
+        approve_success: Deposit record approved successfully
+        approve_error: Failed to approve deposit record
+        reject_reason_prompt: Enter rejection reason:
+        reject_reason_required: Rejection reason is required
+        reject_success: Deposit record rejected successfully
+        reject_error: Failed to reject deposit record
+        delete_confirm_title: Confirm Delete
+        delete_confirm_message: "Are you sure you want to delete deposit record for {user} ({amount})?"
+        delete_confirm_button: Delete
+        delete_cancel_button: Cancel
+        delete_success: Deposit record deleted successfully
+        delete_error: Failed to delete deposit record
+        status:
+          pending: Pending
+          approved: Approved
+          rejected: Rejected
 
   forum:
     header:
@@ -204,6 +234,37 @@ withdrawal:
       default_warning: "Please ensure you are depositing {currency} on the {network} network. Minimum deposit is {minAmount}."
       platform_label: Deposit Platform
       select_platform: Select Platform
+      record:
+        section_title: Manual Deposit Submission
+        show_form: Submit Deposit Record
+        hide_form: Hide Form
+        form_title: Submit Deposit Record
+        selected_platform: "Selected Platform: {platform} ({symbol})"
+        platform_account: Platform Account
+        platform_account_placeholder: Enter your account on the deposit platform
+        platform_account_help: Your account ID/name on the deposit platform (required)
+        real_name: Real Name
+        optional: Optional
+        real_name_placeholder: Your real name for verification
+        amount: Amount
+        amount_placeholder: Enter deposit amount
+        deposit_time: Deposit Time
+        deposit_time_help: When you made the deposit (auto-filled with current time)
+        screenshot_url: Screenshot URL
+        screenshot_url_placeholder: "https://example.com/screenshot.png"
+        screenshot_url_help: Optional screenshot of your deposit transaction
+        user_message: Message
+        user_message_placeholder: Any additional notes or information
+        cancel: Cancel
+        submit: Submit Record
+        submit_success: Deposit record submitted successfully and is pending admin approval
+        submit_error: Failed to submit deposit record
+        server_error: Server error occurred. Please try again later.
+        validation:
+          required_fields: All required fields must be filled
+          invalid_amount: Please enter a valid amount
+          amount_too_low: "Amount {amount} is below minimum {min} {symbol}"
+          amount_too_high: "Amount {amount} exceeds maximum {max} {symbol}"
       history:
         title: Deposit History
         transactions: transactions

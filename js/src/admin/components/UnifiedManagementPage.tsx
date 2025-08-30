@@ -10,6 +10,7 @@ import GeneralSettingsSection from './sections/GeneralSettingsSection';
 import PlatformManagementSection from './sections/PlatformManagementSection';
 import RequestManagementSection from './sections/RequestManagementSection';
 import DepositManagementSection from './sections/DepositManagementSection';
+import DepositRecordManagementSection from './sections/DepositRecordManagementSection';
 import ConfirmModal from '../../common/components/shared/ConfirmModal';
 import { 
   createWithdrawalPlatformOperations,
@@ -23,6 +24,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
   // Additional state for complex scenarios
   private depositPlatforms: GenericPlatform[] = [];
   private depositTransactions: GenericTransaction[] = [];
+  private depositRecords: GenericTransaction[] = [];
   private users: { [key: number]: any } = {};
 
   protected getConfig(): GenericManagementPageConfig<GenericPlatform, GenericTransaction> {
@@ -57,6 +59,11 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
             onDeletePlatform: this.deleteDepositPlatform.bind(this),
             onUpdateTransactionStatus: this.updateDepositTransactionStatus.bind(this),
           })
+        },
+        {
+          key: 'deposit-records',
+          label: app.translator.trans('withdrawal.admin.tabs.deposit_records'),
+          component: 'div', // Will be replaced by custom content
         }
       ],
       
@@ -67,7 +74,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
     };
   }
 
-  // Override renderActiveTabContent to handle the complex withdrawals tab  
+  // Override renderActiveTabContent to handle the complex withdrawals and deposit-records tabs  
   protected renderActiveTabContent(): Mithril.Children {
     if (this.activeTab === 'withdrawals') {
       return (
@@ -89,6 +96,19 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
       );
     }
     
+    if (this.activeTab === 'deposit-records') {
+      return (
+        <DepositRecordManagementSection
+          records={this.depositRecords as any}
+          platforms={this.depositPlatforms}
+          loading={this.loading}
+          onApproveRecord={this.approveDepositRecord.bind(this)}
+          onRejectRecord={this.rejectDepositRecord.bind(this)}
+          onDeleteRecord={this.deleteDepositRecord.bind(this)}
+        />
+      );
+    }
+    
     // For other tabs, use the parent implementation
     return super.renderActiveTabContent();
   }
@@ -106,6 +126,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
       // Load deposit data
       await this.loadDepositPlatforms();
       await this.loadDepositTransactions();
+      await this.loadDepositRecords();
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {
@@ -304,6 +325,96 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
       } catch (error) {
         console.error('Error loading users:', error);
       }
+    }
+  }
+
+  // Deposit record management methods
+  private async loadDepositRecords(): Promise<void> {
+    try {
+      const response = await app.request({
+        method: 'GET',
+        url: app.forum.attribute('apiUrl') + '/deposit-records'
+      });
+
+      app.store.pushPayload(response);
+      this.depositRecords = app.store.all('deposit-records');
+      console.log('Loaded deposit records:', this.depositRecords);
+    } catch (error) {
+      console.error('Error loading deposit records:', error);
+      this.depositRecords = [];
+    }
+  }
+
+  private async approveDepositRecord(record: any, creditedAmount?: number, notes?: string): Promise<void> {
+    const recordId = typeof record.id === 'function' ? record.id() : record.id;
+    
+    try {
+      const response = await app.request({
+        method: 'PATCH',
+        url: `${app.forum.attribute('apiUrl')}/deposit-records/${recordId}`,
+        body: {
+          data: {
+            type: 'deposit-records',
+            id: recordId,
+            attributes: {
+              status: 'approved',
+              creditedAmount: creditedAmount,
+              adminNotes: notes
+            }
+          }
+        }
+      });
+
+      app.store.pushPayload(response);
+      await this.loadDepositRecords();
+      m.redraw();
+    } catch (error) {
+      console.error('Error approving deposit record:', error);
+      throw error;
+    }
+  }
+
+  private async rejectDepositRecord(record: any, reason: string): Promise<void> {
+    const recordId = typeof record.id === 'function' ? record.id() : record.id;
+    
+    try {
+      const response = await app.request({
+        method: 'PATCH',
+        url: `${app.forum.attribute('apiUrl')}/deposit-records/${recordId}`,
+        body: {
+          data: {
+            type: 'deposit-records',
+            id: recordId,
+            attributes: {
+              status: 'rejected',
+              adminNotes: reason
+            }
+          }
+        }
+      });
+
+      app.store.pushPayload(response);
+      await this.loadDepositRecords();
+      m.redraw();
+    } catch (error) {
+      console.error('Error rejecting deposit record:', error);
+      throw error;
+    }
+  }
+
+  private async deleteDepositRecord(record: any): Promise<void> {
+    const recordId = typeof record.id === 'function' ? record.id() : record.id;
+    
+    try {
+      const storeRecord = app.store.getById('deposit-records', recordId);
+      if (storeRecord) {
+        await storeRecord.delete();
+        await this.loadDepositRecords();
+        m.redraw();
+      }
+    } catch (error) {
+      console.error('Error deleting deposit record:', error);
+      throw error;
     }
   }
 }

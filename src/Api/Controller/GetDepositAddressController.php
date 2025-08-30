@@ -24,7 +24,7 @@ class GetDepositAddressController extends AbstractShowController
         $actor->assertRegistered();
 
         $platformId = Arr::get($request->getQueryParams(), 'platform_id');
-        
+
         if (!$platformId) {
             throw ValidationException::withMessages([
                 'platform_id' => ['Platform ID is required']
@@ -44,7 +44,7 @@ class GetDepositAddressController extends AbstractShowController
         if (!$depositAddress) {
             // Generate new address for user
             $address = $platform->generateDepositAddress($actor->id);
-            
+
             $depositAddress = DepositAddress::create([
                 'user_id' => $actor->id,
                 'platform_id' => $platform->id,

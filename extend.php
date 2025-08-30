@@ -1,7 +1,7 @@
 <?php
 
 use Flarum\Extend;
-use wusong8899\Withdrawal\Api\Controller;
+use Wusong8899\Withdrawal\Api\Controller;
 use wusong8899\Withdrawal\Model;
 
 return [
@@ -40,19 +40,24 @@ return [
         ->get('/network-types', 'network-types.index', Controller\ListNetworkTypesController::class)
         ->post('/network-types', 'network-types.create', Controller\CreateNetworkTypeController::class)
         ->patch('/network-types/{id}', 'network-types.update', Controller\UpdateNetworkTypeController::class)
-        ->delete('/network-types/{id}', 'network-types.delete', Controller\DeleteNetworkTypeController::class),
+        ->delete('/network-types/{id}', 'network-types.delete', Controller\DeleteNetworkTypeController::class)
+        // Deposit records routes
+        ->get('/deposit-records', 'deposit.records.index', Controller\ListDepositRecordsController::class)
+        ->post('/deposit-records', 'deposit.records.create', Controller\CreateDepositRecordController::class)
+        ->patch('/deposit-records/{id}', 'deposit.records.update', Controller\UpdateDepositRecordController::class),
 
     (new Extend\Model(Flarum\User\User::class))
         ->hasMany('withdrawalRequests', Model\WithdrawalRequest::class)
         ->hasMany('depositAddresses', Model\DepositAddress::class)
-        ->hasMany('depositTransactions', Model\DepositTransaction::class),
+        ->hasMany('depositTransactions', Model\DepositTransaction::class)
+        ->hasMany('depositRecords', \Wusong8899\Withdrawal\Models\DepositRecord::class),
 
     // Register API serializers for our models
     (new Extend\ApiController(\Flarum\Api\Controller\ListUsersController::class))
-        ->addInclude(['withdrawalRequests', 'withdrawalRequests.platform', 'depositAddresses', 'depositTransactions']),
+        ->addInclude(['withdrawalRequests', 'withdrawalRequests.platform', 'depositAddresses', 'depositTransactions', 'depositRecords', 'depositRecords.platform']),
 
     (new Extend\ApiController(\Flarum\Api\Controller\ShowUserController::class))
-        ->addInclude(['withdrawalRequests', 'withdrawalRequests.platform', 'depositAddresses', 'depositTransactions']),
+        ->addInclude(['withdrawalRequests', 'withdrawalRequests.platform', 'depositAddresses', 'depositTransactions', 'depositRecords', 'depositRecords.platform']),
 
     (new Extend\Settings())
         ->serializeToForum('wusong8899-withdrawal.moneyIconUrl', 'wusong8899-withdrawal.moneyIconUrl', null, 'https://i.mji.rip/2025/08/28/cd18932c68e9bbee9502b1fb6317cba9.png'),

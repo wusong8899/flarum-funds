@@ -59,11 +59,11 @@ class WithdrawalPlatform extends AbstractModel
     public function getDisplayNameAttribute(): string
     {
         $display = $this->symbol ?: $this->name;
-        
+
         if ($this->network) {
             $display .= " ({$this->network})";
         }
-        
+
         return $display;
     }
 }
