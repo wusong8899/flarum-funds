@@ -125,12 +125,6 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
     try {
       await depositOperations.create(formData);
       await this.loadDepositPlatforms();
-      
-      // Show success message
-      app.alerts.show(
-        { type: 'success', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.platforms.add_success')
-      );
     } catch (error) {
       console.error('Error adding deposit platform:', error);
       

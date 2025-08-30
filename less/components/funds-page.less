@@ -136,14 +136,254 @@
   // Deposit-specific styles
   .FundsPage-depositTab {
     .FundsPage-selectors {
-      display: flex;
-      gap: 12px;
       margin-bottom: 24px;
+
+      // New deposit platform dropdown selector
+      .FundsPage-platformSelector {
+        position: relative;
+
+        .FundsPage-label {
+          color: #fff;
+          font-weight: 500;
+          font-size: 16px;
+          margin-bottom: 12px;
+        }
+
+        .FundsPage-platformDropdown {
+          background: #2a2a2a;
+          border: 1px solid #3a3a3a;
+          border-radius: 12px;
+          padding: 16px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          transition: all 0.2s ease;
+
+          &:hover {
+            border-color: #4A90E2;
+          }
+
+          .FundsPage-platformSelected {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+
+            .FundsPage-platformInfo {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+
+              .FundsPage-platformIcon {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: #4A90E2;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                font-size: 16px;
+                overflow: hidden;
+
+                .FundsPage-platformIconImage {
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                  border-radius: 50%;
+                }
+
+                .FundsPage-currencyIcon {
+                  font-weight: bold;
+                  &.usdt { color: #26ad7a; }
+                  &.usdc { color: #2775ca; }
+                  &.btc { color: #f7931a; }
+                  &.eth { color: #627eea; }
+                }
+              }
+
+              .FundsPage-platformDetails {
+                .FundsPage-platformName {
+                  color: #fff;
+                  font-size: 16px;
+                  font-weight: 500;
+                }
+
+                .FundsPage-platformSubtext {
+                  font-size: 12px;
+                  color: #888;
+                  margin-top: 2px;
+                }
+              }
+            }
+          }
+
+          .FundsPage-dropdownIcon {
+            color: #888;
+            transition: transform 0.2s ease;
+          }
+        }
+
+        .FundsPage-dropdownMenu {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: #2a2a2a;
+          border: 1px solid #3a3a3a;
+          border-radius: 12px;
+          margin-top: 8px;
+          max-height: 300px;
+          overflow-y: auto;
+          z-index: 1001;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+          .FundsPage-dropdownHeader {
+            .FundsPage-currencyHeader {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 12px 16px;
+              background: #333;
+              border-bottom: 1px solid #444;
+              font-weight: 600;
+              color: #fff;
+              font-size: 14px;
+
+              .FundsPage-currencyIcon {
+                font-size: 16px;
+                font-weight: bold;
+                &.usdt { color: #26ad7a; }
+                &.usdc { color: #2775ca; }  
+                &.btc { color: #f7931a; }
+                &.eth { color: #627eea; }
+              }
+            }
+          }
+
+          .FundsPage-dropdownItem {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+
+            &:hover {
+              background: #3a3a3a;
+            }
+
+            &.FundsPage-noData {
+              justify-content: center;
+              color: #888;
+              cursor: default;
+              
+              &:hover {
+                background: transparent;
+              }
+            }
+
+            .FundsPage-platformIcon {
+              width: 24px;
+              height: 24px;
+              border-radius: 50%;
+              background: #4A90E2;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: #fff;
+              font-size: 12px;
+              overflow: hidden;
+
+              .FundsPage-platformIconImage {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 50%;
+              }
+
+              .FundsPage-currencyIcon {
+                font-weight: bold;
+                &.usdt { color: #26ad7a; }
+                &.usdc { color: #2775ca; }
+                &.btc { color: #f7931a; }
+                &.eth { color: #627eea; }
+              }
+            }
+
+            .FundsPage-platformInfo {
+              .FundsPage-platformName {
+                color: #fff;
+                font-size: 14px;
+                font-weight: 500;
+              }
+
+              .FundsPage-platformSubtext {
+                font-size: 12px;
+                color: #888;
+                margin-top: 2px;
+              }
+            }
+          }
+        }
+      }
+
 
       // Make responsive on mobile
       @media (max-width: 480px) {
-        flex-direction: column;
-        gap: 16px;
+        .FundsPage-platformSelector {
+          .FundsPage-platformDropdown {
+            padding: 14px;
+            
+            .FundsPage-platformSelected {
+              gap: 10px;
+
+              .FundsPage-platformInfo {
+                gap: 10px;
+
+                .FundsPage-platformIcon {
+                  width: 28px;
+                  height: 28px;
+                  font-size: 14px;
+                }
+
+                .FundsPage-platformDetails {
+                  .FundsPage-platformName {
+                    font-size: 14px;
+                  }
+
+                  .FundsPage-platformSubtext {
+                    font-size: 11px;
+                  }
+                }
+              }
+            }
+          }
+
+          .FundsPage-dropdownMenu {
+            .FundsPage-dropdownItem {
+              padding: 10px 14px;
+              gap: 10px;
+
+              .FundsPage-platformIcon {
+                width: 22px;
+                height: 22px;
+                font-size: 11px;
+              }
+
+              .FundsPage-platformInfo {
+                .FundsPage-platformName {
+                  font-size: 13px;
+                }
+
+                .FundsPage-platformSubtext {
+                  font-size: 11px;
+                }
+              }
+            }
+          }
+        }
       }
     }
 

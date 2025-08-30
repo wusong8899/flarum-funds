@@ -212,14 +212,17 @@ withdrawal:
         history: 存款历史
       no_platforms: 暂无可用存款方式
       no_platforms_description: 管理员还未配置任何存款平台，请稍后再试。
-      select_currency_network: 请先选择货币和网络
       scan_or_use_address: 扫码或使用以下地址完成存款
       min_amount: "最小存款金额为: {amount} {currency}"
+      min_amount_short: "最小: {amount} {symbol}"
       fee: "存款手续费: {fee} {currency}"
+      fee_short: "手续费: {fee} {symbol}"
       address_copied: 地址已复制到剪贴板
       copy_failed: 复制失败，请手动复制地址
       address_load_error: 获取存款地址失败，请重试
       default_warning: "此地址仅接受 {currency} {network} 协议充值，我们不接受少于 {minAmount} 的存款..."
+      platform_label: 存款平台
+      select_platform: 选择平台
       history:
         title: 存款历史
         transactions: 笔交易

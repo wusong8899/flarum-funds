@@ -196,11 +196,14 @@ withdrawal:
         history: History
       no_platforms: No deposit platforms available
       no_platforms_description: Please contact the administrator to configure deposit platforms.
-      select_currency_network: Please select a currency and network to view deposit information.
       scan_or_use_address: Scan the QR code or copy the deposit address below.
       min_amount: "Minimum deposit: {amount} {currency}"
+      min_amount_short: "Min: {amount} {symbol}"
       fee: "Deposit fee: {fee} {currency}"
+      fee_short: "Fee: {fee} {symbol}"
       default_warning: "Please ensure you are depositing {currency} on the {network} network. Minimum deposit is {minAmount}."
+      platform_label: Deposit Platform
+      select_platform: Select Platform
       history:
         title: Deposit History
         transactions: transactions

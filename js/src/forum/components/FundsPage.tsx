@@ -15,9 +15,7 @@ import TransactionHistory from './shared/TransactionHistory';
 // Deposit imports
 import type { DepositFormData, DepositAddressData } from './deposit/types/interfaces';
 import type DepositPlatform from '../common/models/DepositPlatform';
-import CurrencySelector from './deposit/selectors/CurrencySelector';
-import NetworkSelector from './deposit/selectors/NetworkSelector';
-import PlatformSelector from './deposit/selectors/PlatformSelector';
+import DepositPlatformDropdown from './deposit/selectors/DepositPlatformDropdown';
 import AddressDisplay from './deposit/components/AddressDisplay';
 import ImageDisplay from './deposit/components/QRCodeDisplay';
 
@@ -76,11 +74,8 @@ export default class FundsPage extends Page {
     loading: false
   };
 
-  // Platform-based selection for deposits
+  // Platform-based selection for deposits  
   private availablePlatforms: DepositPlatform[] = [];
-  private currencyGroups: { [currency: string]: DepositPlatform[] } = {};
-  private selectedCurrency = Stream<string>('');
-  private selectedNetwork = Stream<string>('');
 
   oninit(vnode: Mithril.VnodeDOM) {
     super.oninit(vnode);
@@ -280,54 +275,13 @@ export default class FundsPage extends Page {
   }
 
   private renderDepositSelectors(): Mithril.Children {
-    const currencies = Object.keys(this.currencyGroups);
-    const selectedCurrency = this.selectedCurrency();
-    const selectedPlatforms = this.currencyGroups[selectedCurrency] || [];
-    
-    // Check if any platforms in the selected currency group have networks
-    const hasNetworkPlatforms = selectedPlatforms.some(p => getAttr(p, 'network'));
-    const noNetworkPlatforms = selectedPlatforms.filter(p => !getAttr(p, 'network'));
-    
     return (
       <div className="FundsPage-selectors">
-        {/* Always show currency selector */}
-        <CurrencySelector
-          currencies={currencies}
-          selected={selectedCurrency}
-          onSelect={(currency) => this.handleCurrencyChange(currency)}
-          loading={this.state.loading}
+        <DepositPlatformDropdown
+          platforms={this.availablePlatforms}
+          selectedPlatform={this.depositFormData.selectedPlatform()}
+          onPlatformSelect={(platform) => this.handlePlatformSelect(platform)}
         />
-        
-        {/* Show network selector only if there are platforms with networks after currency selection */}
-        {selectedCurrency && hasNetworkPlatforms && (
-          <NetworkSelector
-            networks={selectedPlatforms.filter(p => getAttr(p, 'network')).map(p => getAttr(p, 'network')).filter((n, i, arr) => arr.indexOf(n) === i)}
-            selected={this.selectedNetwork()}
-            onSelect={(network) => this.handleNetworkChange(network)}
-            loading={this.state.loading}
-            disabled={false}
-          />
-        )}
-        
-        {/* Show platform selector for platforms without networks */}
-        {selectedCurrency && noNetworkPlatforms.length > 0 && !hasNetworkPlatforms && (
-          <PlatformSelector
-            platforms={noNetworkPlatforms}
-            selected={this.depositFormData.selectedPlatform()}
-            onSelect={(platform) => this.handlePlatformSelect(platform)}
-            loading={this.state.loading}
-          />
-        )}
-        
-        {/* If currency has both network and non-network platforms, show platform selector after network selection */}
-        {selectedCurrency && hasNetworkPlatforms && this.selectedNetwork() && (
-          <PlatformSelector
-            platforms={selectedPlatforms.filter(p => getAttr(p, 'network') === this.selectedNetwork())}
-            selected={this.depositFormData.selectedPlatform()}
-            onSelect={(platform) => this.handlePlatformSelect(platform)}
-            loading={this.state.loading}
-          />
-        )}
       </div>
     );
   }
@@ -338,7 +292,7 @@ export default class FundsPage extends Page {
     if (!platform) {
       return (
         <div className="FundsPage-selectPrompt">
-          <p>{app.translator.trans('withdrawal.forum.deposit.select_currency_network')}</p>
+          <p>{app.translator.trans('withdrawal.forum.deposit.select_platform')}</p>
         </div>
       );
     }
@@ -640,39 +594,7 @@ export default class FundsPage extends Page {
     }
   }
 
-  // Deposit methods - updated for new platform selection logic
-  private handleCurrencyChange(currency: string): void {
-    this.selectedCurrency(currency);
-    this.selectedNetwork('');
-    this.depositFormData.selectedPlatform(null);
-    this.depositAddressData.address = '';
-    this.depositAddressData.loading = false;
-    
-    // If the currency has no network platforms, auto-select the first platform
-    const selectedPlatforms = this.currencyGroups[currency] || [];
-    const noNetworkPlatforms = selectedPlatforms.filter(p => !getAttr(p, 'network'));
-    const hasNetworkPlatforms = selectedPlatforms.some(p => getAttr(p, 'network'));
-    
-    if (noNetworkPlatforms.length > 0 && !hasNetworkPlatforms) {
-      // Auto-select the first platform without network
-      this.handlePlatformSelect(noNetworkPlatforms[0]);
-    }
-  }
-
-  private handleNetworkChange(network: string): void {
-    this.selectedNetwork(network);
-    this.depositFormData.selectedPlatform(null);
-    this.depositAddressData.address = '';
-    this.depositAddressData.loading = false;
-    
-    // Auto-select if there's only one platform with this network
-    const selectedPlatforms = this.currencyGroups[this.selectedCurrency()] || [];
-    const networkPlatforms = selectedPlatforms.filter(p => getAttr(p, 'network') === network);
-    
-    if (networkPlatforms.length === 1) {
-      this.handlePlatformSelect(networkPlatforms[0]);
-    }
-  }
+  // Deposit methods - simplified platform selection
   
   private handlePlatformSelect(platform: DepositPlatform): void {
     this.depositFormData.selectedPlatform(platform);
@@ -753,16 +675,6 @@ export default class FundsPage extends Page {
     
     // Filter active platforms
     this.availablePlatforms = this.state.depositPlatforms.filter(platform => getAttr(platform, 'isActive'));
-    
-    // Group platforms by currency
-    this.currencyGroups = {};
-    this.availablePlatforms.forEach(platform => {
-      const symbol = getAttr(platform, 'symbol');
-      if (!this.currencyGroups[symbol]) {
-        this.currencyGroups[symbol] = [];
-      }
-      this.currencyGroups[symbol].push(platform);
-    });
   }
 
   private async loadUserBalance(forceRefresh = false): Promise<void> {
