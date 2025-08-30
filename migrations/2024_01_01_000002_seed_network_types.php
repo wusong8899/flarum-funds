@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Flarum\Database\Migration;
 use Illuminate\Database\Schema\Builder;
 
@@ -7,7 +8,7 @@ return [
     'up' => function (Builder $schema) {
         // Insert default network types
         $connection = $schema->getConnection();
-        
+
         $networkTypes = [
             [
                 'name' => 'TRON (TRC20)',
@@ -16,18 +17,18 @@ return [
                 'icon_class' => 'fab fa-tron',
                 'sort_order' => 10,
                 'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
                 'name' => 'Ethereum (ERC20)',
-                'code' => 'ERC20', 
+                'code' => 'ERC20',
                 'description' => 'Ethereum blockchain network using ERC20 standard',
                 'icon_class' => 'fab fa-ethereum',
                 'sort_order' => 20,
                 'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
                 'name' => 'Binance Smart Chain (BSC)',
@@ -36,8 +37,8 @@ return [
                 'icon_class' => 'fas fa-coins',
                 'sort_order' => 30,
                 'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
                 'name' => 'Polygon (MATIC)',
@@ -46,8 +47,8 @@ return [
                 'icon_class' => 'fas fa-gem',
                 'sort_order' => 40,
                 'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
                 'name' => 'Arbitrum',
@@ -56,8 +57,8 @@ return [
                 'icon_class' => 'fas fa-layer-group',
                 'sort_order' => 50,
                 'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
         ];
 
@@ -66,13 +67,17 @@ return [
             $connection->table('network_types')->insert($networkTypes);
         }
     },
-    
+
     'down' => function (Builder $schema) {
         $connection = $schema->getConnection();
-        
+
         // Delete seeded network types
         $connection->table('network_types')->whereIn('code', [
-            'TRC20', 'ERC20', 'BSC', 'POLYGON', 'ARB'
+            'TRC20',
+            'ERC20',
+            'BSC',
+            'POLYGON',
+            'ARB'
         ])->delete();
     }
 ];
