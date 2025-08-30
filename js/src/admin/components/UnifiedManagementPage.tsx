@@ -338,7 +338,6 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
   private async loadDepositPlatforms(): Promise<void> {
     try {
       this.depositPlatforms = await platformService.find('deposit', {
-        include: 'networkType',
         sort: 'name'
       });
       console.log('Loaded deposit platforms:', this.depositPlatforms);

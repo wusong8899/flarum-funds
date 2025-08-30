@@ -35,9 +35,9 @@ export default class PlatformService implements PlatformServiceInterface {
         queryParams.filter = options.filter;
       }
 
-      // Include network type for deposit platforms
-      if (type === 'deposit') {
-        queryParams.include = options.include || 'networkType';
+      // Include relationships if specified
+      if (options.include) {
+        queryParams.include = options.include;
       }
 
       const results = await app.store.find(modelType, queryParams);
@@ -60,9 +60,9 @@ export default class PlatformService implements PlatformServiceInterface {
     try {
       const queryParams: any = {};
       
-      // Include network type for deposit platforms
-      if (type === 'deposit') {
-        queryParams.include = options.include || 'networkType';
+      // Include relationships if specified
+      if (options.include) {
+        queryParams.include = options.include;
       }
 
       const result = await app.store.find(modelType, id, queryParams);
