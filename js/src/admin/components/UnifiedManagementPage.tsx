@@ -10,7 +10,6 @@ import GeneralSettingsSection from './sections/GeneralSettingsSection';
 import PlatformManagementSection from './sections/PlatformManagementSection';
 import RequestManagementSection from './sections/RequestManagementSection';
 import DepositManagementSection from './sections/DepositManagementSection';
-import NetworkTypeManagementSection from './sections/NetworkTypeManagementSection';
 import ConfirmModal from '../../common/components/shared/ConfirmModal';
 import { 
   createWithdrawalPlatformOperations,
@@ -58,11 +57,6 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
             onDeletePlatform: this.deleteDepositPlatform.bind(this),
             onUpdateTransactionStatus: this.updateDepositTransactionStatus.bind(this),
           })
-        },
-        {
-          key: 'network-types',
-          label: app.translator.trans('withdrawal.admin.tabs.network_types'),
-          component: NetworkTypeManagementSection,
         }
       ],
       

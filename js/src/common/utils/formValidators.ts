@@ -214,30 +214,3 @@ export function showValidationErrors(result: ValidationResult): void {
   }
 }
 
-/**
- * 网络类型验证
- */
-export function validateNetworkType(data: {
-  name: string;
-  code: string;
-  description?: string;
-  iconUrl?: string;
-  sortOrder?: string;
-}): ValidationResult {
-  const validator = new FormValidator();
-
-  validator
-    .required(data.name, 'name', 'Network Name')
-    .required(data.code, 'code', 'Network Code')
-    .minLength(data.code, 1, 'code', 'Network Code');
-
-  if (data.sortOrder) {
-    validator.numberRange(data.sortOrder, 0, 999, 'sortOrder', 'Sort Order');
-  }
-
-  if (data.iconUrl) {
-    validator.url(data.iconUrl, 'iconUrl', 'Icon URL');
-  }
-
-  return validator.getResult();
-}

@@ -3,17 +3,13 @@ import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
 import Switch from 'flarum/common/components/Switch';
 import Stream from 'flarum/common/utils/Stream';
-import withAttr from 'flarum/common/utils/withAttr';
-import m from 'mithril';
 import type Mithril from 'mithril';
-import NetworkType from '../../../common/models/NetworkType';
 import { FormValidator } from '../../../common/utils/formValidators';
 
 export interface DepositPlatformFormData {
   name: string;
   symbol: string;
   network: string;
-  networkTypeId: number | null;
   minAmount: string;
   maxAmount: string;
   address: string;
@@ -35,7 +31,6 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
     name: Stream(''),
     symbol: Stream(''),
     network: Stream(''),
-    networkTypeId: Stream<number | null>(null),
     minAmount: Stream(''),
     maxAmount: Stream(''),
     address: Stream(''),
@@ -45,13 +40,9 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
     warningText: Stream(''),
     isActive: Stream(true)
   };
-  
-  private networkTypes: NetworkType[] = [];
-  private loadingNetworkTypes = false;
 
   oninit(vnode: Mithril.Vnode<AddDepositPlatformFormAttrs>) {
     super.oninit(vnode);
-    this.loadNetworkTypes();
   }
 
   view(vnode: Mithril.Vnode<AddDepositPlatformFormAttrs>) {
@@ -94,47 +85,15 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
               <label>
                 {app.translator.trans('withdrawal.admin.deposit.platforms.network')}
               </label>
-              <select
-                className="FormControl"
-                value={this.formData.networkTypeId() || ''}
-                onchange={withAttr('value', (value: string) => {
-                  const networkTypeId = value ? parseInt(value) : null;
-                  this.formData.networkTypeId(networkTypeId);
-                  
-                  // Auto-fill network field based on selected network type
-                  if (networkTypeId) {
-                    const networkType = this.networkTypes.find(nt => nt.id() === networkTypeId);
-                    if (networkType) {
-                      this.formData.network(networkType.code());
-                    }
-                  } else {
-                    this.formData.network('');
-                  }
-                })}
-                disabled={submitting || this.loadingNetworkTypes}
-              >
-                <option value="">{this.loadingNetworkTypes ? 'Loading...' : 'Select Network Type (Optional)'}</option>
-                {this.networkTypes.map(networkType => (
-                  <option key={networkType.id()} value={networkType.id()}>
-                    {networkType.name()}
-                  </option>
-                ))}
-              </select>
-            </div>
-            
-            <div className="Form-group">
-              <label>
-                {app.translator.trans('withdrawal.admin.deposit.platforms.custom_network')}
-              </label>
               <input
                 type="text"
                 className="FormControl"
-                placeholder="Custom network name (if not using predefined)"
+                placeholder="e.g., TRC20, ERC20, BSC (optional)"
                 bidi={this.formData.network}
                 disabled={submitting}
               />
               <div className="helpText">
-                Leave empty to use the selected network type above, or enter a custom network name.
+                Optional. Specify the blockchain network for this platform.
               </div>
             </div>
           </div>
@@ -271,25 +230,6 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
     );
   }
 
-  private async loadNetworkTypes(): Promise<void> {
-    this.loadingNetworkTypes = true;
-    m.redraw();
-
-    try {
-      const response = await app.request({
-        method: 'GET',
-        url: app.forum.attribute('apiUrl') + '/network-types?filter[is_active]=1',
-      });
-
-      app.store.pushPayload(response);
-      this.networkTypes = app.store.all('network-types') as NetworkType[];
-    } catch (error) {
-      console.error('Failed to load network types:', error);
-    } finally {
-      this.loadingNetworkTypes = false;
-      m.redraw();
-    }
-  }
 
   private validateForm(): boolean {
     const validator = new FormValidator();
@@ -351,7 +291,6 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
       name: this.formData.name(),
       symbol: this.formData.symbol(),
       network: this.formData.network(),
-      networkTypeId: this.formData.networkTypeId(),
       minAmount: this.formData.minAmount(),
       maxAmount: this.formData.maxAmount(),
       address: this.formData.address(),
@@ -369,8 +308,6 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
       Object.keys(this.formData).forEach(key => {
         if (key === 'isActive') {
           this.formData[key](true);
-        } else if (key === 'networkTypeId') {
-          this.formData[key](null);
         } else {
           this.formData[key]('');
         }
