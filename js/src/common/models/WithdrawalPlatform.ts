@@ -1,5 +1,6 @@
 import Model from 'flarum/common/Model';
 import { ServiceError, ServiceErrorType } from '../types/services';
+import { validateWithdrawalPlatform } from '../utils/PlatformValidation';
 import app from 'flarum/common/app';
 
 /**
@@ -251,49 +252,7 @@ export default class WithdrawalPlatform extends Model {
    * Validate attributes before saving
    */
   private validateAttributes(attributes: Record<string, any>): void {
-    const errors: string[] = [];
-
-    if (attributes.name !== undefined) {
-      if (!attributes.name || typeof attributes.name !== 'string') {
-        errors.push('Platform name is required');
-      }
-    }
-
-    if (attributes.symbol !== undefined) {
-      if (!attributes.symbol || typeof attributes.symbol !== 'string') {
-        errors.push('Symbol is required');
-      }
-    }
-
-    if (attributes.minAmount !== undefined) {
-      if (typeof attributes.minAmount !== 'number' || attributes.minAmount < 0) {
-        errors.push('Minimum amount must be a non-negative number');
-      }
-    }
-
-    if (attributes.maxAmount !== undefined && attributes.maxAmount !== null) {
-      if (typeof attributes.maxAmount !== 'number' || attributes.maxAmount < 0) {
-        errors.push('Maximum amount must be a non-negative number');
-      }
-      
-      const minAmount = attributes.minAmount || this.minAmount();
-      if (attributes.maxAmount < minAmount) {
-        errors.push('Maximum amount must be greater than or equal to minimum amount');
-      }
-    }
-
-    if (attributes.fee !== undefined) {
-      if (typeof attributes.fee !== 'number' || attributes.fee < 0) {
-        errors.push('Fee must be a non-negative number');
-      }
-    }
-
-    if (errors.length > 0) {
-      throw new ServiceError(
-        errors.join(', '),
-        ServiceErrorType.VALIDATION_ERROR
-      );
-    }
+    validateWithdrawalPlatform(attributes, this.minAmount());
   }
 
   /**
