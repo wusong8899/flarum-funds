@@ -226,8 +226,6 @@ export default class WithdrawalRequest extends Model {
     if (attributes.accountDetails !== undefined) {
       if (!attributes.accountDetails || typeof attributes.accountDetails !== 'string') {
         errors.push('Account details are required');
-      } else if (attributes.accountDetails.trim().length < 5) {
-        errors.push('Account details must be at least 5 characters long');
       }
     }
 
