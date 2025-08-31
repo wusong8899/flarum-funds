@@ -157,22 +157,20 @@ export default class DepositService implements DepositServiceInterface {
   }
 
   /**
-   * Create deposit record with transaction validation
+   * Create deposit record
    */
   async createRecord(data: {
     platformId: number;
     amount: number;
-    transactionHash: string;
     note?: string;
   }): Promise<DepositRecord> {
     try {
-      // Validate transaction hash format and platform
+      // Validate platform and amount
       await this.validateDepositRecord(data);
 
       const attributes = {
         platformId: data.platformId,
         amount: data.amount,
-        transactionHash: data.transactionHash,
         note: data.note || '',
         status: 'pending'
       };
@@ -327,7 +325,7 @@ export default class DepositService implements DepositServiceInterface {
    * Validate deposit record data
    */
   private async validateDepositRecord(data: any): Promise<void> {
-    const { platformId, amount, transactionHash } = data;
+    const { platformId, amount } = data;
 
     // Get platform details
     const platform = await app.store.find(this.platformModelType, platformId);
@@ -356,39 +354,13 @@ export default class DepositService implements DepositServiceInterface {
       );
     }
 
-    // Validate transaction hash format (basic validation)
-    if (!transactionHash || transactionHash.length < 10) {
-      throw new ServiceError(
-        'Invalid transaction hash',
-        ServiceErrorType.VALIDATION_ERROR
-      );
-    }
-
-    // Check for duplicate transaction hash
-    try {
-      const existingRecords = await this.find({
-        filter: { transactionHash: transactionHash }
-      });
-
-      if (existingRecords.length > 0) {
-        throw new ServiceError(
-          'Transaction hash already exists',
-          ServiceErrorType.VALIDATION_ERROR
-        );
-      }
-    } catch (error) {
-      // If it's not a validation error, re-throw
-      if (error instanceof ServiceError && error.type === ServiceErrorType.VALIDATION_ERROR) {
-        throw error;
-      }
-    }
   }
 
   /**
    * Validate create attributes
    */
   private validateCreateAttributes(attributes: any): void {
-    const required = ['platformId', 'amount', 'transactionHash'];
+    const required = ['platformId', 'amount'];
     
     for (const field of required) {
       if (!attributes[field]) {

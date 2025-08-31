@@ -61,22 +61,6 @@ class NetworkType extends AbstractModel
             ->get();
     }
 
-    /**
-     * Get explorer URL for a transaction hash
-     */
-    public function getExplorerUrl(?string $hash): ?string
-    {
-        if (!$hash || !$this->config) {
-            return null;
-        }
-
-        $explorerUrl = $this->config['explorer_url'] ?? null;
-        if (!$explorerUrl) {
-            return null;
-        }
-
-        return str_replace('{hash}', $hash, $explorerUrl);
-    }
 
     /**
      * Get required confirmations for this network

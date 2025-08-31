@@ -372,8 +372,4 @@ export default class TransactionHistory extends Component<TransactionHistoryAttr
     }
   }
 
-  private formatHash(hash: string): string {
-    if (hash.length <= 16) return hash;
-    return `${hash.substring(0, 8)}...${hash.substring(hash.length - 8)}`;
-  }
 }

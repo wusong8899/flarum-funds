@@ -158,7 +158,6 @@ export interface DepositServiceInterface extends BaseService<any> {
   createRecord(data: {
     platformId: number;
     amount: number;
-    transactionHash: string;
     note?: string;
   }): Promise<any>;
 
