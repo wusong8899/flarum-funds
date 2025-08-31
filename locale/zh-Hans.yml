@@ -19,10 +19,21 @@ withdrawal:
       min_amount: 最小金额
       max_amount: 最大金额
       fee: 手续费
-      icon_url: 图标图片URL（可选）
-      icon_url_help: "输入图片URL（如：https://example.com/icon.png）"
-      icon_class: 图标CSS类（可选）
-      icon_class_help: 输入字体图标类（如：fas fa-coins）
+      # 三层图标系统
+      icon_configuration: 图标配置
+      icon_configuration_help: "配置图标优先级：平台专属 → 网络 → 货币。高优先级图标会覆盖低优先级图标。"
+      
+      # 货币图标覆盖
+      currency_icon_override_url: 货币图标URL（可选）
+      currency_icon_override_url_help: "使用自定义图片URL覆盖货币图标（如：https://example.com/btc-icon.png）"
+      currency_icon_override_class: 货币图标CSS类（可选）
+      currency_icon_override_class_help: "使用字体图标类覆盖货币图标（如：fab fa-bitcoin）"
+      
+      # 网络图标覆盖
+      network_icon_override_url: 网络图标URL（可选）
+      network_icon_override_url_help: "使用自定义图片URL覆盖网络图标（如：https://example.com/tron-icon.png）"
+      network_icon_override_class: 网络图标CSS类（可选）
+      network_icon_override_class_help: "使用字体图标类覆盖网络图标（如：fas fa-network-wired）"
       is_active: 启用
       active: 启用
       inactive: 禁用
@@ -76,8 +87,10 @@ withdrawal:
         address_help: 输入该平台的存款地址
         qr_code_image_url: 二维码图片URL
         qr_code_image_help: 输入二维码图片的URL（可选）
-        icon_url: 图标图片URL
-        icon_class: 图标CSS类
+        icon_url: 平台专属图标URL
+        icon_url_help: 输入此特定存款平台/网络的图标URL
+        icon_class: 平台专属图标CSS类
+        icon_class_help: 输入此特定存款平台/网络的字体图标类
         warning_text: 警告文本
         is_active: 启用
         active: 启用

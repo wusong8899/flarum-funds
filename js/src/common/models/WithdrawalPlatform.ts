@@ -1,6 +1,7 @@
 import Model from 'flarum/common/Model';
 import { ServiceError, ServiceErrorType } from '../types/services';
 import { validateWithdrawalPlatform } from '../utils/PlatformValidation';
+import { IconRepresentation } from './CurrencyIcon';
 import app from 'flarum/common/app';
 
 /**
@@ -19,9 +20,20 @@ export default class WithdrawalPlatform extends Model {
   maxAmount = Model.attribute<number>('maxAmount');
   fee = Model.attribute<number>('fee');
   
-  // Optional attributes
-  iconUrl = Model.attribute<string | null>('iconUrl');
-  iconClass = Model.attribute<string | null>('iconClass');
+  // Three-tier icon system - computed properties
+  currencyIconUrl = Model.attribute<string>('currencyIconUrl');
+  currencyIconClass = Model.attribute<string>('currencyIconClass');
+  currencyUnicodeSymbol = Model.attribute<string>('currencyUnicodeSymbol');
+  networkIconUrl = Model.attribute<string>('networkIconUrl');
+  networkIconClass = Model.attribute<string>('networkIconClass');
+  platformSpecificIconUrl = Model.attribute<string>('platformSpecificIconUrl');
+  platformSpecificIconClass = Model.attribute<string>('platformSpecificIconClass');
+  
+  // Override fields for admin configuration
+  currencyIconOverrideUrl = Model.attribute<string>('currencyIconOverrideUrl');
+  currencyIconOverrideClass = Model.attribute<string>('currencyIconOverrideClass');
+  networkIconOverrideUrl = Model.attribute<string>('networkIconOverrideUrl');
+  networkIconOverrideClass = Model.attribute<string>('networkIconOverrideClass');
   
   // Status
   isActive = Model.attribute<boolean>('isActive');
@@ -29,6 +41,11 @@ export default class WithdrawalPlatform extends Model {
   // Timestamps
   createdAt = Model.attribute('createdAt', Model.transformDate);
   updatedAt = Model.attribute('updatedAt', Model.transformDate);
+
+  // Icon representations from serializer
+  bestIcon = Model.attribute<IconRepresentation>('bestIcon');
+  currencyIcon = Model.attribute<IconRepresentation>('currencyIcon');
+  networkIcon = Model.attribute<IconRepresentation>('networkIcon');
   
   // Computed properties
   apiEndpoint() {
@@ -126,8 +143,11 @@ export default class WithdrawalPlatform extends Model {
       minAmount: this.minAmount(),
       maxAmount: this.maxAmount(),
       fee: this.fee(),
-      iconUrl: this.iconUrl(),
-      iconClass: this.iconClass(),
+      // Copy three-tier icon fields
+      currencyIconOverrideUrl: this.currencyIconOverrideUrl(),
+      currencyIconOverrideClass: this.currencyIconOverrideClass(),
+      networkIconOverrideUrl: this.networkIconOverrideUrl(),
+      networkIconOverrideClass: this.networkIconOverrideClass(),
       isActive: false // Clone as inactive by default
     });
 

@@ -14,10 +14,21 @@ withdrawal:
       min_amount: Minimum Amount
       max_amount: Maximum Amount
       fee: Fee
-      icon_url: Icon Image URL (Optional)
-      icon_url_help: "Enter image URL (e.g., https://example.com/icon.png)"
-      icon_class: Icon CSS Class (Optional)
-      icon_class_help: Enter Font Awesome class (e.g., fas fa-coins)
+      # Three-tier icon system
+      icon_configuration: Icon Configuration
+      icon_configuration_help: "Configure icons with priority: Platform-specific → Network → Currency. Higher priority icons override lower ones."
+      
+      # Currency Icon Override
+      currency_icon_override_url: Currency Icon URL (Optional)
+      currency_icon_override_url_help: "Override currency icon with custom image URL (e.g., https://example.com/btc-icon.png)"
+      currency_icon_override_class: Currency Icon CSS Class (Optional) 
+      currency_icon_override_class_help: "Override currency icon with Font Awesome class (e.g., fab fa-bitcoin)"
+      
+      # Network Icon Override
+      network_icon_override_url: Network Icon URL (Optional)
+      network_icon_override_url_help: "Override network icon with custom image URL (e.g., https://example.com/tron-icon.png)"
+      network_icon_override_class: Network Icon CSS Class (Optional)
+      network_icon_override_class_help: "Override network icon with Font Awesome class (e.g., fas fa-network-wired)"
       is_active: Active
       active: Active
       inactive: Inactive
@@ -103,8 +114,10 @@ withdrawal:
         address_help: Enter the deposit address for this platform
         qr_code_image_url: QR Code Image URL
         qr_code_image_help: Enter QR code image URL (optional)
-        icon_url: Icon Image URL
-        icon_class: Icon CSS Class
+        icon_url: Platform Icon Image URL
+        icon_url_help: Enter image URL for this specific deposit platform/network
+        icon_class: Platform Icon CSS Class
+        icon_class_help: Enter Font Awesome class for this specific deposit platform/network
         warning_text: Warning Text
         custom_network: Custom Network Name (Optional)
         is_active: Active

@@ -60,7 +60,7 @@ export default class DepositRecordManagementSection extends Component<
     if (loading) {
       return (
         <div className="DepositRecordManagementSection">
-          <div className="DepositRecordManagementSection-header">
+          <div className="ection-header">
             <h3>{app.translator.trans('withdrawal.admin.deposit.records.title')}</h3>
           </div>
           <LoadingIndicator />

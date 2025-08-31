@@ -1,6 +1,7 @@
 import Model from 'flarum/common/Model';
 import { ServiceError, ServiceErrorType } from '../types/services';
 import { validateDepositPlatform } from '../utils/PlatformValidation';
+import { IconRepresentation } from './CurrencyIcon';
 import app from 'flarum/common/app';
 
 export default class DepositPlatform extends Model {
@@ -14,8 +15,20 @@ export default class DepositPlatform extends Model {
   fee = Model.attribute('fee');
   address = Model.attribute('address');
   qrCodeImageUrl = Model.attribute<string>('qrCodeImageUrl');
-  iconUrl = Model.attribute<string>('iconUrl');
-  iconClass = Model.attribute<string>('iconClass');
+  // Three-tier icon system - computed properties
+  currencyIconUrl = Model.attribute<string>('currencyIconUrl');
+  currencyIconClass = Model.attribute<string>('currencyIconClass');
+  currencyUnicodeSymbol = Model.attribute<string>('currencyUnicodeSymbol');
+  networkIconUrl = Model.attribute<string>('networkIconUrl');
+  networkIconClass = Model.attribute<string>('networkIconClass');
+  platformSpecificIconUrl = Model.attribute<string>('platformSpecificIconUrl');
+  platformSpecificIconClass = Model.attribute<string>('platformSpecificIconClass');
+  
+  // Override fields for admin configuration
+  currencyIconOverrideUrl = Model.attribute<string>('currencyIconOverrideUrl');
+  currencyIconOverrideClass = Model.attribute<string>('currencyIconOverrideClass');
+  networkIconOverrideUrl = Model.attribute<string>('networkIconOverrideUrl');
+  networkIconOverrideClass = Model.attribute<string>('networkIconOverrideClass');
   warningText = Model.attribute<string>('warningText');
   networkConfig = Model.attribute('networkConfig');
   isActive = Model.attribute('isActive');
@@ -24,6 +37,11 @@ export default class DepositPlatform extends Model {
 
   // Relationships
   networkType = Model.hasOne('networkType');
+
+  // Icon representations from serializer
+  bestIcon = Model.attribute<IconRepresentation>('bestIcon');
+  currencyIcon = Model.attribute<IconRepresentation>('currencyIcon');
+  networkIcon = Model.attribute<IconRepresentation>('networkIcon');
 
   // Helper methods
   getDisplayName(): string {

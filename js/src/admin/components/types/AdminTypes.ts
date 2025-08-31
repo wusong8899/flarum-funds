@@ -8,8 +8,19 @@ export interface WithdrawalPlatform {
     minAmount?: number;
     maxAmount?: number;
     fee?: number;
-    iconUrl?: string;
-    iconClass?: string;
+    // Three-tier icon system
+    currencyIconUrl?: string;
+    currencyIconClass?: string;
+    currencyUnicodeSymbol?: string;
+    networkIconUrl?: string;
+    networkIconClass?: string;
+    platformSpecificIconUrl?: string;
+    platformSpecificIconClass?: string;
+    // Override fields
+    currencyIconOverrideUrl?: string;
+    currencyIconOverrideClass?: string;
+    networkIconOverrideUrl?: string;
+    networkIconOverrideClass?: string;
     isActive?: boolean;
     createdAt?: string;
     created_at?: string;
@@ -50,8 +61,11 @@ export interface PlatformFormData {
   minAmount: string;
   maxAmount: string;
   fee: string;
-  iconUrl: string;
-  iconClass: string;
+  // Three-tier icon system
+  currencyIconOverrideUrl: string;
+  currencyIconOverrideClass: string;
+  networkIconOverrideUrl: string;
+  networkIconOverrideClass: string;
 }
 
 // Deposit-related interfaces
@@ -65,8 +79,19 @@ export interface DepositPlatform {
   maxAmount?: number;
   address?: string;
   qrCodeImageUrl?: string;
-  iconUrl?: string;
-  iconClass?: string;
+  // Three-tier icon system
+  currencyIconUrl?: string;
+  currencyIconClass?: string;
+  currencyUnicodeSymbol?: string;
+  networkIconUrl?: string;
+  networkIconClass?: string;
+  platformSpecificIconUrl?: string;
+  platformSpecificIconClass?: string;
+  // Override fields
+  currencyIconOverrideUrl?: string;
+  currencyIconOverrideClass?: string;
+  networkIconOverrideUrl?: string;
+  networkIconOverrideClass?: string;
   warningText?: string;
   networkConfig?: any;
   isActive: boolean;

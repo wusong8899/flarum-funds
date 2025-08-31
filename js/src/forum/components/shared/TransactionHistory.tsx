@@ -317,19 +317,8 @@ export default class TransactionHistory extends Component<TransactionHistoryAttr
       return icon(iconClass);
     }
 
-    // Default currency icons
-    switch (symbol) {
-      case 'USDT':
-        return <span className="DepositHistory-currencyIcon usdt">₮</span>;
-      case 'USDC':
-        return <span className="DepositHistory-currencyIcon usdc">$</span>;
-      case 'BTC':
-        return <span className="DepositHistory-currencyIcon btc">₿</span>;
-      case 'ETH':
-        return <span className="DepositHistory-currencyIcon eth">Ξ</span>;
-      default:
-        return icon('fas fa-coins');
-    }
+    // Fallback to generic icon - use platform-configurable icons only
+    return icon('fas fa-coins');
   }
 
   private getStatusIcon(status: string): Mithril.Children {

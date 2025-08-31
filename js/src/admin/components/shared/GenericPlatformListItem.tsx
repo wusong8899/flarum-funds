@@ -222,18 +222,7 @@ export default class GenericPlatformListItem extends Component<GenericPlatformLi
       return icon(iconClass);
     }
 
-    // Default currency icons - now uses generic class names that work for both types
-    switch (symbol) {
-      case 'USDT':
-        return <span className="PlatformListItem-currencyIcon usdt">₮</span>;
-      case 'USDC':
-        return <span className="PlatformListItem-currencyIcon usdc">$</span>;
-      case 'BTC':
-        return <span className="PlatformListItem-currencyIcon btc">₿</span>;
-      case 'ETH':
-        return <span className="PlatformListItem-currencyIcon eth">Ξ</span>;
-      default:
-        return icon('fas fa-coins');
-    }
+    // Fallback to generic icon - use platform-configurable icons only
+    return icon('fas fa-coins');
   }
 }

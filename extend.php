@@ -44,7 +44,13 @@ return [
         ->get('/deposit-records/{id}', 'deposit.records.show', Controller\ShowDepositRecordController::class)
         ->post('/deposit-records', 'deposit.records.create', Controller\CreateDepositRecordController::class)
         ->patch('/deposit-records/{id}', 'deposit.records.update', Controller\UpdateDepositRecordController::class)
-        ->delete('/deposit-records/{id}', 'deposit.records.delete', Controller\DeleteDepositRecordController::class),
+        ->delete('/deposit-records/{id}', 'deposit.records.delete', Controller\DeleteDepositRecordController::class)
+        // Currency icons routes
+        ->get('/currency-icons', 'currency-icons.index', Controller\CurrencyIcon\ListCurrencyIconsController::class)
+        ->get('/currency-icons/{id}', 'currency-icons.show', Controller\CurrencyIcon\ShowCurrencyIconController::class)
+        ->post('/currency-icons', 'currency-icons.create', Controller\CurrencyIcon\CreateCurrencyIconController::class)
+        ->patch('/currency-icons/{id}', 'currency-icons.update', Controller\CurrencyIcon\UpdateCurrencyIconController::class)
+        ->delete('/currency-icons/{id}', 'currency-icons.delete', Controller\CurrencyIcon\DeleteCurrencyIconController::class),
 
     (new Extend\Model(Flarum\User\User::class))
         ->hasMany('withdrawalRequests', Model\WithdrawalRequest::class)
@@ -63,7 +69,8 @@ return [
         ->hasMany('withdrawalRequests', \wusong8899\Withdrawal\Api\Serializer\WithdrawalRequestSerializer::class)
         ->hasMany('depositPlatforms', \wusong8899\Withdrawal\Api\Serializer\DepositPlatformSerializer::class)
         ->hasMany('depositRecords', \wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer::class)
-        ->hasMany('networkTypes', \wusong8899\Withdrawal\Api\Serializer\NetworkTypeSerializer::class),
+        ->hasMany('networkTypes', \wusong8899\Withdrawal\Api\Serializer\NetworkTypeSerializer::class)
+        ->hasMany('currencyIcons', \wusong8899\Withdrawal\Api\Serializer\CurrencyIconSerializer::class),
 
     (new Extend\ApiSerializer(\Flarum\Api\Serializer\UserSerializer::class))
         ->hasMany('withdrawalRequests', \wusong8899\Withdrawal\Api\Serializer\WithdrawalRequestSerializer::class)

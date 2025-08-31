@@ -188,10 +188,13 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
               <input
                 type="url"
                 className="FormControl"
-                placeholder="https://example.com/icon.png"
+                placeholder="https://example.com/usdt-trc20-icon.png"
                 bidi={this.formData.iconUrl}
                 disabled={submitting}
               />
+              <div className="helpText">
+                {app.translator.trans('withdrawal.admin.deposit.platforms.icon_url_help')}
+              </div>
             </div>
             <div className="Form-group">
               <label>
@@ -204,6 +207,9 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
                 bidi={this.formData.iconClass}
                 disabled={submitting}
               />
+              <div className="helpText">
+                {app.translator.trans('withdrawal.admin.deposit.platforms.icon_class_help')}
+              </div>
             </div>
           </div>
 

@@ -5,6 +5,7 @@ import type Mithril from 'mithril';
 import DepositPlatform from '../../../../common/models/DepositPlatform';
 import { getAttr } from '../../withdrawal/utils/modelHelpers';
 import { ICONS } from '../../withdrawal/utils/constants';
+import { getBestPlatformIcon, getCurrencyIcon, renderIcon } from '../../../../common/utils/IconResolver';
 import m from 'mithril';
 
 interface DepositPlatformDropdownProps {
@@ -101,30 +102,20 @@ export default class DepositPlatformDropdown extends Component<DepositPlatformDr
       return icon('fas fa-coins');
     }
 
-    const iconUrl = getAttr(platform, 'iconUrl');
-    const symbol = getAttr(platform, 'symbol');
-    
-    if (iconUrl) {
-      return <img src={iconUrl} alt={symbol} className="FundsPage-platformIconImage" />;
-    }
-    
-    // Default icons based on symbol
-    return this.getCurrencyIcon(symbol);
+    const bestIcon = getBestPlatformIcon(platform);
+    return renderIcon(bestIcon, 'FundsPage-platformIconImage');
   }
 
-  private getCurrencyIcon(symbol: string): Mithril.Children {
-    switch (symbol?.toUpperCase()) {
-      case 'USDT':
-        return <span className="FundsPage-currencyIcon usdt">₮</span>;
-      case 'USDC':
-        return <span className="FundsPage-currencyIcon usdc">$</span>;
-      case 'BTC':
-        return <span className="FundsPage-currencyIcon btc">₿</span>;
-      case 'ETH':
-        return <span className="FundsPage-currencyIcon eth">Ξ</span>;
-      default:
-        return icon('fas fa-coins');
+  private getCurrencyIconForSymbol(symbol: string, platforms: DepositPlatform[]): Mithril.Children {
+    // Find the first platform with this symbol to get currency icon
+    const platformWithSymbol = platforms.find(platform => getAttr(platform, 'symbol') === symbol);
+    
+    if (platformWithSymbol) {
+      const currencyIconRep = getCurrencyIcon(platformWithSymbol);
+      return renderIcon(currencyIconRep, 'FundsPage-currencyIcon');
     }
+    
+    return icon('fas fa-coins');
   }
 
   private renderPlatformSubtext(platform: DepositPlatform): Mithril.Children {
@@ -182,7 +173,7 @@ export default class DepositPlatformDropdown extends Component<DepositPlatformDr
           <div key={`${currency}-header`} className="FundsPage-dropdownHeader">
             <div className="FundsPage-currencyHeader">
               <div className="FundsPage-currencyIcon">
-                {this.getCurrencyIcon(currency)}
+                {this.getCurrencyIconForSymbol(currency, platforms)}
               </div>
               <span className="FundsPage-currencyName">{currency}</span>
             </div>
