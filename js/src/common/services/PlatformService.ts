@@ -310,11 +310,8 @@ export default class PlatformService implements PlatformServiceInterface {
   private validateCreateAttributes(type: 'withdrawal' | 'deposit', attributes: any): void {
     const commonRequired = ['name', 'symbol', 'minAmount'];
     
-    // Withdrawal platforms require address
-    // Deposit platforms require address and can have networkTypeId
-    const required = type === 'withdrawal' 
-      ? [...commonRequired, 'address']
-      : [...commonRequired, 'address']; // Deposit platforms also require address
+    // Only common fields are required (removed address requirement)
+    const required = commonRequired;
 
     for (const field of required) {
       if (!attributes[field]) {

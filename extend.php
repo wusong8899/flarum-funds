@@ -20,6 +20,7 @@ return [
 
     (new Extend\Routes('api'))
         ->get('/withdrawal-platforms', 'withdrawal.platforms.index', Controller\ListWithdrawalPlatformsController::class)
+        ->get('/withdrawal-platforms/{id}', 'withdrawal.platforms.show', Controller\ShowWithdrawalPlatformController::class)
         ->post('/withdrawal-platforms', 'withdrawal.platforms.create', Controller\CreateWithdrawalPlatformController::class)
         ->patch('/withdrawal-platforms/{id}', 'withdrawal.platforms.update', Controller\UpdateWithdrawalPlatformController::class)
         ->delete('/withdrawal-platforms/{id}', 'withdrawal.platforms.delete', Controller\DeleteWithdrawalPlatformController::class)
@@ -29,6 +30,7 @@ return [
         ->delete('/withdrawal-requests/{id}', 'withdrawal.requests.delete', Controller\DeleteWithdrawalRequestController::class)
         // Deposit routes
         ->get('/deposit-platforms', 'deposit.platforms.index', Controller\ListDepositPlatformsController::class)
+        ->get('/deposit-platforms/{id}', 'deposit.platforms.show', Controller\ShowDepositPlatformController::class)
         ->post('/deposit-platforms', 'deposit.platforms.create', Controller\CreateDepositPlatformController::class)
         ->patch('/deposit-platforms/{id}', 'deposit.platforms.update', Controller\UpdateDepositPlatformController::class)
         ->delete('/deposit-platforms/{id}', 'deposit.platforms.delete', Controller\DeleteDepositPlatformController::class)
@@ -40,6 +42,7 @@ return [
         ->delete('/network-types/{id}', 'network-types.delete', Controller\DeleteNetworkTypeController::class)
         // Deposit records routes
         ->get('/deposit-records', 'deposit.records.index', Controller\ListDepositRecordsController::class)
+        ->get('/deposit-records/{id}', 'deposit.records.show', Controller\ShowDepositRecordController::class)
         ->post('/deposit-records', 'deposit.records.create', Controller\CreateDepositRecordController::class)
         ->patch('/deposit-records/{id}', 'deposit.records.update', Controller\UpdateDepositRecordController::class)
         ->delete('/deposit-records/{id}', 'deposit.records.delete', Controller\DeleteDepositRecordController::class),

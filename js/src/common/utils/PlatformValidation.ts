@@ -64,17 +64,17 @@ export function validateAmountFields(attributes: Record<string, any>, currentMin
 export function validateDepositFields(attributes: Record<string, any>): string[] {
   const errors: string[] = [];
 
-  // Network validation (for deposit platforms)
-  if (attributes.network !== undefined) {
-    if (!attributes.network || typeof attributes.network !== 'string') {
-      errors.push('Network is required');
+  // Network validation (for deposit platforms) - only validate if provided
+  if (attributes.network !== undefined && attributes.network !== null && attributes.network !== '') {
+    if (typeof attributes.network !== 'string') {
+      errors.push('Network must be a string');
     }
   }
 
-  // Address validation (for deposit platforms)
-  if (attributes.address !== undefined) {
-    if (!attributes.address || typeof attributes.address !== 'string') {
-      errors.push('Deposit address is required');
+  // Address validation (for deposit platforms) - only validate if provided
+  if (attributes.address !== undefined && attributes.address !== null && attributes.address !== '') {
+    if (typeof attributes.address !== 'string') {
+      errors.push('Deposit address must be a string');
     }
   }
 
