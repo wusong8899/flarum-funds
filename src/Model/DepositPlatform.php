@@ -61,12 +61,6 @@ class DepositPlatform extends AbstractModel
         'updated_at' => 'datetime'
     ];
 
-    public function depositAddresses(): HasMany
-    {
-        return $this->hasMany(DepositAddress::class, 'platform_id');
-    }
-
-
     public function networkType(): BelongsTo
     {
         return $this->belongsTo(NetworkType::class, 'network_type_id');
@@ -89,21 +83,4 @@ class DepositPlatform extends AbstractModel
         return $this->address;
     }
 
-    /**
-     * Generate deposit address for a specific user ID
-     * Only supports shared addresses (templates removed)
-     *
-     * @param int $userId
-     * @return string
-     * @throws \InvalidArgumentException
-     */
-    public function generateDepositAddress(int $userId): string
-    {
-        if ($this->address) {
-            // Shared address - return as-is
-            return $this->address;
-        }
-
-        throw new \InvalidArgumentException("No address configured for platform: {$this->name}");
-    }
 }

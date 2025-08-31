@@ -34,9 +34,6 @@ return [
         ->post('/deposit-platforms', 'deposit.platforms.create', Controller\CreateDepositPlatformController::class)
         ->patch('/deposit-platforms/{id}', 'deposit.platforms.update', Controller\UpdateDepositPlatformController::class)
         ->delete('/deposit-platforms/{id}', 'deposit.platforms.delete', Controller\DeleteDepositPlatformController::class)
-        ->get('/deposit-address', 'deposit.address.get', Controller\GetDepositAddressController::class)
-        // Deposit addresses routes
-        ->get('/deposit-addresses', 'deposit.addresses.index', Controller\ListDepositAddressesController::class)
         // Network types routes
         ->get('/network-types', 'network-types.index', Controller\ListNetworkTypesController::class)
         ->post('/network-types', 'network-types.create', Controller\CreateNetworkTypeController::class)
@@ -51,15 +48,14 @@ return [
 
     (new Extend\Model(Flarum\User\User::class))
         ->hasMany('withdrawalRequests', Model\WithdrawalRequest::class)
-        ->hasMany('depositAddresses', Model\DepositAddress::class)
         ->hasMany('depositRecords', Model\DepositRecord::class),
 
     // Register API serializers for our models
     (new Extend\ApiController(\Flarum\Api\Controller\ListUsersController::class))
-        ->addInclude(['withdrawalRequests', 'withdrawalRequests.platform', 'depositAddresses', 'depositRecords', 'depositRecords.platform']),
+        ->addInclude(['withdrawalRequests', 'withdrawalRequests.platform', 'depositRecords', 'depositRecords.platform']),
 
     (new Extend\ApiController(\Flarum\Api\Controller\ShowUserController::class))
-        ->addInclude(['withdrawalRequests', 'withdrawalRequests.platform', 'depositAddresses', 'depositRecords', 'depositRecords.platform']),
+        ->addInclude(['withdrawalRequests', 'withdrawalRequests.platform', 'depositRecords', 'depositRecords.platform']),
 
     // Register serializers for our models
     (new Extend\ApiSerializer(\Flarum\Api\Serializer\ForumSerializer::class))
@@ -71,7 +67,6 @@ return [
 
     (new Extend\ApiSerializer(\Flarum\Api\Serializer\UserSerializer::class))
         ->hasMany('withdrawalRequests', \wusong8899\Withdrawal\Api\Serializer\WithdrawalRequestSerializer::class)
-        ->hasMany('depositAddresses', \wusong8899\Withdrawal\Api\Serializer\DepositAddressSerializer::class)
         ->hasMany('depositRecords', \wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer::class),
 
     (new Extend\Settings())

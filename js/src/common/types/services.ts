@@ -220,20 +220,7 @@ export interface SettingsServiceInterface {
  */
 export interface AddressServiceInterface {
   generateAddress(platformId: number, userId?: number): Promise<string>;
-  getUserAddresses(userId?: number, options?: QueryOptions): Promise<any[]>;
-  getAddressForPlatform(platformId: number, userId?: number): Promise<any | null>;
-  refreshAddress(platformId: number, userId?: number): Promise<string>;
-  deactivateAddress(addressId: number): Promise<void>;
   canGenerateAddress(): boolean;
-  canViewAddress(address: any): boolean;
-
-  /**
-   * Validate platform limits
-   */
-  validateAmount(platform: any, amount: number): {
-    valid: boolean;
-    errors: string[];
-  };
 }
 
 /**

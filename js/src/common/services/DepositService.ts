@@ -1,7 +1,6 @@
 import app from 'flarum/common/app';
 import DepositRecord from '../models/DepositRecord';
 import DepositPlatform from '../models/DepositPlatform';
-import DepositAddress from '../models/DepositAddress';
 import { 
   DepositServiceInterface, 
   QueryOptions, 
@@ -323,18 +322,6 @@ export default class DepositService implements DepositServiceInterface {
     return grouped;
   }
 
-  /**
-   * Get user's deposit addresses - delegates to AddressService
-   */
-  async getUserAddresses(userId?: number): Promise<DepositAddress[]> {
-    try {
-      // Import AddressService dynamically to avoid circular dependencies
-      const { addressService } = await import('./AddressService') as any;
-      return await addressService.getUserAddresses(userId);
-    } catch (error) {
-      throw this.handleError(error, 'Failed to fetch user deposit addresses');
-    }
-  }
 
   /**
    * Validate deposit record data
