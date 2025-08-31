@@ -30,7 +30,7 @@ export default class AddressService implements AddressServiceInterface {
       }
 
       // Check if platform exists and is active
-      const platform = await app.store.find(this.platformModelType, platformId) as DepositPlatform;
+      const platform = await app.store.find(this.platformModelType, platformId) as unknown as DepositPlatform;
       if (!platform) {
         throw new ServiceError(
           'Invalid platform selected',
@@ -283,9 +283,6 @@ export default class AddressService implements AddressServiceInterface {
       return { valid: false, errors };
     }
 
-    if (address.length < 10) {
-      errors.push('Address must be at least 10 characters long');
-    }
 
     // Add platform-specific validations
     const symbol = platform.symbol()?.toLowerCase();

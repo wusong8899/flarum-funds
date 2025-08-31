@@ -283,8 +283,6 @@ export default class DepositPlatform extends Model {
     if (attributes.address !== undefined) {
       if (!attributes.address || typeof attributes.address !== 'string') {
         errors.push('Deposit address is required');
-      } else if (attributes.address.trim().length < 10) {
-        errors.push('Deposit address must be at least 10 characters long');
       }
     }
 
