@@ -27,7 +27,7 @@ return [
 
         // 2. Update network_types table - rename icon fields for clarity
         if ($schema->hasTable('network_types')) {
-            $schema->table('network_types', function (Blueprint $table) {
+            $schema->table('network_types', function (Blueprint $table) use ($schema) {
                 // Rename existing icon fields to be network-specific
                 if ($schema->hasColumn('network_types', 'icon_url')) {
                     $table->renameColumn('icon_url', 'network_icon_url');
@@ -40,7 +40,7 @@ return [
 
         // 3. Update deposit_platforms table - remove old fields and add explicit ones
         if ($schema->hasTable('deposit_platforms')) {
-            $schema->table('deposit_platforms', function (Blueprint $table) {
+            $schema->table('deposit_platforms', function (Blueprint $table) use ($schema) {
                 // Remove old generic icon fields
                 if ($schema->hasColumn('deposit_platforms', 'icon_url')) {
                     $table->dropColumn('icon_url');
@@ -61,7 +61,7 @@ return [
 
         // 4. Update withdrawal_platforms table - same changes
         if ($schema->hasTable('withdrawal_platforms')) {
-            $schema->table('withdrawal_platforms', function (Blueprint $table) {
+            $schema->table('withdrawal_platforms', function (Blueprint $table) use ($schema) {
                 // Remove old generic icon fields
                 if ($schema->hasColumn('withdrawal_platforms', 'icon_url')) {
                     $table->dropColumn('icon_url');
@@ -99,7 +99,7 @@ return [
 
         // Revert deposit_platforms table
         if ($schema->hasTable('deposit_platforms')) {
-            $schema->table('deposit_platforms', function (Blueprint $table) {
+            $schema->table('deposit_platforms', function (Blueprint $table) use ($schema) {
                 // Remove new fields
                 $table->dropColumn([
                     'currency_icon_override_url',
@@ -118,7 +118,7 @@ return [
 
         // Revert withdrawal_platforms table
         if ($schema->hasTable('withdrawal_platforms')) {
-            $schema->table('withdrawal_platforms', function (Blueprint $table) {
+            $schema->table('withdrawal_platforms', function (Blueprint $table) use ($schema) {
                 // Remove new fields
                 $table->dropColumn([
                     'currency_icon_override_url',
