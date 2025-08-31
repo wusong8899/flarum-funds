@@ -9,7 +9,6 @@ return [
         ->js(__DIR__ . '/js/dist/forum.js')
         ->css(__DIR__ . '/less/forum.less')
         ->route('/funds', 'funds.index')
-        ->route('/funds', 'funds.index')
         ->route('/deposit', 'deposit.index'),
 
     (new Extend\Frontend('admin'))
