@@ -101,7 +101,9 @@ export default class WithdrawalRequest extends Model {
       );
     }
 
-    if (!this.canBeModified()) {
+    // Only check if request can be modified for non-admin users
+    const currentUser = app.session.user;
+    if (currentUser && !currentUser.isAdmin() && !this.canBeModified()) {
       throw new ServiceError(
         'This request cannot be deleted as it has already been processed',
         ServiceErrorType.VALIDATION_ERROR
