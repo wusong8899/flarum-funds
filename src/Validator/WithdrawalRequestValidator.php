@@ -97,12 +97,6 @@ class WithdrawalRequestValidator
             ]);
         }
 
-        if (strlen($accountDetails) < 5) {
-            throw new ValidationException([
-                'Account details must be at least 5 characters'
-            ]);
-        }
-
         if (strlen($accountDetails) > 500) {
             throw new ValidationException([
                 'Account details must not exceed 500 characters'
