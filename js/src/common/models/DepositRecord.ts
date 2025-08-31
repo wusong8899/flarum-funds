@@ -286,8 +286,6 @@ export default class DepositRecord extends Model {
     if (attributes.realName !== undefined) {
       if (!attributes.realName || typeof attributes.realName !== 'string') {
         errors.push('Real name is required');
-      } else if (attributes.realName.trim().length < 2) {
-        errors.push('Real name must be at least 2 characters long');
       }
     }
 
