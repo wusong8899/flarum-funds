@@ -369,7 +369,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
     // Check user balance
     const currentUser = app.session.user;
     if (currentUser) {
-      const userBalance = currentUser.money ? currentUser.money() : 0;
+      const userBalance = parseFloat(currentUser.attribute('money') || '0');
       const fee = platform.fee ? platform.fee() : 0;
       const totalRequired = amount + fee;
 
