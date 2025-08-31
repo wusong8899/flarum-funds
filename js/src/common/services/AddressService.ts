@@ -85,9 +85,13 @@ export default class AddressService implements AddressServiceInterface {
           user: targetUserId,
           ...options.filter
         },
-        include: options.include || 'platform',
-        sort: options.sort || '-created_at'
+        include: options.include || 'platform'
       };
+      
+      // Only add sort if explicitly provided
+      if (options.sort) {
+        queryOptions.sort = options.sort;
+      }
 
       const addresses = await app.store.find(this.addressModelType, queryOptions);
       return Array.isArray(addresses) ? addresses : [addresses];
