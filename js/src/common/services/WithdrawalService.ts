@@ -22,7 +22,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
     try {
       const queryParams: any = {
         include: options.include || 'user,platform',
-        sort: options.sort || '-createdAt',
+        sort: options.sort || '-created_at',
         ...options
       };
 
@@ -163,7 +163,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
         ...options.filter
       },
       include: options.include || 'platform',
-      sort: options.sort || '-createdAt'
+      sort: options.sort || '-created_at'
     };
 
     return await this.find(queryOptions);
@@ -187,7 +187,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
         ...options.filter
       },
       include: options.include || 'user,platform',
-      sort: options.sort || 'createdAt'
+      sort: options.sort || 'created_at'
     };
 
     return await this.find(queryOptions);

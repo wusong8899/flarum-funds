@@ -86,7 +86,7 @@ export default class AddressService implements AddressServiceInterface {
           ...options.filter
         },
         include: options.include || 'platform',
-        sort: options.sort || '-createdAt'
+        sort: options.sort || '-created_at'
       };
 
       const addresses = await app.store.find(this.addressModelType, queryOptions);

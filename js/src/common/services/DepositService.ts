@@ -24,7 +24,7 @@ export default class DepositService implements DepositServiceInterface {
     try {
       const queryParams: any = {
         include: options.include || 'user,platform',
-        sort: options.sort || '-createdAt',
+        sort: options.sort || '-created_at',
         ...options
       };
 
@@ -151,7 +151,7 @@ export default class DepositService implements DepositServiceInterface {
         ...options.filter
       },
       include: options.include || 'platform',
-      sort: options.sort || '-createdAt'
+      sort: options.sort || '-created_at'
     };
 
     return await this.find(queryOptions);
@@ -202,7 +202,7 @@ export default class DepositService implements DepositServiceInterface {
         ...options.filter
       },
       include: options.include || 'user,platform',
-      sort: options.sort || 'createdAt'
+      sort: options.sort || 'created_at'
     };
 
     return await this.find(queryOptions);
