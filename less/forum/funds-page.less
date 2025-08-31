@@ -103,6 +103,53 @@
     }
   }
 
+  // Sub-tab navigation styles
+  .FundsPage-subTabs {
+    display: flex;
+    gap: 0;
+    margin: 16px 0 20px 0;
+    border-bottom: 1px solid #333;
+    
+    .FundsPage-subTab {
+      padding: 8px 12px;
+      color: #888;
+      cursor: pointer;
+      position: relative;
+      font-weight: 500;
+      font-size: 13px;
+      white-space: nowrap;
+      border-radius: 4px 4px 0 0;
+      transition: all 0.2s ease;
+
+      &.active {
+        color: #fff;
+        background: rgba(74, 144, 226, 0.1);
+        
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: #4A90E2;
+          border-radius: 1px 1px 0 0;
+        }
+      }
+
+      &:hover:not(.active) {
+        color: #bbb;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      // Responsive font sizes
+      @media (max-width: 480px) {
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+    }
+  }
+
   .FundsPage-content {
     padding: 20px;
     color: #fff;
