@@ -7,7 +7,6 @@ export interface WithdrawalFormData {
   selectedPlatform: Stream<WithdrawalPlatform | null>;
   accountDetails: Stream<string>;
   message: Stream<string>;
-  saveAddress: Stream<boolean>;
 }
 
 export interface WithdrawalPageState {

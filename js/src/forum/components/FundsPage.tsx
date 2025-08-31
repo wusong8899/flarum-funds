@@ -69,8 +69,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
     amount: Stream(''),
     selectedPlatform: Stream<WithdrawalPlatform | null>(null),
     accountDetails: Stream(''),
-    message: Stream(''),
-    saveAddress: Stream(false)
+    message: Stream('')
   };
 
   // Deposit form data and address - Fixed: Added missing userMessage property

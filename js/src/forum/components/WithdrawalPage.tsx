@@ -30,8 +30,7 @@ export default class WithdrawalPage extends Page<any, any> {
     amount: Stream(''),
     selectedPlatform: Stream<WithdrawalPlatform | null>(null),
     accountDetails: Stream(''),
-    message: Stream(''),
-    saveAddress: Stream(false)
+    message: Stream('')
   };
 
   oninit(vnode: Mithril.VnodeDOM) {

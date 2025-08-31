@@ -49,9 +49,7 @@ export default class WithdrawalForm extends Component<WithdrawalFormProps> {
       <AddressInput 
         accountDetails={formData.accountDetails}
         selectedPlatform={formData.selectedPlatform}
-        saveAddress={formData.saveAddress}
         onAccountDetailsChange={(accountDetails: any) => onFormDataChange({ accountDetails })}
-        onSaveAddressToggle={(saveAddress: any) => onFormDataChange({ saveAddress })}
       />,
       
       <MessageInput 

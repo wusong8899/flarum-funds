@@ -10,9 +10,7 @@ import m from 'mithril';
 interface AddressInputProps {
   accountDetails: string;
   selectedPlatform: WithdrawalPlatform | null;
-  saveAddress: boolean;
   onAccountDetailsChange: (details: string) => void;
-  onSaveAddressToggle: (save: boolean) => void;
 }
 
 export default class AddressInput extends Component<AddressInputProps> {
@@ -20,9 +18,7 @@ export default class AddressInput extends Component<AddressInputProps> {
     const { 
       accountDetails, 
       selectedPlatform, 
-      saveAddress,
-      onAccountDetailsChange,
-      onSaveAddressToggle
+      onAccountDetailsChange
     } = this.attrs;
 
     const symbol = this.getSymbol(selectedPlatform);
@@ -35,13 +31,6 @@ export default class AddressInput extends Component<AddressInputProps> {
               {app.translator.trans('withdrawal.forum.form.address', { symbol })}
               <span className="WithdrawalPage-required">*</span>
             </span>
-            <div 
-              className="WithdrawalPage-saveAddress" 
-              onclick={() => onSaveAddressToggle(!saveAddress)}
-            >
-              {icon(ICONS.BOOKMARK)}
-              {app.translator.trans('withdrawal.forum.form.save_address')}
-            </div>
           </div>
 
           <div className="WithdrawalPage-addressInput">
