@@ -64,9 +64,11 @@ class ListDepositAddressesController extends AbstractListController
         }
 
         // Apply sorting
-        foreach ($sort as $field => $order) {
-            if (in_array($field, ['created_at', 'last_used_at', 'platform_id'])) {
-                $query->orderBy($field, $order);
+        if ($sort) {
+            foreach ($sort as $field => $order) {
+                if (in_array($field, ['created_at', 'last_used_at', 'platform_id'])) {
+                    $query->orderBy($field, $order);
+                }
             }
         }
 
