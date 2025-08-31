@@ -18,7 +18,7 @@ class DeleteCurrencyIconController extends AbstractDeleteController
         $actor->assertAdmin();
 
         $id = (int) $request->getAttribute('id');
-        
+
         $currencyIcon = CurrencyIcon::findOrFail($id);
 
         // Check if currency is in use by platforms

@@ -43,7 +43,6 @@ interface FundsPageState {
   // Deposit state
   depositPlatforms: DepositPlatform[];
   depositRecords: any[];
-  showDepositRecordForm: boolean;
   submittingDepositRecord: boolean;
   
   // Shared state
@@ -60,7 +59,6 @@ export default class FundsPage extends Page<any, FundsPageState> {
     submitting: false,
     depositPlatforms: [],
     depositRecords: [],
-    showDepositRecordForm: false,
     submittingDepositRecord: false,
     loading: true,
     activeTab: Stream('withdrawal')
@@ -374,26 +372,14 @@ export default class FundsPage extends Page<any, FundsPageState> {
         <div className="FundsPage-recordSection">
           <div className="FundsPage-recordHeader">
             <h4>{app.translator.trans('withdrawal.forum.deposit.record.section_title')}</h4>
-            <Button
-              className="Button Button--primary FundsPage-recordButton"
-              onclick={this.handleToggleDepositRecordForm.bind(this)}
-              disabled={this.state.submittingDepositRecord}
-            >
-              {this.state.showDepositRecordForm 
-                ? app.translator.trans('withdrawal.forum.deposit.record.hide_form')
-                : app.translator.trans('withdrawal.forum.deposit.record.show_form')
-              }
-            </Button>
           </div>
           
-          {this.state.showDepositRecordForm && (
-            <DepositRecordForm
-              platform={platform}
-              onSubmit={this.handleDepositRecordSubmit.bind(this)}
-              onCancel={this.handleCancelDepositRecordForm.bind(this)}
-              submitting={this.state.submittingDepositRecord}
-            />
-          )}
+          <DepositRecordForm
+            platform={platform}
+            onSubmit={this.handleDepositRecordSubmit.bind(this)}
+            onCancel={this.handleCancelDepositRecordForm.bind(this)}
+            submitting={this.state.submittingDepositRecord}
+          />
         </div>
       </div>
     );
@@ -604,13 +590,8 @@ export default class FundsPage extends Page<any, FundsPageState> {
     }
   }
 
-  private handleToggleDepositRecordForm(): void {
-    this.state.showDepositRecordForm = !this.state.showDepositRecordForm;
-    m.redraw();
-  }
-
   private handleCancelDepositRecordForm(): void {
-    this.state.showDepositRecordForm = false;
+    // Just clear the form - form remains visible
     m.redraw();
   }
 
@@ -632,8 +613,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
         status: 'pending'
       });
 
-      // Hide form and show success message
-      this.state.showDepositRecordForm = false;
+      // Show success message (form remains visible for new submissions)
       
       app.alerts.show(
         { type: 'success', dismissible: true },

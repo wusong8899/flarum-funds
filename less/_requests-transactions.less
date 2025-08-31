@@ -1,0 +1,366 @@
+.WithdrawalRequest {
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  border: 1px solid var(--control-bg);
+  background: var(--body-bg);
+
+  &.status-pending {
+    border-left: 4px solid var(--warning-color);
+  }
+
+  &.status-approved {
+    border-left: 4px solid var(--success-color);
+  }
+
+  &.status-rejected {
+    border-left: 4px solid var(--danger-color);
+  }
+
+  .WithdrawalRequest-info {
+    margin-bottom: 15px;
+
+    .WithdrawalRequest-user {
+      margin-bottom: 10px;
+
+      strong {
+        color: var(--primary-color);
+        margin-right: 10px;
+      }
+
+      .request-id {
+        background: var(--control-bg);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.9em;
+        color: var(--muted-color);
+      }
+    }
+
+    .WithdrawalRequest-details {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+
+      .amount {
+        font-weight: bold;
+        font-size: 1.1em;
+        color: var(--success-color);
+      }
+
+      .platform {
+        background: var(--control-bg);
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.9em;
+      }
+
+      .symbol {
+        background: var(--primary-color);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+
+      .date {
+        color: var(--muted-color);
+        font-size: 0.9em;
+      }
+    }
+
+    .WithdrawalRequest-account {
+      margin-bottom: 10px;
+
+      strong {
+        margin-right: 8px;
+      }
+
+      span {
+        background: var(--control-bg);
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-family: monospace;
+        word-break: break-all;
+      }
+    }
+
+    .WithdrawalRequest-status {
+      .Badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.8em;
+        font-weight: bold;
+        width: fit-content;
+
+        &.Badge--pending {
+          background: #f39c12;
+          color: white;
+        }
+
+        &.Badge--approved {
+          background: #27ae60;
+          color: white;
+        }
+
+        &.Badge--rejected {
+          background: #e74c3c;
+          color: white;
+        }
+      }
+    }
+  }
+
+  .WithdrawalRequest-actions {
+    display: flex;
+    gap: 10px;
+
+    .Button {
+      padding: 6px 12px;
+      font-size: 0.9em;
+    }
+  }
+}
+
+// DepositRecordManagementSection Styles
+.DepositRecordManagementSection {
+  .DepositRecordManagementSection-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--control-bg);
+
+    h3 {
+      margin: 0;
+      color: var(--heading-color);
+    }
+
+    .DepositRecordManagementSection-stats {
+      display: flex;
+      gap: 20px;
+      font-size: 0.9em;
+      
+      .DepositRecordManagementSection-count {
+        color: var(--text-color);
+        font-weight: 500;
+      }
+
+      .DepositRecordManagementSection-pending {
+        color: var(--warning-color);
+        font-weight: 600;
+      }
+    }
+  }
+
+  .DepositRecordManagementSection-content {
+    .DepositRecordManagementSection-empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted-color);
+
+      .DepositRecordManagementSection-emptyIcon {
+        font-size: 3em;
+        margin-bottom: 20px;
+        opacity: 0.5;
+      }
+
+      h4 {
+        margin: 0 0 10px;
+        color: var(--heading-color);
+      }
+
+      p {
+        margin: 0;
+        font-size: 0.9em;
+      }
+    }
+
+    .DepositRecordManagementSection-list {
+      .DepositRecordItem {
+        background: var(--body-bg);
+        border: 1px solid var(--control-bg);
+        border-radius: 6px;
+        padding: 20px;
+        margin-bottom: 15px;
+        transition: box-shadow 0.2s ease;
+
+        &:hover {
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        &.status-pending {
+          border-left: 4px solid var(--warning-color);
+        }
+
+        &.status-approved {
+          border-left: 4px solid var(--success-color);
+        }
+
+        &.status-rejected {
+          border-left: 4px solid var(--danger-color);
+        }
+
+        .DepositRecordItem-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 15px;
+
+          .DepositRecordItem-user {
+            .DepositRecordItem-username {
+              font-weight: 600;
+              color: var(--primary-color);
+              display: block;
+              margin-bottom: 4px;
+            }
+
+            .DepositRecordItem-userId {
+              font-size: 0.85em;
+              color: var(--muted-color);
+              font-family: monospace;
+              background: var(--control-bg);
+              padding: 2px 6px;
+              border-radius: 4px;
+            }
+          }
+
+          .DepositRecordItem-amount {
+            text-align: right;
+
+            .DepositRecordItem-amountValue {
+              font-weight: 700;
+              font-size: 1.2em;
+              color: var(--success-color);
+              display: block;
+              margin-bottom: 8px;
+              font-family: monospace;
+            }
+
+            .DepositRecordItem-status {
+              display: inline-flex;
+              align-items: center;
+              gap: 6px;
+              padding: 4px 12px;
+              border-radius: 15px;
+              font-size: 0.8em;
+              font-weight: 600;
+
+              &.status-warning {
+                background: rgba(243, 156, 18, 0.1);
+                color: var(--warning-color);
+                border: 1px solid rgba(243, 156, 18, 0.2);
+              }
+
+              &.status-success {
+                background: rgba(39, 174, 96, 0.1);
+                color: var(--success-color);
+                border: 1px solid rgba(39, 174, 96, 0.2);
+              }
+
+              &.status-danger {
+                background: rgba(231, 76, 60, 0.1);
+                color: var(--danger-color);
+                border: 1px solid rgba(231, 76, 60, 0.2);
+              }
+            }
+          }
+        }
+
+        .DepositRecordItem-details {
+          .DepositRecordItem-row {
+            display: flex;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+
+            .DepositRecordItem-label {
+              font-weight: 600;
+              color: var(--text-color);
+              min-width: 120px;
+              flex-shrink: 0;
+            }
+
+            .DepositRecordItem-value {
+              color: var(--muted-color);
+              flex: 1;
+              word-break: break-word;
+            }
+
+            .DepositRecordItem-link {
+              color: var(--primary-color);
+              text-decoration: none;
+              display: inline-flex;
+              align-items: center;
+              gap: 4px;
+
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+
+          .DepositRecordItem-processed {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--control-bg);
+            background: rgba(39, 174, 96, 0.05);
+            border-radius: 4px;
+            padding: 15px;
+          }
+        }
+
+        .DepositRecordItem-actions {
+          display: flex;
+          gap: 10px;
+          margin-top: 15px;
+          padding-top: 15px;
+          border-top: 1px solid var(--control-bg);
+
+          .DepositRecordItem-approveButton {
+            background: var(--success-color);
+            border-color: var(--success-color);
+
+            &:hover {
+              background: darken(@success-color, 10%);
+              border-color: darken(@success-color, 10%);
+            }
+          }
+
+          .DepositRecordItem-rejectButton {
+            background: var(--danger-color);
+            border-color: var(--danger-color);
+
+            &:hover {
+              background: darken(@danger-color, 10%);
+              border-color: darken(@danger-color, 10%);
+            }
+          }
+        }
+
+        .DepositRecordItem-adminActions {
+          display: flex;
+          justify-content: flex-end;
+          margin-top: 10px;
+
+          .DepositRecordItem-deleteButton {
+            color: var(--danger-color);
+            font-size: 0.8em;
+            padding: 4px 8px;
+
+            &:hover {
+              background: rgba(231, 76, 60, 0.1);
+            }
+          }
+        }
+      }
+    }
+  }
+}

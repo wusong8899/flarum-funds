@@ -100,7 +100,7 @@ class DepositPlatform extends AbstractModel
      */
     public function getCurrencyIconUrl(): ?string
     {
-        return $this->currency_icon_override_url 
+        return $this->currency_icon_override_url
             ?: $this->currencyIcon?->getCurrencyIconUrl();
     }
 
@@ -110,7 +110,7 @@ class DepositPlatform extends AbstractModel
      */
     public function getCurrencyIconClass(): ?string
     {
-        return $this->currency_icon_override_class 
+        return $this->currency_icon_override_class
             ?: $this->currencyIcon?->getCurrencyIconClass();
     }
 
@@ -128,7 +128,7 @@ class DepositPlatform extends AbstractModel
      */
     public function getNetworkIconUrl(): ?string
     {
-        return $this->network_icon_override_url 
+        return $this->network_icon_override_url
             ?: $this->networkType?->network_icon_url;
     }
 
@@ -138,7 +138,7 @@ class DepositPlatform extends AbstractModel
      */
     public function getNetworkIconClass(): ?string
     {
-        return $this->network_icon_override_class 
+        return $this->network_icon_override_class
             ?: $this->networkType?->network_icon_class;
     }
 

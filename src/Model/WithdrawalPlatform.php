@@ -89,7 +89,7 @@ class WithdrawalPlatform extends AbstractModel
      */
     public function getCurrencyIconUrl(): ?string
     {
-        return $this->currency_icon_override_url 
+        return $this->currency_icon_override_url
             ?: $this->currencyIcon?->getCurrencyIconUrl();
     }
 
@@ -99,7 +99,7 @@ class WithdrawalPlatform extends AbstractModel
      */
     public function getCurrencyIconClass(): ?string
     {
-        return $this->currency_icon_override_class 
+        return $this->currency_icon_override_class
             ?: $this->currencyIcon?->getCurrencyIconClass();
     }
 

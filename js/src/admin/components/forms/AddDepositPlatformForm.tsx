@@ -1,6 +1,5 @@
 import app from 'flarum/admin/app';
 import Component from 'flarum/common/Component';
-import Button from 'flarum/common/components/Button';
 import Switch from 'flarum/common/components/Switch';
 import Stream from 'flarum/common/utils/Stream';
 import type Mithril from 'mithril';
@@ -15,8 +14,13 @@ export interface DepositPlatformFormData {
   fee: string;
   address: string;
   qrCodeImageUrl: string;
-  iconUrl: string;
-  iconClass: string;
+  // Three-tier icon system (deprecating old single icon fields)
+  currencyIconOverrideUrl: string;
+  currencyIconOverrideClass: string;
+  networkIconOverrideUrl: string;
+  networkIconOverrideClass: string;
+  platformSpecificIconUrl: string;
+  platformSpecificIconClass: string;
   warningText: string;
   isActive: boolean;
 }
@@ -24,7 +28,7 @@ export interface DepositPlatformFormData {
 export interface AddDepositPlatformFormAttrs {
   submitting: boolean;
   onSubmit: (formData: DepositPlatformFormData) => Promise<void>;
-  onCancel: () => void;
+  onCancel?: () => void; // Optional since form is always visible
 }
 
 export default class AddDepositPlatformForm extends Component<AddDepositPlatformFormAttrs> {
@@ -37,8 +41,13 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
     fee: Stream(''),
     address: Stream(''),
     qrCodeImageUrl: Stream(''),
-    iconUrl: Stream(''),
-    iconClass: Stream(''),
+    // Three-tier icon system
+    currencyIconOverrideUrl: Stream(''),
+    currencyIconOverrideClass: Stream(''),
+    networkIconOverrideUrl: Stream(''),
+    networkIconOverrideClass: Stream(''),
+    platformSpecificIconUrl: Stream(''),
+    platformSpecificIconClass: Stream(''),
     warningText: Stream(''),
     isActive: Stream(true)
   };
@@ -48,10 +57,14 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
   }
 
   view(vnode: Mithril.Vnode<AddDepositPlatformFormAttrs>) {
-    const { submitting, onCancel } = vnode.attrs;
+    const { submitting } = vnode.attrs;
 
     return (
-      <div className="AddDepositPlatformForm">
+      <form 
+        id="deposit-platform-form" 
+        className="AddDepositPlatformForm"
+        onsubmit={(e: Event) => this.handleSubmit(vnode.attrs, e)}
+      >
         <div className="Form">
           <div className="Form-row">
             <div className="Form-group">
@@ -180,35 +193,86 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
             </div>
           </div>
 
-          <div className="Form-row">
-            <div className="Form-group">
-              <label>
-                {app.translator.trans('withdrawal.admin.deposit.platforms.icon_url')}
-              </label>
-              <input
-                type="url"
-                className="FormControl"
-                placeholder="https://example.com/usdt-trc20-icon.png"
-                bidi={this.formData.iconUrl}
-                disabled={submitting}
-              />
-              <div className="helpText">
-                {app.translator.trans('withdrawal.admin.deposit.platforms.icon_url_help')}
+          {/* Three-tier icon system */}
+          <div className="Form-section">
+            <h4>{app.translator.trans('withdrawal.admin.platforms.icon_configuration')}</h4>
+            <p className="helpText">{app.translator.trans('withdrawal.admin.platforms.icon_configuration_help')}</p>
+            
+            {/* Currency Icon Override */}
+            <div className="Form-row">
+              <div className="Form-group">
+                <label>{app.translator.trans('withdrawal.admin.platforms.currency_icon_override_url')}</label>
+                <input
+                  type="url"
+                  className="FormControl"
+                  placeholder="https://example.com/usdt-icon.png"
+                  bidi={this.formData.currencyIconOverrideUrl}
+                  disabled={submitting}
+                />
+                <div className="helpText">{app.translator.trans('withdrawal.admin.platforms.currency_icon_override_url_help')}</div>
+              </div>
+              <div className="Form-group">
+                <label>{app.translator.trans('withdrawal.admin.platforms.currency_icon_override_class')}</label>
+                <input
+                  type="text"
+                  className="FormControl"
+                  placeholder="fab fa-bitcoin"
+                  bidi={this.formData.currencyIconOverrideClass}
+                  disabled={submitting}
+                />
+                <div className="helpText">{app.translator.trans('withdrawal.admin.platforms.currency_icon_override_class_help')}</div>
               </div>
             </div>
-            <div className="Form-group">
-              <label>
-                {app.translator.trans('withdrawal.admin.deposit.platforms.icon_class')}
-              </label>
-              <input
-                type="text"
-                className="FormControl"
-                placeholder="fas fa-coins"
-                bidi={this.formData.iconClass}
-                disabled={submitting}
-              />
-              <div className="helpText">
-                {app.translator.trans('withdrawal.admin.deposit.platforms.icon_class_help')}
+            
+            {/* Network Icon Override */}
+            <div className="Form-row">
+              <div className="Form-group">
+                <label>{app.translator.trans('withdrawal.admin.platforms.network_icon_override_url')}</label>
+                <input
+                  type="url"
+                  className="FormControl"
+                  placeholder="https://example.com/trc20-icon.png"
+                  bidi={this.formData.networkIconOverrideUrl}
+                  disabled={submitting}
+                />
+                <div className="helpText">{app.translator.trans('withdrawal.admin.platforms.network_icon_override_url_help')}</div>
+              </div>
+              <div className="Form-group">
+                <label>{app.translator.trans('withdrawal.admin.platforms.network_icon_override_class')}</label>
+                <input
+                  type="text"
+                  className="FormControl"
+                  placeholder="fas fa-network-wired"
+                  bidi={this.formData.networkIconOverrideClass}
+                  disabled={submitting}
+                />
+                <div className="helpText">{app.translator.trans('withdrawal.admin.platforms.network_icon_override_class_help')}</div>
+              </div>
+            </div>
+            
+            {/* Platform-Specific Icon */}
+            <div className="Form-row">
+              <div className="Form-group">
+                <label>{app.translator.trans('withdrawal.admin.platforms.platform_specific_icon_url')}</label>
+                <input
+                  type="url"
+                  className="FormControl"
+                  placeholder="https://example.com/platform-specific-icon.png"
+                  bidi={this.formData.platformSpecificIconUrl}
+                  disabled={submitting}
+                />
+                <div className="helpText">{app.translator.trans('withdrawal.admin.platforms.platform_specific_icon_url_help')}</div>
+              </div>
+              <div className="Form-group">
+                <label>{app.translator.trans('withdrawal.admin.platforms.platform_specific_icon_class')}</label>
+                <input
+                  type="text"
+                  className="FormControl"
+                  placeholder="fas fa-building"
+                  bidi={this.formData.platformSpecificIconClass}
+                  disabled={submitting}
+                />
+                <div className="helpText">{app.translator.trans('withdrawal.admin.platforms.platform_specific_icon_class_help')}</div>
               </div>
             </div>
           </div>
@@ -233,25 +297,8 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
             </Switch>
           </div>
 
-          <div className="Form-actions">
-            <Button
-              className="Button Button--primary"
-              type="submit"
-              loading={submitting}
-              onclick={this.handleSubmit.bind(this, vnode.attrs)}
-            >
-              {app.translator.trans('withdrawal.admin.deposit.platforms.add_button')}
-            </Button>
-            <Button
-              className="Button"
-              onclick={onCancel}
-              disabled={submitting}
-            >
-              {app.translator.trans('core.admin.basics.cancel_button')}
-            </Button>
-          </div>
         </div>
-      </div>
+      </form>
     );
   }
 
@@ -296,10 +343,20 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
         }
       }
 
-      // Optional URL validations
-      if (this.formData.iconUrl() && this.formData.iconUrl().trim()) {
-        const iconUrlLabel = app.translator.trans('withdrawal.admin.deposit.platforms.icon_url').toString();
-        validator.url(this.formData.iconUrl(), 'iconUrl', iconUrlLabel);
+      // Optional URL validations for three-tier icon system
+      if (this.formData.currencyIconOverrideUrl() && this.formData.currencyIconOverrideUrl().trim()) {
+        const currencyIconUrlLabel = app.translator.trans('withdrawal.admin.platforms.currency_icon_override_url').toString();
+        validator.url(this.formData.currencyIconOverrideUrl(), 'currencyIconOverrideUrl', currencyIconUrlLabel);
+      }
+      
+      if (this.formData.networkIconOverrideUrl() && this.formData.networkIconOverrideUrl().trim()) {
+        const networkIconUrlLabel = app.translator.trans('withdrawal.admin.platforms.network_icon_override_url').toString();
+        validator.url(this.formData.networkIconOverrideUrl(), 'networkIconOverrideUrl', networkIconUrlLabel);
+      }
+      
+      if (this.formData.platformSpecificIconUrl() && this.formData.platformSpecificIconUrl().trim()) {
+        const platformIconUrlLabel = app.translator.trans('withdrawal.admin.platforms.platform_specific_icon_url').toString();
+        validator.url(this.formData.platformSpecificIconUrl(), 'platformSpecificIconUrl', platformIconUrlLabel);
       }
       
       if (this.formData.qrCodeImageUrl() && this.formData.qrCodeImageUrl().trim()) {
@@ -321,6 +378,26 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
     }
   }
 
+  public clearForm(): void {
+    this.formData.name('');
+    this.formData.symbol('');
+    this.formData.network('');
+    this.formData.minAmount('');
+    this.formData.maxAmount('');
+    this.formData.fee('');
+    this.formData.address('');
+    this.formData.qrCodeImageUrl('');
+    // Clear three-tier icon fields
+    this.formData.currencyIconOverrideUrl('');
+    this.formData.currencyIconOverrideClass('');
+    this.formData.networkIconOverrideUrl('');
+    this.formData.networkIconOverrideClass('');
+    this.formData.platformSpecificIconUrl('');
+    this.formData.platformSpecificIconClass('');
+    this.formData.warningText('');
+    this.formData.isActive(true);
+  }
+
   private async handleSubmit(attrs: AddDepositPlatformFormAttrs, e: Event): Promise<void> {
     e.preventDefault();
 
@@ -337,12 +414,24 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
       fee: this.formData.fee(),
       address: this.formData.address(),
       qrCodeImageUrl: this.formData.qrCodeImageUrl(),
-      iconUrl: this.formData.iconUrl(),
-      iconClass: this.formData.iconClass(),
+      // Three-tier icon system
+      currencyIconOverrideUrl: this.formData.currencyIconOverrideUrl(),
+      currencyIconOverrideClass: this.formData.currencyIconOverrideClass(),
+      networkIconOverrideUrl: this.formData.networkIconOverrideUrl(),
+      networkIconOverrideClass: this.formData.networkIconOverrideClass(),
+      platformSpecificIconUrl: this.formData.platformSpecificIconUrl(),
+      platformSpecificIconClass: this.formData.platformSpecificIconClass(),
       warningText: this.formData.warningText(),
       isActive: this.formData.isActive()
     };
 
-    await attrs.onSubmit(formData);
+    try {
+      await attrs.onSubmit(formData);
+      // Clear form after successful submission
+      this.clearForm();
+    } catch (error) {
+      // Error handling is done by parent component
+      console.error('Form submission error:', error);
+    }
   }
 }

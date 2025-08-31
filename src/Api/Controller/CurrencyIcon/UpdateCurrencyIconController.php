@@ -30,7 +30,7 @@ class UpdateCurrencyIconController extends AbstractShowController
         $this->validateAttributes($attributes);
 
         // Check for duplicate currency symbol (if changing)
-        if (isset($attributes['currencySymbol']) && 
+        if (isset($attributes['currencySymbol']) &&
             strtoupper($attributes['currencySymbol']) !== $currencyIcon->currency_symbol) {
             $existingCurrency = CurrencyIcon::where('currency_symbol', strtoupper($attributes['currencySymbol']))
                                            ->where('id', '!=', $currencyIcon->id)

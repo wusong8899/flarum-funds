@@ -42,7 +42,7 @@ class CreateCurrencyIconController extends AbstractCreateController
         $currencyIcon->currency_unicode_symbol = $attributes['currencyUnicodeSymbol'] ?? null;
         $currencyIcon->display_priority = $attributes['displayPriority'] ?? 0;
         $currencyIcon->is_active = $attributes['isActive'] ?? true;
-        
+
         $currencyIcon->save();
 
         return $currencyIcon;

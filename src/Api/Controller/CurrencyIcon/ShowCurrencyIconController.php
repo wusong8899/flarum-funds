@@ -22,7 +22,7 @@ class ShowCurrencyIconController extends AbstractShowController
         $actor->assertAdmin();
 
         $id = (int) $request->getAttribute('id');
-        
+
         $currencyIcon = CurrencyIcon::findOrFail($id);
 
         return $currencyIcon;

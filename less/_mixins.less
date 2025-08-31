@@ -1,0 +1,56 @@
+// Generic platform card styles (LESS mixin)
+.platform-card-styles() {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: var(--body-bg);
+  border-radius: 4px;
+  border: 1px solid var(--control-bg);
+}
+
+.platform-card-info-styles() {
+  flex: 1;
+}
+
+.platform-card-primary-styles() {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.platform-card-status-styles() {
+  font-size: 1.2em;
+  line-height: 1;
+
+  &.inactive {
+    opacity: 0.5;
+  }
+}
+
+.platform-card-name-styles() {
+  font-weight: bold;
+}
+
+.platform-card-details-styles() {
+  display: flex;
+  gap: 20px;
+  font-size: 0.9em;
+  color: var(--muted-color);
+}
+
+.platform-card-amounts-styles() {
+  font-family: monospace;
+}
+
+.platform-card-actions-styles() {
+  display: flex;
+  gap: 10px;
+
+  .Button {
+    padding: 6px 12px;
+    font-size: 0.9em;
+  }
+}

@@ -32,7 +32,7 @@ class ListCurrencyIconsController extends AbstractListController
         // Search by symbol or name
         if (isset($filter['search'])) {
             $search = trim($filter['search']);
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('currency_symbol', 'LIKE', "%{$search}%")
                   ->orWhere('currency_name', 'LIKE', "%{$search}%");
             });
