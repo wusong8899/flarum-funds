@@ -25,7 +25,7 @@ interface DepositRecord {
   creditedAmount?(): number;
   createdAt(): Date;
   updatedAt(): Date;
-  user?(): any;
+  user?(): any; // Flarum User model - keep as any for compatibility
   platform?(): any;
   processedByUser?(): any;
   isPending(): boolean;
@@ -392,13 +392,12 @@ export default class DepositRecordManagementSection extends Component<
 
   private handleDelete(record: DepositRecord, attrs: DepositRecordManagementSectionAttrs): void {
     const user = record.user?.();
-    const userName = user?.displayName?.() || 'Unknown User';
     const amount = record.amount();
 
     app.modal.show(ConfirmModal, {
       title: app.translator.trans('withdrawal.admin.deposit.records.delete_confirm_title'),
       message: app.translator.trans('withdrawal.admin.deposit.records.delete_confirm_message', {
-        user: userName,
+        user: user,
         amount: amount
       }),
       confirmText: app.translator.trans('withdrawal.admin.deposit.records.delete_confirm_button'),
