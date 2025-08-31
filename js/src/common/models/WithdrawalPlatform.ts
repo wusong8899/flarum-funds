@@ -32,7 +32,8 @@ export default class WithdrawalPlatform extends Model {
   
   // Computed properties
   apiEndpoint() {
-    return `/withdrawal-platforms/${this.id()}`;
+    const id = this.id();
+    return id ? `/withdrawal-platforms/${id}` : '/withdrawal-platforms';
   }
   
   // Helper methods

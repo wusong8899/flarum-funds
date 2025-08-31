@@ -31,7 +31,8 @@ export default class WithdrawalRequest extends Model {
   
   // Computed properties
   apiEndpoint() {
-    return `/withdrawal-requests/${this.id()}`;
+    const id = this.id();
+    return id ? `/withdrawal-requests/${id}` : '/withdrawal-requests';
   }
   
   // Status helpers
