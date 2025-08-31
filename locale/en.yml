@@ -145,6 +145,7 @@ withdrawal:
         delete_cancel_button: Cancel
         delete_success: Deposit record deleted successfully
         delete_error: Failed to delete deposit record
+        delete_processed_error: Cannot delete processed records. Only pending deposits can be deleted.
         status:
           pending: Pending
           approved: Approved

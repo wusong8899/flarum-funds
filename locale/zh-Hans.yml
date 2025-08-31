@@ -121,6 +121,7 @@ withdrawal:
         delete_cancel_button: 取消
         delete_success: 存款记录删除成功
         delete_error: 删除存款记录失败
+        delete_processed_error: 无法删除已处理的记录。只能删除待处理的存款记录。
         status:
           pending: 待审核
           approved: 已通过
