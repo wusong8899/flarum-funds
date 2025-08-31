@@ -246,18 +246,16 @@ export default class DepositRecordManagementSection extends Component<
           </div>
         )}
 
-        {record.isPending() && (
-          <div className="DepositRecordItem-adminActions">
-            <Button
-              className="Button Button--link DepositRecordItem-deleteButton"
-              onclick={() => this.handleDelete(record, attrs)}
-              disabled={isProcessing}
-            >
-              {icon('fas fa-trash')}
-              {app.translator.trans('withdrawal.admin.deposit.records.delete')}
-            </Button>
-          </div>
-        )}
+        <div className="DepositRecordItem-adminActions">
+          <Button
+            className="Button Button--link DepositRecordItem-deleteButton"
+            onclick={() => this.handleDelete(record, attrs)}
+            disabled={isProcessing}
+          >
+            {icon('fas fa-trash')}
+            {app.translator.trans('withdrawal.admin.deposit.records.delete')}
+          </Button>
+        </div>
       </div>
     );
   }
@@ -419,17 +417,9 @@ export default class DepositRecordManagementSection extends Component<
           );
         } catch (error) {
           console.error('Error deleting deposit record:', error);
-          
-          let errorMessage = app.translator.trans('withdrawal.admin.deposit.records.delete_error');
-          
-          // Provide more specific error message for processed records
-          if (error && (error.message || '').includes('already been processed')) {
-            errorMessage = app.translator.trans('withdrawal.admin.deposit.records.delete_processed_error');
-          }
-          
           app.alerts.show(
             { type: 'error', dismissible: true },
-            errorMessage
+            app.translator.trans('withdrawal.admin.deposit.records.delete_error')
           );
         } finally {
           this.state.processingRecords.delete(recordId);

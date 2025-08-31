@@ -99,12 +99,7 @@ export default class DepositRecord extends Model {
       );
     }
 
-    if (!this.canBeModified()) {
-      throw new ServiceError(
-        'This record cannot be deleted as it has already been processed',
-        ServiceErrorType.VALIDATION_ERROR
-      );
-    }
+    // Removed canBeModified() check - admins can now delete processed records
 
     try {
       await super.delete();
@@ -186,7 +181,7 @@ export default class DepositRecord extends Model {
     const currentUser = app.session.user;
     if (!currentUser) return false;
 
-    // Admin can delete any record
+    // Admin can delete any record (including processed ones)
     if (currentUser.isAdmin()) return true;
 
     // Users can only delete their own pending records
