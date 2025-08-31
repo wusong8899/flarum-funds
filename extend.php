@@ -35,6 +35,8 @@ return [
         ->patch('/deposit-platforms/{id}', 'deposit.platforms.update', Controller\UpdateDepositPlatformController::class)
         ->delete('/deposit-platforms/{id}', 'deposit.platforms.delete', Controller\DeleteDepositPlatformController::class)
         ->get('/deposit-address', 'deposit.address.get', Controller\GetDepositAddressController::class)
+        // Deposit addresses routes
+        ->get('/deposit-addresses', 'deposit.addresses.index', Controller\ListDepositAddressesController::class)
         // Network types routes
         ->get('/network-types', 'network-types.index', Controller\ListNetworkTypesController::class)
         ->post('/network-types', 'network-types.create', Controller\CreateNetworkTypeController::class)
