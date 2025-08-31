@@ -1,6 +1,6 @@
 vendor
 node_modules
-CLAUDE.md
+*.md
 .claude
 .serena
 .php-cs-fixer.cache
