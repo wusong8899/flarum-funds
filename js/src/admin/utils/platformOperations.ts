@@ -20,18 +20,18 @@ export const createWithdrawalPlatformOperations = (): PlatformOperations<any> =>
         isActive: true
       };
       
-      const result = await platformService.create('withdrawal', attributes);
+      const result = await platformService.create('funds', attributes);
       
       app.alerts.show(
         { type: 'success', dismissible: true },
-        app.translator.trans('withdrawal.admin.platforms.add_success').toString()
+        app.translator.trans('funds.admin.platforms.add_success').toString()
       );
       
       return result;
     } catch (error) {
       app.alerts.show(
         { type: 'error', dismissible: true },
-        error instanceof Error ? error.message : app.translator.trans('withdrawal.admin.platforms.add_error').toString()
+        error instanceof Error ? error.message : app.translator.trans('funds.admin.platforms.add_error').toString()
       );
       throw error;
     }
@@ -47,7 +47,7 @@ export const createWithdrawalPlatformOperations = (): PlatformOperations<any> =>
       
       app.alerts.show(
         { type: 'success', dismissible: true },
-        app.translator.trans(`withdrawal.admin.platforms.${newStatus ? 'enable' : 'disable'}_success`)
+        app.translator.trans(`funds.admin.platforms.${newStatus ? 'enable' : 'disable'}_success`)
       );
       
       return result;
@@ -69,7 +69,7 @@ export const createWithdrawalPlatformOperations = (): PlatformOperations<any> =>
       
       app.alerts.show(
         { type: 'success', dismissible: true },
-        app.translator.trans('withdrawal.admin.platforms.delete_success').toString()
+        app.translator.trans('funds.admin.platforms.delete_success').toString()
       );
     } catch (error) {
       app.alerts.show(
@@ -84,11 +84,11 @@ export const createWithdrawalPlatformOperations = (): PlatformOperations<any> =>
     try {
       // Import PlatformService dynamically
       const { platformService } = await import('../../common/services/PlatformService');
-      return await platformService.find('withdrawal');
+      return await platformService.find('funds');
     } catch (error) {
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.admin.platforms.load_error').toString()
+        app.translator.trans('funds.admin.platforms.load_error').toString()
       );
       throw error;
     }
@@ -125,7 +125,7 @@ export const createDepositPlatformOperations = (): PlatformOperations<any> => ({
     } catch (error) {
       app.alerts.show(
         { type: 'error', dismissible: true },
-        error instanceof Error ? error.message : app.translator.trans('withdrawal.admin.deposit.platforms.add_error').toString()
+        error instanceof Error ? error.message : app.translator.trans('funds.admin.deposit.platforms.add_error').toString()
       );
       throw error;
     }
@@ -145,7 +145,7 @@ export const createDepositPlatformOperations = (): PlatformOperations<any> => ({
     } catch (error) {
       app.alerts.show(
         { type: 'error', dismissible: true },
-        error instanceof Error ? error.message : app.translator.trans('withdrawal.admin.deposit.platforms.toggle_error').toString()
+        error instanceof Error ? error.message : app.translator.trans('funds.admin.deposit.platforms.toggle_error').toString()
       );
       throw error;
     }
@@ -163,7 +163,7 @@ export const createDepositPlatformOperations = (): PlatformOperations<any> => ({
     } catch (error) {
       app.alerts.show(
         { type: 'error', dismissible: true },
-        error instanceof Error ? error.message : app.translator.trans('withdrawal.admin.deposit.platforms.delete_error').toString()
+        error instanceof Error ? error.message : app.translator.trans('funds.admin.deposit.platforms.delete_error').toString()
       );
       throw error;
     }
@@ -177,7 +177,7 @@ export const createDepositPlatformOperations = (): PlatformOperations<any> => ({
     } catch (error) {
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.platforms.load_error').toString()
+        app.translator.trans('funds.admin.deposit.platforms.load_error').toString()
       );
       throw error;
     }
@@ -214,7 +214,7 @@ export const createWithdrawalRequestOperations = (): TransactionOperations<any> 
     } catch (error) {
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.admin.requests.load_error').toString()
+        app.translator.trans('funds.admin.requests.load_error').toString()
       );
       throw error;
     }
@@ -237,7 +237,7 @@ export const createDepositRecordOperations = (): TransactionOperations<any> => (
     } catch (error) {
       app.alerts.show(
         { type: 'error', dismissible: true },
-        error instanceof Error ? error.message : app.translator.trans('withdrawal.admin.deposit.records.update_error').toString()
+        error instanceof Error ? error.message : app.translator.trans('funds.admin.deposit.records.update_error').toString()
       );
       throw error;
     }
@@ -251,7 +251,7 @@ export const createDepositRecordOperations = (): TransactionOperations<any> => (
     } catch (error) {
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.records.load_error').toString()
+        app.translator.trans('funds.admin.deposit.records.load_error').toString()
       );
       throw error;
     }

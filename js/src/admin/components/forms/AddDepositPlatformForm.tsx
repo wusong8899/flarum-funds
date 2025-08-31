@@ -69,7 +69,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
           <div className="Form-row">
             <div className="Form-group">
               <label>
-                {app.translator.trans('withdrawal.admin.deposit.platforms.name')}
+                {app.translator.trans('funds.admin.deposit.platforms.name')}
                 <span className="Form-required">*</span>
               </label>
               <input
@@ -82,7 +82,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
             </div>
             <div className="Form-group">
               <label>
-                {app.translator.trans('withdrawal.admin.deposit.platforms.symbol')}
+                {app.translator.trans('funds.admin.deposit.platforms.symbol')}
                 <span className="Form-required">*</span>
               </label>
               <input
@@ -98,7 +98,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
           <div className="Form-row">
             <div className="Form-group">
               <label>
-                {app.translator.trans('withdrawal.admin.deposit.platforms.network')}
+                {app.translator.trans('funds.admin.deposit.platforms.network')}
               </label>
               <input
                 type="text"
@@ -115,7 +115,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
           <div className="Form-row">
             <div className="Form-group">
               <label>
-                {app.translator.trans('withdrawal.admin.deposit.platforms.min_amount')}
+                {app.translator.trans('funds.admin.deposit.platforms.min_amount')}
               </label>
               <input
                 type="number"
@@ -129,7 +129,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
             </div>
             <div className="Form-group">
               <label>
-                {app.translator.trans('withdrawal.admin.deposit.platforms.max_amount')}
+                {app.translator.trans('funds.admin.deposit.platforms.max_amount')}
               </label>
               <input
                 type="number"
@@ -143,7 +143,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
             </div>
             <div className="Form-group">
               <label>
-                {app.translator.trans('withdrawal.admin.deposit.platforms.fee')}
+                {app.translator.trans('funds.admin.deposit.platforms.fee')}
               </label>
               <input
                 type="number"
@@ -155,14 +155,14 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
                 disabled={submitting}
               />
               <div className="helpText">
-                {app.translator.trans('withdrawal.admin.deposit.platforms.fee_help')}
+                {app.translator.trans('funds.admin.deposit.platforms.fee_help')}
               </div>
             </div>
           </div>
 
           <div className="Form-group">
             <label>
-              {app.translator.trans('withdrawal.admin.deposit.platforms.address')}
+              {app.translator.trans('funds.admin.deposit.platforms.address')}
               <span className="Form-required">*</span>
             </label>
             <input
@@ -173,13 +173,13 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
               disabled={submitting}
             />
             <div className="helpText">
-              {app.translator.trans('withdrawal.admin.deposit.platforms.address_help')}
+              {app.translator.trans('funds.admin.deposit.platforms.address_help')}
             </div>
           </div>
 
           <div className="Form-group">
             <label>
-              {app.translator.trans('withdrawal.admin.deposit.platforms.qr_code_image_url')}
+              {app.translator.trans('funds.admin.deposit.platforms.qr_code_image_url')}
             </label>
             <input
               type="url"
@@ -189,19 +189,19 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
               disabled={submitting}
             />
             <div className="helpText">
-              {app.translator.trans('withdrawal.admin.deposit.platforms.qr_code_image_help')}
+              {app.translator.trans('funds.admin.deposit.platforms.qr_code_image_help')}
             </div>
           </div>
 
           {/* Three-tier icon system */}
           <div className="Form-section">
-            <h4>{app.translator.trans('withdrawal.admin.platforms.icon_configuration')}</h4>
-            <p className="helpText">{app.translator.trans('withdrawal.admin.platforms.icon_configuration_help')}</p>
+            <h4>{app.translator.trans('funds.admin.platforms.icon_configuration')}</h4>
+            <p className="helpText">{app.translator.trans('funds.admin.platforms.icon_configuration_help')}</p>
             
             {/* Currency Icon Override */}
             <div className="Form-row">
               <div className="Form-group">
-                <label>{app.translator.trans('withdrawal.admin.platforms.currency_icon_override_url')}</label>
+                <label>{app.translator.trans('funds.admin.platforms.currency_icon_override_url')}</label>
                 <input
                   type="url"
                   className="FormControl"
@@ -209,10 +209,10 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
                   bidi={this.formData.currencyIconOverrideUrl}
                   disabled={submitting}
                 />
-                <div className="helpText">{app.translator.trans('withdrawal.admin.platforms.currency_icon_override_url_help')}</div>
+                <div className="helpText">{app.translator.trans('funds.admin.platforms.currency_icon_override_url_help')}</div>
               </div>
               <div className="Form-group">
-                <label>{app.translator.trans('withdrawal.admin.platforms.currency_icon_override_class')}</label>
+                <label>{app.translator.trans('funds.admin.platforms.currency_icon_override_class')}</label>
                 <input
                   type="text"
                   className="FormControl"
@@ -220,14 +220,14 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
                   bidi={this.formData.currencyIconOverrideClass}
                   disabled={submitting}
                 />
-                <div className="helpText">{app.translator.trans('withdrawal.admin.platforms.currency_icon_override_class_help')}</div>
+                <div className="helpText">{app.translator.trans('funds.admin.platforms.currency_icon_override_class_help')}</div>
               </div>
             </div>
             
             {/* Network Icon Override */}
             <div className="Form-row">
               <div className="Form-group">
-                <label>{app.translator.trans('withdrawal.admin.platforms.network_icon_override_url')}</label>
+                <label>{app.translator.trans('funds.admin.platforms.network_icon_override_url')}</label>
                 <input
                   type="url"
                   className="FormControl"
@@ -235,10 +235,10 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
                   bidi={this.formData.networkIconOverrideUrl}
                   disabled={submitting}
                 />
-                <div className="helpText">{app.translator.trans('withdrawal.admin.platforms.network_icon_override_url_help')}</div>
+                <div className="helpText">{app.translator.trans('funds.admin.platforms.network_icon_override_url_help')}</div>
               </div>
               <div className="Form-group">
-                <label>{app.translator.trans('withdrawal.admin.platforms.network_icon_override_class')}</label>
+                <label>{app.translator.trans('funds.admin.platforms.network_icon_override_class')}</label>
                 <input
                   type="text"
                   className="FormControl"
@@ -246,14 +246,14 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
                   bidi={this.formData.networkIconOverrideClass}
                   disabled={submitting}
                 />
-                <div className="helpText">{app.translator.trans('withdrawal.admin.platforms.network_icon_override_class_help')}</div>
+                <div className="helpText">{app.translator.trans('funds.admin.platforms.network_icon_override_class_help')}</div>
               </div>
             </div>
             
             {/* Platform-Specific Icon */}
             <div className="Form-row">
               <div className="Form-group">
-                <label>{app.translator.trans('withdrawal.admin.platforms.platform_specific_icon_url')}</label>
+                <label>{app.translator.trans('funds.admin.platforms.platform_specific_icon_url')}</label>
                 <input
                   type="url"
                   className="FormControl"
@@ -261,10 +261,10 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
                   bidi={this.formData.platformSpecificIconUrl}
                   disabled={submitting}
                 />
-                <div className="helpText">{app.translator.trans('withdrawal.admin.platforms.platform_specific_icon_url_help')}</div>
+                <div className="helpText">{app.translator.trans('funds.admin.platforms.platform_specific_icon_url_help')}</div>
               </div>
               <div className="Form-group">
-                <label>{app.translator.trans('withdrawal.admin.platforms.platform_specific_icon_class')}</label>
+                <label>{app.translator.trans('funds.admin.platforms.platform_specific_icon_class')}</label>
                 <input
                   type="text"
                   className="FormControl"
@@ -272,7 +272,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
                   bidi={this.formData.platformSpecificIconClass}
                   disabled={submitting}
                 />
-                <div className="helpText">{app.translator.trans('withdrawal.admin.platforms.platform_specific_icon_class_help')}</div>
+                <div className="helpText">{app.translator.trans('funds.admin.platforms.platform_specific_icon_class_help')}</div>
               </div>
             </div>
           </div>
@@ -280,7 +280,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
 
           <div className="Form-group">
             <label>
-              {app.translator.trans('withdrawal.admin.deposit.platforms.warning_text')}
+              {app.translator.trans('funds.admin.deposit.platforms.warning_text')}
             </label>
             <textarea
               className="FormControl"
@@ -293,7 +293,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
 
           <div className="Form-group">
             <Switch state={this.formData.isActive()} onchange={this.formData.isActive} disabled={submitting}>
-              {app.translator.trans('withdrawal.admin.deposit.platforms.is_active')}
+              {app.translator.trans('funds.admin.deposit.platforms.is_active')}
             </Switch>
           </div>
 
@@ -308,9 +308,9 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
     
     try {
       // Fixed: Convert NestedStringArray to string for FormValidator
-      const nameLabel = app.translator.trans('withdrawal.admin.deposit.platforms.name').toString();
-      const symbolLabel = app.translator.trans('withdrawal.admin.deposit.platforms.symbol').toString();
-      const addressLabel = app.translator.trans('withdrawal.admin.deposit.platforms.address').toString();
+      const nameLabel = app.translator.trans('funds.admin.deposit.platforms.name').toString();
+      const symbolLabel = app.translator.trans('funds.admin.deposit.platforms.symbol').toString();
+      const addressLabel = app.translator.trans('funds.admin.deposit.platforms.address').toString();
       
       validator
         .required(this.formData.name(), 'name', nameLabel)
@@ -319,17 +319,17 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
 
       // Optional numeric fields validation
       if (this.formData.minAmount() && this.formData.minAmount().trim()) {
-        const minAmountLabel = app.translator.trans('withdrawal.admin.deposit.platforms.min_amount').toString();
+        const minAmountLabel = app.translator.trans('funds.admin.deposit.platforms.min_amount').toString();
         validator.numberRange(this.formData.minAmount(), 0, undefined, 'minAmount', minAmountLabel);
       }
       
       if (this.formData.maxAmount() && this.formData.maxAmount().trim()) {
-        const maxAmountLabel = app.translator.trans('withdrawal.admin.deposit.platforms.max_amount').toString();
+        const maxAmountLabel = app.translator.trans('funds.admin.deposit.platforms.max_amount').toString();
         validator.numberRange(this.formData.maxAmount(), 0, undefined, 'maxAmount', maxAmountLabel);
       }
 
       if (this.formData.fee() && this.formData.fee().trim()) {
-        const feeLabel = app.translator.trans('withdrawal.admin.deposit.platforms.fee').toString();
+        const feeLabel = app.translator.trans('funds.admin.deposit.platforms.fee').toString();
         validator.numberRange(this.formData.fee(), 0, undefined, 'fee', feeLabel);
       }
 
@@ -338,29 +338,29 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
         const minVal = parseFloat(this.formData.minAmount());
         const maxVal = parseFloat(this.formData.maxAmount());
         if (!isNaN(minVal) && !isNaN(maxVal) && maxVal < minVal) {
-          const errorMessage = app.translator.trans('withdrawal.admin.platforms.max_min_error').toString();
+          const errorMessage = app.translator.trans('funds.admin.platforms.max_min_error').toString();
           validator.custom(false, 'maxAmount', errorMessage);
         }
       }
 
       // Optional URL validations for three-tier icon system
       if (this.formData.currencyIconOverrideUrl() && this.formData.currencyIconOverrideUrl().trim()) {
-        const currencyIconUrlLabel = app.translator.trans('withdrawal.admin.platforms.currency_icon_override_url').toString();
+        const currencyIconUrlLabel = app.translator.trans('funds.admin.platforms.currency_icon_override_url').toString();
         validator.url(this.formData.currencyIconOverrideUrl(), 'currencyIconOverrideUrl', currencyIconUrlLabel);
       }
       
       if (this.formData.networkIconOverrideUrl() && this.formData.networkIconOverrideUrl().trim()) {
-        const networkIconUrlLabel = app.translator.trans('withdrawal.admin.platforms.network_icon_override_url').toString();
+        const networkIconUrlLabel = app.translator.trans('funds.admin.platforms.network_icon_override_url').toString();
         validator.url(this.formData.networkIconOverrideUrl(), 'networkIconOverrideUrl', networkIconUrlLabel);
       }
       
       if (this.formData.platformSpecificIconUrl() && this.formData.platformSpecificIconUrl().trim()) {
-        const platformIconUrlLabel = app.translator.trans('withdrawal.admin.platforms.platform_specific_icon_url').toString();
+        const platformIconUrlLabel = app.translator.trans('funds.admin.platforms.platform_specific_icon_url').toString();
         validator.url(this.formData.platformSpecificIconUrl(), 'platformSpecificIconUrl', platformIconUrlLabel);
       }
       
       if (this.formData.qrCodeImageUrl() && this.formData.qrCodeImageUrl().trim()) {
-        const qrCodeLabel = app.translator.trans('withdrawal.admin.deposit.platforms.qr_code_image_url').toString();
+        const qrCodeLabel = app.translator.trans('funds.admin.deposit.platforms.qr_code_image_url').toString();
         validator.url(this.formData.qrCodeImageUrl(), 'qrCodeImageUrl', qrCodeLabel);
       }
 

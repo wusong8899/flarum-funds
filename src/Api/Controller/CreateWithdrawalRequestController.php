@@ -52,7 +52,7 @@ class CreateWithdrawalRequestController extends AbstractCreateController
         $accountDetails = (string) Arr::get($attributes, 'accountDetails', '');
         $message = Arr::get($attributes, 'message', null);
 
-        // Find the withdrawal platform
+        // Find the funds platform
         $platform = WithdrawalPlatform::find($platformId);
 
         // Validate the request

@@ -9,7 +9,7 @@ return [
         ->js(__DIR__ . '/js/dist/forum.js')
         ->css(__DIR__ . '/less/forum.less')
         ->route('/funds', 'funds.index')
-        ->route('/withdrawal', 'withdrawal.index')
+        ->route('/funds', 'funds.index')
         ->route('/deposit', 'deposit.index'),
 
     (new Extend\Frontend('admin'))
@@ -19,15 +19,15 @@ return [
     new Extend\Locales(__DIR__ . '/locale'),
 
     (new Extend\Routes('api'))
-        ->get('/withdrawal-platforms', 'withdrawal.platforms.index', Controller\ListWithdrawalPlatformsController::class)
-        ->get('/withdrawal-platforms/{id}', 'withdrawal.platforms.show', Controller\ShowWithdrawalPlatformController::class)
-        ->post('/withdrawal-platforms', 'withdrawal.platforms.create', Controller\CreateWithdrawalPlatformController::class)
-        ->patch('/withdrawal-platforms/{id}', 'withdrawal.platforms.update', Controller\UpdateWithdrawalPlatformController::class)
-        ->delete('/withdrawal-platforms/{id}', 'withdrawal.platforms.delete', Controller\DeleteWithdrawalPlatformController::class)
-        ->get('/withdrawal-requests', 'withdrawal.requests.index', Controller\ListWithdrawalRequestsController::class)
-        ->post('/withdrawal-requests', 'withdrawal.requests.create', Controller\CreateWithdrawalRequestController::class)
-        ->patch('/withdrawal-requests/{id}', 'withdrawal.requests.update', Controller\UpdateWithdrawalRequestController::class)
-        ->delete('/withdrawal-requests/{id}', 'withdrawal.requests.delete', Controller\DeleteWithdrawalRequestController::class)
+        ->get('/funds-platforms', 'funds.platforms.index', Controller\ListWithdrawalPlatformsController::class)
+        ->get('/funds-platforms/{id}', 'funds.platforms.show', Controller\ShowWithdrawalPlatformController::class)
+        ->post('/funds-platforms', 'funds.platforms.create', Controller\CreateWithdrawalPlatformController::class)
+        ->patch('/funds-platforms/{id}', 'funds.platforms.update', Controller\UpdateWithdrawalPlatformController::class)
+        ->delete('/funds-platforms/{id}', 'funds.platforms.delete', Controller\DeleteWithdrawalPlatformController::class)
+        ->get('/funds-requests', 'funds.requests.index', Controller\ListWithdrawalRequestsController::class)
+        ->post('/funds-requests', 'funds.requests.create', Controller\CreateWithdrawalRequestController::class)
+        ->patch('/funds-requests/{id}', 'funds.requests.update', Controller\UpdateWithdrawalRequestController::class)
+        ->delete('/funds-requests/{id}', 'funds.requests.delete', Controller\DeleteWithdrawalRequestController::class)
         // Deposit routes
         ->get('/deposit-platforms', 'deposit.platforms.index', Controller\ListDepositPlatformsController::class)
         ->get('/deposit-platforms/{id}', 'deposit.platforms.show', Controller\ShowDepositPlatformController::class)
@@ -77,5 +77,5 @@ return [
         ->hasMany('depositRecords', \wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer::class),
 
     (new Extend\Settings())
-        ->serializeToForum('wusong8899-withdrawal.moneyIconUrl', 'wusong8899-withdrawal.moneyIconUrl', null, 'https://i.mji.rip/2025/08/28/cd18932c68e9bbee9502b1fb6317cba9.png'),
+        ->serializeToForum('wusong8899-funds.moneyIconUrl', 'wusong8899-funds.moneyIconUrl', null, 'https://i.mji.rip/2025/08/28/cd18932c68e9bbee9502b1fb6317cba9.png'),
 ];

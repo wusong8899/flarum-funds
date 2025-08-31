@@ -38,12 +38,12 @@ export default class SubmitButton extends Component<SubmitButtonProps> {
           disabled={!canSubmit}
           onclick={onSubmit}
         >
-          {app.translator.trans('withdrawal.forum.form.submit')}
+          {app.translator.trans('funds.forum.form.submit')}
         </Button>
 
         {numericAmount > 0 && (
           <div className="WithdrawalPage-finalAmount">
-            {app.translator.trans('withdrawal.forum.final_amount', { 
+            {app.translator.trans('funds.forum.final_amount', { 
               amount: finalAmount.toFixed(DEFAULTS.BALANCE_PRECISION), 
               symbol 
             })}

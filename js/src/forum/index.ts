@@ -12,10 +12,10 @@ import MobileMoneyDisplay from './components/MobileMoneyDisplay';
 import { ConfigManager } from './utils/ConfigManager';
 import { MobileDetector } from './utils/MobileDetector';
 
-app.initializers.add('wusong8899-withdrawal', () => {
+app.initializers.add('wusong8899-funds', () => {
   // Register models in store
-  app.store.models['withdrawal-platforms'] = WithdrawalPlatform;
-  app.store.models['withdrawal-requests'] = WithdrawalRequest;
+  app.store.models['funds-platforms'] = WithdrawalPlatform;
+  app.store.models['funds-requests'] = WithdrawalRequest;
   app.store.models['deposit-platforms'] = DepositPlatform;
   app.store.models['deposit-records'] = DepositRecord;
 
@@ -23,7 +23,7 @@ app.initializers.add('wusong8899-withdrawal', () => {
   app.routes.funds = { path: '/funds', component: FundsPage };
   
   // Legacy routes for backward compatibility - redirect to funds page
-  app.routes.withdrawal = { path: '/withdrawal', component: FundsPage };
+  app.routes.funds = { path: '/funds', component: FundsPage };
   app.routes.deposit = { path: '/deposit', component: FundsPage };
 
 
@@ -68,7 +68,7 @@ app.initializers.add('wusong8899-withdrawal', () => {
     if (!hasMoneyDisplay) {
       // Add MobileMoneyDisplay component to navigation
       vnode.children.push(MobileMoneyDisplay.component({
-        className: "item-withdrawal Navigation-mobileMoneyDisplay"
+        className: "item-funds Navigation-mobileMoneyDisplay"
       }));
     }
   });

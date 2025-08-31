@@ -179,24 +179,24 @@ export default class SettingsService implements SettingsServiceInterface {
   }
 
   /**
-   * Get withdrawal extension settings
+   * Get funds extension settings
    */
   async getWithdrawalSetting(key: string, defaultValue?: any): Promise<any> {
-    return await this.getExtensionSetting('wusong8899-withdrawal', key, defaultValue);
+    return await this.getExtensionSetting('wusong8899-funds', key, defaultValue);
   }
 
   /**
-   * Save withdrawal extension setting
+   * Save funds extension setting
    */
   async saveWithdrawalSetting(key: string, value: any): Promise<void> {
-    return await this.saveExtensionSetting('wusong8899-withdrawal', key, value);
+    return await this.saveExtensionSetting('wusong8899-funds', key, value);
   }
 
   /**
-   * Get all withdrawal extension settings
+   * Get all funds extension settings
    */
   async getAllWithdrawalSettings(): Promise<Record<string, any>> {
-    return await this.getSettingsWithPrefix('wusong8899-withdrawal.');
+    return await this.getSettingsWithPrefix('wusong8899-funds.');
   }
 
   /**

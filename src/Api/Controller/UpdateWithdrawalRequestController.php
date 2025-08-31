@@ -71,7 +71,7 @@ class UpdateWithdrawalRequestController extends AbstractShowController
     }
 
     /**
-     * Approve withdrawal request and deduct user balance
+     * Approve funds request and deduct user balance
      *
      * @param WithdrawalRequest $withdrawalRequest
      * @return void
@@ -99,7 +99,7 @@ class UpdateWithdrawalRequestController extends AbstractShowController
             $user->money -= $totalAmount;
             $user->save();
 
-            // Update withdrawal request status
+            // Update funds request status
             $withdrawalRequest->approve();
             $withdrawalRequest->save();
         });

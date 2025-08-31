@@ -9,7 +9,7 @@ use wusong8899\Withdrawal\Model\WithdrawalPlatform;
 
 class WithdrawalPlatformSerializer extends AbstractSerializer
 {
-    protected $type = 'withdrawal-platforms';
+    protected $type = 'funds-platforms';
 
     /**
      * @param WithdrawalPlatform $platform

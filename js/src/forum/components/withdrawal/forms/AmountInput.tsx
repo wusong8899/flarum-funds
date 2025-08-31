@@ -33,7 +33,7 @@ export default class AmountInput extends Component<AmountInputProps> {
       <div className="WithdrawalPage-amountSection">
         <div className="WithdrawalPage-formGroup">
           <div className="WithdrawalPage-label">
-            {app.translator.trans('withdrawal.forum.form.amount')}
+            {app.translator.trans('funds.forum.form.amount')}
           </div>
 
           <div className="WithdrawalPage-amountInput">
@@ -49,14 +49,14 @@ export default class AmountInput extends Component<AmountInputProps> {
               onclick={onFillAllAmount}
               disabled={loadingBalance}
             >
-              {app.translator.trans('withdrawal.forum.form.all_button')}
+              {app.translator.trans('funds.forum.form.all_button')}
             </Button>
           </div>
 
           <div className="WithdrawalPage-amountLimits">
             <div className="WithdrawalPage-limitRow">
               <span className="WithdrawalPage-limitLabel">
-                {app.translator.trans('withdrawal.forum.limits.min_max')}
+                {app.translator.trans('funds.forum.limits.min_max')}
               </span>
               <span className="WithdrawalPage-limitValue">
                 {icon(ICONS.COINS)} {minAmount} ~ {maxAmount}
@@ -64,7 +64,7 @@ export default class AmountInput extends Component<AmountInputProps> {
             </div>
             <div className="WithdrawalPage-limitRow">
               <span className="WithdrawalPage-limitLabel">
-                {app.translator.trans('withdrawal.forum.limits.fee')}
+                {app.translator.trans('funds.forum.limits.fee')}
               </span>
               <span className="WithdrawalPage-limitValue">
                 {icon(ICONS.COINS)} {fee}

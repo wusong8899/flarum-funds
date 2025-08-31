@@ -7,7 +7,7 @@ import icon from 'flarum/common/helpers/icon';
 import m from 'mithril';
 import type Mithril from 'mithril';
 
-// Generic platform interface that can represent both withdrawal and deposit platforms
+// Generic platform interface that can represent both funds and deposit platforms
 interface GenericPlatform {
   id?: () => string | number;
   name?: () => string;
@@ -27,7 +27,7 @@ interface GenericPlatform {
 
 interface GenericPlatformListItemAttrs {
   platform: GenericPlatform;
-  type: 'withdrawal' | 'deposit';
+  type: 'funds' | 'deposit';
   onToggleStatus: (platform?: GenericPlatform) => Promise<void>;
   onDelete: (platform?: GenericPlatform) => Promise<void>;
   style?: 'card' | 'list';
@@ -51,7 +51,7 @@ export default class GenericPlatformListItem extends Component<GenericPlatformLi
     onDelete: (platform?: GenericPlatform) => Promise<void>
   ): Mithril.Children {
     const platformData = this.extractPlatformData(platform);
-    const translationPrefix = type === 'withdrawal' ? 'withdrawal.admin.platforms' : 'withdrawal.admin.deposit.platforms';
+    const translationPrefix = type === 'funds' ? 'funds.admin.platforms' : 'funds.admin.deposit.platforms';
 
     return (
       <div key={platformData.id} className={`${type}Platform`}>
@@ -100,7 +100,7 @@ export default class GenericPlatformListItem extends Component<GenericPlatformLi
     onDelete: (platform?: GenericPlatform) => Promise<void>
   ): Mithril.Children {
     const platformData = this.extractPlatformData(platform);
-    const translationPrefix = type === 'withdrawal' ? 'withdrawal.admin.platforms' : 'withdrawal.admin.deposit.platforms';
+    const translationPrefix = type === 'funds' ? 'funds.admin.platforms' : 'funds.admin.deposit.platforms';
 
     return (
       <div className={`${type}PlatformListItem`}>

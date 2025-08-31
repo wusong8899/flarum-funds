@@ -45,10 +45,10 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
 
   protected getConfig(): GenericManagementPageConfig<GenericPlatform, GenericTransaction> {
     return {
-      pageTitle: app.translator.trans('withdrawal.admin.page.title').toString(),
+      pageTitle: app.translator.trans('funds.admin.page.title').toString(),
       extensionId: 'WithdrawalManagement',
       
-      // Primary platform operations (withdrawal)
+      // Primary platform operations (funds)
       platformOperations: createWithdrawalPlatformOperations(),
       transactionOperations: createWithdrawalRequestOperations(),
       
@@ -59,19 +59,19 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
       tabs: [
         {
           key: 'withdrawals',
-          label: app.translator.trans('withdrawal.admin.tabs.withdrawals').toString(),
+          label: app.translator.trans('funds.admin.tabs.withdrawals').toString(),
           component: WithdrawalTabPlaceholder
         },
         {
           key: 'deposits',
-          label: app.translator.trans('withdrawal.admin.tabs.deposits').toString(),
+          label: app.translator.trans('funds.admin.tabs.deposits').toString(),
           component: DepositsTabPlaceholder
         }
       ],
       
       translations: {
-        platformPrefix: 'withdrawal.admin.platforms',
-        transactionPrefix: 'withdrawal.admin.requests'
+        platformPrefix: 'funds.admin.platforms',
+        transactionPrefix: 'funds.admin.requests'
       }
     };
   }
@@ -125,10 +125,10 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
     return super.renderActiveTabContent();
   }
 
-  // Override loadData to handle unified withdrawal and deposit data loading
+  // Override loadData to handle unified funds and deposit data loading
   protected async loadData(): Promise<void> {
     try {
-      // Load withdrawal data (handled by parent)
+      // Load funds data (handled by parent)
       await this.loadPlatforms();
       await this.loadTransactions();
       
@@ -168,12 +168,12 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
       
       app.alerts.show(
         { type: 'success', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.platforms.add_success')
+        app.translator.trans('funds.admin.deposit.platforms.add_success')
       );
     } catch (error) {
       console.error('Error adding deposit platform:', error);
       
-      let errorMessage = app.translator.trans('withdrawal.admin.deposit.platforms.add_error').toString();
+      let errorMessage = app.translator.trans('funds.admin.deposit.platforms.add_error').toString();
       
       if (error instanceof ServiceError) {
         errorMessage = error.message;
@@ -196,14 +196,14 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
       
       app.alerts.show(
         { type: 'success', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.platforms.status_updated')
+        app.translator.trans('funds.admin.deposit.platforms.status_updated')
       );
       
       m.redraw();
     } catch (error) {
       console.error('Error toggling deposit platform status:', error);
       
-      let errorMessage = app.translator.trans('withdrawal.admin.deposit.platforms.status_error').toString();
+      let errorMessage = app.translator.trans('funds.admin.deposit.platforms.status_error').toString();
       
       if (error instanceof ServiceError) {
         errorMessage = error.message;
@@ -220,10 +220,10 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
     const platformName = (typeof platform.name === 'function' ? platform.name() : platform.name) || 'Unknown Platform';
     
     app.modal.show(ConfirmModal, {
-      title: app.translator.trans('withdrawal.admin.platforms.delete_confirm_title'),
-      message: app.translator.trans('withdrawal.admin.platforms.delete_confirm_message', { name: platformName }),
-      confirmText: app.translator.trans('withdrawal.admin.platforms.delete_confirm_button'),
-      cancelText: app.translator.trans('withdrawal.admin.platforms.delete_cancel_button'),
+      title: app.translator.trans('funds.admin.platforms.delete_confirm_title'),
+      message: app.translator.trans('funds.admin.platforms.delete_confirm_message', { name: platformName }),
+      confirmText: app.translator.trans('funds.admin.platforms.delete_confirm_button'),
+      cancelText: app.translator.trans('funds.admin.platforms.delete_cancel_button'),
       dangerous: true,
       icon: 'fas fa-trash',
       onConfirm: async () => {
@@ -233,12 +233,12 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
           
           app.alerts.show(
             { type: 'success', dismissible: true },
-            app.translator.trans('withdrawal.admin.deposit.platforms.delete_success')
+            app.translator.trans('funds.admin.deposit.platforms.delete_success')
           );
         } catch (error) {
           console.error('Error deleting deposit platform:', error);
           
-          let errorMessage = app.translator.trans('withdrawal.admin.deposit.platforms.delete_error').toString();
+          let errorMessage = app.translator.trans('funds.admin.deposit.platforms.delete_error').toString();
           
           if (error instanceof ServiceError) {
             errorMessage = error.message;
@@ -265,14 +265,14 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
       
       app.alerts.show(
         { type: 'success', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.records.status_updated')
+        app.translator.trans('funds.admin.deposit.records.status_updated')
       );
       
       m.redraw();
     } catch (error) {
       console.error('Error updating deposit record:', error);
       
-      let errorMessage = app.translator.trans('withdrawal.admin.deposit.records.status_error').toString();
+      let errorMessage = app.translator.trans('funds.admin.deposit.records.status_error').toString();
       
       if (error instanceof ServiceError) {
         errorMessage = error.message;
@@ -285,7 +285,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
     }
   }
 
-  // Deletion method for withdrawal requests  
+  // Deletion method for funds requests  
   private deleteWithdrawalRequest(request: any): void {
     const requestId = typeof request.id === 'function' ? request.id() : request.id;
     const amount = typeof request.amount === 'function' ? request.amount() : (request.attributes?.amount || 0);
@@ -302,29 +302,29 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
     }
     
     app.modal.show(ConfirmModal, {
-      title: app.translator.trans('withdrawal.admin.requests.delete_confirm_title'),
-      message: app.translator.trans('withdrawal.admin.requests.delete_confirm_message', { info: `${userName} - ${amount}` }),
-      confirmText: app.translator.trans('withdrawal.admin.requests.delete_confirm_button'),
-      cancelText: app.translator.trans('withdrawal.admin.requests.delete_cancel_button'),
+      title: app.translator.trans('funds.admin.requests.delete_confirm_title'),
+      message: app.translator.trans('funds.admin.requests.delete_confirm_message', { info: `${userName} - ${amount}` }),
+      confirmText: app.translator.trans('funds.admin.requests.delete_confirm_button'),
+      cancelText: app.translator.trans('funds.admin.requests.delete_cancel_button'),
       dangerous: true,
       icon: 'fas fa-trash',
       onConfirm: async () => {
         try {
-          const record = app.store.getById('withdrawal-requests', requestId);
+          const record = app.store.getById('funds-requests', requestId);
           if (record) {
             await record.delete();
             await this.loadTransactions();
             
             app.alerts.show(
               { type: 'success', dismissible: true },
-              app.translator.trans('withdrawal.admin.requests.delete_success')
+              app.translator.trans('funds.admin.requests.delete_success')
             );
           }
         } catch (error) {
           console.error('Error deleting request:', error);
           app.alerts.show(
             { type: 'error', dismissible: true },
-            app.translator.trans('withdrawal.admin.requests.delete_error')
+            app.translator.trans('funds.admin.requests.delete_error')
           );
         }
       },
@@ -423,14 +423,14 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
       
       app.alerts.show(
         { type: 'success', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.records.approve_success')
+        app.translator.trans('funds.admin.deposit.records.approve_success')
       );
       
       m.redraw();
     } catch (error) {
       console.error('Error approving deposit record:', error);
       
-      let errorMessage = app.translator.trans('withdrawal.admin.deposit.records.approve_error').toString();
+      let errorMessage = app.translator.trans('funds.admin.deposit.records.approve_error').toString();
       
       if (error instanceof ServiceError) {
         errorMessage = error.message;
@@ -456,14 +456,14 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
       
       app.alerts.show(
         { type: 'success', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.records.reject_success')
+        app.translator.trans('funds.admin.deposit.records.reject_success')
       );
       
       m.redraw();
     } catch (error) {
       console.error('Error rejecting deposit record:', error);
       
-      let errorMessage = app.translator.trans('withdrawal.admin.deposit.records.reject_error').toString();
+      let errorMessage = app.translator.trans('funds.admin.deposit.records.reject_error').toString();
       
       if (error instanceof ServiceError) {
         errorMessage = error.message;
@@ -485,14 +485,14 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
       
       app.alerts.show(
         { type: 'success', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.records.delete_success')
+        app.translator.trans('funds.admin.deposit.records.delete_success')
       );
       
       m.redraw();
     } catch (error) {
       console.error('Error deleting deposit record:', error);
       
-      let errorMessage = app.translator.trans('withdrawal.admin.deposit.records.delete_error').toString();
+      let errorMessage = app.translator.trans('funds.admin.deposit.records.delete_error').toString();
       
       if (error instanceof ServiceError) {
         errorMessage = error.message;

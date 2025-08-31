@@ -164,16 +164,16 @@ export default class FundsPage extends Page<any, FundsPageState> {
 
   private updatePageTitle(): void {
     const tab = this.state.activeTab();
-    let titleKey = 'withdrawal.forum.page.title'; // default
+    let titleKey = 'funds.forum.page.title'; // default
     
     switch (tab) {
       case 'withdrawal':
       case 'withdrawal-history':
-        titleKey = 'withdrawal.forum.page.title';
+        titleKey = 'funds.forum.page.title';
         break;
       case 'deposit':
       case 'deposit-history':
-        titleKey = 'withdrawal.forum.deposit.page.title';
+        titleKey = 'funds.forum.deposit.page.title';
         break;
     }
     
@@ -215,13 +215,13 @@ export default class FundsPage extends Page<any, FundsPageState> {
             className={`FundsPage-tab ${activeTab === 'withdrawal' ? 'active' : ''}`}
             onclick={() => this.handleTabChange('withdrawal')}
           >
-            {app.translator.trans('withdrawal.forum.tabs.withdrawal')}
+            {app.translator.trans('funds.forum.tabs.funds')}
           </div>
           <div 
             className={`FundsPage-tab ${activeTab === 'deposit' ? 'active' : ''}`}
             onclick={() => this.handleTabChange('deposit')}
           >
-            {app.translator.trans('withdrawal.forum.deposit.tabs.deposit')}
+            {app.translator.trans('funds.forum.deposit.tabs.deposit')}
           </div>
         </div>
         <Button
@@ -257,13 +257,13 @@ export default class FundsPage extends Page<any, FundsPageState> {
             className={`FundsPage-subTab ${activeSubTab === 'form' ? 'active' : ''}`}
             onclick={() => this.handleSubTabChange('withdrawal', 'form')}
           >
-            {app.translator.trans('withdrawal.forum.tabs.withdrawal')}
+            {app.translator.trans('funds.forum.tabs.funds')}
           </div>
           <div 
             className={`FundsPage-subTab ${activeSubTab === 'history' ? 'active' : ''}`}
             onclick={() => this.handleSubTabChange('withdrawal', 'history')}
           >
-            {app.translator.trans('withdrawal.forum.tabs.history')}
+            {app.translator.trans('funds.forum.tabs.history')}
           </div>
         </div>
         
@@ -284,10 +284,10 @@ export default class FundsPage extends Page<any, FundsPageState> {
               {icon('fas fa-coins')}
             </div>
             <h3 className="WithdrawalPage-emptyTitle">
-              {app.translator.trans('withdrawal.forum.no_platforms')}
+              {app.translator.trans('funds.forum.no_platforms')}
             </h3>
             <p className="WithdrawalPage-emptyDescription">
-              {app.translator.trans('withdrawal.forum.no_platforms_description')}
+              {app.translator.trans('funds.forum.no_platforms_description')}
             </p>
           </div>
         </div>
@@ -333,13 +333,13 @@ export default class FundsPage extends Page<any, FundsPageState> {
             className={`FundsPage-subTab ${activeSubTab === 'form' ? 'active' : ''}`}
             onclick={() => this.handleSubTabChange('deposit', 'form')}
           >
-            {app.translator.trans('withdrawal.forum.deposit.tabs.deposit')}
+            {app.translator.trans('funds.forum.deposit.tabs.deposit')}
           </div>
           <div 
             className={`FundsPage-subTab ${activeSubTab === 'history' ? 'active' : ''}`}
             onclick={() => this.handleSubTabChange('deposit', 'history')}
           >
-            {app.translator.trans('withdrawal.forum.deposit.tabs.history')}
+            {app.translator.trans('funds.forum.deposit.tabs.history')}
           </div>
         </div>
         
@@ -362,10 +362,10 @@ export default class FundsPage extends Page<any, FundsPageState> {
               {icon('fas fa-coins')}
             </div>
             <h3 className="FundsPage-emptyTitle">
-              {app.translator.trans('withdrawal.forum.deposit.no_platforms')}
+              {app.translator.trans('funds.forum.deposit.no_platforms')}
             </h3>
             <p className="FundsPage-emptyDescription">
-              {app.translator.trans('withdrawal.forum.deposit.no_platforms_description')}
+              {app.translator.trans('funds.forum.deposit.no_platforms_description')}
             </p>
           </div>
         </div>
@@ -421,14 +421,14 @@ export default class FundsPage extends Page<any, FundsPageState> {
     if (!platform) {
       return (
         <div className="FundsPage-selectPrompt">
-          <p>{app.translator.trans('withdrawal.forum.deposit.select_platform')}</p>
+          <p>{app.translator.trans('funds.forum.deposit.select_platform')}</p>
         </div>
       );
     }
 
     const minAmount = getAttr(platform, 'minAmount') || 0;
     const warningText = getAttr(platform, 'warningText') || 
-      app.translator.trans('withdrawal.forum.deposit.default_warning', {
+      app.translator.trans('funds.forum.deposit.default_warning', {
         currency: getAttr(platform, 'symbol'),
         network: getAttr(platform, 'network'),
         minAmount
@@ -437,7 +437,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
     return (
       <div className="FundsPage-depositInfo">
         <p className="FundsPage-instructionText">
-          {app.translator.trans('withdrawal.forum.deposit.scan_or_use_address')}
+          {app.translator.trans('funds.forum.deposit.scan_or_use_address')}
         </p>
         
         <AddressDisplay
@@ -447,7 +447,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
         />
         
         <p className="FundsPage-minAmountText">
-          {app.translator.trans('withdrawal.forum.deposit.min_amount', {
+          {app.translator.trans('funds.forum.deposit.min_amount', {
             amount: minAmount,
             currency: getAttr(platform, 'symbol')
           })}
@@ -458,7 +458,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
           if (fee > 0) {
             return (
               <p className="FundsPage-feeText">
-                {app.translator.trans('withdrawal.forum.deposit.fee', {
+                {app.translator.trans('funds.forum.deposit.fee', {
                   fee: fee,
                   currency: getAttr(platform, 'symbol')
                 })}
@@ -487,7 +487,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
         {/* Deposit Record Submission Section */}
         <div className="FundsPage-recordSection">
           <div className="FundsPage-recordHeader">
-            <h4>{app.translator.trans('withdrawal.forum.deposit.record.section_title')}</h4>
+            <h4>{app.translator.trans('funds.forum.deposit.record.section_title')}</h4>
           </div>
           
           <DepositRecordForm
@@ -567,14 +567,14 @@ export default class FundsPage extends Page<any, FundsPageState> {
       } else {
         app.alerts.show(
           { type: 'warning', dismissible: true },
-          app.translator.trans('withdrawal.forum.insufficient_balance')
+          app.translator.trans('funds.forum.insufficient_balance')
         );
       }
     } catch (error) {
       console.error('Error refreshing balance:', error);
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.forum.balance_refresh_error')
+        app.translator.trans('funds.forum.balance_refresh_error')
       );
     }
   }
@@ -595,7 +595,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
     if (isNaN(amountNum) || amountNum <= 0) {
       app.alerts.show(
         { type: 'warning', dismissible: true },
-        app.translator.trans('withdrawal.forum.invalid_amount')
+        app.translator.trans('funds.forum.invalid_amount')
       );
       return;
     }
@@ -624,13 +624,13 @@ export default class FundsPage extends Page<any, FundsPageState> {
 
       app.alerts.show(
         { type: 'success', dismissible: true },
-        app.translator.trans('withdrawal.forum.submit_success')
+        app.translator.trans('funds.forum.submit_success')
       );
 
     } catch (error: unknown) {
       console.error('Withdrawal request failed:', error);
       
-      let errorMessage = app.translator.trans('withdrawal.forum.error').toString();
+      let errorMessage = app.translator.trans('funds.forum.error').toString();
       
       if (error instanceof ServiceError) {
         errorMessage = error.message;
@@ -662,12 +662,12 @@ export default class FundsPage extends Page<any, FundsPageState> {
       navigator.clipboard.writeText(this.depositAddressData.address).then(() => {
         app.alerts.show(
           { type: 'success', dismissible: true },
-          app.translator.trans('withdrawal.forum.deposit.address_copied')
+          app.translator.trans('funds.forum.deposit.address_copied')
         );
       }).catch(() => {
         app.alerts.show(
           { type: 'error', dismissible: true },
-          app.translator.trans('withdrawal.forum.deposit.copy_failed')
+          app.translator.trans('funds.forum.deposit.copy_failed')
         );
       });
     }
@@ -700,7 +700,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
       
       app.alerts.show(
         { type: 'success', dismissible: true },
-        app.translator.trans('withdrawal.forum.deposit.record.submit_success')
+        app.translator.trans('funds.forum.deposit.record.submit_success')
       );
 
       // Reload deposit history
@@ -709,7 +709,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
     } catch (error: unknown) {
       console.error('Deposit record submission failed:', error);
       
-      let errorMessage = app.translator.trans('withdrawal.forum.deposit.record.submit_error').toString();
+      let errorMessage = app.translator.trans('funds.forum.deposit.record.submit_error').toString();
       
       if (error instanceof ServiceError) {
         errorMessage = error.message;
@@ -750,7 +750,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
   }
 
   /**
-   * Load withdrawal platforms and user requests using service layer
+   * Load funds platforms and user requests using service layer
    */
   private async loadWithdrawalData(): Promise<void> {
     try {
@@ -762,7 +762,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
       this.state.withdrawalPlatforms = platforms as WithdrawalPlatform[];
       this.state.withdrawalRequests = requests;
     } catch (error) {
-      console.error('Error loading withdrawal data:', error);
+      console.error('Error loading funds data:', error);
       // Fallback to empty arrays
       this.state.withdrawalPlatforms = [];
       this.state.withdrawalRequests = [];
@@ -839,7 +839,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
       const requests = await withdrawalService.getUserHistory();
       this.state.withdrawalRequests = requests;
     } catch (error) {
-      console.error('Error loading withdrawal requests:', error);
+      console.error('Error loading funds requests:', error);
       this.state.withdrawalRequests = [];
     }
   }
@@ -862,7 +862,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
       console.error('Error loading deposit address:', error);
       this.depositAddressData.loading = false;
       
-      let errorMessage = app.translator.trans('withdrawal.forum.deposit.address_load_error').toString();
+      let errorMessage = app.translator.trans('funds.forum.deposit.address_load_error').toString();
       
       if (error instanceof ServiceError) {
         errorMessage = error.message;

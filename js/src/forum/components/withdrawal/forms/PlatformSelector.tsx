@@ -81,7 +81,7 @@ export default class PlatformSelector extends Component<PlatformSelectorProps, P
       return (
         <div className="WithdrawalPage-dropdownMenu">
           <div className="WithdrawalPage-dropdownItem WithdrawalPage-noData">
-            {app.translator.trans('withdrawal.forum.no_platforms')}
+            {app.translator.trans('funds.forum.no_platforms')}
           </div>
         </div>
       );

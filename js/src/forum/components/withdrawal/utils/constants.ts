@@ -22,7 +22,7 @@ export const STATUS_CLASS_MAP: Record<StatusType, StatusClass> = {
  * Tab types
  */
 export const TABS = {
-  WITHDRAWAL: 'withdrawal',
+  WITHDRAWAL: 'funds',
   HISTORY: 'history',
 } as const;
 

@@ -4,14 +4,14 @@ import type Mithril from 'mithril';
 
 /**
  * MobileMoneyDisplay component for mobile navigation bar
- * Shows user's money balance with withdrawal button in mobile navigation
+ * Shows user's money balance with funds button in mobile navigation
  */
 export default class MobileMoneyDisplay extends Component<ComponentAttrs> {
   view(): Mithril.Children {
     // Note: Mobile detection and user authentication are now handled in index.ts
     // This component assumes it should render when called
     const userMoney = app.session.user?.attribute('money') || 0;
-    const iconUrl: string | null = app.forum.attribute('wusong8899-withdrawal.moneyIconUrl');
+    const iconUrl: string | null = app.forum.attribute('wusong8899-funds.moneyIconUrl');
 
     return (
       <div className="Navigation-mobileMoneyDisplay">
@@ -60,7 +60,7 @@ export default class MobileMoneyDisplay extends Component<ComponentAttrs> {
   }
 
   /**
-   * Handle withdrawal button click
+   * Handle funds button click
    */
   private handleWithdrawalClick(e: Event): void {
     e.preventDefault();
@@ -68,12 +68,12 @@ export default class MobileMoneyDisplay extends Component<ComponentAttrs> {
     console.log('MobileMoneyDisplay clicked!'); // 调试日志
     
     try {
-      // Navigate to unified funds page with withdrawal tab
-      window.location.href = '/funds?tab=withdrawal';
+      // Navigate to unified funds page with funds tab
+      window.location.href = '/funds?tab=funds';
     } catch (error) {
       console.error('Navigation error:', error);
       // 备用方案
-      window.location.href = '/funds?tab=withdrawal';
+      window.location.href = '/funds?tab=funds';
     }
   }
 }

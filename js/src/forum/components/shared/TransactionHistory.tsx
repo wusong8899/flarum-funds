@@ -39,7 +39,7 @@ interface TransactionHistoryAttrs {
   transactions: (WithdrawalRequest | DepositRecord)[];
   platforms: (WithdrawalPlatform | DepositPlatform)[];
   loading: boolean;
-  type: 'withdrawal' | 'deposit';
+  type: 'funds' | 'deposit';
 }
 
 export default class TransactionHistory extends Component<TransactionHistoryAttrs> {
@@ -53,7 +53,7 @@ export default class TransactionHistory extends Component<TransactionHistoryAttr
     if (!transactions || transactions.length === 0) {
       return (
         <EmptyState
-          iconName={type === 'withdrawal' ? 'fas fa-history' : 'fas fa-inbox'}
+          iconName={type === 'funds' ? 'fas fa-history' : 'fas fa-inbox'}
           title={app.translator.trans(`${type}.forum.history.empty.title`)}
           description={app.translator.trans(`${type}.forum.history.empty.description`)}
           className={`${type}History-empty`}
@@ -122,7 +122,7 @@ export default class TransactionHistory extends Component<TransactionHistoryAttr
         <div className="WithdrawalPage-historyDetails">
           <div className="WithdrawalPage-historyAmount">
             <span className="WithdrawalPage-historyLabel">
-              {app.translator.trans('withdrawal.forum.history.amount')}:
+              {app.translator.trans('funds.forum.history.amount')}:
             </span>
             <span className="WithdrawalPage-historyValue">
               {amount} {this.getPlatformSymbol(platform)}
@@ -130,7 +130,7 @@ export default class TransactionHistory extends Component<TransactionHistoryAttr
           </div>
           <div className="WithdrawalPage-historyAddress">
             <span className="WithdrawalPage-historyLabel">
-              {app.translator.trans('withdrawal.forum.history.address')}:
+              {app.translator.trans('funds.forum.history.address')}:
             </span>
             <span className="WithdrawalPage-historyValue">
               {accountDetails}

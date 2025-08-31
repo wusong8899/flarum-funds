@@ -3,7 +3,7 @@ import app from 'flarum/forum/app';
 import type Mithril from 'mithril';
 
 /**
- * MoneyDisplay component shows the user's money balance with withdrawal button
+ * MoneyDisplay component shows the user's money balance with funds button
  */
 export default class MoneyDisplay extends Component<ComponentAttrs> {
   view(): Mithril.Children {
@@ -13,7 +13,7 @@ export default class MoneyDisplay extends Component<ComponentAttrs> {
 
     const moneyName: string = app.forum.attribute('antoinefr-money.moneyname') || '[money]';
     const userMoneyText: string = moneyName.replace('[money]', app.session.user.attribute("money"));
-    const iconUrl: string | null = app.forum.attribute('wusong8899-withdrawal.moneyIconUrl');
+    const iconUrl: string | null = app.forum.attribute('wusong8899-funds.moneyIconUrl');
 
     return (
       <div
@@ -76,13 +76,13 @@ export default class MoneyDisplay extends Component<ComponentAttrs> {
   }
 
   /**
-   * Handle withdrawal button click
+   * Handle funds button click
    */
   private handleWithdrawalClick(e: Event): void {
     e.preventDefault();
     e.stopPropagation();
-    // Navigate to funds page with withdrawal tab
-    window.location.href = '/funds?tab=withdrawal';
+    // Navigate to funds page with funds tab
+    window.location.href = '/funds?tab=funds';
   }
 
   /**

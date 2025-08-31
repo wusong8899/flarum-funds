@@ -9,14 +9,14 @@ import {
 } from '../types/services';
 
 /**
- * Service for managing withdrawal requests with proper CRUD operations
+ * Service for managing funds requests with proper CRUD operations
  */
 export default class WithdrawalService implements WithdrawalServiceInterface {
-  private readonly modelType = 'withdrawal-requests';
-  private readonly platformModelType = 'withdrawal-platforms';
+  private readonly modelType = 'funds-requests';
+  private readonly platformModelType = 'funds-platforms';
 
   /**
-   * Find multiple withdrawal requests
+   * Find multiple funds requests
    */
   async find(options: QueryOptions = {}): Promise<WithdrawalRequest[]> {
     try {
@@ -39,12 +39,12 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
       const results = await app.store.find(this.modelType, queryParams);
       return Array.isArray(results) ? results : [results];
     } catch (error) {
-      throw this.handleError(error, 'Failed to fetch withdrawal requests');
+      throw this.handleError(error, 'Failed to fetch funds requests');
     }
   }
 
   /**
-   * Find a single withdrawal request by ID
+   * Find a single funds request by ID
    */
   async findById(id: string | number, options: QueryOptions = {}): Promise<WithdrawalRequest | null> {
     try {
@@ -58,12 +58,12 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
       if (this.isNotFoundError(error)) {
         return null;
       }
-      throw this.handleError(error, `Failed to fetch withdrawal request ${id}`);
+      throw this.handleError(error, `Failed to fetch funds request ${id}`);
     }
   }
 
   /**
-   * Create a new withdrawal request
+   * Create a new funds request
    */
   async create(attributes: Record<string, any>): Promise<WithdrawalRequest> {
     try {
@@ -75,18 +75,18 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
       const savedRequest = await request.save(attributes);
       return savedRequest as WithdrawalRequest;
     } catch (error) {
-      throw this.handleError(error, 'Failed to create withdrawal request');
+      throw this.handleError(error, 'Failed to create funds request');
     }
   }
 
   /**
-   * Update an existing withdrawal request
+   * Update an existing funds request
    */
   async update(model: WithdrawalRequest, attributes: Record<string, any>): Promise<WithdrawalRequest> {
     try {
       if (!this.canModify(model)) {
         throw new ServiceError(
-          'You do not have permission to modify this withdrawal request',
+          'You do not have permission to modify this funds request',
           ServiceErrorType.PERMISSION_DENIED
         );
       }
@@ -94,30 +94,30 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
       const updatedModel = await model.save(attributes);
       return updatedModel as WithdrawalRequest;
     } catch (error) {
-      throw this.handleError(error, 'Failed to update withdrawal request');
+      throw this.handleError(error, 'Failed to update funds request');
     }
   }
 
   /**
-   * Delete a withdrawal request
+   * Delete a funds request
    */
   async delete(model: WithdrawalRequest): Promise<void> {
     try {
       if (!this.canDelete(model)) {
         throw new ServiceError(
-          'You do not have permission to delete this withdrawal request',
+          'You do not have permission to delete this funds request',
           ServiceErrorType.PERMISSION_DENIED
         );
       }
 
       await model.delete();
     } catch (error) {
-      throw this.handleError(error, 'Failed to delete withdrawal request');
+      throw this.handleError(error, 'Failed to delete funds request');
     }
   }
 
   /**
-   * Submit a new withdrawal request with validation
+   * Submit a new funds request with validation
    */
   async submitRequest(data: {
     platformId: number;
@@ -139,12 +139,12 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
 
       return await this.create(attributes);
     } catch (error) {
-      throw this.handleError(error, 'Failed to submit withdrawal request');
+      throw this.handleError(error, 'Failed to submit funds request');
     }
   }
 
   /**
-   * Get user's withdrawal history
+   * Get user's funds history
    */
   async getUserHistory(userId?: number, options: QueryOptions = {}): Promise<WithdrawalRequest[]> {
     const targetUserId = userId || app.session.user?.id();
@@ -194,7 +194,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
   }
 
   /**
-   * Approve a withdrawal request (admin only)
+   * Approve a funds request (admin only)
    */
   async approve(request: WithdrawalRequest, message?: string): Promise<WithdrawalRequest> {
     if (!app.session.user?.isAdmin()) {
@@ -223,7 +223,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
   }
 
   /**
-   * Reject a withdrawal request (admin only)
+   * Reject a funds request (admin only)
    */
   async reject(request: WithdrawalRequest, reason?: string): Promise<WithdrawalRequest> {
     if (!app.session.user?.isAdmin()) {
@@ -274,7 +274,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
   }
 
   /**
-   * Check if current user can modify a withdrawal request
+   * Check if current user can modify a funds request
    */
   canModify(model: WithdrawalRequest): boolean {
     const currentUser = app.session.user;
@@ -288,7 +288,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
   }
 
   /**
-   * Check if current user can create new withdrawal requests
+   * Check if current user can create new funds requests
    */
   canCreate(): boolean {
     const currentUser = app.session.user;
@@ -296,7 +296,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
   }
 
   /**
-   * Check if current user can delete a withdrawal request
+   * Check if current user can delete a funds request
    */
   canDelete(model: WithdrawalRequest): boolean {
     const currentUser = app.session.user;
@@ -310,7 +310,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
   }
 
   /**
-   * Get available withdrawal platforms
+   * Get available funds platforms
    */
   async getPlatforms(): Promise<WithdrawalPlatform[]> {
     try {
@@ -321,12 +321,12 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
       
       return Array.isArray(platforms) ? platforms : [platforms];
     } catch (error) {
-      throw this.handleError(error, 'Failed to fetch withdrawal platforms');
+      throw this.handleError(error, 'Failed to fetch funds platforms');
     }
   }
 
   /**
-   * Validate withdrawal request data
+   * Validate funds request data
    */
   private async validateWithdrawalRequest(data: any): Promise<void> {
     const { platformId, amount } = data;
@@ -354,14 +354,14 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
     
     if (amount < minAmount) {
       throw new ServiceError(
-        `Minimum withdrawal amount is ${minAmount}`,
+        `Minimum funds amount is ${minAmount}`,
         ServiceErrorType.VALIDATION_ERROR
       );
     }
 
     if (maxAmount && amount > maxAmount) {
       throw new ServiceError(
-        `Maximum withdrawal amount is ${maxAmount}`,
+        `Maximum funds amount is ${maxAmount}`,
         ServiceErrorType.VALIDATION_ERROR
       );
     }

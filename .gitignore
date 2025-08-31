@@ -7,5 +7,4 @@ CLAUDE.md
 .serena/project.yml
 translation_workflow.md
 .gitignore
-check_translations.py
-translation_manager.py
+*.py

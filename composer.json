@@ -1,6 +1,6 @@
 {
-  "name": "wusong8899/flarum-withdrawal",
-  "description": "Flarum withdrawal plugin allowing users to withdraw money to different platforms",
+  "name": "wusong8899/flarum-funds",
+  "description": "Flarum funds plugin allowing users to withdraw money to different platforms",
   "type": "flarum-extension",
   "license": "MIT",
   "authors": [

@@ -21,7 +21,7 @@ export default class DepositPlatformManagementSection extends Component<DepositP
     return (
       <div className="DepositPlatformManagementSection">
         <div className="Section-header">
-          <h3>{app.translator.trans('withdrawal.admin.deposit.platforms.title')}</h3>
+          <h3>{app.translator.trans('funds.admin.deposit.platforms.title')}</h3>
         </div>
 
         <div className="DepositPlatformManagementSection-layout">
@@ -37,7 +37,7 @@ export default class DepositPlatformManagementSection extends Component<DepositP
                 loading={submittingPlatform}
                 disabled={submittingPlatform}
               >
-                {app.translator.trans('withdrawal.admin.deposit.platforms.add_button')}
+                {app.translator.trans('funds.admin.deposit.platforms.add_button')}
               </Button>
             </div>
             
@@ -54,7 +54,7 @@ export default class DepositPlatformManagementSection extends Component<DepositP
             <div className="Section-content">
               {platforms.length === 0 ? (
                 <div className="helpText">
-                  {app.translator.trans('withdrawal.admin.deposit.platforms.empty')}
+                  {app.translator.trans('funds.admin.deposit.platforms.empty')}
                 </div>
               ) : (
                 <div className="PlatformList">

@@ -16,7 +16,7 @@ export interface WithdrawalPageState {
   submitting: boolean;
   loadingBalance: boolean;
   userBalance: number;
-  activeTab: Stream<'withdrawal' | 'history'>;
+  activeTab: Stream<'funds' | 'history'>;
 }
 
 export type StatusType = 'pending' | 'approved' | 'rejected';

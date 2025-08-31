@@ -18,18 +18,18 @@ export default class MessageInput extends Component<MessageInputProps> {
       <div className="WithdrawalPage-messageSection">
         <div className="WithdrawalPage-formGroup">
           <span className="WithdrawalPage-label">
-            {app.translator.trans('withdrawal.forum.form.message')}
+            {app.translator.trans('funds.forum.form.message')}
           </span>
           <textarea
             className="WithdrawalPage-textarea"
-            placeholder={app.translator.trans('withdrawal.forum.form.message_placeholder')}
+            placeholder={app.translator.trans('funds.forum.form.message_placeholder')}
             value={message}
             rows={3}
             maxlength={500}
             oninput={(e: Event) => onMessageChange((e.target as HTMLTextAreaElement).value)}
           />
           <div className="WithdrawalPage-helperText">
-            {app.translator.trans('withdrawal.forum.form.message_helper')} ({message.length}/500)
+            {app.translator.trans('funds.forum.form.message_helper')} ({message.length}/500)
           </div>
         </div>
       </div>

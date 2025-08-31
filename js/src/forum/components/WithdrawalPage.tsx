@@ -23,7 +23,7 @@ export default class WithdrawalPage extends Page<any, any> {
     loadingBalance: true,
     userBalance: 0,
     submitting: false,
-    activeTab: Stream('withdrawal')
+    activeTab: Stream('funds')
   };
 
   private formData: WithdrawalFormData = {
@@ -36,7 +36,7 @@ export default class WithdrawalPage extends Page<any, any> {
   oninit(vnode: Mithril.VnodeDOM) {
     super.oninit(vnode);
 
-    app.setTitle(app.translator.trans('withdrawal.forum.page.title').toString());
+    app.setTitle(app.translator.trans('funds.forum.page.title').toString());
 
     this.loadData();
     this.loadUserBalance();
@@ -58,7 +58,7 @@ export default class WithdrawalPage extends Page<any, any> {
         <div className="WithdrawalPage-modal">
           {this.renderHeader()}
           <div className="WithdrawalPage-content">
-            {this.state.activeTab() === 'withdrawal' ? this.renderWithdrawalTab() : this.renderHistoryTab()}
+            {this.state.activeTab() === 'funds' ? this.renderWithdrawalTab() : this.renderHistoryTab()}
           </div>
         </div>
       </div>
@@ -70,16 +70,16 @@ export default class WithdrawalPage extends Page<any, any> {
       <div className="WithdrawalPage-header">
         <div className="WithdrawalPage-tabs">
           <div 
-            className={`WithdrawalPage-tab ${this.state.activeTab() === 'withdrawal' ? 'active' : ''}`}
-            onclick={() => this.handleTabChange('withdrawal')}
+            className={`WithdrawalPage-tab ${this.state.activeTab() === 'funds' ? 'active' : ''}`}
+            onclick={() => this.handleTabChange('funds')}
           >
-            {app.translator.trans('withdrawal.forum.tabs.withdrawal')}
+            {app.translator.trans('funds.forum.tabs.funds')}
           </div>
           <div 
             className={`WithdrawalPage-tab ${this.state.activeTab() === 'history' ? 'active' : ''}`}
             onclick={() => this.handleTabChange('history')}
           >
-            {app.translator.trans('withdrawal.forum.tabs.history')}
+            {app.translator.trans('funds.forum.tabs.history')}
           </div>
         </div>
         <Button
@@ -101,10 +101,10 @@ export default class WithdrawalPage extends Page<any, any> {
             {icon('fas fa-coins')}
           </div>
           <h3 className="WithdrawalPage-emptyTitle">
-            {app.translator.trans('withdrawal.forum.no_platforms')}
+            {app.translator.trans('funds.forum.no_platforms')}
           </h3>
           <p className="WithdrawalPage-emptyDescription">
-            {app.translator.trans('withdrawal.forum.no_platforms_description')}
+            {app.translator.trans('funds.forum.no_platforms_description')}
           </p>
         </div>
       );
@@ -129,12 +129,12 @@ export default class WithdrawalPage extends Page<any, any> {
         transactions={this.state.requests}
         platforms={this.state.platforms}
         loading={false}
-        type="withdrawal"
+        type="funds"
       />
     );
   }
 
-  private handleTabChange(tab: 'withdrawal' | 'history'): void {
+  private handleTabChange(tab: 'funds' | 'history'): void {
     this.state.activeTab(tab);
   }
 
@@ -182,14 +182,14 @@ export default class WithdrawalPage extends Page<any, any> {
       } else {
         app.alerts.show(
           { type: 'warning', dismissible: true },
-          app.translator.trans('withdrawal.forum.insufficient_balance')
+          app.translator.trans('funds.forum.insufficient_balance')
         );
       }
     } catch (error) {
       console.error('Error refreshing balance:', error);
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.forum.balance_refresh_error')
+        app.translator.trans('funds.forum.balance_refresh_error')
       );
     }
   }
@@ -212,7 +212,7 @@ export default class WithdrawalPage extends Page<any, any> {
     if (isNaN(amountNum) || amountNum <= 0) {
       app.alerts.show(
         { type: 'warning', dismissible: true },
-        app.translator.trans('withdrawal.forum.invalid_amount')
+        app.translator.trans('funds.forum.invalid_amount')
       );
       return;
     }
@@ -224,7 +224,7 @@ export default class WithdrawalPage extends Page<any, any> {
     if (amountNum < minAmount) {
       app.alerts.show(
         { type: 'warning', dismissible: true },
-        app.translator.trans('withdrawal.forum.amount_below_minimum', { 
+        app.translator.trans('funds.forum.amount_below_minimum', { 
           amount: amountNum, 
           minimum: minAmount,
           platform: getAttr(selectedPlatform, 'name') 
@@ -236,7 +236,7 @@ export default class WithdrawalPage extends Page<any, any> {
     if (amountNum > maxAmount) {
       app.alerts.show(
         { type: 'warning', dismissible: true },
-        app.translator.trans('withdrawal.forum.amount_above_maximum', { 
+        app.translator.trans('funds.forum.amount_above_maximum', { 
           amount: amountNum, 
           maximum: maxAmount,
           platform: getAttr(selectedPlatform, 'name') 
@@ -250,10 +250,10 @@ export default class WithdrawalPage extends Page<any, any> {
     const totalRequired = amountNum + fee;
     
     if (this.state.userBalance < totalRequired) {
-      const feeText = fee > 0 ? app.translator.trans('withdrawal.forum.including_fee', { fee }) : '';
+      const feeText = fee > 0 ? app.translator.trans('funds.forum.including_fee', { fee }) : '';
       app.alerts.show(
         { type: 'warning', dismissible: true },
-        app.translator.trans('withdrawal.forum.insufficient_balance_detailed', {
+        app.translator.trans('funds.forum.insufficient_balance_detailed', {
           required: totalRequired,
           available: this.state.userBalance,
           feeText
@@ -282,7 +282,7 @@ export default class WithdrawalPage extends Page<any, any> {
 
       app.alerts.show(
         { type: 'success', dismissible: true },
-        app.translator.trans('withdrawal.forum.submit_success')
+        app.translator.trans('funds.forum.submit_success')
       );
 
     } catch (error: unknown) {
@@ -292,7 +292,7 @@ export default class WithdrawalPage extends Page<any, any> {
         ? error.message 
         : extractErrorMessage(
             error as FlarumApiError, 
-            app.translator.trans('withdrawal.forum.error').toString()
+            app.translator.trans('funds.forum.error').toString()
           );
       
       app.alerts.show(
@@ -306,7 +306,7 @@ export default class WithdrawalPage extends Page<any, any> {
 
   private async loadData(): Promise<void> {
     try {
-      console.log('Starting to load withdrawal data...');
+      console.log('Starting to load funds data...');
       
       const [platforms, requests] = await Promise.all([
         withdrawalService.getPlatforms(),
@@ -364,7 +364,7 @@ export default class WithdrawalPage extends Page<any, any> {
     try {
       this.state.requests = await withdrawalService.getUserHistory();
     } catch (error) {
-      console.error('Error loading withdrawal requests:', error);
+      console.error('Error loading funds requests:', error);
     }
   }
 }

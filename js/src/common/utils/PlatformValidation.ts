@@ -94,7 +94,7 @@ export function throwIfErrors(errors: string[]): void {
 }
 
 /**
- * Complete validation for withdrawal platforms
+ * Complete validation for funds platforms
  */
 export function validateWithdrawalPlatform(attributes: Record<string, any>, currentMinAmount?: number): void {
   const errors = [

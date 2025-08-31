@@ -43,7 +43,7 @@ class CreateDepositRecordController extends AbstractCreateController
         }
 
         // Check if user has permission to submit deposit records
-        if (!$actor->hasPermission('wusong8899-withdrawal.submitDepositRecord')) {
+        if (!$actor->hasPermission('wusong8899-funds.submitDepositRecord')) {
             throw new PermissionDeniedException();
         }
 

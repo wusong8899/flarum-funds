@@ -61,7 +61,7 @@ export default class DepositRecordManagementSection extends Component<
       return (
         <div className="DepositRecordManagementSection">
           <div className="ection-header">
-            <h3>{app.translator.trans('withdrawal.admin.deposit.records.title')}</h3>
+            <h3>{app.translator.trans('funds.admin.deposit.records.title')}</h3>
           </div>
           <LoadingIndicator />
         </div>
@@ -71,15 +71,15 @@ export default class DepositRecordManagementSection extends Component<
     return (
       <div className="DepositRecordManagementSection">
         <div className="DepositRecordManagementSection-header">
-          <h3>{app.translator.trans('withdrawal.admin.deposit.records.title')}</h3>
+          <h3>{app.translator.trans('funds.admin.deposit.records.title')}</h3>
           <div className="DepositRecordManagementSection-stats">
             <span className="DepositRecordManagementSection-count">
-              {app.translator.trans('withdrawal.admin.deposit.records.total_count', {
+              {app.translator.trans('funds.admin.deposit.records.total_count', {
                 count: records.length
               })}
             </span>
             <span className="DepositRecordManagementSection-pending">
-              {app.translator.trans('withdrawal.admin.deposit.records.pending_count', {
+              {app.translator.trans('funds.admin.deposit.records.pending_count', {
                 count: records.filter(r => r.isPending()).length
               })}
             </span>
@@ -92,8 +92,8 @@ export default class DepositRecordManagementSection extends Component<
               <div className="DepositRecordManagementSection-emptyIcon">
                 {icon('fas fa-receipt')}
               </div>
-              <h4>{app.translator.trans('withdrawal.admin.deposit.records.empty.title')}</h4>
-              <p>{app.translator.trans('withdrawal.admin.deposit.records.empty.description')}</p>
+              <h4>{app.translator.trans('funds.admin.deposit.records.empty.title')}</h4>
+              <p>{app.translator.trans('funds.admin.deposit.records.empty.description')}</p>
             </div>
           ) : (
             <div className="DepositRecordManagementSection-list">
@@ -232,7 +232,7 @@ export default class DepositRecordManagementSection extends Component<
               loading={isProcessing}
               disabled={isProcessing}
             >
-              {app.translator.trans('withdrawal.admin.deposit.records.approve')}
+              {app.translator.trans('funds.admin.deposit.records.approve')}
             </Button>
             
             <Button
@@ -241,7 +241,7 @@ export default class DepositRecordManagementSection extends Component<
               loading={isProcessing}
               disabled={isProcessing}
             >
-              {app.translator.trans('withdrawal.admin.deposit.records.reject')}
+              {app.translator.trans('funds.admin.deposit.records.reject')}
             </Button>
           </div>
         )}
@@ -253,7 +253,7 @@ export default class DepositRecordManagementSection extends Component<
             disabled={isProcessing}
           >
             {icon('fas fa-trash')}
-            {app.translator.trans('withdrawal.admin.deposit.records.delete')}
+            {app.translator.trans('funds.admin.deposit.records.delete')}
           </Button>
         </div>
       </div>
@@ -296,11 +296,11 @@ export default class DepositRecordManagementSection extends Component<
   private getStatusText(status: string): string {
     switch (status) {
       case 'pending':
-        return app.translator.trans('withdrawal.admin.deposit.records.status.pending').toString();
+        return app.translator.trans('funds.admin.deposit.records.status.pending').toString();
       case 'approved':
-        return app.translator.trans('withdrawal.admin.deposit.records.status.approved').toString();
+        return app.translator.trans('funds.admin.deposit.records.status.approved').toString();
       case 'rejected':
-        return app.translator.trans('withdrawal.admin.deposit.records.status.rejected').toString();
+        return app.translator.trans('funds.admin.deposit.records.status.rejected').toString();
       default:
         return 'Unknown';
     }
@@ -313,7 +313,7 @@ export default class DepositRecordManagementSection extends Component<
     // Simple approval - could be enhanced with a modal for custom amounts/notes
     const creditedAmount = parseFloat(
       prompt(
-        app.translator.trans('withdrawal.admin.deposit.records.approve_prompt', {
+        app.translator.trans('funds.admin.deposit.records.approve_prompt', {
           amount: defaultAmount
         }).toString(),
         defaultAmount.toString()
@@ -321,13 +321,13 @@ export default class DepositRecordManagementSection extends Component<
     );
 
     const notes = prompt(
-      app.translator.trans('withdrawal.admin.deposit.records.approve_notes_prompt').toString()
+      app.translator.trans('funds.admin.deposit.records.approve_notes_prompt').toString()
     );
 
     if (isNaN(creditedAmount) || creditedAmount <= 0) {
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.records.invalid_amount')
+        app.translator.trans('funds.admin.deposit.records.invalid_amount')
       );
       return;
     }
@@ -342,7 +342,7 @@ export default class DepositRecordManagementSection extends Component<
       console.error('Error approving deposit record:', error);
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.records.approve_error')
+        app.translator.trans('funds.admin.deposit.records.approve_error')
       );
     } finally {
       this.state.processingRecords.delete(recordId);
@@ -352,13 +352,13 @@ export default class DepositRecordManagementSection extends Component<
 
   private async handleReject(record: DepositRecord, attrs: DepositRecordManagementSectionAttrs): Promise<void> {
     const reason = prompt(
-      app.translator.trans('withdrawal.admin.deposit.records.reject_reason_prompt').toString()
+      app.translator.trans('funds.admin.deposit.records.reject_reason_prompt').toString()
     );
 
     if (!reason || reason.trim() === '') {
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.records.reject_reason_required')
+        app.translator.trans('funds.admin.deposit.records.reject_reason_required')
       );
       return;
     }
@@ -374,7 +374,7 @@ export default class DepositRecordManagementSection extends Component<
       console.error('Error rejecting deposit record:', error);
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.records.reject_error')
+        app.translator.trans('funds.admin.deposit.records.reject_error')
       );
     } finally {
       this.state.processingRecords.delete(recordId);
@@ -387,13 +387,13 @@ export default class DepositRecordManagementSection extends Component<
     const amount = record.amount();
 
     app.modal.show(ConfirmModal, {
-      title: app.translator.trans('withdrawal.admin.deposit.records.delete_confirm_title'),
-      message: app.translator.trans('withdrawal.admin.deposit.records.delete_confirm_message', {
+      title: app.translator.trans('funds.admin.deposit.records.delete_confirm_title'),
+      message: app.translator.trans('funds.admin.deposit.records.delete_confirm_message', {
         user: user,
         amount: amount
       }),
-      confirmText: app.translator.trans('withdrawal.admin.deposit.records.delete_confirm_button'),
-      cancelText: app.translator.trans('withdrawal.admin.deposit.records.delete_cancel_button'),
+      confirmText: app.translator.trans('funds.admin.deposit.records.delete_confirm_button'),
+      cancelText: app.translator.trans('funds.admin.deposit.records.delete_cancel_button'),
       dangerous: true,
       icon: 'fas fa-trash',
       onConfirm: async () => {
@@ -407,7 +407,7 @@ export default class DepositRecordManagementSection extends Component<
           console.error('Error deleting deposit record:', error);
           app.alerts.show(
             { type: 'error', dismissible: true },
-            app.translator.trans('withdrawal.admin.deposit.records.delete_error')
+            app.translator.trans('funds.admin.deposit.records.delete_error')
           );
         } finally {
           this.state.processingRecords.delete(recordId);

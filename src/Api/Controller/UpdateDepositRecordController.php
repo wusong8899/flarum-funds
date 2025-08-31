@@ -46,7 +46,7 @@ class UpdateDepositRecordController extends AbstractShowController
         $data = Arr::get($request->getParsedBody(), 'data.attributes', []);
 
         // Check if user has permission to manage deposit records
-        if (!$actor->hasPermission('wusong8899-withdrawal.manageDepositRecords')) {
+        if (!$actor->hasPermission('wusong8899-funds.manageDepositRecords')) {
             throw new PermissionDeniedException();
         }
 

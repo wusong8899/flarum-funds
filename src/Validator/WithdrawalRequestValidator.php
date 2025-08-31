@@ -11,7 +11,7 @@ use wusong8899\Withdrawal\Model\WithdrawalPlatform;
 class WithdrawalRequestValidator
 {
     /**
-     * Validate withdrawal request creation
+     * Validate funds request creation
      *
      * @param User $actor
      * @param float $amount
@@ -51,7 +51,7 @@ class WithdrawalRequestValidator
     }
 
     /**
-     * Validate withdrawal amount
+     * Validate funds amount
      *
      * @param float $amount
      * @param WithdrawalPlatform $platform
@@ -139,7 +139,7 @@ class WithdrawalRequestValidator
     }
 
     /**
-     * Validate withdrawal request can be updated
+     * Validate funds request can be updated
      *
      * @param User $actor
      * @param string $currentStatus
@@ -151,7 +151,7 @@ class WithdrawalRequestValidator
     {
         if (!$actor->isAdmin()) {
             throw new ValidationException([
-                'Only administrators can update withdrawal requests'
+                'Only administrators can update funds requests'
             ]);
         }
 
@@ -207,14 +207,14 @@ class WithdrawalRequestValidator
     {
         if (!$actor->isAdmin()) {
             throw new ValidationException([
-                'Only administrators can delete withdrawal requests'
+                'Only administrators can delete funds requests'
             ]);
         }
 
         // Optionally, you might want to prevent deletion of approved requests
         if ($status === 'approved') {
             throw new ValidationException([
-                'Cannot delete approved withdrawal requests'
+                'Cannot delete approved funds requests'
             ]);
         }
     }

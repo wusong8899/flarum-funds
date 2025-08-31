@@ -7,7 +7,7 @@ import app from 'flarum/common/app';
 /**
  * WithdrawalPlatform model for Flarum
  * 
- * This model represents a withdrawal platform that users can use
+ * This model represents a funds platform that users can use
  * to withdraw their virtual currency with enhanced CRUD capabilities.
  */
 export default class WithdrawalPlatform extends Model {
@@ -50,7 +50,7 @@ export default class WithdrawalPlatform extends Model {
   // Computed properties
   apiEndpoint() {
     const id = this.id();
-    return id ? `/withdrawal-platforms/${id}` : '/withdrawal-platforms';
+    return id ? `/funds-platforms/${id}` : '/funds-platforms';
   }
   
   // Helper methods
@@ -101,7 +101,7 @@ export default class WithdrawalPlatform extends Model {
     // Check if platform is in use
     if (await this.isInUse()) {
       throw new ServiceError(
-        'Cannot delete platform that has pending withdrawal requests',
+        'Cannot delete platform that has pending funds requests',
         ServiceErrorType.VALIDATION_ERROR
       );
     }
@@ -133,7 +133,7 @@ export default class WithdrawalPlatform extends Model {
    * Clone this platform for creating a similar one
    */
   clone(): WithdrawalPlatform {
-    const cloned = app.store.createRecord('withdrawal-platforms') as WithdrawalPlatform;
+    const cloned = app.store.createRecord('funds-platforms') as WithdrawalPlatform;
     
     // Copy relevant attributes but not id/timestamps
     cloned.pushAttributes({
@@ -179,7 +179,7 @@ export default class WithdrawalPlatform extends Model {
   }
 
   /**
-   * Check if user has sufficient balance for withdrawal
+   * Check if user has sufficient balance for funds
    */
   validateUserBalance(amount: number, userBalance: number): { valid: boolean; errors: string[] } {
     const errors: string[] = [];
@@ -230,7 +230,7 @@ export default class WithdrawalPlatform extends Model {
    */
   async isInUse(): Promise<boolean> {
     try {
-      const requests = await app.store.find('withdrawal-requests', {
+      const requests = await app.store.find('funds-requests', {
         filter: { platform: this.id(), status: 'pending' }
       });
       
@@ -288,7 +288,7 @@ export default class WithdrawalPlatform extends Model {
     if (error.response && error.response.errors) {
       const apiError = error.response.errors[0];
       return new ServiceError(
-        apiError.detail || 'Failed to save withdrawal platform',
+        apiError.detail || 'Failed to save funds platform',
         ServiceErrorType.VALIDATION_ERROR,
         apiError.code,
         apiError
@@ -296,7 +296,7 @@ export default class WithdrawalPlatform extends Model {
     }
 
     return new ServiceError(
-      error.message || 'Failed to save withdrawal platform',
+      error.message || 'Failed to save funds platform',
       ServiceErrorType.SERVER_ERROR
     );
   }
@@ -318,7 +318,7 @@ export default class WithdrawalPlatform extends Model {
     }
 
     return new ServiceError(
-      error.message || 'Failed to delete withdrawal platform',
+      error.message || 'Failed to delete funds platform',
       ServiceErrorType.SERVER_ERROR
     );
   }

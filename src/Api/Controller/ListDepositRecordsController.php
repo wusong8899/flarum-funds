@@ -42,7 +42,7 @@ class ListDepositRecordsController extends AbstractListController
             ->with(['user', 'platform', 'processedBy']);
 
         // Admin can see all records, users can only see their own
-        if (!$actor->hasPermission('wusong8899-withdrawal.manageDepositRecords')) {
+        if (!$actor->hasPermission('wusong8899-funds.manageDepositRecords')) {
             $query->where('user_id', $actor->id);
         }
 

@@ -103,7 +103,7 @@ export interface BaseService<TModel extends Model> {
  */
 export interface WithdrawalServiceInterface extends BaseService<any> {
   /**
-   * Submit a withdrawal request
+   * Submit a funds request
    */
   submitRequest(data: {
     platformId: number;
@@ -113,7 +113,7 @@ export interface WithdrawalServiceInterface extends BaseService<any> {
   }): Promise<any>;
 
   /**
-   * Get user's withdrawal history
+   * Get user's funds history
    */
   getUserHistory(userId?: number, options?: QueryOptions): Promise<any[]>;
 
@@ -123,12 +123,12 @@ export interface WithdrawalServiceInterface extends BaseService<any> {
   getPendingRequests(options?: QueryOptions): Promise<any[]>;
 
   /**
-   * Approve a withdrawal request (admin only)
+   * Approve a funds request (admin only)
    */
   approve(request: any, message?: string): Promise<any>;
 
   /**
-   * Reject a withdrawal request (admin only)
+   * Reject a funds request (admin only)
    */
   reject(request: any, reason?: string): Promise<any>;
 
@@ -173,13 +173,13 @@ export interface DepositServiceInterface extends BaseService<any> {
 }
 
 /**
- * Platform service interface for both withdrawal and deposit platforms
+ * Platform service interface for both funds and deposit platforms
  */
 export interface PlatformServiceInterface extends BaseService<any> {
   /**
    * Get active platforms only
    */
-  getActive(type: 'withdrawal' | 'deposit', options?: QueryOptions): Promise<any[]>;
+  getActive(type: 'funds' | 'deposit', options?: QueryOptions): Promise<any[]>;
 
   /**
    * Toggle platform status (admin only)
@@ -194,7 +194,7 @@ export interface PlatformServiceInterface extends BaseService<any> {
   /**
    * Get platforms by symbol
    */
-  getBySymbol(symbol: string, type: 'withdrawal' | 'deposit'): Promise<any[]>;
+  getBySymbol(symbol: string, type: 'funds' | 'deposit'): Promise<any[]>;
 }
 
 /**

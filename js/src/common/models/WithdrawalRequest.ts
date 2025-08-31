@@ -8,7 +8,7 @@ import app from 'flarum/common/app';
 /**
  * WithdrawalRequest model for Flarum
  * 
- * This model represents a user's withdrawal request with enhanced CRUD capabilities.
+ * This model represents a user's funds request with enhanced CRUD capabilities.
  */
 export default class WithdrawalRequest extends Model {
   // Basic attributes
@@ -32,7 +32,7 @@ export default class WithdrawalRequest extends Model {
   // Computed properties
   apiEndpoint() {
     const id = this.id();
-    return id ? `/withdrawal-requests/${id}` : '/withdrawal-requests';
+    return id ? `/funds-requests/${id}` : '/funds-requests';
   }
   
   // Status helpers
@@ -55,7 +55,7 @@ export default class WithdrawalRequest extends Model {
   // Display helpers
   statusLabel(): string {
     const status = this.status();
-    return app.translator.trans(`withdrawal.forum.status.${status}`).toString();
+    return app.translator.trans(`funds.forum.status.${status}`).toString();
   }
   
   statusColor(): string {
@@ -74,7 +74,7 @@ export default class WithdrawalRequest extends Model {
   // Enhanced CRUD methods
 
   /**
-   * Save this withdrawal request with enhanced validation
+   * Save this funds request with enhanced validation
    */
   async save(attributes?: Record<string, any>): Promise<WithdrawalRequest> {
     // Validate before saving if attributes provided
@@ -91,7 +91,7 @@ export default class WithdrawalRequest extends Model {
   }
 
   /**
-   * Delete this withdrawal request with permission check
+   * Delete this funds request with permission check
    */
   async delete(): Promise<void> {
     if (!this.canDelete()) {
@@ -121,7 +121,7 @@ export default class WithdrawalRequest extends Model {
    * Clone this request for resubmission
    */
   clone(): WithdrawalRequest {
-    const cloned = app.store.createRecord('withdrawal-requests') as WithdrawalRequest;
+    const cloned = app.store.createRecord('funds-requests') as WithdrawalRequest;
     
     // Copy relevant attributes but not status/timestamps
     cloned.pushAttributes({
@@ -257,7 +257,7 @@ export default class WithdrawalRequest extends Model {
     if (error.response && error.response.errors) {
       const apiError = error.response.errors[0];
       return new ServiceError(
-        apiError.detail || 'Failed to save withdrawal request',
+        apiError.detail || 'Failed to save funds request',
         ServiceErrorType.VALIDATION_ERROR,
         apiError.code,
         apiError
@@ -265,7 +265,7 @@ export default class WithdrawalRequest extends Model {
     }
 
     return new ServiceError(
-      error.message || 'Failed to save withdrawal request',
+      error.message || 'Failed to save funds request',
       ServiceErrorType.SERVER_ERROR
     );
   }
@@ -287,7 +287,7 @@ export default class WithdrawalRequest extends Model {
     }
 
     return new ServiceError(
-      error.message || 'Failed to delete withdrawal request',
+      error.message || 'Failed to delete funds request',
       ServiceErrorType.SERVER_ERROR
     );
   }

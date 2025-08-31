@@ -75,12 +75,12 @@ export default class WithdrawalRequestItem extends Component<WithdrawalRequestIt
             <span className="date">{dateDisplay}</span>
           </div>
           <div className="WithdrawalRequest-account">
-            <strong>{app.translator.trans('withdrawal.admin.requests.account_details')}:</strong>
+            <strong>{app.translator.trans('funds.admin.requests.account_details')}:</strong>
             <span>{accountDetails}</span>
           </div>
           <div className="WithdrawalRequest-status">
             <span className={`Badge Badge--${status}`}>
-              {app.translator.trans(`withdrawal.admin.requests.status.${status}`)}
+              {app.translator.trans(`funds.admin.requests.status.${status}`)}
             </span>
           </div>
         </div>
@@ -93,13 +93,13 @@ export default class WithdrawalRequestItem extends Component<WithdrawalRequestIt
                   className="Button Button--primary"
                   onclick={() => this.attrs.onUpdateStatus!(request, 'approved')}
                 >
-                  {app.translator.trans('withdrawal.admin.requests.approve')}
+                  {app.translator.trans('funds.admin.requests.approve')}
                 </Button>
                 <Button
                   className="Button Button--danger"
                   onclick={() => this.attrs.onUpdateStatus!(request, 'rejected')}
                 >
-                  {app.translator.trans('withdrawal.admin.requests.reject')}
+                  {app.translator.trans('funds.admin.requests.reject')}
                 </Button>
               </>
             )}
@@ -109,7 +109,7 @@ export default class WithdrawalRequestItem extends Component<WithdrawalRequestIt
                 onclick={() => this.attrs.onDelete!(request)}
               >
                 <i className="fas fa-trash"></i>
-                {app.translator.trans('withdrawal.admin.requests.delete')}
+                {app.translator.trans('funds.admin.requests.delete')}
               </Button>
             )}
           </div>

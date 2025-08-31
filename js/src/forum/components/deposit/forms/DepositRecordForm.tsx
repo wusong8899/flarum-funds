@@ -64,10 +64,10 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
         <div className="DepositRecordForm-header">
           <div className="DepositRecordForm-title">
             <i className="fas fa-plus-circle"></i>
-            {app.translator.trans('withdrawal.forum.deposit.record.form_title')}
+            {app.translator.trans('funds.forum.deposit.record.form_title')}
           </div>
           <div className="DepositRecordForm-platformInfo">
-            {app.translator.trans('withdrawal.forum.deposit.record.selected_platform', {
+            {app.translator.trans('funds.forum.deposit.record.selected_platform', {
               platform: getAttr(platform, 'name'),
               symbol: symbol
             })}
@@ -78,35 +78,35 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
           {/* Platform Account Field */}
           <div className="DepositRecordForm-field">
             <label className="DepositRecordForm-label">
-              {app.translator.trans('withdrawal.forum.deposit.record.platform_account')}
+              {app.translator.trans('funds.forum.deposit.record.platform_account')}
               <span className="DepositRecordForm-required">*</span>
             </label>
             <input
               type="text"
               className="DepositRecordForm-input"
-              placeholder={app.translator.trans('withdrawal.forum.deposit.record.platform_account_placeholder')}
+              placeholder={app.translator.trans('funds.forum.deposit.record.platform_account_placeholder')}
               value={this.state.platformAccount()}
               oninput={withAttr('value', this.state.platformAccount)}
               required
               disabled={submitting}
             />
             <div className="DepositRecordForm-help">
-              {app.translator.trans('withdrawal.forum.deposit.record.platform_account_help')}
+              {app.translator.trans('funds.forum.deposit.record.platform_account_help')}
             </div>
           </div>
 
           {/* Real Name Field (Optional) */}
           <div className="DepositRecordForm-field">
             <label className="DepositRecordForm-label">
-              {app.translator.trans('withdrawal.forum.deposit.record.real_name')}
+              {app.translator.trans('funds.forum.deposit.record.real_name')}
               <span className="DepositRecordForm-optional">
-                ({app.translator.trans('withdrawal.forum.deposit.record.optional')})
+                ({app.translator.trans('funds.forum.deposit.record.optional')})
               </span>
             </label>
             <input
               type="text"
               className="DepositRecordForm-input"
-              placeholder={app.translator.trans('withdrawal.forum.deposit.record.real_name_placeholder')}
+              placeholder={app.translator.trans('funds.forum.deposit.record.real_name_placeholder')}
               value={this.state.realName()}
               oninput={withAttr('value', this.state.realName)}
               disabled={submitting}
@@ -116,7 +116,7 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
           {/* Amount Field */}
           <div className="DepositRecordForm-field">
             <label className="DepositRecordForm-label">
-              {app.translator.trans('withdrawal.forum.deposit.record.amount')} ({symbol})
+              {app.translator.trans('funds.forum.deposit.record.amount')} ({symbol})
               <span className="DepositRecordForm-required">*</span>
             </label>
             <input
@@ -125,7 +125,7 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
               min={minAmount}
               max={maxAmount}
               className="DepositRecordForm-input"
-              placeholder={app.translator.trans('withdrawal.forum.deposit.record.amount_placeholder')}
+              placeholder={app.translator.trans('funds.forum.deposit.record.amount_placeholder')}
               value={this.state.amount()}
               oninput={withAttr('value', this.state.amount)}
               required
@@ -134,7 +134,7 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
             <div className="DepositRecordForm-limits">
               {minAmount > 0 && (
                 <span className="DepositRecordForm-limit">
-                  {app.translator.trans('withdrawal.forum.deposit.record.min_amount', {
+                  {app.translator.trans('funds.forum.deposit.record.min_amount', {
                     amount: minAmount,
                     symbol: symbol
                   })}
@@ -142,7 +142,7 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
               )}
               {maxAmount && (
                 <span className="DepositRecordForm-limit">
-                  {app.translator.trans('withdrawal.forum.deposit.record.max_amount', {
+                  {app.translator.trans('funds.forum.deposit.record.max_amount', {
                     amount: maxAmount,
                     symbol: symbol
                   })}
@@ -154,7 +154,7 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
           {/* Deposit Time Field */}
           <div className="DepositRecordForm-field">
             <label className="DepositRecordForm-label">
-              {app.translator.trans('withdrawal.forum.deposit.record.deposit_time')}
+              {app.translator.trans('funds.forum.deposit.record.deposit_time')}
               <span className="DepositRecordForm-required">*</span>
             </label>
             <input
@@ -166,42 +166,42 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
               disabled={submitting}
             />
             <div className="DepositRecordForm-help">
-              {app.translator.trans('withdrawal.forum.deposit.record.deposit_time_help')}
+              {app.translator.trans('funds.forum.deposit.record.deposit_time_help')}
             </div>
           </div>
 
           {/* Screenshot URL Field (Optional) */}
           <div className="DepositRecordForm-field">
             <label className="DepositRecordForm-label">
-              {app.translator.trans('withdrawal.forum.deposit.record.screenshot_url')}
+              {app.translator.trans('funds.forum.deposit.record.screenshot_url')}
               <span className="DepositRecordForm-optional">
-                ({app.translator.trans('withdrawal.forum.deposit.record.optional')})
+                ({app.translator.trans('funds.forum.deposit.record.optional')})
               </span>
             </label>
             <input
               type="url"
               className="DepositRecordForm-input"
-              placeholder={app.translator.trans('withdrawal.forum.deposit.record.screenshot_url_placeholder')}
+              placeholder={app.translator.trans('funds.forum.deposit.record.screenshot_url_placeholder')}
               value={this.state.screenshotUrl()}
               oninput={withAttr('value', this.state.screenshotUrl)}
               disabled={submitting}
             />
             <div className="DepositRecordForm-help">
-              {app.translator.trans('withdrawal.forum.deposit.record.screenshot_url_help')}
+              {app.translator.trans('funds.forum.deposit.record.screenshot_url_help')}
             </div>
           </div>
 
           {/* User Message Field (Optional) */}
           <div className="DepositRecordForm-field">
             <label className="DepositRecordForm-label">
-              {app.translator.trans('withdrawal.forum.deposit.record.user_message')}
+              {app.translator.trans('funds.forum.deposit.record.user_message')}
               <span className="DepositRecordForm-optional">
-                ({app.translator.trans('withdrawal.forum.deposit.record.optional')})
+                ({app.translator.trans('funds.forum.deposit.record.optional')})
               </span>
             </label>
             <textarea
               className="DepositRecordForm-textarea"
-              placeholder={app.translator.trans('withdrawal.forum.deposit.record.user_message_placeholder')}
+              placeholder={app.translator.trans('funds.forum.deposit.record.user_message_placeholder')}
               value={this.state.userMessage()}
               oninput={withAttr('value', this.state.userMessage)}
               rows={3}
@@ -217,7 +217,7 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
               onclick={vnode.attrs.onCancel}
               disabled={submitting}
             >
-              {app.translator.trans('withdrawal.forum.deposit.record.cancel')}
+              {app.translator.trans('funds.forum.deposit.record.cancel')}
             </Button>
             
             <Button
@@ -226,7 +226,7 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
               loading={submitting}
               disabled={submitting}
             >
-              {app.translator.trans('withdrawal.forum.deposit.record.submit')}
+              {app.translator.trans('funds.forum.deposit.record.submit')}
             </Button>
           </div>
         </form>
@@ -243,7 +243,7 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
     if (!this.state.platformAccount() || !this.state.amount() || !this.state.depositTime()) {
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.forum.deposit.record.validation.required_fields')
+        app.translator.trans('funds.forum.deposit.record.validation.required_fields')
       );
       return;
     }
@@ -252,7 +252,7 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
     if (isNaN(amount) || amount <= 0) {
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.forum.deposit.record.validation.invalid_amount')
+        app.translator.trans('funds.forum.deposit.record.validation.invalid_amount')
       );
       return;
     }
@@ -264,7 +264,7 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
     if (amount < minAmount) {
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.forum.deposit.record.validation.amount_too_low', {
+        app.translator.trans('funds.forum.deposit.record.validation.amount_too_low', {
           amount: amount,
           min: minAmount,
           symbol: getAttr(platform, 'symbol')
@@ -276,7 +276,7 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
     if (maxAmount && amount > maxAmount) {
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.forum.deposit.record.validation.amount_too_high', {
+        app.translator.trans('funds.forum.deposit.record.validation.amount_too_high', {
           amount: amount,
           max: maxAmount,
           symbol: getAttr(platform, 'symbol')

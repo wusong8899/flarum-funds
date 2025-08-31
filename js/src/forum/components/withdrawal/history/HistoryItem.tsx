@@ -53,7 +53,7 @@ export default class HistoryItem extends Component<HistoryItemProps> {
         <div className="WithdrawalPage-historyDetails">
           <div className="WithdrawalPage-historyAmount">
             <span className="WithdrawalPage-historyLabel">
-              {app.translator.trans('withdrawal.forum.history.amount')}:
+              {app.translator.trans('funds.forum.history.amount')}:
             </span>
             <span className="WithdrawalPage-historyValue">
               {amount} {this.getPlatformSymbol(platform)}
@@ -61,7 +61,7 @@ export default class HistoryItem extends Component<HistoryItemProps> {
           </div>
           <div className="WithdrawalPage-historyAddress">
             <span className="WithdrawalPage-historyLabel">
-              {app.translator.trans('withdrawal.forum.history.address')}:
+              {app.translator.trans('funds.forum.history.address')}:
             </span>
             <span className="WithdrawalPage-historyValue">
               {accountDetails}

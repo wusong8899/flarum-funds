@@ -1,7 +1,7 @@
 import app from 'flarum/forum/app';
 
 /**
- * ConfigManager utility for flarum-withdrawal extension
+ * ConfigManager utility for flarum-funds extension
  */
 export class ConfigManager {
   private static instance: ConfigManager;

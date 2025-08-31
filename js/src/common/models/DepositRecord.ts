@@ -62,7 +62,7 @@ export default class DepositRecord extends Model {
   // Display helpers
   getStatusLabel(): string {
     const status = this.status();
-    return app.translator.trans(`withdrawal.forum.deposit.status.${status}`).toString();
+    return app.translator.trans(`funds.forum.deposit.status.${status}`).toString();
   }
 
   canBeModified(): boolean {

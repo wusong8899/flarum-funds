@@ -26,12 +26,12 @@ export default class RequestManagementSection extends Component<RequestManagemen
 
     return (
       <div className="WithdrawalManagementPage-section">
-        <h3>{app.translator.trans('withdrawal.admin.requests.title')}</h3>
+        <h3>{app.translator.trans('funds.admin.requests.title')}</h3>
         
         <div className="WithdrawalManagementPage-pendingRequests">
-          <h4>{app.translator.trans('withdrawal.admin.requests.pending_title')}</h4>
+          <h4>{app.translator.trans('funds.admin.requests.pending_title')}</h4>
           {pendingRequests.length === 0 ? (
-            <p>{app.translator.trans('withdrawal.admin.requests.no_pending')}</p>
+            <p>{app.translator.trans('funds.admin.requests.no_pending')}</p>
           ) : (
             pendingRequests.map((request) => (
               <WithdrawalRequestItem
@@ -47,9 +47,9 @@ export default class RequestManagementSection extends Component<RequestManagemen
         </div>
 
         <div className="WithdrawalManagementPage-processedRequests">
-          <h4>{app.translator.trans('withdrawal.admin.requests.processed_title')}</h4>
+          <h4>{app.translator.trans('funds.admin.requests.processed_title')}</h4>
           {processedRequests.length === 0 ? (
-            <p>{app.translator.trans('withdrawal.admin.requests.no_processed')}</p>
+            <p>{app.translator.trans('funds.admin.requests.no_processed')}</p>
           ) : (
             processedRequests.map((request) => (
               <WithdrawalRequestItem

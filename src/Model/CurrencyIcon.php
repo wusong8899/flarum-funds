@@ -109,7 +109,7 @@ class CurrencyIcon extends AbstractModel
     }
 
     /**
-     * Get platforms using this currency (withdrawal)
+     * Get platforms using this currency (funds)
      */
     public function withdrawalPlatforms(): HasMany
     {

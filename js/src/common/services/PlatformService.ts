@@ -7,17 +7,17 @@ import {
 } from '../types/services';
 
 /**
- * Service for managing both withdrawal and deposit platforms
+ * Service for managing both funds and deposit platforms
  */
 export default class PlatformService implements PlatformServiceInterface {
-  private readonly withdrawalModelType = 'withdrawal-platforms';
+  private readonly withdrawalModelType = 'funds-platforms';
   private readonly depositModelType = 'deposit-platforms';
 
   /**
    * Find multiple platforms of specified type
    */
-  async find(type: 'withdrawal' | 'deposit', options: QueryOptions = {}): Promise<any[]> {
-    const modelType = type === 'withdrawal' ? this.withdrawalModelType : this.depositModelType;
+  async find(type: 'funds' | 'deposit', options: QueryOptions = {}): Promise<any[]> {
+    const modelType = type === 'funds' ? this.withdrawalModelType : this.depositModelType;
     
     try {
       const queryParams: any = {
@@ -51,11 +51,11 @@ export default class PlatformService implements PlatformServiceInterface {
    * Find a single platform by ID
    */
   async findById(
-    type: 'withdrawal' | 'deposit', 
+    type: 'funds' | 'deposit', 
     id: string | number, 
     options: QueryOptions = {}
   ): Promise<any | null> {
-    const modelType = type === 'withdrawal' ? this.withdrawalModelType : this.depositModelType;
+    const modelType = type === 'funds' ? this.withdrawalModelType : this.depositModelType;
     
     try {
       const queryParams: any = {};
@@ -78,8 +78,8 @@ export default class PlatformService implements PlatformServiceInterface {
   /**
    * Create a new platform
    */
-  async create(type: 'withdrawal' | 'deposit', attributes: Record<string, any>): Promise<any> {
-    const modelType = type === 'withdrawal' ? this.withdrawalModelType : this.depositModelType;
+  async create(type: 'funds' | 'deposit', attributes: Record<string, any>): Promise<any> {
+    const modelType = type === 'funds' ? this.withdrawalModelType : this.depositModelType;
     
     try {
       // Validate required fields based on platform type
@@ -134,7 +134,7 @@ export default class PlatformService implements PlatformServiceInterface {
   /**
    * Get active platforms only
    */
-  async getActive(type: 'withdrawal' | 'deposit', options: QueryOptions = {}): Promise<any[]> {
+  async getActive(type: 'funds' | 'deposit', options: QueryOptions = {}): Promise<any[]> {
     const queryOptions = {
       ...options,
       filter: {
@@ -178,7 +178,7 @@ export default class PlatformService implements PlatformServiceInterface {
   /**
    * Get platforms by symbol
    */
-  async getBySymbol(symbol: string, type: 'withdrawal' | 'deposit'): Promise<any[]> {
+  async getBySymbol(symbol: string, type: 'funds' | 'deposit'): Promise<any[]> {
     return await this.find(type, {
       filter: { symbol: symbol },
       sort: 'name'
@@ -213,7 +213,7 @@ export default class PlatformService implements PlatformServiceInterface {
   /**
    * Get platform statistics (admin only)
    */
-  async getPlatformStats(type: 'withdrawal' | 'deposit', platformId: number): Promise<any> {
+  async getPlatformStats(type: 'funds' | 'deposit', platformId: number): Promise<any> {
     if (!app.session.user?.isAdmin()) {
       throw new ServiceError(
         'Admin permissions required',
@@ -221,7 +221,7 @@ export default class PlatformService implements PlatformServiceInterface {
       );
     }
 
-    const requestType = type === 'withdrawal' ? 'withdrawal-requests' : 'deposit-records';
+    const requestType = type === 'funds' ? 'funds-requests' : 'deposit-records';
     
     try {
       // Get all requests/records for this platform
@@ -250,7 +250,7 @@ export default class PlatformService implements PlatformServiceInterface {
   /**
    * Get platforms grouped by symbol
    */
-  async getPlatformsBySymbolGrouped(type: 'withdrawal' | 'deposit'): Promise<Record<string, any[]>> {
+  async getPlatformsBySymbolGrouped(type: 'funds' | 'deposit'): Promise<Record<string, any[]>> {
     const platforms = await this.getActive(type);
     const grouped: Record<string, any[]> = {};
 
@@ -269,7 +269,7 @@ export default class PlatformService implements PlatformServiceInterface {
    * Sort platforms by criteria
    */
   async getSortedPlatforms(
-    type: 'withdrawal' | 'deposit', 
+    type: 'funds' | 'deposit', 
     sortBy: 'name' | 'symbol' | 'createdAt' | 'fee' = 'name',
     direction: 'asc' | 'desc' = 'asc'
   ): Promise<any[]> {
@@ -307,7 +307,7 @@ export default class PlatformService implements PlatformServiceInterface {
   /**
    * Validate create attributes based on platform type
    */
-  private validateCreateAttributes(type: 'withdrawal' | 'deposit', attributes: any): void {
+  private validateCreateAttributes(type: 'funds' | 'deposit', attributes: any): void {
     const commonRequired = ['name', 'symbol', 'minAmount'];
     
     // Only common fields are required (removed address requirement)

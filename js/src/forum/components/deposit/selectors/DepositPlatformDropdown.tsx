@@ -32,7 +32,7 @@ export default class DepositPlatformDropdown extends Component<DepositPlatformDr
 
     return (
       <div className="FundsPage-platformSelector">
-        <div className="FundsPage-label">{app.translator.trans('withdrawal.forum.deposit.platform_label')}</div>
+        <div className="FundsPage-label">{app.translator.trans('funds.forum.deposit.platform_label')}</div>
         <div 
           className="FundsPage-platformDropdown" 
           onclick={() => this.toggleDropdown()}
@@ -84,7 +84,7 @@ export default class DepositPlatformDropdown extends Component<DepositPlatformDr
 
   private getPlatformDisplayName(platform: DepositPlatform | null): string {
     if (!platform) {
-      return app.translator.trans('withdrawal.forum.deposit.select_platform').toString();
+      return app.translator.trans('funds.forum.deposit.select_platform').toString();
     }
     
     const name = getAttr(platform, 'name') || '';
@@ -126,14 +126,14 @@ export default class DepositPlatformDropdown extends Component<DepositPlatformDr
     const parts: string[] = [];
     
     if (minAmount && minAmount > 0) {
-      parts.push(app.translator.trans('withdrawal.forum.deposit.min_amount_short', {
+      parts.push(app.translator.trans('funds.forum.deposit.min_amount_short', {
         amount: minAmount,
         symbol: symbol
       }).toString());
     }
     
     if (fee && fee > 0) {
-      parts.push(app.translator.trans('withdrawal.forum.deposit.fee_short', {
+      parts.push(app.translator.trans('funds.forum.deposit.fee_short', {
         fee: fee,
         symbol: symbol
       }).toString());
@@ -160,7 +160,7 @@ export default class DepositPlatformDropdown extends Component<DepositPlatformDr
       return (
         <div className="FundsPage-dropdownMenu">
           <div className="FundsPage-dropdownItem FundsPage-noData">
-            {app.translator.trans('withdrawal.forum.deposit.no_platforms')}
+            {app.translator.trans('funds.forum.deposit.no_platforms')}
           </div>
         </div>
       );

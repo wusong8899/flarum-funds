@@ -1,292 +1,293 @@
-withdrawal:
+funds:
   admin:
+    deposit:
+      platforms:
+        active: Active
+        add_button: Add Platform
+        add_error: Failed to add deposit platform
+        add_success: Deposit platform added successfully
+        address: Deposit Address (Required)
+        address_help: Enter the deposit address for this platform
+        custom_network: Custom Network Name (Optional)
+        delete: Delete
+        delete_error: Failed to delete deposit platform
+        delete_success: Deposit platform deleted successfully
+        disable_success: Deposit platform disabled successfully
+        empty: No deposit platforms configured
+        enable_success: Deposit platform enabled successfully
+        fee: Fee
+        fee_help: Fee charged for this deposit platform (optional, defaults to 0)
+        icon_class: Platform Icon CSS Class
+        icon_class_help: Enter Font Awesome class for this specific deposit platform/network
+        icon_url: Platform Icon Image URL
+        icon_url_help: Enter image URL for this specific deposit platform/network
+        inactive: Inactive
+        is_active: Active
+        load_error: Failed to load deposit platforms
+        max_amount: Maximum Amount
+        min_amount: Minimum Amount
+        name: Platform Name
+        network: Network Type (Optional)
+        qr_code_image_help: Enter QR code image URL (optional)
+        qr_code_image_url: QR Code Image URL
+        required_fields_error: 'Please fill required fields: platform name, currency symbol and deposit address'
+        status_error: Failed to update platform status
+        status_updated: Platform status updated successfully
+        symbol: Currency Symbol
+        title: Deposit Platform Management
+        toggle_error: Failed to toggle platform status
+        warning_text: Warning Text
+      records:
+        approve: Approve
+        approve_error: Failed to approve deposit record
+        approve_notes_prompt: 'Admin notes (optional):'
+        approve_prompt: 'Enter credited amount (default: {amount}):'
+        approve_success: Deposit record approved successfully
+        delete: Delete
+        delete_cancel_button: Cancel
+        delete_confirm_button: Delete
+        delete_confirm_message: Are you sure you want to delete deposit record for {user} ({amount})?
+        delete_confirm_title: Confirm Delete
+        delete_error: Failed to delete deposit record
+        delete_success: Deposit record deleted successfully
+        empty:
+          description: User-submitted deposit records will appear here for review.
+          title: No deposit records
+        invalid_amount: Please enter a valid amount greater than zero
+        load_error: Failed to load deposit records
+        pending_count: '{count} pending'
+        reject: Reject
+        reject_error: Failed to reject deposit record
+        reject_reason_prompt: 'Enter rejection reason:'
+        reject_reason_required: Rejection reason is required
+        reject_success: Deposit record rejected successfully
+        status:
+          approved: Approved
+          pending: Pending
+          rejected: Rejected
+        status_error: Failed to update record status
+        status_updated: Record status updated successfully
+        title: Deposit Record Management
+        total_count: '{count} records total'
+        update_error: Failed to update deposit record
+    network_types:
+      add_button: Add Network Type
+      code: Network Code
+      create_error: Failed to create network type
+      created: Network type created successfully
+      delete_confirm: Are you sure you want to delete this network type?
+      delete_error: Failed to delete network type
+      deleted: Network type deleted successfully
+      description: Description
+      empty: No network types configured
+      icon_class: Icon CSS Class
+      icon_url: Icon URL
+      is_active: Active
+      load_error: Failed to load network types
+      name: Network Name
+      required_fields_error: Name and Code are required
+      sort_order: Sort Order
+      title: Network Type Management
+      update_error: Failed to update network type
+      updated: Network type updated successfully
     page:
-      title: Withdrawal Management
-    settings:
-      money_icon_url: Money Display Icon URL
-      money_icon_url_help: Enter image URL for the money display icon (shows in header)
+      title: Funds Management
     platforms:
-      title: Withdrawal Platforms
-      name: Platform Name
-      symbol: Currency Symbol
-      network: Network (Optional)
-      network_help: Enter network name (e.g., TRC20, ERC20, BSC) - leave empty if not applicable
-      min_amount: Minimum Amount
-      max_amount: Maximum Amount
-      fee: Fee
-      icon_configuration: Icon Configuration
-      icon_configuration_help: 'Configure icons with priority: Platform-specific → Network → Currency. Higher priority icons override lower ones.'
-      currency_icon_override_url: Currency Icon URL (Optional)
-      currency_icon_override_url_help: Override currency icon with custom image URL (e.g., https://example.com/btc-icon.png)
+      active: Active
+      add_button: Add Platform
+      add_error: Failed to add platform
+      add_placeholder: Enter platform name
+      add_success: Platform added successfully
       currency_icon_override_class: Currency Icon CSS Class (Optional)
       currency_icon_override_class_help: Override currency icon with Font Awesome class (e.g., fab fa-bitcoin)
-      network_icon_override_url: Network Icon URL (Optional)
-      network_icon_override_url_help: Override network icon with custom image URL (e.g., https://example.com/tron-icon.png)
-      network_icon_override_class: Network Icon CSS Class (Optional)
-      network_icon_override_class_help: Override network icon with Font Awesome class (e.g., fas fa-network-wired)
-      is_active: Active
-      active: Active
-      inactive: Inactive
-      add_placeholder: Enter platform name
-      add_button: Add Platform
-      empty: No platforms configured
+      currency_icon_override_url: Currency Icon URL (Optional)
+      currency_icon_override_url_help: Override currency icon with custom image URL (e.g., https://example.com/btc-icon.png)
       delete: Delete
+      delete_cancel_button: Cancel
       delete_confirm: Are you sure you want to delete {name}?
       delete_confirm_base: Are you sure you want to delete {name}?
-      delete_confirm_title: Confirm Delete
-      delete_confirm_message: Are you sure you want to delete platform "{name}"? This action cannot be undone.
       delete_confirm_button: Delete
-      delete_cancel_button: Cancel
-      add_success: Platform added successfully
-      add_error: Failed to add platform
-      delete_success: Platform deleted successfully
+      delete_confirm_message: Are you sure you want to delete platform "{name}"? This action cannot be undone.
+      delete_confirm_title: Confirm Delete
       delete_error: Failed to delete platform
-      max_min_error: Maximum amount must be greater than or equal to minimum amount
-      enable: Enable
+      delete_success: Platform deleted successfully
       disable: Disable
-      enable_success: Platform enabled successfully
       disable_success: Platform disabled successfully
-      toggle_error: Failed to toggle platform status
+      empty: No platforms configured
+      enable: Enable
+      enable_success: Platform enabled successfully
+      fee: Fee
+      icon_configuration: Icon Configuration
+      icon_configuration_help: 'Configure icons with priority: Platform-specific → Network → Currency. Higher priority icons
+        override lower ones.'
+      inactive: Inactive
+      is_active: Active
       load_error: Load Error Error
+      max_amount: Maximum Amount
+      max_min_error: Maximum amount must be greater than or equal to minimum amount
+      min_amount: Minimum Amount
+      name: Platform Name
+      network: Network (Optional)
+      network_help: Enter network name (e.g., TRC20, ERC20, BSC) - leave empty if not applicable
+      network_icon_override_class: Network Icon CSS Class (Optional)
+      network_icon_override_class_help: Override network icon with Font Awesome class (e.g., fas fa-network-wired)
+      network_icon_override_url: Network Icon URL (Optional)
+      network_icon_override_url_help: Override network icon with custom image URL (e.g., https://example.com/tron-icon.png)
       platform_specific_icon_class: Platform Specific Icon Class
       platform_specific_icon_class_help: Platform Specific Icon Class Help
       platform_specific_icon_url: Platform Specific Icon Url
       platform_specific_icon_url_help: Platform Specific Icon Url Help
+      symbol: Currency Symbol
+      title: Withdrawal Platforms
+      toggle_error: Failed to toggle platform status
     requests:
-      title: Withdrawal Requests
-      pending_title: Pending Requests
-      processed_title: Processed Requests
-      no_pending: No pending requests
-      no_processed: No processed requests
       account_details: Account Details
       approve: Approve
-      reject: Reject
-      delete: Delete
-      delete_confirm_title: Confirm Delete Request
-      delete_confirm_message: Are you sure you want to delete withdrawal request "{info}"? This action cannot be undone.
-      delete_confirm_button: Confirm Delete
-      delete_cancel_button: Cancel
-      delete_success: Withdrawal request deleted successfully
-      delete_error: Failed to delete withdrawal request
       approved_success: Request approved successfully
-      rejected_success: Request rejected successfully
-      update_error: Failed to update request
-      status:
-        pending: Pending
-        approved: Approved
-        rejected: Rejected
+      delete: Delete
+      delete_cancel_button: Cancel
+      delete_confirm_button: Confirm Delete
+      delete_confirm_message: Are you sure you want to delete funds request "{info}"? This action cannot be undone.
+      delete_confirm_title: Confirm Delete Request
+      delete_error: Failed to delete funds request
+      delete_success: Withdrawal request deleted successfully
       load_error: Load Error Error
+      no_pending: No pending requests
+      no_processed: No processed requests
+      pending_title: Pending Requests
+      processed_title: Processed Requests
+      reject: Reject
+      rejected_success: Request rejected successfully
+      status:
+        approved: Approved
+        pending: Pending
+        rejected: Rejected
+      title: Withdrawal Requests
+      update_error: Failed to update request
+    settings:
+      money_icon_url: Money Display Icon URL
+      money_icon_url_help: Enter image URL for the money display icon (shows in header)
     tabs:
-      withdrawals: Withdrawals
-      deposits: Deposits
       deposit_records: Deposit Records
+      deposits: Deposits
       network_types: Network Types
-    network_types:
-      title: Network Type Management
-      name: Network Name
-      code: Network Code
-      description: Description
-      icon_url: Icon URL
-      icon_class: Icon CSS Class
-      sort_order: Sort Order
-      is_active: Active
-      add_button: Add Network Type
-      empty: No network types configured
-      required_fields_error: Name and Code are required
-      created: Network type created successfully
-      updated: Network type updated successfully
-      deleted: Network type deleted successfully
-      create_error: Failed to create network type
-      update_error: Failed to update network type
-      delete_error: Failed to delete network type
-      delete_confirm: Are you sure you want to delete this network type?
-      load_error: Failed to load network types
-    deposit:
-      platforms:
-        title: Deposit Platform Management
-        name: Platform Name
-        symbol: Currency Symbol
-        network: Network Type (Optional)
-        min_amount: Minimum Amount
-        max_amount: Maximum Amount
-        fee: Fee
-        fee_help: Fee charged for this deposit platform (optional, defaults to 0)
-        address: Deposit Address (Required)
-        address_help: Enter the deposit address for this platform
-        qr_code_image_url: QR Code Image URL
-        qr_code_image_help: Enter QR code image URL (optional)
-        icon_url: Platform Icon Image URL
-        icon_url_help: Enter image URL for this specific deposit platform/network
-        icon_class: Platform Icon CSS Class
-        icon_class_help: Enter Font Awesome class for this specific deposit platform/network
-        warning_text: Warning Text
-        custom_network: Custom Network Name (Optional)
-        is_active: Active
-        active: Active
-        inactive: Inactive
-        add_button: Add Platform
-        empty: No deposit platforms configured
-        delete: Delete
-        add_success: Deposit platform added successfully
-        add_error: Failed to add deposit platform
-        delete_success: Deposit platform deleted successfully
-        delete_error: Failed to delete deposit platform
-        required_fields_error: 'Please fill required fields: platform name, currency symbol and deposit address'
-        enable_success: Deposit platform enabled successfully
-        disable_success: Deposit platform disabled successfully
-        load_error: Load Error Error
-        status_error: Status Error Error
-        status_updated: Status Updated
-        toggle_error: Toggle Error Error
-      records:
-        title: Deposit Record Management
-        total_count: '{count} records total'
-        pending_count: '{count} pending'
-        empty:
-          title: No deposit records
-          description: User-submitted deposit records will appear here for review.
-        approve: Approve
-        reject: Reject
-        delete: Delete
-        approve_prompt: 'Enter credited amount (default: {amount}):'
-        approve_notes_prompt: 'Admin notes (optional):'
-        invalid_amount: Please enter a valid amount greater than zero
-        approve_success: Deposit record approved successfully
-        approve_error: Failed to approve deposit record
-        reject_reason_prompt: 'Enter rejection reason:'
-        reject_reason_required: Rejection reason is required
-        reject_success: Deposit record rejected successfully
-        reject_error: Failed to reject deposit record
-        delete_confirm_title: Confirm Delete
-        delete_confirm_message: Are you sure you want to delete deposit record for {user} ({amount})?
-        delete_confirm_button: Delete
-        delete_cancel_button: Cancel
-        delete_success: Deposit record deleted successfully
-        delete_error: Failed to delete deposit record
-        status:
-          pending: Pending
-          approved: Approved
-          rejected: Rejected
-        load_error: Load Error Error
-        status_error: Status Error Error
-        status_updated: Status Updated
-        update_error: Update Error Error
+      withdrawals: Withdrawals
   forum:
-    header:
-      withdrawal_button: Withdrawal
-    page:
-      title: Withdrawal
-      description: Submit a withdrawal request to transfer your funds to external platforms
-    tabs:
-      withdrawal: Withdrawal
-      history: History
-    no_platforms: No withdrawal platforms available
-    no_platforms_description: Please contact the administrator to configure withdrawal platforms.
-    remaining_flow: 'Remaining flow: {amount}'
-    available_balance: 'Available balance: {amount}'
-    form:
-      amount: Amount
-      all_button: All
-      address: '{symbol} Address'
-      address_placeholder: Enter or paste withdrawal address...
-      save_address: Save current address
-      message: Message (Optional)
-      message_placeholder: Enter a message or note for this withdrawal...
-      message_helper: Optional message for your withdrawal request
-      submit: Submit
-    limits:
-      min_max: 'Min & Max withdrawal amount:'
-      fee: 'Fee:'
-    final_amount: 'Amount to receive: {amount} {symbol}'
-    clipboard_error: Clipboard access not available. Please paste manually.
-    insufficient_balance: Insufficient balance to fill maximum amount
-    insufficient_balance_detailed: 'Insufficient balance. Required: {required}, Available: {available} {feeText}'
-    invalid_amount: Please enter a valid amount greater than zero
-    amount_below_minimum: Amount {amount} is below minimum {minimum} for {platform}
     amount_above_maximum: Amount {amount} exceeds maximum {maximum} for {platform}
-    including_fee: (including {fee} fee)
-    balance_refresh_error: Failed to refresh balance. Please try again.
-    server_error: A server error occurred. Please try again later or contact the administrator.
-    success: Withdrawal request submitted successfully
-    error: Failed to submit withdrawal request
+    amount_below_minimum: Amount {amount} is below minimum {minimum} for {platform}
+    available_balance: 'Available balance: {amount}'
     balance:
-      title: Available Balance
       amount: 'Available: ${amount}'
       loading: Loading balance...
-    info:
-      minimum_amount: 'Minimum Amount: ${amount}'
-      maximum_amount: 'Maximum Amount: ${amount}'
-      withdrawal_fee: 'Withdrawal Fee: ${amount}'
-      final_amount: 'Final Amount: ${amount}'
-    history:
-      title: Withdrawal History
-      transactions: requests
-      empty:
-        title: No withdrawal requests yet
-        description: You haven't made any withdrawal requests. Click the Withdrawal tab to submit your first request.
-      amount: Amount
-      address: Address
-    status:
-      pending: Pending
-      approved: Approved
-      rejected: Rejected
+      title: Available Balance
+    balance_refresh_error: Failed to refresh balance. Please try again.
+    clipboard_error: Clipboard access not available. Please paste manually.
     deposit:
-      page:
-        title: Deposit
-      tabs:
-        deposit: Deposit
-        history: History
-      no_platforms: No deposit platforms available
-      no_platforms_description: Please contact the administrator to configure deposit platforms.
-      scan_or_use_address: Scan the QR code or copy the deposit address below.
-      min_amount: 'Minimum deposit: {amount} {currency}'
-      min_amount_short: 'Min: {amount} {symbol}'
-      fee: 'Deposit fee: {fee} {currency}'
-      fee_short: 'Fee: {fee} {symbol}'
-      default_warning: Please ensure you are depositing {currency} on the {network} network. Minimum deposit is {minAmount}.
-      platform_label: Deposit Platform
-      select_platform: Select Platform
-      record:
-        section_title: Manual Deposit Submission
-        show_form: Submit Deposit Record
-        hide_form: Hide Form
-        form_title: Submit Deposit Record
-        selected_platform: 'Selected Platform: {platform} ({symbol})'
-        platform_account: Platform Account
-        platform_account_placeholder: Enter your account on the deposit platform
-        platform_account_help: Your account ID/name on the deposit platform (required)
-        real_name: Real Name
-        optional: Optional
-        real_name_placeholder: Your real name for verification
-        amount: Amount
-        amount_placeholder: Enter deposit amount
-        deposit_time: Deposit Time
-        deposit_time_help: When you made the deposit (auto-filled with current time)
-        screenshot_url: Screenshot URL
-        screenshot_url_placeholder: https://example.com/screenshot.png
-        screenshot_url_help: Optional screenshot of your deposit record
-        user_message: Message
-        user_message_placeholder: Any additional notes or information
-        cancel: Cancel
-        submit: Submit Record
-        submit_success: Deposit record submitted successfully and is pending admin approval
-        submit_error: Failed to submit deposit record
-        server_error: Server error occurred. Please try again later.
-        validation:
-          required_fields: All required fields must be filled
-          invalid_amount: Please enter a valid amount
-          amount_too_low: Amount {amount} is below minimum {min} {symbol}
-          amount_too_high: Amount {amount} exceeds maximum {max} {symbol}
-        max_amount: Max Amount
-        min_amount: Min Amount
-      history:
-        title: Deposit History
-        transactions: records
-        empty:
-          title: No deposits yet
-          description: Your deposit records will appear here once you make a deposit.
       address_copied: Address Copied
       address_load_error: Address Load Error Error
       copy_failed: Copy Failed
+      default_warning: Please ensure you are depositing {currency} on the {network} network. Minimum deposit is {minAmount}.
+      fee: 'Deposit fee: {fee} {currency}'
+      fee_short: 'Fee: {fee} {symbol}'
+      history:
+        empty:
+          description: Your deposit records will appear here once you make a deposit.
+          title: No deposits yet
+        title: Deposit History
+        transactions: records
+      min_amount: 'Minimum deposit: {amount} {currency}'
+      min_amount_short: 'Min: {amount} {symbol}'
+      no_platforms: No deposit platforms available
+      no_platforms_description: Please contact the administrator to configure deposit platforms.
+      page:
+        title: Deposit
+      platform_label: Deposit Platform
+      record:
+        amount: Amount
+        amount_placeholder: Enter deposit amount
+        cancel: Cancel
+        deposit_time: Deposit Time
+        deposit_time_help: When you made the deposit (auto-filled with current time)
+        form_title: Submit Deposit Record
+        hide_form: Hide Form
+        max_amount: Max Amount
+        min_amount: Min Amount
+        optional: Optional
+        platform_account: Platform Account
+        platform_account_help: Your account ID/name on the deposit platform (required)
+        platform_account_placeholder: Enter your account on the deposit platform
+        real_name: Real Name
+        real_name_placeholder: Your real name for verification
+        screenshot_url: Screenshot URL
+        screenshot_url_help: Optional screenshot of your deposit record
+        screenshot_url_placeholder: https://example.com/screenshot.png
+        section_title: Manual Deposit Submission
+        selected_platform: 'Selected Platform: {platform} ({symbol})'
+        server_error: Server error occurred. Please try again later.
+        show_form: Submit Deposit Record
+        submit: Submit Record
+        submit_error: Failed to submit deposit record
+        submit_success: Deposit record submitted successfully and is pending admin approval
+        user_message: Message
+        user_message_placeholder: Any additional notes or information
+        validation:
+          amount_too_high: Amount {amount} exceeds maximum {max} {symbol}
+          amount_too_low: Amount {amount} is below minimum {min} {symbol}
+          invalid_amount: Please enter a valid amount
+          required_fields: All required fields must be filled
+      scan_or_use_address: Scan the QR code or copy the deposit address below.
       select_currency_network: Select Currency Network
+      select_platform: Select Platform
+      tabs:
+        deposit: Deposit
+        history: History
+    error: Failed to submit funds request
+    final_amount: 'Amount to receive: {amount} {symbol}'
+    form:
+      address: '{symbol} Address'
+      address_placeholder: Enter or paste funds address...
+      all_button: All
+      amount: Amount
+      message: Message (Optional)
+      message_helper: Optional message for your funds request
+      message_placeholder: Enter a message or note for this funds...
+      save_address: Save current address
+      submit: Submit
+    header:
+      withdrawal_button: Withdrawal
+    history:
+      address: Address
+      amount: Amount
+      empty:
+        description: You haven't made any funds requests. Click the Withdrawal tab to submit your first request.
+        title: No funds requests yet
+      title: Withdrawal History
+      transactions: requests
+    including_fee: (including {fee} fee)
+    info:
+      final_amount: 'Final Amount: ${amount}'
+      maximum_amount: 'Maximum Amount: ${amount}'
+      minimum_amount: 'Minimum Amount: ${amount}'
+      withdrawal_fee: 'Withdrawal Fee: ${amount}'
+    insufficient_balance: Insufficient balance to fill maximum amount
+    insufficient_balance_detailed: 'Insufficient balance. Required: {required}, Available: {available} {feeText}'
+    invalid_amount: Please enter a valid amount greater than zero
+    limits:
+      fee: 'Fee:'
+      min_max: 'Min & Max funds amount:'
+    no_platforms: No funds platforms available
+    no_platforms_description: Please contact the administrator to configure funds platforms.
+    page:
+      description: Submit a funds request to transfer your funds to external platforms
+      title: Withdrawal
+    remaining_flow: 'Remaining flow: {amount}'
+    server_error: A server error occurred. Please try again later or contact the administrator.
+    status:
+      approved: Approved
+      pending: Pending
+      rejected: Rejected
     submit_success: Submit Success Success
+    success: Withdrawal request submitted successfully
+    tabs:
+      funds: Withdrawal
+      history: History

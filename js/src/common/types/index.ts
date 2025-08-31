@@ -34,7 +34,7 @@ export interface WithdrawalRequestData {
 }
 
 /**
- * User withdrawal data extension
+ * User funds data extension
  */
 export interface UserWithdrawalData {
   money?: number;

@@ -53,7 +53,7 @@ export default class DepositPage extends Page<any, DepositPageState> {
   oninit(vnode: Mithril.VnodeDOM) {
     super.oninit(vnode);
 
-    app.setTitle(app.translator.trans('withdrawal.forum.deposit.page.title').toString());
+    app.setTitle(app.translator.trans('funds.forum.deposit.page.title').toString());
 
     this.loadPlatforms();
     this.loadTransactions();
@@ -90,13 +90,13 @@ export default class DepositPage extends Page<any, DepositPageState> {
             className={`DepositPage-tab ${this.state.activeTab() === 'deposit' ? 'active' : ''}`}
             onclick={() => this.handleTabChange('deposit')}
           >
-            {app.translator.trans('withdrawal.forum.deposit.tabs.deposit')}
+            {app.translator.trans('funds.forum.deposit.tabs.deposit')}
           </div>
           <div 
             className={`DepositPage-tab ${this.state.activeTab() === 'history' ? 'active' : ''}`}
             onclick={() => this.handleTabChange('history')}
           >
-            {app.translator.trans('withdrawal.forum.deposit.tabs.history')}
+            {app.translator.trans('funds.forum.deposit.tabs.history')}
           </div>
         </div>
         <Button
@@ -120,10 +120,10 @@ export default class DepositPage extends Page<any, DepositPageState> {
             {icon('fas fa-coins')}
           </div>
           <h3 className="DepositPage-emptyTitle">
-            {app.translator.trans('withdrawal.forum.deposit.no_platforms')}
+            {app.translator.trans('funds.forum.deposit.no_platforms')}
           </h3>
           <p className="DepositPage-emptyDescription">
-            {app.translator.trans('withdrawal.forum.deposit.no_platforms_description')}
+            {app.translator.trans('funds.forum.deposit.no_platforms_description')}
           </p>
         </div>
       );
@@ -155,14 +155,14 @@ export default class DepositPage extends Page<any, DepositPageState> {
     if (!platform) {
       return (
         <div className="DepositPage-selectPrompt">
-          <p>{app.translator.trans('withdrawal.forum.deposit.select_currency_network')}</p>
+          <p>{app.translator.trans('funds.forum.deposit.select_currency_network')}</p>
         </div>
       );
     }
 
     const minAmount = getAttr(platform, 'minAmount') || 0;
     const warningText = getAttr(platform, 'warningText') || 
-      app.translator.trans('withdrawal.forum.deposit.default_warning', {
+      app.translator.trans('funds.forum.deposit.default_warning', {
         currency: getAttr(platform, 'symbol'),
         network: getAttr(platform, 'network'),
         minAmount
@@ -171,7 +171,7 @@ export default class DepositPage extends Page<any, DepositPageState> {
     return (
       <div className="DepositPage-depositInfo">
         <p className="DepositPage-instructionText">
-          {app.translator.trans('withdrawal.forum.deposit.scan_or_use_address')}
+          {app.translator.trans('funds.forum.deposit.scan_or_use_address')}
         </p>
         
         <AddressDisplay
@@ -181,7 +181,7 @@ export default class DepositPage extends Page<any, DepositPageState> {
         />
         
         <p className="DepositPage-minAmountText">
-          {app.translator.trans('withdrawal.forum.deposit.min_amount', {
+          {app.translator.trans('funds.forum.deposit.min_amount', {
             amount: minAmount,
             currency: getAttr(platform, 'symbol')
           })}
@@ -267,12 +267,12 @@ export default class DepositPage extends Page<any, DepositPageState> {
       navigator.clipboard.writeText(this.addressData.address).then(() => {
         app.alerts.show(
           { type: 'success', dismissible: true },
-          app.translator.trans('withdrawal.forum.deposit.address_copied')
+          app.translator.trans('funds.forum.deposit.address_copied')
         );
       }).catch(() => {
         app.alerts.show(
           { type: 'error', dismissible: true },
-          app.translator.trans('withdrawal.forum.deposit.copy_failed')
+          app.translator.trans('funds.forum.deposit.copy_failed')
         );
       });
     }
@@ -325,7 +325,7 @@ export default class DepositPage extends Page<any, DepositPageState> {
       
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('withdrawal.forum.deposit.address_load_error')
+        app.translator.trans('funds.forum.deposit.address_load_error')
       );
       
       m.redraw();

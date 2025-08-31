@@ -19,7 +19,7 @@ export default class PlatformManagementSection extends Component<PlatformManagem
 
     return (
       <div className="WithdrawalManagementPage-section">
-        <h3>{app.translator.trans('withdrawal.admin.platforms.title')}</h3>
+        <h3>{app.translator.trans('funds.admin.platforms.title')}</h3>
         
         <AddPlatformForm 
           onSubmit={onAddPlatform}
@@ -28,13 +28,13 @@ export default class PlatformManagementSection extends Component<PlatformManagem
 
         <div className="WithdrawalManagementPage-platformList">
           {platforms.length === 0 ? (
-            <p>{app.translator.trans('withdrawal.admin.platforms.empty')}</p>
+            <p>{app.translator.trans('funds.admin.platforms.empty')}</p>
           ) : (
             platforms.map((platform) => (
               <GenericPlatformListItem
                 key={platform.id?.() ?? platform.id ?? Math.random()}
                 platform={platform}
-                type="withdrawal"
+                type="funds"
                 style="card"
                 onToggleStatus={onTogglePlatformStatus}
                 onDelete={onDeletePlatform}

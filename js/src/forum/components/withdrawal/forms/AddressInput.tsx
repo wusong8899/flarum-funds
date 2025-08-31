@@ -28,7 +28,7 @@ export default class AddressInput extends Component<AddressInputProps> {
         <div className="WithdrawalPage-formGroup">
           <div className="WithdrawalPage-addressHeader">
             <span className="WithdrawalPage-label">
-              {app.translator.trans('withdrawal.forum.form.address', { symbol })}
+              {app.translator.trans('funds.forum.form.address', { symbol })}
               <span className="WithdrawalPage-required">*</span>
             </span>
           </div>
@@ -37,7 +37,7 @@ export default class AddressInput extends Component<AddressInputProps> {
             <input
               type="text"
               className="WithdrawalPage-input"
-              placeholder={app.translator.trans('withdrawal.forum.form.address_placeholder')}
+              placeholder={app.translator.trans('funds.forum.form.address_placeholder')}
               value={accountDetails}
               oninput={(e: Event) => onAccountDetailsChange((e.target as HTMLInputElement).value)}
             />
@@ -72,7 +72,7 @@ export default class AddressInput extends Component<AddressInputProps> {
       app.alerts.show({
         type: 'error',
         dismissible: true
-      }, app.translator.trans('withdrawal.forum.clipboard_error'));
+      }, app.translator.trans('funds.forum.clipboard_error'));
     }
   }
 }

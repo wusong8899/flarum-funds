@@ -125,7 +125,7 @@ class WithdrawalRequestRepository
     }
 
     /**
-     * Create a new withdrawal request
+     * Create a new funds request
      *
      * @param array<string, mixed> $data
      * @return WithdrawalRequest
@@ -146,7 +146,7 @@ class WithdrawalRequestRepository
     }
 
     /**
-     * Update withdrawal request status
+     * Update funds request status
      *
      * @param WithdrawalRequest $request
      * @param string $status
@@ -161,7 +161,7 @@ class WithdrawalRequestRepository
     }
 
     /**
-     * Approve a withdrawal request
+     * Approve a funds request
      *
      * @param WithdrawalRequest $request
      * @return WithdrawalRequest
@@ -175,7 +175,7 @@ class WithdrawalRequestRepository
     }
 
     /**
-     * Reject a withdrawal request
+     * Reject a funds request
      *
      * @param WithdrawalRequest $request
      * @return WithdrawalRequest
@@ -189,7 +189,7 @@ class WithdrawalRequestRepository
     }
 
     /**
-     * Delete a withdrawal request
+     * Delete a funds request
      *
      * @param WithdrawalRequest $request
      * @return bool

@@ -31,16 +31,16 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
         <div className="Form-group">
           <div className="Form-row">
             <div className="Form-col">
-              <label>{app.translator.trans('withdrawal.admin.platforms.name')}</label>
+              <label>{app.translator.trans('funds.admin.platforms.name')}</label>
               <input
                 type="text"
                 className="FormControl"
-                placeholder={app.translator.trans('withdrawal.admin.platforms.add_placeholder')}
+                placeholder={app.translator.trans('funds.admin.platforms.add_placeholder')}
                 bidi={this.name}
               />
             </div>
             <div className="Form-col">
-              <label>{app.translator.trans('withdrawal.admin.platforms.symbol')}</label>
+              <label>{app.translator.trans('funds.admin.platforms.symbol')}</label>
               <input
                 type="text"
                 className="FormControl"
@@ -49,20 +49,20 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
               />
             </div>
             <div className="Form-col">
-              <label>{app.translator.trans('withdrawal.admin.platforms.network')}</label>
+              <label>{app.translator.trans('funds.admin.platforms.network')}</label>
               <input
                 type="text"
                 className="FormControl"
                 placeholder="TRC20, ERC20, BSC... (optional)"
                 bidi={this.network}
               />
-              <small className="helpText">{app.translator.trans('withdrawal.admin.platforms.network_help')}</small>
+              <small className="helpText">{app.translator.trans('funds.admin.platforms.network_help')}</small>
             </div>
           </div>
           
           <div className="Form-row">
             <div className="Form-col">
-              <label>{app.translator.trans('withdrawal.admin.platforms.min_amount')}</label>
+              <label>{app.translator.trans('funds.admin.platforms.min_amount')}</label>
               <input
                 type="number"
                 step="0.00000001"
@@ -72,7 +72,7 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
               />
             </div>
             <div className="Form-col">
-              <label>{app.translator.trans('withdrawal.admin.platforms.max_amount')}</label>
+              <label>{app.translator.trans('funds.admin.platforms.max_amount')}</label>
               <input
                 type="number"
                 step="0.00000001"
@@ -82,7 +82,7 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
               />
             </div>
             <div className="Form-col">
-              <label>{app.translator.trans('withdrawal.admin.platforms.fee')}</label>
+              <label>{app.translator.trans('funds.admin.platforms.fee')}</label>
               <input
                 type="number"
                 step="0.00000001"
@@ -95,54 +95,54 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
           
           {/* Three-tier icon system */}
           <div className="Form-section">
-            <h4>{app.translator.trans('withdrawal.admin.platforms.icon_configuration')}</h4>
-            <p className="helpText">{app.translator.trans('withdrawal.admin.platforms.icon_configuration_help')}</p>
+            <h4>{app.translator.trans('funds.admin.platforms.icon_configuration')}</h4>
+            <p className="helpText">{app.translator.trans('funds.admin.platforms.icon_configuration_help')}</p>
             
             {/* Currency Icon Override */}
             <div className="Form-row">
               <div className="Form-col">
-                <label>{app.translator.trans('withdrawal.admin.platforms.currency_icon_override_url')}</label>
+                <label>{app.translator.trans('funds.admin.platforms.currency_icon_override_url')}</label>
                 <input
                   type="url"
                   className="FormControl"
                   placeholder="https://example.com/currency-icon.png"
                   bidi={this.currencyIconOverrideUrl}
                 />
-                <small className="helpText">{app.translator.trans('withdrawal.admin.platforms.currency_icon_override_url_help')}</small>
+                <small className="helpText">{app.translator.trans('funds.admin.platforms.currency_icon_override_url_help')}</small>
               </div>
               <div className="Form-col">
-                <label>{app.translator.trans('withdrawal.admin.platforms.currency_icon_override_class')}</label>
+                <label>{app.translator.trans('funds.admin.platforms.currency_icon_override_class')}</label>
                 <input
                   type="text"
                   className="FormControl"
                   placeholder="fab fa-bitcoin"
                   bidi={this.currencyIconOverrideClass}
                 />
-                <small className="helpText">{app.translator.trans('withdrawal.admin.platforms.currency_icon_override_class_help')}</small>
+                <small className="helpText">{app.translator.trans('funds.admin.platforms.currency_icon_override_class_help')}</small>
               </div>
             </div>
             
             {/* Network Icon Override */}
             <div className="Form-row">
               <div className="Form-col">
-                <label>{app.translator.trans('withdrawal.admin.platforms.network_icon_override_url')}</label>
+                <label>{app.translator.trans('funds.admin.platforms.network_icon_override_url')}</label>
                 <input
                   type="url"
                   className="FormControl"
                   placeholder="https://example.com/network-icon.png"
                   bidi={this.networkIconOverrideUrl}
                 />
-                <small className="helpText">{app.translator.trans('withdrawal.admin.platforms.network_icon_override_url_help')}</small>
+                <small className="helpText">{app.translator.trans('funds.admin.platforms.network_icon_override_url_help')}</small>
               </div>
               <div className="Form-col">
-                <label>{app.translator.trans('withdrawal.admin.platforms.network_icon_override_class')}</label>
+                <label>{app.translator.trans('funds.admin.platforms.network_icon_override_class')}</label>
                 <input
                   type="text"
                   className="FormControl"
                   placeholder="fas fa-network-wired"
                   bidi={this.networkIconOverrideClass}
                 />
-                <small className="helpText">{app.translator.trans('withdrawal.admin.platforms.network_icon_override_class_help')}</small>
+                <small className="helpText">{app.translator.trans('funds.admin.platforms.network_icon_override_class_help')}</small>
               </div>
             </div>
           </div>
@@ -154,7 +154,7 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
               disabled={this.attrs.submitting}
               onclick={this.handleSubmit.bind(this)}
             >
-              {app.translator.trans('withdrawal.admin.platforms.add_button')}
+              {app.translator.trans('funds.admin.platforms.add_button')}
             </Button>
           </div>
         </div>
@@ -167,11 +167,11 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
     
     try {
       // Fixed: Convert NestedStringArray to string for FormValidator
-      const nameLabel = app.translator.trans('withdrawal.admin.platforms.name').toString();
-      const symbolLabel = app.translator.trans('withdrawal.admin.platforms.symbol').toString();
-      const minAmountLabel = app.translator.trans('withdrawal.admin.platforms.min_amount').toString();
-      const maxAmountLabel = app.translator.trans('withdrawal.admin.platforms.max_amount').toString();
-      const feeLabel = app.translator.trans('withdrawal.admin.platforms.fee').toString();
+      const nameLabel = app.translator.trans('funds.admin.platforms.name').toString();
+      const symbolLabel = app.translator.trans('funds.admin.platforms.symbol').toString();
+      const minAmountLabel = app.translator.trans('funds.admin.platforms.min_amount').toString();
+      const maxAmountLabel = app.translator.trans('funds.admin.platforms.max_amount').toString();
+      const feeLabel = app.translator.trans('funds.admin.platforms.fee').toString();
       
       validator
         .required(this.name(), 'name', nameLabel)
@@ -184,18 +184,18 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
       const minVal = parseFloat(this.minAmount());
       const maxVal = parseFloat(this.maxAmount());
       if (maxVal < minVal) {
-        const errorMessage = app.translator.trans('withdrawal.admin.platforms.max_min_error').toString();
+        const errorMessage = app.translator.trans('funds.admin.platforms.max_min_error').toString();
         validator.custom(false, 'maxAmount', errorMessage);
       }
 
       // Optional URL validations for three-tier icon system
       if (this.currencyIconOverrideUrl() && this.currencyIconOverrideUrl().trim()) {
-        const currencyIconUrlLabel = app.translator.trans('withdrawal.admin.platforms.currency_icon_override_url').toString();
+        const currencyIconUrlLabel = app.translator.trans('funds.admin.platforms.currency_icon_override_url').toString();
         validator.url(this.currencyIconOverrideUrl(), 'currencyIconOverrideUrl', currencyIconUrlLabel);
       }
       
       if (this.networkIconOverrideUrl() && this.networkIconOverrideUrl().trim()) {
-        const networkIconUrlLabel = app.translator.trans('withdrawal.admin.platforms.network_icon_override_url').toString();
+        const networkIconUrlLabel = app.translator.trans('funds.admin.platforms.network_icon_override_url').toString();
         validator.url(this.networkIconOverrideUrl(), 'networkIconOverrideUrl', networkIconUrlLabel);
       }
 
