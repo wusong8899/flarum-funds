@@ -41,7 +41,8 @@ return [
         // Deposit records routes
         ->get('/deposit-records', 'deposit.records.index', Controller\ListDepositRecordsController::class)
         ->post('/deposit-records', 'deposit.records.create', Controller\CreateDepositRecordController::class)
-        ->patch('/deposit-records/{id}', 'deposit.records.update', Controller\UpdateDepositRecordController::class),
+        ->patch('/deposit-records/{id}', 'deposit.records.update', Controller\UpdateDepositRecordController::class)
+        ->delete('/deposit-records/{id}', 'deposit.records.delete', Controller\DeleteDepositRecordController::class),
 
     (new Extend\Model(Flarum\User\User::class))
         ->hasMany('withdrawalRequests', Model\WithdrawalRequest::class)
