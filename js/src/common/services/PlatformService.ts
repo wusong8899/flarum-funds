@@ -351,9 +351,9 @@ export default class PlatformService implements PlatformServiceInterface {
     }
 
     // Validate symbol format (basic validation)
-    if (typeof attributes.symbol !== 'string' || attributes.symbol.length < 2) {
+    if (typeof attributes.symbol !== 'string' || !attributes.symbol.trim()) {
       throw new ServiceError(
-        'symbol must be at least 2 characters long',
+        'Symbol is required',
         ServiceErrorType.VALIDATION_ERROR
       );
     }

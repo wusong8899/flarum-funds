@@ -261,16 +261,12 @@ export default class DepositPlatform extends Model {
     if (attributes.name !== undefined) {
       if (!attributes.name || typeof attributes.name !== 'string') {
         errors.push('Platform name is required');
-      } else if (attributes.name.trim().length < 2) {
-        errors.push('Platform name must be at least 2 characters long');
       }
     }
 
     if (attributes.symbol !== undefined) {
       if (!attributes.symbol || typeof attributes.symbol !== 'string') {
         errors.push('Symbol is required');
-      } else if (attributes.symbol.trim().length < 2) {
-        errors.push('Symbol must be at least 2 characters long');
       }
     }
 
