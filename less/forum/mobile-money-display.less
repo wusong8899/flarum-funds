@@ -82,7 +82,7 @@
   }
 }
 
-@media @phone {
+@media (max-width: 480px) {
   .App-navigation .Navigation.ButtonGroup.App-backControl {
     display: flex;
     align-items: center;
@@ -91,45 +91,16 @@
       flex-shrink: 0;
 
       .Navigation-moneySection {
-        padding: 4px 6px;
-        gap: 6px;
-      }
-
-      .Navigation-moneyText {
-        font-size: 14px;
-
-        .fas.fa-yen-sign {
-          font-size: 13px;
-        }
-      }
-
-      .Navigation-withdrawalButton {
-        padding: 3px 5px;
-        min-width: 35px;
-
-        .fas.fa-money-bill-transfer {
-          font-size: 10px;
-        }
-
-        span {
-          font-size: 10px;
-        }
-      }
-    }
-  }
-}
-
-@media (max-width: 480px) {
-  .App-navigation .Navigation.ButtonGroup.App-backControl {
-    .Navigation-mobileMoneyDisplay {
-
-      .Navigation-moneySection {
         padding: 3px 5px;
         gap: 4px;
       }
 
       .Navigation-moneyText {
         font-size: 13px;
+
+        .fas.fa-yen-sign {
+          font-size: 13px;
+        }
 
         .Navigation-moneyAmount {
           min-width: 25px;
