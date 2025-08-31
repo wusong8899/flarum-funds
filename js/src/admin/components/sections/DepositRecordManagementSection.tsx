@@ -337,11 +337,7 @@ export default class DepositRecordManagementSection extends Component<
 
     try {
       await attrs.onApproveRecord(record, creditedAmount, notes || undefined);
-      
-      app.alerts.show(
-        { type: 'success', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.records.approve_success')
-      );
+      // Success alert handled by parent component
     } catch (error) {
       console.error('Error approving deposit record:', error);
       app.alerts.show(
@@ -373,11 +369,7 @@ export default class DepositRecordManagementSection extends Component<
 
     try {
       await attrs.onRejectRecord(record, reason);
-      
-      app.alerts.show(
-        { type: 'success', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.records.reject_success')
-      );
+      // Success alert handled by parent component
     } catch (error) {
       console.error('Error rejecting deposit record:', error);
       app.alerts.show(
@@ -410,11 +402,7 @@ export default class DepositRecordManagementSection extends Component<
         
         try {
           await attrs.onDeleteRecord(record);
-          
-          app.alerts.show(
-            { type: 'success', dismissible: true },
-            app.translator.trans('withdrawal.admin.deposit.records.delete_success')
-          );
+          // Success alert handled by parent component
         } catch (error) {
           console.error('Error deleting deposit record:', error);
           app.alerts.show(
