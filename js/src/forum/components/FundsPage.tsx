@@ -30,7 +30,8 @@ import { ServiceError } from '../../common/types/services';
 import { getAttr, getIdString, getDateFromAttr } from './withdrawal/utils/modelHelpers';
 import { extractErrorMessage, type FlarumApiError } from '../../common/types/api';
 
-type TabType = 'withdrawal' | 'deposit' | 'withdrawal-history' | 'deposit-history';
+type TabType = 'withdrawal' | 'deposit';
+type SubTabType = 'form' | 'history';
 
 interface FundsPageState {
   // Withdrawal state
@@ -48,6 +49,8 @@ interface FundsPageState {
   // Shared state
   loading: boolean;
   activeTab: Stream<TabType>;
+  withdrawalSubTab: Stream<SubTabType>;
+  depositSubTab: Stream<SubTabType>;
 }
 
 export default class FundsPage extends Page<any, FundsPageState> {
@@ -61,7 +64,9 @@ export default class FundsPage extends Page<any, FundsPageState> {
     depositRecords: [],
     submittingDepositRecord: false,
     loading: true,
-    activeTab: Stream('withdrawal')
+    activeTab: Stream('withdrawal'),
+    withdrawalSubTab: Stream('form'),
+    depositSubTab: Stream('form')
   };
 
   // Withdrawal form data
@@ -90,15 +95,21 @@ export default class FundsPage extends Page<any, FundsPageState> {
   oninit(vnode: Mithril.VnodeDOM) {
     super.oninit(vnode);
 
-    // Parse URL to determine initial tab
+    // Parse URL to determine initial tab and sub-tab
     const urlParams = new URLSearchParams(window.location.search);
     const tabParam = urlParams.get('tab');
-    const pathTab = this.getTabFromPath();
     
-    if (pathTab) {
-      this.state.activeTab(pathTab);
-    } else if (tabParam && this.isValidTab(tabParam)) {
-      this.state.activeTab(tabParam as TabType);
+    // Handle legacy URL parameters and set appropriate tab/subtab
+    if (tabParam) {
+      if (tabParam === 'withdrawal' || tabParam === 'withdrawal-history') {
+        this.state.activeTab('withdrawal');
+        this.state.withdrawalSubTab(tabParam === 'withdrawal-history' ? 'history' : 'form');
+      } else if (tabParam === 'deposit' || tabParam === 'deposit-history') {
+        this.state.activeTab('deposit');
+        this.state.depositSubTab(tabParam === 'deposit-history' ? 'history' : 'form');
+      } else if (this.isValidTab(tabParam)) {
+        this.state.activeTab(tabParam as TabType);
+      }
     }
 
     // Set page title based on active tab
@@ -108,17 +119,47 @@ export default class FundsPage extends Page<any, FundsPageState> {
     this.loadAllData();
   }
 
-  private getTabFromPath(): TabType | null {
-    const path = window.location.pathname;
-    if (path.includes('/funds/withdrawal')) return 'withdrawal';
-    if (path.includes('/funds/deposit')) return 'deposit';
-    if (path.includes('/funds/withdrawal-history')) return 'withdrawal-history';
-    if (path.includes('/funds/deposit-history')) return 'deposit-history';
-    return null;
-  }
 
   private isValidTab(tab: string): boolean {
-    return ['withdrawal', 'deposit', 'withdrawal-history', 'deposit-history'].includes(tab);
+    return ['withdrawal', 'deposit'].includes(tab);
+  }
+
+  private isValidSubTab(subTab: string): boolean {
+    return ['form', 'history'].includes(subTab);
+  }
+
+  private handleSubTabChange(mainTab: TabType, subTab: SubTabType): void {
+    if (mainTab === 'withdrawal') {
+      this.state.withdrawalSubTab(subTab);
+    } else if (mainTab === 'deposit') {
+      this.state.depositSubTab(subTab);
+    }
+    this.updateUrl();
+    m.redraw();
+  }
+
+  private updateUrl(): void {
+    const currentTab = this.state.activeTab();
+    const params = new URLSearchParams();
+    
+    if (currentTab === 'withdrawal') {
+      const subTab = this.state.withdrawalSubTab();
+      if (subTab === 'history') {
+        params.set('tab', 'withdrawal-history');
+      } else {
+        params.set('tab', 'withdrawal');
+      }
+    } else if (currentTab === 'deposit') {
+      const subTab = this.state.depositSubTab();
+      if (subTab === 'history') {
+        params.set('tab', 'deposit-history');
+      } else {
+        params.set('tab', 'deposit');
+      }
+    }
+
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.replaceState({}, '', newUrl);
   }
 
   private updatePageTitle(): void {
@@ -182,18 +223,6 @@ export default class FundsPage extends Page<any, FundsPageState> {
           >
             {app.translator.trans('withdrawal.forum.deposit.tabs.deposit')}
           </div>
-          <div 
-            className={`FundsPage-tab ${activeTab === 'withdrawal-history' ? 'active' : ''}`}
-            onclick={() => this.handleTabChange('withdrawal-history')}
-          >
-            {app.translator.trans('withdrawal.forum.tabs.history')}
-          </div>
-          <div 
-            className={`FundsPage-tab ${activeTab === 'deposit-history' ? 'active' : ''}`}
-            onclick={() => this.handleTabChange('deposit-history')}
-          >
-            {app.translator.trans('withdrawal.forum.deposit.tabs.history')}
-          </div>
         </div>
         <Button
           className="FundsPage-close"
@@ -212,21 +241,44 @@ export default class FundsPage extends Page<any, FundsPageState> {
         return this.renderWithdrawalTab();
       case 'deposit':
         return this.renderDepositTab();
-      case 'withdrawal-history':
-        return this.renderWithdrawalHistoryTab();
-      case 'deposit-history':
-        return this.renderDepositHistoryTab();
       default:
         return this.renderWithdrawalTab();
     }
   }
 
   private renderWithdrawalTab(): Mithril.Children {
+    const activeSubTab = this.state.withdrawalSubTab();
+    
+    return (
+      <div className="FundsPage-withdrawalTab">
+        {/* Sub-tab navigation */}
+        <div className="FundsPage-subTabs">
+          <div 
+            className={`FundsPage-subTab ${activeSubTab === 'form' ? 'active' : ''}`}
+            onclick={() => this.handleSubTabChange('withdrawal', 'form')}
+          >
+            {app.translator.trans('withdrawal.forum.tabs.withdrawal')}
+          </div>
+          <div 
+            className={`FundsPage-subTab ${activeSubTab === 'history' ? 'active' : ''}`}
+            onclick={() => this.handleSubTabChange('withdrawal', 'history')}
+          >
+            {app.translator.trans('withdrawal.forum.tabs.history')}
+          </div>
+        </div>
+        
+        {/* Sub-tab content */}
+        {activeSubTab === 'form' ? this.renderWithdrawalForm() : this.renderWithdrawalHistory()}
+      </div>
+    );
+  }
+
+  private renderWithdrawalForm(): Mithril.Children {
     const validPlatforms = (this.state.withdrawalPlatforms || []).filter(platform => !!platform);
 
     if (validPlatforms.length === 0) {
       return (
-        <div className="FundsPage-withdrawalTab">
+        <div className="FundsPage-withdrawalContent">
           <div className="WithdrawalPage-emptyState">
             <div className="WithdrawalPage-emptyIcon">
               {icon('fas fa-coins')}
@@ -243,7 +295,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
     }
 
     return (
-      <div className="FundsPage-withdrawalTab">
+      <div className="FundsPage-withdrawalContent">
         <WithdrawalForm
           platforms={this.state.withdrawalPlatforms}
           formData={this.getWithdrawalFormDataForComponent()}
@@ -257,31 +309,96 @@ export default class FundsPage extends Page<any, FundsPageState> {
     );
   }
 
+  private renderWithdrawalHistory(): Mithril.Children {
+    return (
+      <div className="FundsPage-withdrawalContent">
+        <TransactionHistory
+          transactions={this.state.withdrawalRequests}
+          platforms={this.state.withdrawalPlatforms}
+          loading={false}
+          type="withdrawal"
+        />
+      </div>
+    );
+  }
+
   private renderDepositTab(): Mithril.Children {
+    const activeSubTab = this.state.depositSubTab();
+    
+    return (
+      <div className="FundsPage-depositTab">
+        {/* Sub-tab navigation */}
+        <div className="FundsPage-subTabs">
+          <div 
+            className={`FundsPage-subTab ${activeSubTab === 'form' ? 'active' : ''}`}
+            onclick={() => this.handleSubTabChange('deposit', 'form')}
+          >
+            {app.translator.trans('withdrawal.forum.deposit.tabs.deposit')}
+          </div>
+          <div 
+            className={`FundsPage-subTab ${activeSubTab === 'history' ? 'active' : ''}`}
+            onclick={() => this.handleSubTabChange('deposit', 'history')}
+          >
+            {app.translator.trans('withdrawal.forum.deposit.tabs.history')}
+          </div>
+        </div>
+        
+        {/* Sub-tab content */}
+        {activeSubTab === 'form' ? this.renderDepositForm() : this.renderDepositHistory()}
+      </div>
+    );
+  }
+
+  private renderDepositForm(): Mithril.Children {
     const availablePlatforms = (this.state.depositPlatforms || []).filter(platform => 
       platform && getAttr(platform, 'isActive')
     );
 
     if (availablePlatforms.length === 0) {
       return (
-        <div className="FundsPage-emptyState">
-          <div className="FundsPage-emptyIcon">
-            {icon('fas fa-coins')}
+        <div className="FundsPage-depositContent">
+          <div className="FundsPage-emptyState">
+            <div className="FundsPage-emptyIcon">
+              {icon('fas fa-coins')}
+            </div>
+            <h3 className="FundsPage-emptyTitle">
+              {app.translator.trans('withdrawal.forum.deposit.no_platforms')}
+            </h3>
+            <p className="FundsPage-emptyDescription">
+              {app.translator.trans('withdrawal.forum.deposit.no_platforms_description')}
+            </p>
           </div>
-          <h3 className="FundsPage-emptyTitle">
-            {app.translator.trans('withdrawal.forum.deposit.no_platforms')}
-          </h3>
-          <p className="FundsPage-emptyDescription">
-            {app.translator.trans('withdrawal.forum.deposit.no_platforms_description')}
-          </p>
         </div>
       );
     }
 
     return (
-      <div className="FundsPage-depositTab">
+      <div className="FundsPage-depositContent">
         {this.renderDepositSelectors()}
         {this.renderDepositInfo()}
+      </div>
+    );
+  }
+
+  private renderDepositHistory(): Mithril.Children {
+    // Use only deposit records for history
+    const allDepositHistory = [...this.state.depositRecords];
+    
+    // Sort by creation date (newest first)
+    allDepositHistory.sort((a, b) => {
+      const dateA = getDateFromAttr(a, 'createdAt') || new Date(0);
+      const dateB = getDateFromAttr(b, 'createdAt') || new Date(0);
+      return dateB.getTime() - dateA.getTime();
+    });
+
+    return (
+      <div className="FundsPage-depositContent">
+        <TransactionHistory
+          transactions={allDepositHistory}
+          platforms={this.state.depositPlatforms}
+          loading={false}
+          type="deposit"
+        />
       </div>
     );
   }
@@ -384,39 +501,6 @@ export default class FundsPage extends Page<any, FundsPageState> {
     );
   }
 
-  private renderWithdrawalHistoryTab(): Mithril.Children {
-    return (
-      <div className="FundsPage-withdrawalTab">
-        <TransactionHistory
-          transactions={this.state.withdrawalRequests}
-          platforms={this.state.withdrawalPlatforms}
-          loading={false}
-          type="withdrawal"
-        />
-      </div>
-    );
-  }
-
-  private renderDepositHistoryTab(): Mithril.Children {
-    // Use only deposit records for history
-    const allDepositHistory = [...this.state.depositRecords];
-    
-    // Sort by creation date (newest first)
-    allDepositHistory.sort((a, b) => {
-      const dateA = getDateFromAttr(a, 'createdAt') || new Date(0);
-      const dateB = getDateFromAttr(b, 'createdAt') || new Date(0);
-      return dateB.getTime() - dateA.getTime();
-    });
-
-    return (
-      <TransactionHistory
-        transactions={allDepositHistory}
-        platforms={this.state.depositPlatforms}
-        loading={false}
-        type="deposit"
-      />
-    );
-  }
 
   private handleTabChange(tab: TabType): void {
     this.state.activeTab(tab);
@@ -425,8 +509,14 @@ export default class FundsPage extends Page<any, FundsPageState> {
     // Update URL without page reload
     const url = new URL(window.location.href);
     url.searchParams.set('tab', tab);
+    
+    // Include current sub-tab in URL
+    const currentSubTab = tab === 'withdrawal' ? this.state.withdrawalSubTab() : this.state.depositSubTab();
+    url.searchParams.set('subtab', currentSubTab);
+    
     window.history.replaceState({}, '', url.toString());
   }
+
 
   // Withdrawal methods (copied from WithdrawalPage)
   private getWithdrawalFormDataForComponent() {
