@@ -436,8 +436,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
       selectedPlatform: selectedPlatform,
       amount: this.withdrawalFormData.amount(),
       accountDetails: this.withdrawalFormData.accountDetails(),
-      message: this.withdrawalFormData.message(),
-      saveAddress: this.withdrawalFormData.saveAddress()
+      message: this.withdrawalFormData.message()
     };
   }
 
@@ -453,9 +452,6 @@ export default class FundsPage extends Page<any, FundsPageState> {
     }
     if (data.message !== undefined) {
       this.withdrawalFormData.message(data.message);
-    }
-    if (data.saveAddress !== undefined) {
-      this.withdrawalFormData.saveAddress(data.saveAddress);
     }
   }
 
@@ -528,9 +524,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
       this.withdrawalFormData.amount('');
       this.withdrawalFormData.accountDetails('');
       this.withdrawalFormData.message('');
-      if (!this.withdrawalFormData.saveAddress()) {
-        this.withdrawalFormData.selectedPlatform(null);
-      }
+      this.withdrawalFormData.selectedPlatform(null);
 
       // Refresh data
       await Promise.all([

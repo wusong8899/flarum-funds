@@ -142,8 +142,7 @@ export default class WithdrawalPage extends Page<any, any> {
     return {
       selectedPlatform: this.formData.selectedPlatform(),
       amount: this.formData.amount(),
-      accountDetails: this.formData.accountDetails(),
-      saveAddress: this.formData.saveAddress()
+      accountDetails: this.formData.accountDetails()
     };
   }
 
@@ -156,9 +155,6 @@ export default class WithdrawalPage extends Page<any, any> {
     }
     if (data.accountDetails !== undefined) {
       this.formData.accountDetails(data.accountDetails);
-    }
-    if (data.saveAddress !== undefined) {
-      this.formData.saveAddress(data.saveAddress);
     }
   }
 
@@ -273,16 +269,13 @@ export default class WithdrawalPage extends Page<any, any> {
         platformId: parseInt(getIdString(selectedPlatform)),
         amount: parseFloat(amount),
         accountDetails,
-        message: this.formData.message(),
-        saveAddress: this.formData.saveAddress()
+        message: this.formData.message()
       });
 
       this.formData.amount('');
       this.formData.accountDetails('');
       this.formData.message('');
-      if (!this.formData.saveAddress()) {
-        this.formData.selectedPlatform(null);
-      }
+      this.formData.selectedPlatform(null);
 
       this.loadUserBalance();
       this.loadWithdrawalRequests();
