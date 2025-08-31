@@ -1,25 +1,19 @@
-// Modular LESS imports for admin styles
+// Admin LESS imports - organized by admin/shared classification
 // Import order is important: mixins first, then components that use them
 
-// Shared mixins and utilities
-@import "_mixins.less";
+// Shared components
+@import "shared/_mixins.less";
+@import "shared/_forms.less";
+@import "shared/_platform-cards.less";
 
-// Generic form patterns
-@import "_forms.less";
-
-// Admin management interfaces
-@import "_management-pages.less";
-
-// Platform display components (depends on mixins)
-@import "_platform-cards.less";
-
-// Complex request and transaction components
-@import "_requests-transactions.less";
+// Admin-specific components
+@import "admin/_management-pages.less";
+@import "admin/_requests-transactions.less";
 
 // Fix for the typo in line 63 of DepositRecordManagementSection
 .ection-header {
   display: none; // Hide the typo element
 }
 
-// Import deposit admin styles
-@import "components/admin-tabs.less";
+// Import admin tabs component
+@import "admin/admin-tabs.less";
