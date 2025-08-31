@@ -118,10 +118,8 @@ export const createDepositPlatformOperations = (): PlatformOperations<any> => ({
       
       const result = await platformService.create('deposit', attributes);
       
-      app.alerts.show(
-        { type: 'success', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.platforms.add_success').toString()
-      );
+      // Success message is handled by the calling component (UnifiedManagementPage)
+      // to avoid duplicate messages
       
       return result;
     } catch (error) {
@@ -139,12 +137,9 @@ export const createDepositPlatformOperations = (): PlatformOperations<any> => ({
       const { platformService } = await import('../../common/services/PlatformService');
       
       const result = await platformService.toggleStatus(platform);
-      const newStatus = result.isActive();
       
-      app.alerts.show(
-        { type: 'success', dismissible: true },
-        app.translator.trans(`withdrawal.admin.deposit.platforms.${newStatus ? 'enable' : 'disable'}_success`).toString()
-      );
+      // Success message is handled by the calling component (UnifiedManagementPage)
+      // to avoid duplicate messages
       
       return result;
     } catch (error) {
@@ -163,10 +158,8 @@ export const createDepositPlatformOperations = (): PlatformOperations<any> => ({
       
       await platformService.delete(platform);
       
-      app.alerts.show(
-        { type: 'success', dismissible: true },
-        app.translator.trans('withdrawal.admin.deposit.platforms.delete_success').toString()
-      );
+      // Success message is handled by the calling component (UnifiedManagementPage)
+      // to avoid duplicate messages
     } catch (error) {
       app.alerts.show(
         { type: 'error', dismissible: true },
@@ -200,10 +193,8 @@ export const createWithdrawalRequestOperations = (): TransactionOperations<any> 
       
       const result = await withdrawalService.update(request, { status });
       
-      app.alerts.show(
-        { type: 'success', dismissible: true },
-        app.translator.trans(`withdrawal.admin.requests.${status}_success`).toString()
-      );
+      // Success message is handled by the calling component (GenericManagementPage)
+      // to avoid duplicate messages
       
       return result;
     } catch (error) {
@@ -239,10 +230,8 @@ export const createDepositRecordOperations = (): TransactionOperations<any> => (
       
       const result = await depositService.update(record, { status });
       
-      app.alerts.show(
-        { type: 'success', dismissible: true },
-        app.translator.trans(`withdrawal.admin.deposit.records.${status}_success`).toString()
-      );
+      // Success message is handled by the calling component
+      // to avoid duplicate messages
       
       return result;
     } catch (error) {
