@@ -29,14 +29,14 @@ class WithdrawalRequestValidator
         // Validate platform exists
         if (!$platform) {
             throw new ValidationException([
-                'platformId' => ['Selected platform does not exist']
+                'Selected platform does not exist'
             ]);
         }
 
         // Validate platform is active
         if (!$platform->is_active) {
             throw new ValidationException([
-                'platformId' => ['Selected platform is not active']
+                'Selected platform is not active'
             ]);
         }
 
@@ -65,19 +65,19 @@ class WithdrawalRequestValidator
 
         if ($amount <= 0) {
             throw new ValidationException([
-                'amount' => ['Amount must be greater than zero']
+                'Amount must be greater than zero'
             ]);
         }
 
         if ($amount < $minAmount) {
             throw new ValidationException([
-                'amount' => ["Amount must be at least {$minAmount} for {$platform->name}"]
+                "Amount must be at least {$minAmount} for {$platform->name}"
             ]);
         }
 
         if ($amount > $maxAmount) {
             throw new ValidationException([
-                'amount' => ["Amount cannot exceed {$maxAmount} for {$platform->name}"]
+                "Amount cannot exceed {$maxAmount} for {$platform->name}"
             ]);
         }
     }
@@ -93,19 +93,19 @@ class WithdrawalRequestValidator
     {
         if (empty($accountDetails)) {
             throw new ValidationException([
-                'accountDetails' => ['Account details are required']
+                'Account details are required'
             ]);
         }
 
         if (strlen($accountDetails) < 5) {
             throw new ValidationException([
-                'accountDetails' => ['Account details must be at least 5 characters']
+                'Account details must be at least 5 characters'
             ]);
         }
 
         if (strlen($accountDetails) > 500) {
             throw new ValidationException([
-                'accountDetails' => ['Account details must not exceed 500 characters']
+                'Account details must not exceed 500 characters'
             ]);
         }
     }
@@ -129,7 +129,7 @@ class WithdrawalRequestValidator
         // Check if user has money attribute (should be added by money extension)
         if (!isset($actor->money)) {
             throw new ValidationException([
-                'amount' => ['Money extension is not properly configured']
+                'Money extension is not properly configured'
             ]);
         }
 
@@ -139,7 +139,7 @@ class WithdrawalRequestValidator
         if ($userBalance < $totalRequired) {
             $feeText = $platform->fee > 0 ? " (including {$platform->fee} fee)" : '';
             throw new ValidationException([
-                'amount' => ["Insufficient balance. You need {$totalRequired}{$feeText} but only have {$userBalance}"]
+                "Insufficient balance. You need {$totalRequired}{$feeText} but only have {$userBalance}"
             ]);
         }
     }
@@ -157,7 +157,7 @@ class WithdrawalRequestValidator
     {
         if (!$actor->isAdmin()) {
             throw new ValidationException([
-                'permission' => ['Only administrators can update withdrawal requests']
+                'Only administrators can update withdrawal requests'
             ]);
         }
 
@@ -180,22 +180,23 @@ class WithdrawalRequestValidator
 
         if (!in_array($newStatus, $validStatuses, true)) {
             throw new ValidationException([
-                'status' => ['Invalid status. Must be one of: pending, approved, rejected']
+                'Invalid status. Must be one of: pending, approved, rejected'
             ]);
         }
 
         // Don't allow changing from approved/rejected back to pending
         if (in_array($currentStatus, ['approved', 'rejected'], true) && $newStatus === 'pending') {
             throw new ValidationException([
-                'status' => ['Cannot change status from ' . $currentStatus . ' back to pending']
+                'Cannot change status from ' . $currentStatus . ' back to pending'
             ]);
         }
 
         // Don't allow changing from rejected to approved or vice versa
         if (($currentStatus === 'approved' && $newStatus === 'rejected') ||
-            ($currentStatus === 'rejected' && $newStatus === 'approved')) {
+            ($currentStatus === 'rejected' && $newStatus === 'approved')
+        ) {
             throw new ValidationException([
-                'status' => ['Cannot change status directly from ' . $currentStatus . ' to ' . $newStatus]
+                'Cannot change status directly from ' . $currentStatus . ' to ' . $newStatus
             ]);
         }
     }
@@ -212,14 +213,14 @@ class WithdrawalRequestValidator
     {
         if (!$actor->isAdmin()) {
             throw new ValidationException([
-                'permission' => ['Only administrators can delete withdrawal requests']
+                'Only administrators can delete withdrawal requests'
             ]);
         }
 
         // Optionally, you might want to prevent deletion of approved requests
         if ($status === 'approved') {
             throw new ValidationException([
-                'status' => ['Cannot delete approved withdrawal requests']
+                'Cannot delete approved withdrawal requests'
             ]);
         }
     }
