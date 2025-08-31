@@ -56,6 +56,19 @@ return [
     (new Extend\ApiController(\Flarum\Api\Controller\ShowUserController::class))
         ->addInclude(['withdrawalRequests', 'withdrawalRequests.platform', 'depositAddresses', 'depositRecords', 'depositRecords.platform']),
 
+    // Register serializers for our models
+    (new Extend\ApiSerializer(\Flarum\Api\Serializer\ForumSerializer::class))
+        ->hasMany('withdrawalPlatforms', \wusong8899\Withdrawal\Api\Serializer\WithdrawalPlatformSerializer::class)
+        ->hasMany('withdrawalRequests', \wusong8899\Withdrawal\Api\Serializer\WithdrawalRequestSerializer::class)
+        ->hasMany('depositPlatforms', \wusong8899\Withdrawal\Api\Serializer\DepositPlatformSerializer::class)
+        ->hasMany('depositRecords', \wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer::class)
+        ->hasMany('networkTypes', \wusong8899\Withdrawal\Api\Serializer\NetworkTypeSerializer::class),
+
+    (new Extend\ApiSerializer(\Flarum\Api\Serializer\UserSerializer::class))
+        ->hasMany('withdrawalRequests', \wusong8899\Withdrawal\Api\Serializer\WithdrawalRequestSerializer::class)
+        ->hasMany('depositAddresses', \wusong8899\Withdrawal\Api\Serializer\DepositAddressSerializer::class)
+        ->hasMany('depositRecords', \wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer::class),
+
     (new Extend\Settings())
         ->serializeToForum('wusong8899-withdrawal.moneyIconUrl', 'wusong8899-withdrawal.moneyIconUrl', null, 'https://i.mji.rip/2025/08/28/cd18932c68e9bbee9502b1fb6317cba9.png'),
 ];
