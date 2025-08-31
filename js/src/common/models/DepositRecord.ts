@@ -99,7 +99,6 @@ export default class DepositRecord extends Model {
       );
     }
 
-    // Removed canBeModified() check - admins can now delete processed records
 
     try {
       await super.delete();

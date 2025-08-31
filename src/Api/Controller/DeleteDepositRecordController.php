@@ -7,6 +7,7 @@ namespace wusong8899\Withdrawal\Api\Controller;
 use Flarum\Api\Controller\AbstractDeleteController;
 use Flarum\Http\RequestUtil;
 use Flarum\User\Exception\PermissionDeniedException;
+use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
 use wusong8899\Withdrawal\Model\DepositRecord;
 
@@ -15,7 +16,7 @@ class DeleteDepositRecordController extends AbstractDeleteController
     protected function delete(ServerRequestInterface $request): void
     {
         $actor = RequestUtil::getActor($request);
-        $id = $request->getAttribute('id');
+        $id = Arr::get($request->getQueryParams(), 'id');
 
         // Find the deposit record
         $record = DepositRecord::findOrFail($id);
