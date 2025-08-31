@@ -5,3 +5,7 @@ CLAUDE.md
 .serena
 .php-cs-fixer.cache
 .serena/project.yml
+translation_workflow.md
+.gitignore
+check_translations.py
+translation_manager.py
