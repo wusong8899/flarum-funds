@@ -22,6 +22,8 @@ class DepositRecordSerializer extends AbstractSerializer
             'id' => (int) $record->id,
             'userId' => (int) $record->user_id,
             'platformId' => (int) $record->platform_id,
+            'amount' => (float) $record->amount,
+            'depositTime' => $record->deposit_time,
             'userMessage' => $record->user_message,
             'status' => $record->status,
             'statusText' => $record->getStatusText(),

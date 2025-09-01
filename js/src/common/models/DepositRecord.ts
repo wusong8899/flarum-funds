@@ -4,8 +4,9 @@ import User from 'flarum/common/models/User';
 export default class DepositRecord extends Model {
   // 属性
   userId = Model.attribute<number>('userId');
-  depositAddress = Model.attribute<string>('depositAddress');
-  qrCodeUrl = Model.attribute<string>('qrCodeUrl');
+  platformId = Model.attribute<number>('platformId');
+  amount = Model.attribute<number>('amount');
+  depositTime = Model.attribute('depositTime', Model.transformDate);
   userMessage = Model.attribute<string>('userMessage');
   status = Model.attribute<string>('status');
   statusText = Model.attribute<string>('statusText');
@@ -23,6 +24,7 @@ export default class DepositRecord extends Model {
   // 关联
   user = Model.hasOne<User>('user');
   processedByUser = Model.hasOne<User>('processedByUser');
+  platform = Model.hasOne('platform');
 
   // 辅助方法
   getStatusColor(): string {
@@ -68,16 +70,13 @@ export default class DepositRecord extends Model {
     return currentUser.isAdmin() || false;
   }
 
-  getDisplayAddress(): string {
-    const address = this.depositAddress();
-    if (address && address.length > 20) {
-      return `${address.substring(0, 10)}...${address.substring(address.length - 10)}`;
-    }
-    return address || '';
+  getFormattedAmount(): string {
+    const amount = this.amount();
+    return amount ? amount.toFixed(2) : '0.00';
   }
 
-  hasQrCode(): boolean {
-    const qrUrl = this.qrCodeUrl();
-    return qrUrl !== null && qrUrl !== undefined && qrUrl.trim() !== '';
+  getFormattedDepositTime(): string {
+    const time = this.depositTime();
+    return time ? time.toLocaleDateString() + ' ' + time.toLocaleTimeString() : '';
   }
 }

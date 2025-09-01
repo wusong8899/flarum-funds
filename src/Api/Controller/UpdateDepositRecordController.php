@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace wusong8899\Funds\Api\Controller;
 
+use Illuminate\Support\Arr;
 use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Http\RequestUtil;
+use Flarum\User\User;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
+use Illuminate\Database\ConnectionInterface;
 use Illuminate\Validation\ValidationException;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
@@ -23,16 +26,18 @@ class UpdateDepositRecordController extends AbstractShowController
     ];
 
     protected $validation;
+    protected $db;
 
-    public function __construct(ValidationFactory $validation)
+    public function __construct(ValidationFactory $validation, ConnectionInterface $db)
     {
         $this->validation = $validation;
+        $this->db = $db;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)
     {
         $actor = RequestUtil::getActor($request);
-        $id = array_get($request->getQueryParams(), 'id');
+        $id = Arr::get($request->getQueryParams(), 'id');
 
         $depositRecord = DepositRecord::findOrFail($id);
 
@@ -63,10 +68,13 @@ class UpdateDepositRecordController extends AbstractShowController
     {
         $validator = $this->validation->make($attributes, [
             'status' => 'required|in:' . implode(',', DepositRecord::STATUSES),
+            'creditedAmount' => 'nullable|numeric|min:0.01',
             'adminNotes' => 'nullable|string|max:1000'
         ], [
             'status.required' => '状态不能为空',
             'status.in' => '状态值无效',
+            'creditedAmount.numeric' => '充值金额必须是数字',
+            'creditedAmount.min' => '充值金额必须大于0.01',
             'adminNotes.max' => '管理员备注不能超过1000个字符'
         ]);
 
@@ -76,10 +84,11 @@ class UpdateDepositRecordController extends AbstractShowController
 
         $status = $attributes['status'];
         $adminNotes = $attributes['adminNotes'] ?? null;
+        $creditedAmount = $attributes['creditedAmount'] ?? $record->amount;
 
         switch ($status) {
             case DepositRecord::STATUS_APPROVED:
-                $record->approve($adminId, $adminNotes);
+                $this->approveAndCreditMoney($record, $adminId, $adminNotes, (float) $creditedAmount);
                 break;
             case DepositRecord::STATUS_REJECTED:
                 $record->reject($adminId, $adminNotes);
@@ -93,6 +102,29 @@ class UpdateDepositRecordController extends AbstractShowController
         }
 
         $record->save();
+    }
+
+    /**
+     * 批准存款记录并为用户充值
+     */
+    private function approveAndCreditMoney(DepositRecord $record, int $adminId, ?string $adminNotes, float $creditedAmount): void
+    {
+        $this->db->transaction(function () use ($record, $adminId, $adminNotes, $creditedAmount) {
+            // 锁定用户记录防止并发问题
+            $user = User::where('id', $record->user_id)->lockForUpdate()->first();
+
+            if (!$user) {
+                throw new \RuntimeException('用户不存在');
+            }
+
+            // 给用户充值
+            $user->money = ($user->money ?? 0) + $creditedAmount;
+            $user->save();
+
+            // 批准存款记录
+            $record->approve($adminId, $adminNotes);
+            $record->save();
+        });
     }
 
     protected function processUserUpdate(DepositRecord $record, array $attributes): void

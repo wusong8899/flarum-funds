@@ -16,6 +16,8 @@ use wusong8899\Funds\Model\DepositPlatform;
  * @property int $id
  * @property int $user_id
  * @property int $platform_id 存款平台ID
+ * @property float $amount 存款金额
+ * @property \Carbon\Carbon $deposit_time 实际存款时间
  * @property string|null $user_message 用户留言
  * @property string $status 状态: pending, approved, rejected
  * @property \Carbon\Carbon|null $processed_at 处理时间
@@ -26,6 +28,7 @@ use wusong8899\Funds\Model\DepositPlatform;
  *
  * @property-read User $user
  * @property-read User|null $processedByUser
+ * @property-read DepositPlatform $platform
  */
 class DepositRecord extends AbstractModel
 {
@@ -36,6 +39,8 @@ class DepositRecord extends AbstractModel
     protected $fillable = [
         'user_id',
         'platform_id',
+        'amount',
+        'deposit_time',
         'user_message',
         'status',
         'processed_at',
@@ -46,6 +51,8 @@ class DepositRecord extends AbstractModel
     protected $casts = [
         'user_id' => 'integer',
         'platform_id' => 'integer',
+        'amount' => 'decimal:2',
+        'deposit_time' => 'datetime',
         'processed_by' => 'integer',
         'processed_at' => 'datetime',
         'created_at' => 'datetime',

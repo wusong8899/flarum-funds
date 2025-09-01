@@ -75,6 +75,14 @@ class DepositServiceImpl implements DepositService {
       throw new Error('Platform ID is required');
     }
 
+    if (!data.amount || data.amount <= 0) {
+      throw new Error('Amount is required and must be greater than 0');
+    }
+
+    if (!data.depositTime) {
+      throw new Error('Deposit time is required');
+    }
+
     const response = await app.request({
       method: "POST",
       url: app.forum.attribute("apiUrl") + "/deposit-records",
@@ -83,6 +91,8 @@ class DepositServiceImpl implements DepositService {
           type: "deposit-records",
           attributes: {
             platformId: platformId,
+            amount: data.amount,
+            depositTime: data.depositTime.toISOString(),
             userMessage: data.userMessage,
           },
         },

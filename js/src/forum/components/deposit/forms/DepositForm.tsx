@@ -12,6 +12,8 @@ import { getAttr } from '../../withdrawal/utils/modelHelpers';
 
 export interface DepositFormData {
   selectedPlatform: DepositPlatform | null;
+  amount: number;
+  depositTime: Date;
   userMessage?: string;
 }
 
@@ -24,6 +26,8 @@ interface DepositFormProps {
 
 interface DepositFormState {
   selectedPlatform: Stream<DepositPlatform | null>;
+  amount: Stream<string>;
+  depositTime: Stream<string>;
   userMessage: Stream<string>;
 }
 
@@ -31,8 +35,16 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
   oninit(vnode: Mithril.Vnode<DepositFormProps>) {
     super.oninit(vnode);
     
+    // Initialize with current date/time for deposit time
+    const now = new Date();
+    const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+      .toISOString()
+      .slice(0, 16); // Format: YYYY-MM-DDTHH:mm
+    
     this.state = {
       selectedPlatform: Stream(null),
+      amount: Stream(''),
+      depositTime: Stream(localDateTime),
       userMessage: Stream('')
     };
   }
@@ -66,6 +78,53 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
 
           {/* 显示选中平台的存款信息 */}
           {this.state.selectedPlatform() && this.renderDepositInfo()}
+
+          {/* 存款金额字段 */}
+          {this.state.selectedPlatform() && (
+            <div className="DepositForm-field">
+              <label className="DepositForm-label">
+                {app.translator.trans('funds.forum.deposit.record.amount')}
+                <span className="DepositForm-required">*</span>
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                min="0.01"
+                className="DepositForm-input"
+                placeholder={app.translator.trans('funds.forum.deposit.record.amount_placeholder')}
+                value={this.state.amount()}
+                oninput={withAttr('value', this.state.amount)}
+                required
+                disabled={submitting}
+              />
+              <div className="DepositForm-help">
+                {app.translator.trans('funds.forum.deposit.record.amount_help', {
+                  symbol: getAttr(this.state.selectedPlatform(), 'symbol') || ''
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* 存款时间字段 */}
+          {this.state.selectedPlatform() && (
+            <div className="DepositForm-field">
+              <label className="DepositForm-label">
+                {app.translator.trans('funds.forum.deposit.record.deposit_time')}
+                <span className="DepositForm-required">*</span>
+              </label>
+              <input
+                type="datetime-local"
+                className="DepositForm-input"
+                value={this.state.depositTime()}
+                oninput={withAttr('value', this.state.depositTime)}
+                required
+                disabled={submitting}
+              />
+              <div className="DepositForm-help">
+                {app.translator.trans('funds.forum.deposit.record.deposit_time_help')}
+              </div>
+            </div>
+          )}
 
           {/* 留言字段 */}
           <div className="DepositForm-field">
@@ -200,9 +259,45 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
       return;
     }
 
+    // 验证金额
+    const amount = parseFloat(this.state.amount());
+    if (!this.state.amount() || isNaN(amount) || amount <= 0) {
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        app.translator.trans('funds.forum.deposit.record.validation.invalid_amount')
+      );
+      return;
+    }
+
+    // 验证存款时间
+    if (!this.state.depositTime()) {
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        app.translator.trans('funds.forum.deposit.record.validation.deposit_time_required')
+      );
+      return;
+    }
+
+    // 检查平台最小金额限制
+    const platform = this.state.selectedPlatform();
+    const minAmount = getAttr(platform, 'minAmount') || 0;
+    if (minAmount > 0 && amount < minAmount) {
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        app.translator.trans('funds.forum.deposit.record.validation.amount_too_low', {
+          amount: amount,
+          min: minAmount,
+          symbol: getAttr(platform, 'symbol')
+        })
+      );
+      return;
+    }
+
     // 准备表单数据
     const formData: DepositFormData = {
       selectedPlatform: this.state.selectedPlatform(),
+      amount: amount,
+      depositTime: new Date(this.state.depositTime()),
       userMessage: this.state.userMessage() || undefined
     };
 
@@ -212,6 +307,15 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
   // 清空表单
   resetForm(): void {
     this.state.selectedPlatform(null);
+    this.state.amount('');
+    
+    // Reset deposit time to current time
+    const now = new Date();
+    const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+      .toISOString()
+      .slice(0, 16);
+    this.state.depositTime(localDateTime);
+    
     this.state.userMessage('');
   }
 }
