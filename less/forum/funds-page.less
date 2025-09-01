@@ -1409,6 +1409,209 @@
   .FundsPage-content>* {
     animation: fadeIn 0.2s ease-in-out;
   }
-
+}
   // fadeIn keyframe now in shared/_base-styles.less
+
+// 存款表单独立样式 - 与提款保持视觉一致但类名独立
+.FundsPage-depositContent .DepositForm {
+  
+  // 存款信息显示样式
+  .DepositForm-depositInfo {
+    margin-top: 20px;
+
+    .DepositForm-minAmount {
+      color: #fff;
+      font-weight: 500;
+      font-size: 14px;
+      background: rgba(74, 144, 226, 0.1);
+      border: 1px solid rgba(74, 144, 226, 0.3);
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-bottom: 16px;
+    }
+
+    .DepositForm-warning {
+      color: #ffb84d;
+      font-size: 13px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      background: rgba(255, 184, 77, 0.1);
+      border: 1px solid rgba(255, 184, 77, 0.3);
+      border-radius: 6px;
+      padding: 10px;
+      line-height: 1.4;
+
+      i {
+        color: #ffb84d;
+        margin-top: 2px;
+        flex-shrink: 0;
+      }
+    }
+  }
+
+  // 存款平台选择器样式
+  .DepositForm-platformSelector {
+    position: relative;
+    margin-bottom: 24px;
+
+    .DepositForm-label {
+      color: #fff;
+      font-weight: 500;
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .DepositForm-platformDropdown {
+      background: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: #4A90E2;
+      }
+
+      .DepositForm-platformSelected {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+
+        .DepositForm-platformInfo {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+
+          .DepositForm-platformIcon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #4A90E2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+            overflow: hidden;
+
+            .platform-icon-image {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 50%;
+            }
+          }
+
+          .DepositForm-platformDetails {
+            .DepositForm-platformName {
+              color: #fff;
+              font-weight: 500;
+              font-size: 15px;
+              line-height: 1.2;
+            }
+          }
+        }
+      }
+
+      .DepositForm-dropdownIcon {
+        color: #888;
+        font-size: 12px;
+        margin-left: 8px;
+      }
+    }
+
+    .DepositForm-dropdownMenu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      border-radius: 12px;
+      margin-top: 4px;
+      z-index: 100;
+      max-height: 300px;
+      overflow-y: auto;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+
+      &::-webkit-scrollbar {
+        width: 4px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #666;
+        border-radius: 2px;
+
+        &:hover {
+          background: #888;
+        }
+      }
+
+      .DepositForm-dropdownItem {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border-bottom: 1px solid #333;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background: #333;
+        }
+
+        &.DepositForm-noData {
+          color: #888;
+          cursor: default;
+          justify-content: center;
+
+          &:hover {
+            background: transparent;
+          }
+        }
+
+        .DepositForm-platformIcon {
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          background: #4A90E2;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #fff;
+          font-size: 14px;
+          overflow: hidden;
+          flex-shrink: 0;
+
+          .platform-icon-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+          }
+        }
+
+        .DepositForm-platformName {
+          color: #fff;
+          font-weight: 500;
+          font-size: 14px;
+          flex: 1;
+        }
+      }
+    }
+  }
 }

@@ -31,25 +31,25 @@ export default class DepositPlatformDropdown extends Component<DepositPlatformDr
     const { showDropdown } = this.state;
 
     return (
-      <div className="WithdrawalPage-platformSelector">
-        <div className="WithdrawalPage-label">{app.translator.trans('funds.forum.deposit.platform_label')}</div>
+      <div className="DepositForm-platformSelector">
+        <div className="DepositForm-label">{app.translator.trans('funds.forum.deposit.platform_label')}</div>
         <div 
-          className="WithdrawalPage-platformDropdown" 
+          className="DepositForm-platformDropdown" 
           onclick={() => this.toggleDropdown()}
         >
-          <div className="WithdrawalPage-platformSelected">
-            <div className="WithdrawalPage-platformInfo">
-              <div className="WithdrawalPage-platformIcon">
+          <div className="DepositForm-platformSelected">
+            <div className="DepositForm-platformInfo">
+              <div className="DepositForm-platformIcon">
                 {this.renderPlatformIcon(selectedPlatform)}
               </div>
-              <div className="WithdrawalPage-platformDetails">
-                <div className="WithdrawalPage-platformName">
+              <div className="DepositForm-platformDetails">
+                <div className="DepositForm-platformName">
                   {this.getPlatformDisplayName(selectedPlatform)}
                 </div>
               </div>
             </div>
           </div>
-          {icon(ICONS.CHEVRON_DOWN, { className: 'WithdrawalPage-dropdownIcon' })}
+          {icon(ICONS.CHEVRON_DOWN, { className: 'DepositForm-dropdownIcon' })}
         </div>
 
         {showDropdown && this.renderPlatformDropdown()}
@@ -116,8 +116,8 @@ export default class DepositPlatformDropdown extends Component<DepositPlatformDr
     
     if (validPlatforms.length === 0) {
       return (
-        <div className="WithdrawalPage-dropdownMenu">
-          <div className="WithdrawalPage-dropdownItem WithdrawalPage-noData">
+        <div className="DepositForm-dropdownMenu">
+          <div className="DepositForm-dropdownItem DepositForm-noData">
             {app.translator.trans('funds.forum.deposit.no_platforms')}
           </div>
         </div>
@@ -125,17 +125,17 @@ export default class DepositPlatformDropdown extends Component<DepositPlatformDr
     }
 
     return (
-      <div className="WithdrawalPage-dropdownMenu">
+      <div className="DepositForm-dropdownMenu">
         {validPlatforms.map(platform => (
           <div 
             key={platform.id()}
-            className="WithdrawalPage-dropdownItem"
+            className="DepositForm-dropdownItem"
             onclick={() => this.selectPlatform(platform)}
           >
-            <div className="WithdrawalPage-platformIcon">
+            <div className="DepositForm-platformIcon">
               {this.renderPlatformIcon(platform)}
             </div>
-            <div className="WithdrawalPage-platformName">
+            <div className="DepositForm-platformName">
               {this.getPlatformDisplayName(platform)}
             </div>
           </div>

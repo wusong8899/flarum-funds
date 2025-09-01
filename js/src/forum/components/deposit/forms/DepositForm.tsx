@@ -6,11 +6,12 @@ import withAttr from 'flarum/common/utils/withAttr';
 import type Mithril from 'mithril';
 import DepositPlatform from '../../../../common/models/DepositPlatform';
 import DepositPlatformDropdown from '../selectors/DepositPlatformDropdown';
+import AddressDisplay from '../components/AddressDisplay';
+import ImageDisplay from '../components/ImageDisplay';
+import { getAttr } from '../../withdrawal/utils/modelHelpers';
 
 export interface DepositFormData {
   selectedPlatform: DepositPlatform | null;
-  depositAddress: string;
-  qrCodeUrl?: string;
   userMessage?: string;
 }
 
@@ -23,8 +24,6 @@ interface DepositFormProps {
 
 interface DepositFormState {
   selectedPlatform: Stream<DepositPlatform | null>;
-  depositAddress: Stream<string>;
-  qrCodeUrl: Stream<string>;
   userMessage: Stream<string>;
 }
 
@@ -34,8 +33,6 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
     
     this.state = {
       selectedPlatform: Stream(null),
-      depositAddress: Stream(''),
-      qrCodeUrl: Stream(''),
       userMessage: Stream('')
     };
   }
@@ -63,51 +60,12 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
               selectedPlatform={this.state.selectedPlatform()}
               onPlatformSelect={(platform: DepositPlatform) => {
                 this.state.selectedPlatform(platform);
-                // 清空地址字段，因为不同平台可能有不同地址
-                this.state.depositAddress('');
               }}
             />
           </div>
-          {/* 存款地址字段 */}
-          <div className="DepositForm-field">
-            <label className="DepositForm-label">
-              {app.translator.trans('funds.forum.deposit.form.deposit_address')}
-              <span className="DepositForm-required">*</span>
-            </label>
-            <input
-              type="text"
-              className="DepositForm-input"
-              placeholder={app.translator.trans('funds.forum.deposit.form.deposit_address_placeholder')}
-              value={this.state.depositAddress()}
-              oninput={withAttr('value', this.state.depositAddress)}
-              required
-              disabled={submitting}
-            />
-            <div className="DepositForm-help">
-              {app.translator.trans('funds.forum.deposit.form.deposit_address_help')}
-            </div>
-          </div>
 
-          {/* 收款二维码字段 */}
-          <div className="DepositForm-field">
-            <label className="DepositForm-label">
-              {app.translator.trans('funds.forum.deposit.form.qr_code_url')}
-              <span className="DepositForm-optional">
-                ({app.translator.trans('funds.forum.deposit.form.optional')})
-              </span>
-            </label>
-            <input
-              type="url"
-              className="DepositForm-input"
-              placeholder={app.translator.trans('funds.forum.deposit.form.qr_code_url_placeholder')}
-              value={this.state.qrCodeUrl()}
-              oninput={withAttr('value', this.state.qrCodeUrl)}
-              disabled={submitting}
-            />
-            <div className="DepositForm-help">
-              {app.translator.trans('funds.forum.deposit.form.qr_code_url_help')}
-            </div>
-          </div>
+          {/* 显示选中平台的存款信息 */}
+          {this.state.selectedPlatform() && this.renderDepositInfo()}
 
           {/* 留言字段 */}
           <div className="DepositForm-field">
@@ -155,6 +113,79 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
     );
   }
 
+  private renderDepositInfo(): Mithril.Children {
+    const platform = this.state.selectedPlatform();
+    if (!platform) return null;
+
+    const address = getAttr(platform, 'address');
+    const minAmount = getAttr(platform, 'minAmount') || 0;
+    const symbol = getAttr(platform, 'symbol');
+    const warningText = getAttr(platform, 'warningText') || 
+      app.translator.trans('funds.forum.deposit.default_warning', {
+        currency: symbol,
+        network: getAttr(platform, 'network'),
+        minAmount
+      });
+
+    return (
+      <div className="DepositForm-depositInfo">
+        <div className="DepositForm-field">
+          <label className="DepositForm-label">
+            {app.translator.trans('funds.forum.deposit.form.deposit_address')}
+          </label>
+          <AddressDisplay
+            address={address || ''}
+            loading={false}
+            onCopy={() => {
+              if (address) {
+                navigator.clipboard.writeText(address).then(() => {
+                  app.alerts.show(
+                    { type: 'success', dismissible: true },
+                    app.translator.trans('funds.forum.deposit.address_copied')
+                  );
+                }).catch(() => {
+                  app.alerts.show(
+                    { type: 'error', dismissible: true },
+                    app.translator.trans('funds.forum.deposit.copy_failed')
+                  );
+                });
+              }
+            }}
+          />
+          <div className="DepositForm-help">
+            {app.translator.trans('funds.forum.deposit.form.deposit_address_help')}
+          </div>
+        </div>
+
+        {minAmount > 0 && (
+          <div className="DepositForm-field">
+            <div className="DepositForm-minAmount">
+              {app.translator.trans('funds.forum.deposit.min_amount', {
+                amount: minAmount,
+                currency: symbol
+              })}
+            </div>
+          </div>
+        )}
+
+        <div className="DepositForm-field">
+          <ImageDisplay
+            platform={platform}
+            loading={false}
+            size={160}
+          />
+        </div>
+
+        <div className="DepositForm-field">
+          <div className="DepositForm-warning">
+            <i className="fas fa-info-circle"></i>
+            <span>{warningText}</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   private handleSubmit(e: Event): void {
     e.preventDefault();
 
@@ -168,51 +199,19 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
       );
       return;
     }
-    
-    if (!this.state.depositAddress()) {
-      app.alerts.show(
-        { type: 'error', dismissible: true },
-        app.translator.trans('funds.forum.deposit.form.validation.address_required')
-      );
-      return;
-    }
-
-    // 验证二维码URL格式（如果提供的话）
-    const qrCodeUrl = this.state.qrCodeUrl();
-    if (qrCodeUrl && !this.isValidUrl(qrCodeUrl)) {
-      app.alerts.show(
-        { type: 'error', dismissible: true },
-        app.translator.trans('funds.forum.deposit.form.validation.invalid_url')
-      );
-      return;
-    }
 
     // 准备表单数据
     const formData: DepositFormData = {
       selectedPlatform: this.state.selectedPlatform(),
-      depositAddress: this.state.depositAddress(),
-      qrCodeUrl: qrCodeUrl || undefined,
       userMessage: this.state.userMessage() || undefined
     };
 
     onSubmit(formData);
   }
 
-  private isValidUrl(url: string): boolean {
-    try {
-      // eslint-disable-next-line no-new
-      new URL(url);
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
   // 清空表单
   resetForm(): void {
     this.state.selectedPlatform(null);
-    this.state.depositAddress('');
-    this.state.qrCodeUrl('');
     this.state.userMessage('');
   }
 }
