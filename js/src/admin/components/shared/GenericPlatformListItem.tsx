@@ -51,7 +51,7 @@ export default class GenericPlatformListItem extends Component<GenericPlatformLi
     onDelete: (platform?: GenericPlatform) => Promise<void>
   ): Mithril.Children {
     const platformData = this.extractPlatformData(platform);
-    const translationPrefix = type === 'funds' ? 'funds.admin.platforms' : 'funds.admin.deposit.platforms';
+    const translationPrefix = (type === 'funds' || type === 'withdrawal') ? 'funds.admin.platforms' : 'funds.admin.deposit.platforms';
 
     return (
       <div key={platformData.id} className={`${type}Platform`}>
@@ -100,7 +100,7 @@ export default class GenericPlatformListItem extends Component<GenericPlatformLi
     onDelete: (platform?: GenericPlatform) => Promise<void>
   ): Mithril.Children {
     const platformData = this.extractPlatformData(platform);
-    const translationPrefix = type === 'funds' ? 'funds.admin.platforms' : 'funds.admin.deposit.platforms';
+    const translationPrefix = (type === 'funds' || type === 'withdrawal') ? 'funds.admin.platforms' : 'funds.admin.deposit.platforms';
 
     return (
       <div className={`${type}PlatformListItem`}>

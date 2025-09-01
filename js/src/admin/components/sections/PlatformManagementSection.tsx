@@ -34,7 +34,7 @@ export default class PlatformManagementSection extends Component<PlatformManagem
               <GenericPlatformListItem
                 key={platform.id?.() ?? platform.id ?? Math.random()}
                 platform={platform}
-                type="funds"
+                type="withdrawal"
                 style="card"
                 onToggleStatus={onTogglePlatformStatus}
                 onDelete={onDeletePlatform}
