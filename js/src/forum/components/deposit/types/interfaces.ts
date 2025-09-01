@@ -1,21 +1,28 @@
 import Stream from 'flarum/common/utils/Stream';
-import DepositPlatform from '../../../../common/models/DepositPlatform';
 
-export interface DepositPageState {
-  platforms: DepositPlatform[];
-  transactions: any[]; // Deposit records for history display
+// 简化的存款页面状态
+export interface SimpleDepositPageState {
+  transactions: any[]; // 存款记录历史显示
   loading: boolean;
+  submitting: boolean;
   activeTab: Stream<'deposit' | 'history'>;
 }
 
-export interface DepositFormData {
-  selectedPlatform: Stream<DepositPlatform | null>;
+// 简化的存款表单数据
+export interface SimpleDepositFormData {
+  depositAddress: string;
+  qrCodeUrl?: string;
+  userMessage?: string;
+}
+
+// 存款表单状态
+export interface SimpleDepositFormState {
+  depositAddress: Stream<string>;
+  qrCodeUrl: Stream<string>;
   userMessage: Stream<string>;
 }
 
-export interface DepositAddressData {
-  address: string;
-  addressTag?: string;
-  platform: DepositPlatform;
-  loading: boolean;
+// 保持向后兼容的旧接口（将逐步移除）
+export interface DepositFormData {
+  userMessage: Stream<string>;
 }

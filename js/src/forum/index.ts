@@ -7,6 +7,7 @@ import WithdrawalPlatform from '../common/models/WithdrawalPlatform';
 import WithdrawalRequest from '../common/models/WithdrawalRequest';
 import DepositPlatform from '../common/models/DepositPlatform';
 import DepositRecord from '../common/models/DepositRecord';
+import SimpleDepositRecord from '../common/models/SimpleDepositRecord';
 import MoneyDisplay from './components/MoneyDisplay';
 import MobileMoneyDisplay from './components/MobileMoneyDisplay';
 import { ConfigManager } from './utils/ConfigManager';
@@ -18,6 +19,7 @@ app.initializers.add('wusong8899-funds', () => {
   app.store.models['funds-requests'] = WithdrawalRequest;
   app.store.models['deposit-platforms'] = DepositPlatform;
   app.store.models['deposit-records'] = DepositRecord;
+  app.store.models['simple-deposit-records'] = SimpleDepositRecord;
 
   // New unified funds page
   app.routes.funds = { path: '/funds', component: FundsPage };

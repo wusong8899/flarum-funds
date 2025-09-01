@@ -13,21 +13,18 @@ import WithdrawalPlatform from '../../common/models/WithdrawalPlatform';
 import WithdrawalForm from './withdrawal/forms/WithdrawalForm';
 import TransactionHistory from './shared/TransactionHistory';
 
-// Deposit imports
-import type { DepositFormData, DepositAddressData } from './deposit/types/interfaces';
-import type DepositPlatform from '../../common/models/DepositPlatform';
-import DepositPlatformDropdown from './deposit/selectors/DepositPlatformDropdown';
-import AddressDisplay from './deposit/components/AddressDisplay';
-import ImageDisplay from './deposit/components/ImageDisplay';
-import DepositRecordForm from './deposit/forms/DepositRecordForm';
-import type { DepositRecordFormData } from './deposit/forms/DepositRecordForm';
+// Deposit imports - 简化版本
+import type { SimpleDepositFormData } from './deposit/types/interfaces';
+import SimpleDepositForm from './deposit/forms/SimpleDepositForm';
+import SimpleDepositRecord from '../../common/models/SimpleDepositRecord';
+import simpleDepositService from '../../common/services/SimpleDepositService';
 
 // Services
-import { withdrawalService, depositService, platformService } from '../../common/services';
+import { withdrawalService } from '../../common/services';
 import { ServiceError } from '../../common/types/services';
 
 // Utilities
-import { getAttr, getIdString, getDateFromAttr } from './withdrawal/utils/modelHelpers';
+import { getAttr, getIdString } from './withdrawal/utils/modelHelpers';
 import { extractErrorMessage, type FlarumApiError } from '../../common/types/api';
 
 type TabType = 'withdrawal' | 'deposit';
@@ -41,10 +38,9 @@ interface FundsPageState {
   loadingBalance: boolean;
   submitting: boolean;
   
-  // Deposit state
-  depositPlatforms: DepositPlatform[];
-  depositRecords: any[];
-  submittingDepositRecord: boolean;
+  // Simplified deposit state - 简化的存款状态
+  depositRecords: SimpleDepositRecord[];
+  submittingDeposit: boolean;
   
   // Shared state
   loading: boolean;
@@ -60,9 +56,8 @@ export default class FundsPage extends Page<any, FundsPageState> {
     userBalance: 0,
     loadingBalance: true,
     submitting: false,
-    depositPlatforms: [],
     depositRecords: [],
-    submittingDepositRecord: false,
+    submittingDeposit: false,
     loading: true,
     activeTab: Stream('withdrawal'),
     withdrawalSubTab: Stream('form'),
@@ -77,20 +72,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
     message: Stream('')
   };
 
-  // Deposit form data and address - Fixed: Added missing userMessage property
-  private depositFormData: DepositFormData = {
-    selectedPlatform: Stream<DepositPlatform | null>(null),
-    userMessage: Stream('')
-  };
-
-  private depositAddressData: DepositAddressData = {
-    address: '',
-    platform: null as any,
-    loading: false
-  };
-
-  // Platform-based selection for deposits  
-  private availablePlatforms: DepositPlatform[] = [];
+  // 简化的存款表单数据不需要复杂的状态管理
 
   oninit(vnode: Mithril.VnodeDOM) {
     super.oninit(vnode);
@@ -350,22 +332,32 @@ export default class FundsPage extends Page<any, FundsPageState> {
   }
 
   private renderDepositForm(): Mithril.Children {
-    const availablePlatforms = (this.state.depositPlatforms || []).filter(platform => 
-      platform && getAttr(platform, 'isActive')
+    return (
+      <div className="FundsPage-depositContent">
+        <SimpleDepositForm
+          onSubmit={this.handleSimpleDepositSubmit.bind(this)}
+          onCancel={this.handleCancelDepositForm.bind(this)}
+          submitting={this.state.submittingDeposit}
+        />
+      </div>
     );
+  }
 
-    if (availablePlatforms.length === 0) {
+  private renderDepositHistory(): Mithril.Children {
+    const depositRecords = this.state.depositRecords || [];
+
+    if (depositRecords.length === 0) {
       return (
         <div className="FundsPage-depositContent">
           <div className="FundsPage-emptyState">
             <div className="FundsPage-emptyIcon">
-              {icon('fas fa-coins')}
+              {icon('fas fa-history')}
             </div>
             <h3 className="FundsPage-emptyTitle">
-              {app.translator.trans('funds.forum.deposit.no_platforms')}
+              {app.translator.trans('funds.forum.deposit.simple.no_history', {}, '暂无存款记录')}
             </h3>
             <p className="FundsPage-emptyDescription">
-              {app.translator.trans('funds.forum.deposit.no_platforms_description')}
+              {app.translator.trans('funds.forum.deposit.simple.no_history_description', {}, '您还没有提交过任何存款申请')}
             </p>
           </div>
         </div>
@@ -374,132 +366,52 @@ export default class FundsPage extends Page<any, FundsPageState> {
 
     return (
       <div className="FundsPage-depositContent">
-        {this.renderDepositSelectors()}
-        {this.renderDepositInfo()}
-      </div>
-    );
-  }
-
-  private renderDepositHistory(): Mithril.Children {
-    // Use only deposit records for history
-    const allDepositHistory = [...this.state.depositRecords];
-    
-    // Sort by creation date (newest first)
-    allDepositHistory.sort((a, b) => {
-      const dateA = getDateFromAttr(a, 'createdAt') || new Date(0);
-      const dateB = getDateFromAttr(b, 'createdAt') || new Date(0);
-      return dateB.getTime() - dateA.getTime();
-    });
-
-    return (
-      <div className="FundsPage-depositContent">
-        <TransactionHistory
-          transactions={allDepositHistory}
-          platforms={this.state.depositPlatforms}
-          loading={false}
-          type="deposit"
-        />
-      </div>
-    );
-  }
-
-  private renderDepositSelectors(): Mithril.Children {
-    return (
-      <div className="FundsPage-selectors">
-        <DepositPlatformDropdown
-          platforms={this.availablePlatforms}
-          selectedPlatform={this.depositFormData.selectedPlatform()}
-          onPlatformSelect={(platform: DepositPlatform) => this.handlePlatformSelect(platform)}
-        />
-      </div>
-    );
-  }
-
-  private renderDepositInfo(): Mithril.Children {
-    const platform = this.depositFormData.selectedPlatform();
-    
-    if (!platform) {
-      return (
-        <div className="FundsPage-selectPrompt">
-          <p>{app.translator.trans('funds.forum.deposit.select_platform')}</p>
-        </div>
-      );
-    }
-
-    const minAmount = getAttr(platform, 'minAmount') || 0;
-    const warningText = getAttr(platform, 'warningText') || 
-      app.translator.trans('funds.forum.deposit.default_warning', {
-        currency: getAttr(platform, 'symbol'),
-        network: getAttr(platform, 'network'),
-        minAmount
-      });
-
-    return (
-      <div className="FundsPage-depositInfo">
-        <p className="FundsPage-instructionText">
-          {app.translator.trans('funds.forum.deposit.scan_or_use_address')}
-        </p>
-        
-        <AddressDisplay
-          address={this.depositAddressData.address}
-          loading={this.depositAddressData.loading}
-          onCopy={this.handleCopyAddress.bind(this)}
-        />
-        
-        <p className="FundsPage-minAmountText">
-          {app.translator.trans('funds.forum.deposit.min_amount', {
-            amount: minAmount,
-            currency: getAttr(platform, 'symbol')
-          })}
-        </p>
-        
-        {(() => {
-          const fee = getAttr(platform, 'fee') || 0;
-          if (fee > 0) {
-            return (
-              <p className="FundsPage-feeText">
-                {app.translator.trans('funds.forum.deposit.fee', {
-                  fee: fee,
-                  currency: getAttr(platform, 'symbol')
-                })}
-              </p>
-            );
-          }
-          return null;
-        })()}
-        
-        {/* Only show image container if platform has qrCodeImageUrl */}
-        {this.depositAddressData.platform && this.depositAddressData.platform.qrCodeImageUrl && this.depositAddressData.platform.qrCodeImageUrl() && (
-          <div className="FundsPage-imageContainer">
-            <ImageDisplay
-              platform={this.depositAddressData.platform}
-              loading={this.depositAddressData.loading}
-              size={160}
-            />
-          </div>
-        )}
-        
-        <div className="FundsPage-infoPanel">
-          <i className="fas fa-info-circle"></i>
-          <span>{warningText}</span>
-        </div>
-
-        {/* Deposit Record Submission Section */}
-        <div className="FundsPage-recordSection">
-          <div className="FundsPage-recordHeader">
-            <h4>{app.translator.trans('funds.forum.deposit.record.section_title')}</h4>
-          </div>
-          
-          <DepositRecordForm
-            platform={platform}
-            onSubmit={this.handleDepositRecordSubmit.bind(this)}
-            onCancel={this.handleCancelDepositRecordForm.bind(this)}
-            submitting={this.state.submittingDepositRecord}
-          />
+        <div className="SimpleDepositHistory">
+          {depositRecords.map((record: SimpleDepositRecord) => (
+            <div key={record.id()} className="SimpleDepositHistory-item">
+              <div className="SimpleDepositHistory-header">
+                <span className={`Badge Badge--${record.getStatusColor()}`}>
+                  <i className={record.getStatusIcon()}></i>
+                  {record.statusText()}
+                </span>
+                <span className="SimpleDepositHistory-date">
+                  {record.formattedCreatedAt()}
+                </span>
+              </div>
+              <div className="SimpleDepositHistory-content">
+                <div className="SimpleDepositHistory-address">
+                  <strong>{app.translator.trans('funds.forum.deposit.simple.deposit_address', {}, '存款地址')}:</strong>
+                  <code>{record.getDisplayAddress()}</code>
+                </div>
+                {record.hasQrCode() && (
+                  <div className="SimpleDepositHistory-qr">
+                    <strong>{app.translator.trans('funds.forum.deposit.simple.qr_code_url', {}, '收款二维码')}:</strong>
+                    <a href={record.qrCodeUrl()} target="_blank" rel="noopener noreferrer">
+                      {app.translator.trans('funds.forum.deposit.simple.view_qr', {}, '查看二维码')}
+                    </a>
+                  </div>
+                )}
+                {record.userMessage() && (
+                  <div className="SimpleDepositHistory-message">
+                    <strong>{app.translator.trans('funds.forum.deposit.simple.user_message', {}, '留言')}:</strong>
+                    <p>{record.userMessage()}</p>
+                  </div>
+                )}
+                {record.adminNotes() && (
+                  <div className="SimpleDepositHistory-adminNotes">
+                    <strong>{app.translator.trans('funds.forum.deposit.simple.admin_notes', {}, '管理员备注')}:</strong>
+                    <p>{record.adminNotes()}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );
   }
+
+  // 移除复杂的存款选择器和信息显示 - 简化版本不再需要这些方法
 
 
   private handleTabChange(tab: TabType): void {
@@ -652,64 +564,36 @@ export default class FundsPage extends Page<any, FundsPageState> {
 
   // Deposit methods - simplified platform selection
   
-  private handlePlatformSelect(platform: DepositPlatform): void {
-    this.depositFormData.selectedPlatform(platform);
-    this.loadDepositAddress(platform);
-  }
-
-  private handleCopyAddress(): void {
-    if (this.depositAddressData.address) {
-      navigator.clipboard.writeText(this.depositAddressData.address).then(() => {
-        app.alerts.show(
-          { type: 'success', dismissible: true },
-          app.translator.trans('funds.forum.deposit.address_copied')
-        );
-      }).catch(() => {
-        app.alerts.show(
-          { type: 'error', dismissible: true },
-          app.translator.trans('funds.forum.deposit.copy_failed')
-        );
-      });
-    }
-  }
-
-  private handleCancelDepositRecordForm(): void {
-    // Just clear the form - form remains visible
+  // 简化的存款处理方法
+  private handleCancelDepositForm(): void {
+    // 简单的取消操作，可以添加清空表单逻辑
     m.redraw();
   }
 
-  private async handleDepositRecordSubmit(data: DepositRecordFormData): Promise<void> {
-    if (this.state.submittingDepositRecord) return;
+  private async handleSimpleDepositSubmit(data: SimpleDepositFormData): Promise<void> {
+    if (this.state.submittingDeposit) return;
 
-    this.state.submittingDepositRecord = true;
+    this.state.submittingDeposit = true;
     m.redraw();
 
     try {
-      await depositService.create({
-        platformId: data.platformId,
-        platformAccount: data.platformAccount,
-        realName: data.realName,
-        amount: data.amount,
-        depositTime: data.depositTime.toISOString(),
-        screenshotUrl: data.screenshotUrl,
-        userMessage: data.userMessage,
-        status: 'pending'
-      });
-
-      // Show success message (form remains visible for new submissions)
+      await simpleDepositService.create(data);
       
       app.alerts.show(
         { type: 'success', dismissible: true },
-        app.translator.trans('funds.forum.deposit.record.submit_success')
+        app.translator.trans('funds.forum.deposit.simple.submit_success', {}, '存款申请提交成功，请等待管理员审核')
       );
 
-      // Reload deposit history
-      await this.loadDepositRecords();
+      // 重新加载存款记录
+      await this.loadSimpleDepositRecords();
+
+      // 切换到历史标签页显示刚提交的记录
+      this.state.depositSubTab('history');
 
     } catch (error: unknown) {
-      console.error('Deposit record submission failed:', error);
+      console.error('Simple deposit submission failed:', error);
       
-      let errorMessage = app.translator.trans('funds.forum.deposit.record.submit_error').toString();
+      let errorMessage = app.translator.trans('funds.forum.deposit.simple.submit_error', {}, '提交失败，请重试').toString();
       
       if (error instanceof ServiceError) {
         errorMessage = error.message;
@@ -725,7 +609,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
         errorMessage
       );
     } finally {
-      this.state.submittingDepositRecord = false;
+      this.state.submittingDeposit = false;
       m.redraw();
     }
   }
@@ -736,7 +620,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
     try {
       await Promise.all([
         this.loadWithdrawalData(),
-        this.loadDepositData(),
+        this.loadSimpleDepositRecords(),
         this.loadUserBalance()
       ]);
       
@@ -770,35 +654,14 @@ export default class FundsPage extends Page<any, FundsPageState> {
   }
 
   /**
-   * Load deposit platforms and user records using service layer
+   * 加载简化的存款记录
    */
-  private async loadDepositData(): Promise<void> {
+  private async loadSimpleDepositRecords(): Promise<void> {
     try {
-      const [platforms, records] = await Promise.all([
-        platformService.getActive('deposit'),
-        depositService.getUserHistory()
-      ]);
-
-      this.state.depositPlatforms = platforms as DepositPlatform[];
-      this.state.depositRecords = records;
-      
-      // Filter active platforms
-      this.availablePlatforms = platforms.filter(platform => getAttr(platform, 'isActive')) as DepositPlatform[];
-    } catch (error) {
-      console.error('Error loading deposit data:', error);
-      // Fallback to empty arrays
-      this.state.depositPlatforms = [];
-      this.state.depositRecords = [];
-      this.availablePlatforms = [];
-    }
-  }
-
-  private async loadDepositRecords(): Promise<void> {
-    try {
-      const records = await depositService.getUserHistory();
+      const records = await simpleDepositService.getUserHistory();
       this.state.depositRecords = records;
     } catch (error) {
-      console.error('Error loading deposit records:', error);
+      console.error('Error loading simple deposit records:', error);
       this.state.depositRecords = [];
     }
   }
@@ -844,36 +707,5 @@ export default class FundsPage extends Page<any, FundsPageState> {
     }
   }
 
-  private async loadDepositAddress(platform: DepositPlatform): Promise<void> {
-    this.depositAddressData.loading = true;
-    m.redraw();
-
-    try {
-      const address = await depositService.generateAddress(parseInt(getAttr(platform, 'id'), 10));
-      
-      this.depositAddressData = {
-        address,
-        platform,
-        loading: false
-      };
-
-      m.redraw();
-    } catch (error) {
-      console.error('Error loading deposit address:', error);
-      this.depositAddressData.loading = false;
-      
-      let errorMessage = app.translator.trans('funds.forum.deposit.address_load_error').toString();
-      
-      if (error instanceof ServiceError) {
-        errorMessage = error.message;
-      }
-      
-      app.alerts.show(
-        { type: 'error', dismissible: true },
-        errorMessage
-      );
-      
-      m.redraw();
-    }
-  }
+  // 移除复杂的地址生成逻辑 - 简化版本不再需要这个方法
 }
