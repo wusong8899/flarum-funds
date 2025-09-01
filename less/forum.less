@@ -9,7 +9,11 @@
 // Forum-specific components
 @import "forum/money-display.less";
 @import "forum/mobile-money-display.less";
+
+// Unified interface styles (must load first to avoid conflicts)
+@import "forum/funds-page.less";
+
+// Legacy component styles (loaded after unified styles)
 @import "forum/withdrawal-page.less";
 @import "forum/deposit-page.less";
 @import "forum/deposit-record-form.less";
-@import "forum/funds-page.less";
