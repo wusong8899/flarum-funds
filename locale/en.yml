@@ -30,7 +30,7 @@ funds:
         network: Network Type (Optional)
         qr_code_image_help: Enter QR code image URL (optional)
         qr_code_image_url: QR Code Image URL
-        required_fields_error: 'Please fill required fields: platform name, currency symbol and deposit address'
+        required_fields_error: "Please fill required fields: platform name, currency symbol and deposit address"
         status_error: Failed to update platform status
         status_updated: Platform status updated successfully
         symbol: Currency Symbol
@@ -40,8 +40,8 @@ funds:
       records:
         approve: Approve
         approve_error: Failed to approve deposit record
-        approve_notes_prompt: 'Admin notes (optional):'
-        approve_prompt: 'Enter credited amount (default: {amount}):'
+        approve_notes_prompt: "Admin notes (optional):"
+        approve_prompt: "Enter credited amount (default: {amount}):"
         approve_success: Deposit record approved successfully
         delete: Delete
         delete_cancel_button: Cancel
@@ -55,10 +55,10 @@ funds:
           title: No deposit records
         invalid_amount: Please enter a valid amount greater than zero
         load_error: Failed to load deposit records
-        pending_count: '{count} pending'
+        pending_count: "{count} pending"
         reject: Reject
         reject_error: Failed to reject deposit record
-        reject_reason_prompt: 'Enter rejection reason:'
+        reject_reason_prompt: "Enter rejection reason:"
         reject_reason_required: Rejection reason is required
         reject_success: Deposit record rejected successfully
         status:
@@ -68,7 +68,7 @@ funds:
         status_error: Failed to update record status
         status_updated: Record status updated successfully
         title: Deposit Record Management
-        total_count: '{count} records total'
+        total_count: "{count} records total"
         update_error: Failed to update deposit record
     network_types:
       add_button: Add Network Type
@@ -118,8 +118,9 @@ funds:
       enable_success: Platform enabled successfully
       fee: Fee
       icon_configuration: Icon Configuration
-      icon_configuration_help: 'Configure icons with priority: Platform-specific → Network → Currency. Higher priority icons
-        override lower ones.'
+      icon_configuration_help:
+        "Configure icons with priority: Platform-specific → Network → Currency. Higher priority icons
+        override lower ones."
       inactive: Inactive
       is_active: Active
       load_error: Load Error Error
@@ -175,9 +176,9 @@ funds:
   forum:
     amount_above_maximum: Amount {amount} exceeds maximum {maximum} for {platform}
     amount_below_minimum: Amount {amount} is below minimum {minimum} for {platform}
-    available_balance: 'Available balance: {amount}'
+    available_balance: "Available balance: {amount}"
     balance:
-      amount: 'Available: ${amount}'
+      amount: "Available: ${amount}"
       loading: Loading balance...
       title: Available Balance
     balance_refresh_error: Failed to refresh balance. Please try again.
@@ -187,21 +188,39 @@ funds:
       address_load_error: Address Load Error Error
       copy_failed: Copy Failed
       default_warning: Please ensure you are depositing {currency} on the {network} network. Minimum deposit is {minAmount}.
-      fee: 'Deposit fee: {fee} {currency}'
-      fee_short: 'Fee: {fee} {symbol}'
+      fee: "Deposit fee: {fee} {currency}"
+      fee_short: "Fee: {fee} {symbol}"
       history:
         empty:
           description: Your deposit records will appear here once you make a deposit.
           title: No deposits yet
         title: Deposit History
         transactions: records
-      min_amount: 'Minimum deposit: {amount} {currency}'
-      min_amount_short: 'Min: {amount} {symbol}'
+      min_amount: "Minimum deposit: {amount} {currency}"
+      min_amount_short: "Min: {amount} {symbol}"
       no_platforms: No deposit platforms available
       no_platforms_description: Please contact the administrator to configure deposit platforms.
       page:
         title: Deposit
       platform_label: Deposit Platform
+      form:
+        cancel: Cancel
+        deposit_address: Deposit Address
+        deposit_address_help: Enter your deposit receiving address
+        deposit_address_placeholder: Enter or paste deposit address...
+        form_description: Fill in the following information to submit your deposit request
+        form_title: Deposit Request
+        optional: Optional
+        qr_code_url: Payment QR Code
+        qr_code_url_help: Provide QR code URL for easy payment
+        qr_code_url_placeholder: https://example.com/qrcode.png
+        submit: Submit Request
+        user_message: Message
+        user_message_help: Add notes or comments to your deposit request
+        user_message_placeholder: Please fill in relevant notes or comments...
+        validation:
+          address_required: Deposit address cannot be empty
+          invalid_url: Please enter a valid URL
       record:
         amount: Amount
         amount_placeholder: Enter deposit amount
@@ -222,7 +241,7 @@ funds:
         screenshot_url_help: Optional screenshot of your deposit record
         screenshot_url_placeholder: https://example.com/screenshot.png
         section_title: Manual Deposit Submission
-        selected_platform: 'Selected Platform: {platform} ({symbol})'
+        selected_platform: "Selected Platform: {platform} ({symbol})"
         server_error: Server error occurred. Please try again later.
         show_form: Submit Deposit Record
         submit: Submit Record
@@ -242,9 +261,9 @@ funds:
         deposit: Deposit
         history: History
     error: Failed to submit funds request
-    final_amount: 'Amount to receive: {amount} {symbol}'
+    final_amount: "Amount to receive: {amount} {symbol}"
     form:
-      address: '{symbol} Address'
+      address: "{symbol} Address"
       address_placeholder: Enter or paste funds address...
       all_button: All
       amount: Amount
@@ -265,22 +284,22 @@ funds:
       transactions: requests
     including_fee: (including {fee} fee)
     info:
-      final_amount: 'Final Amount: ${amount}'
-      maximum_amount: 'Maximum Amount: ${amount}'
-      minimum_amount: 'Minimum Amount: ${amount}'
-      withdrawal_fee: 'Withdrawal Fee: ${amount}'
+      final_amount: "Final Amount: ${amount}"
+      maximum_amount: "Maximum Amount: ${amount}"
+      minimum_amount: "Minimum Amount: ${amount}"
+      withdrawal_fee: "Withdrawal Fee: ${amount}"
     insufficient_balance: Insufficient balance to fill maximum amount
-    insufficient_balance_detailed: 'Insufficient balance. Required: {required}, Available: {available} {feeText}'
+    insufficient_balance_detailed: "Insufficient balance. Required: {required}, Available: {available} {feeText}"
     invalid_amount: Please enter a valid amount greater than zero
     limits:
-      fee: 'Fee:'
-      min_max: 'Min & Max funds amount:'
+      fee: "Fee:"
+      min_max: "Min & Max funds amount:"
     no_platforms: No funds platforms available
     no_platforms_description: Please contact the administrator to configure funds platforms.
     page:
       description: Submit a funds request to transfer your funds to external platforms
       title: Withdrawal
-    remaining_flow: 'Remaining flow: {amount}'
+    remaining_flow: "Remaining flow: {amount}"
     server_error: A server error occurred. Please try again later or contact the administrator.
     status:
       approved: Approved
