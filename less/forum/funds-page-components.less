@@ -1,0 +1,1303 @@
+// Funds Page Components - Form components, platform selectors, and specialized widgets
+// Component-specific styles for deposit forms, withdrawal forms, and platform management
+
+// Deposit Form Styles - Enhanced specificity to override legacy styles
+.FundsPage-depositContent .DepositForm {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 20px;
+  color: #fff;
+
+  .DepositForm-header {
+    text-align: center;
+    margin-bottom: 24px;
+
+    .DepositForm-title {
+      color: #fff;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+
+      i {
+        color: #4A90E2;
+      }
+    }
+
+    .DepositForm-description {
+      color: #bbb;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+  }
+
+  .DepositForm-form {
+    .DepositForm-field {
+      margin-bottom: 20px;
+
+      .DepositForm-label {
+        display: block;
+        color: #fff;
+        font-weight: 500;
+        margin-bottom: 8px;
+        font-size: 14px;
+
+        .DepositForm-required {
+          color: #ff6b6b;
+          margin-left: 4px;
+        }
+
+        .DepositForm-optional {
+          color: #888;
+          font-weight: normal;
+          font-size: 12px;
+        }
+      }
+
+      .DepositForm-input,
+      .DepositForm-textarea {
+        width: 100%;
+        background: #2a2a2a;
+        border: 1px solid #3a3a3a;
+        border-radius: 8px;
+        padding: 12px 16px;
+        color: #fff;
+        font-size: 14px;
+        outline: none;
+        transition: all 0.2s ease;
+        font-family: inherit;
+
+        &:focus {
+          border-color: #4A90E2;
+          box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+
+        &::placeholder {
+          color: #666;
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+
+      .DepositForm-textarea {
+        resize: vertical;
+        min-height: 80px;
+        line-height: 1.4;
+      }
+
+      .DepositForm-help {
+        color: #888;
+        font-size: 12px;
+        margin-top: 6px;
+        line-height: 1.3;
+      }
+    }
+
+    .DepositForm-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+
+      .DepositForm-cancelButton,
+      .DepositForm-submitButton {
+        flex: 1;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+        font-size: 14px;
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+
+      .DepositForm-cancelButton {
+        background: #3a3a3a;
+        color: #fff;
+
+        &:hover:not(:disabled) {
+          background: #4a4a4a;
+        }
+      }
+
+      .DepositForm-submitButton {
+        background: #4A90E2;
+        color: #fff;
+
+        &:hover:not(:disabled) {
+          background: #3a7bc8;
+        }
+
+        &.loading {
+          position: relative;
+          color: transparent;
+
+          &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+          }
+        }
+      }
+    }
+  }
+
+  // Mobile responsive
+  @media (max-width: 480px) {
+    padding: 16px;
+
+    .DepositForm-header {
+      margin-bottom: 20px;
+
+      .DepositForm-title {
+        font-size: 16px;
+      }
+
+      .DepositForm-description {
+        font-size: 13px;
+      }
+    }
+
+    .DepositForm-form {
+      .DepositForm-field {
+        margin-bottom: 16px;
+      }
+
+      .DepositForm-actions {
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 20px;
+      }
+    }
+  }
+}
+
+// Deposit-specific styles
+.FundsPage-depositTab {
+  .FundsPage-selectors {
+    margin-bottom: 24px;
+
+    // New deposit platform dropdown selector
+    .FundsPage-platformSelector {
+      position: relative;
+
+      .FundsPage-label {
+        color: #fff;
+        font-weight: 500;
+        font-size: 16px;
+        margin-bottom: 12px;
+      }
+
+      .FundsPage-platformDropdown {
+        background: #2a2a2a;
+        border: 1px solid #3a3a3a;
+        border-radius: 12px;
+        padding: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.2s ease;
+
+        &:hover {
+          border-color: #4A90E2;
+        }
+
+        .FundsPage-platformSelected {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex: 1;
+
+          .FundsPage-platformInfo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            .FundsPage-platformIcon {
+              width: 32px;
+              height: 32px;
+              border-radius: 50%;
+              background: #4A90E2;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: #fff;
+              font-size: 16px;
+              overflow: hidden;
+
+              .FundsPage-platformIconImage {
+                object-fit: cover;
+                border-radius: 50%;
+              }
+
+              .FundsPage-currencyIcon {
+                font-weight: bold;
+                &.usdt { color: #26ad7a; }
+                &.usdc { color: #2775ca; }
+                &.btc { color: #f7931a; }
+                &.eth { color: #627eea; }
+              }
+            }
+
+            .FundsPage-platformDetails {
+              .FundsPage-platformName {
+                color: #fff;
+                font-size: 16px;
+                font-weight: 500;
+              }
+
+              .FundsPage-platformSubtext {
+                font-size: 12px;
+                color: #888;
+                margin-top: 2px;
+              }
+            }
+          }
+        }
+
+        .FundsPage-dropdownIcon {
+          color: #888;
+          transition: transform 0.2s ease;
+        }
+      }
+
+      .FundsPage-dropdownMenu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #2a2a2a;
+        border: 1px solid #3a3a3a;
+        border-radius: 12px;
+        margin-top: 8px;
+        max-height: 300px;
+        overflow-y: auto;
+        z-index: 1001;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+        .FundsPage-dropdownHeader {
+          .FundsPage-currencyHeader {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: #333;
+            border-bottom: 1px solid #444;
+            font-weight: 600;
+            color: #fff;
+            font-size: 14px;
+
+            .FundsPage-currencyIcon {
+              font-size: 16px;
+              font-weight: bold;
+              &.usdt { color: #26ad7a; }
+              &.usdc { color: #2775ca; }  
+              &.btc { color: #f7931a; }
+              &.eth { color: #627eea; }
+            }
+          }
+        }
+
+        .FundsPage-dropdownItem {
+          padding: 12px 16px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          cursor: pointer;
+          transition: background 0.2s ease;
+
+          &:hover {
+            background: #3a3a3a;
+          }
+
+          &.FundsPage-noData {
+            justify-content: center;
+            color: #888;
+            cursor: default;
+            
+            &:hover {
+              background: transparent;
+            }
+          }
+
+          .FundsPage-platformIcon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #4A90E2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 12px;
+            overflow: hidden;
+
+            .FundsPage-platformIconImage {
+              object-fit: cover;
+              border-radius: 50%;
+            }
+
+            .FundsPage-currencyIcon {
+              font-weight: bold;
+              &.usdt { color: #26ad7a; }
+              &.usdc { color: #2775ca; }
+              &.btc { color: #f7931a; }
+              &.eth { color: #627eea; }
+            }
+          }
+
+          .FundsPage-platformInfo {
+            .FundsPage-platformName {
+              color: #fff;
+              font-size: 14px;
+              font-weight: 500;
+            }
+
+            .FundsPage-platformSubtext {
+              font-size: 12px;
+              color: #888;
+              margin-top: 2px;
+            }
+          }
+        }
+      }
+    }
+
+
+    // Make responsive on mobile
+    @media (max-width: 480px) {
+      .FundsPage-platformSelector {
+        .FundsPage-platformDropdown {
+          padding: 14px;
+          
+          .FundsPage-platformSelected {
+            gap: 10px;
+
+            .FundsPage-platformInfo {
+              gap: 10px;
+
+              .FundsPage-platformIcon {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+              }
+
+              .FundsPage-platformDetails {
+                .FundsPage-platformName {
+                  font-size: 14px;
+                }
+
+                .FundsPage-platformSubtext {
+                  font-size: 11px;
+                }
+              }
+            }
+          }
+        }
+
+        .FundsPage-dropdownMenu {
+          .FundsPage-dropdownItem {
+            padding: 10px 14px;
+            gap: 10px;
+
+            .FundsPage-platformIcon {
+              width: 22px;
+              height: 22px;
+              font-size: 11px;
+            }
+
+            .FundsPage-platformInfo {
+              .FundsPage-platformName {
+                font-size: 13px;
+              }
+
+              .FundsPage-platformSubtext {
+                font-size: 11px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .FundsPage-selectPrompt {
+    text-align: center;
+    padding: 40px 20px;
+    color: #888;
+    font-size: 14px;
+  }
+
+  .FundsPage-depositInfo {
+    .FundsPage-instructionText {
+      color: #fff;
+      margin-bottom: 20px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .FundsPage-minAmountText {
+      color: #ffa500;
+      font-size: 14px;
+      margin: 16px 0;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .FundsPage-imageContainer {
+      display: flex;
+      justify-content: center;
+      margin: 24px 0;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+    }
+
+    .FundsPage-infoPanel {
+      background: rgba(255, 193, 7, 0.1);
+      border: 1px solid rgba(255, 193, 7, 0.3);
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+
+      i {
+        color: #ffc107;
+        font-size: 16px;
+        margin-top: 2px;
+        flex-shrink: 0;
+      }
+
+      span {
+        color: #fff;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+    }
+  }
+}
+
+// Withdrawal-specific styles - ensure compatibility with WithdrawalPage components
+.FundsPage-withdrawalTab {
+
+  .WithdrawalPage-platformSelector {
+    margin-bottom: 24px;
+    position: relative;
+
+    .WithdrawalPage-label {
+      color: #fff;
+      font-weight: 500;
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .WithdrawalPage-platformDropdown {
+      background: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: #4A90E2;
+      }
+
+      .WithdrawalPage-platformSelected {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+
+        .WithdrawalPage-platformInfo {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+
+          .WithdrawalPage-platformIcon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #4A90E2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+            overflow: hidden;
+
+            .platform-icon-image {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 50%;
+            }
+
+            .crypto-icon {
+              &.default {
+                color: #fff;
+              }
+            }
+          }
+
+          .WithdrawalPage-platformDetails {
+            .WithdrawalPage-platformSymbol {
+              font-weight: 600;
+              font-size: 16px;
+              color: #fff;
+            }
+
+            .WithdrawalPage-platformFlow {
+              font-size: 12px;
+              color: #888;
+              margin-top: 2px;
+            }
+          }
+        }
+
+        .WithdrawalPage-platformName {
+          color: #fff;
+          font-size: 16px;
+          font-weight: 500;
+        }
+      }
+
+      .WithdrawalPage-dropdownIcon {
+        color: #888;
+        transition: transform 0.2s ease;
+      }
+    }
+
+    .WithdrawalPage-dropdownMenu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      border-radius: 12px;
+      margin-top: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 1001;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+      .WithdrawalPage-dropdownItem {
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+        &:hover {
+          background: #3a3a3a;
+        }
+
+        .WithdrawalPage-platformIcon {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: #4A90E2;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #fff;
+          font-size: 12px;
+          overflow: hidden;
+
+          .platform-icon-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+          }
+        }
+
+        .WithdrawalPage-platformDetails {
+          .WithdrawalPage-platformSymbol {
+            font-weight: 600;
+            color: #fff;
+          }
+
+          .WithdrawalPage-platformName {
+            font-size: 14px;
+            color: #888;
+            margin-top: 2px;
+          }
+        }
+      }
+    }
+  }
+
+  .WithdrawalPage-amountSection {
+    margin-bottom: 24px;
+
+    .WithdrawalPage-formGroup {
+      .WithdrawalPage-balanceHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+
+        .WithdrawalPage-label {
+          color: #fff;
+          font-weight: 500;
+          font-size: 16px;
+        }
+
+        .WithdrawalPage-balance {
+          color: #888;
+          font-size: 14px;
+        }
+      }
+
+      .WithdrawalPage-amountInput {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 16px;
+
+        .WithdrawalPage-input {
+          flex: 1;
+          background: #2a2a2a;
+          border: 1px solid #3a3a3a;
+          border-radius: 8px;
+          padding: 14px 16px;
+          color: #fff;
+          font-size: 16px;
+          outline: none;
+          transition: all 0.2s ease;
+
+          &:focus {
+            border-color: #4A90E2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+          }
+
+          &::placeholder {
+            color: #666;
+          }
+        }
+
+        .WithdrawalPage-allButton {
+          background: #4A90E2;
+          color: #fff;
+          border: none;
+          border-radius: 8px;
+          padding: 14px 20px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          white-space: nowrap;
+
+          &:hover {
+            background: #3a7bc8;
+          }
+        }
+      }
+
+      .WithdrawalPage-amountLimits {
+        .WithdrawalPage-limitRow {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 8px 0;
+          border-bottom: 1px solid #333;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          .WithdrawalPage-limitLabel {
+            color: #888;
+            font-size: 14px;
+          }
+
+          .WithdrawalPage-limitValue {
+            color: #fff;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+
+            i {
+              color: #4A90E2;
+              font-size: 12px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .WithdrawalPage-addressSection {
+    margin-bottom: 24px;
+
+    .WithdrawalPage-formGroup {
+      .WithdrawalPage-addressHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+
+        .WithdrawalPage-label {
+          color: #fff;
+          font-weight: 500;
+          font-size: 16px;
+
+          .WithdrawalPage-required {
+            color: #ff6b6b;
+            margin-left: 4px;
+          }
+        }
+
+      }
+
+      .WithdrawalPage-addressInput {
+        display: flex;
+        gap: 12px;
+
+        .WithdrawalPage-input {
+          flex: 1;
+          background: #2a2a2a;
+          border: 1px solid #3a3a3a;
+          border-radius: 8px;
+          padding: 14px 16px;
+          color: #fff;
+          font-size: 16px;
+          outline: none;
+          transition: all 0.2s ease;
+
+          &:focus {
+            border-color: #4A90E2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+          }
+
+          &::placeholder {
+            color: #666;
+          }
+        }
+
+        .WithdrawalPage-pasteButton {
+          background: #3a3a3a;
+          border: 1px solid #4a4a4a;
+          border-radius: 8px;
+          padding: 14px 16px;
+          color: #888;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background: #4a4a4a;
+            color: #fff;
+          }
+
+          i {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+
+  .WithdrawalPage-messageSection {
+    margin-bottom: 24px;
+
+    .WithdrawalPage-formGroup {
+      .WithdrawalPage-label {
+        color: #fff;
+        font-weight: 500;
+        font-size: 16px;
+        margin-bottom: 12px;
+        display: block;
+      }
+
+      .WithdrawalPage-textarea {
+        width: 100%;
+        background: #2a2a2a;
+        border: 1px solid #3a3a3a;
+        border-radius: 8px;
+        padding: 14px 16px;
+        color: #fff;
+        font-size: 14px;
+        outline: none;
+        transition: all 0.2s ease;
+        resize: vertical;
+        font-family: inherit;
+        line-height: 1.4;
+
+        &:focus {
+          border-color: #4A90E2;
+          box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+
+        &::placeholder {
+          color: #666;
+        }
+      }
+
+      .WithdrawalPage-helperText {
+        color: #888;
+        font-size: 12px;
+        margin-top: 8px;
+        text-align: right;
+      }
+    }
+  }
+
+  .WithdrawalPage-submitSection {
+    .WithdrawalPage-submitButton {
+      width: 100%;
+      background: #4A90E2;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 12px;
+
+      &:hover:not(:disabled) {
+        background: #3a7bc8;
+        transform: translateY(-1px);
+      }
+
+      &:disabled {
+        background: #3a3a3a;
+        color: #666;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      &.loading {
+        position: relative;
+        color: transparent;
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 20px;
+          height: 20px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          border-top-color: #fff;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
+      }
+    }
+
+    .WithdrawalPage-finalAmount {
+      text-align: center;
+      color: #4A90E2;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+
+  .WithdrawalPage-historyList,
+  .WithdrawalPage-historyItem,
+  .WithdrawalPage-emptyState {
+    // All existing WithdrawalPage component styles will be applied
+  }
+
+  // Override any conflicting styles if needed
+  .WithdrawalPage-emptyState {
+    color: #fff;
+  }
+}
+
+// Enhanced button styles for MoneyDisplay
+.clientCustomizeWithdrawalButtons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .clientCustomizeWithdrawalButton,
+  .clientCustomizeDepositButton {
+    display: flex;
+    align-items: center;
+    padding: 6px 10px;
+    background: rgba(74, 144, 226, 0.1);
+    border: 1px solid rgba(74, 144, 226, 0.3);
+    border-radius: 6px;
+    color: #4A90E2;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 12px;
+
+    &:hover {
+      background: rgba(74, 144, 226, 0.2);
+      border-color: rgba(74, 144, 226, 0.5);
+      transform: translateY(-1px);
+    }
+
+    i {
+      font-size: 14px;
+    }
+  }
+
+  .clientCustomizeDepositButton {
+    background: rgba(40, 167, 69, 0.1);
+    border-color: rgba(40, 167, 69, 0.3);
+    color: #28a745;
+
+    &:hover {
+      background: rgba(40, 167, 69, 0.2);
+      border-color: rgba(40, 167, 69, 0.5);
+    }
+  }
+}
+
+// Deposit record section styles
+.FundsPage-recordSection {
+  margin-top: 20px;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 12px;
+  overflow: hidden;
+
+  .FundsPage-recordHeader {
+    background: #333;
+    padding: 15px 20px;
+    border-bottom: 1px solid #3a3a3a;
+    
+    h4 {
+      margin: 0;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+
+  .DepositRecordForm {
+    padding: 20px;
+  }
+}
+
+// Deposit history styles
+.DepositHistory {
+  .DepositHistory-item {
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: #4a4a4a;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .DepositHistory-header {
+      background: #333;
+      padding: 15px 20px;
+      border-bottom: 1px solid #3a3a3a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .Badge {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 8px;
+        border-radius: 6px;
+
+        i {
+          margin-right: 4px;
+        }
+      }
+
+      .DepositHistory-date {
+        font-size: 13px;
+        color: #888;
+      }
+    }
+
+    .DepositHistory-content {
+      padding: 20px;
+
+      .DepositHistory-address,
+      .DepositHistory-qr,
+      .DepositHistory-message,
+      .DepositHistory-adminNotes {
+        margin-bottom: 16px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        strong {
+          display: block;
+          color: #fff;
+          margin-bottom: 8px;
+          font-weight: 600;
+          font-size: 14px;
+        }
+
+        code {
+          background: #1a1a1a;
+          color: #4A90E2;
+          padding: 8px 12px;
+          border-radius: 6px;
+          font-family: 'Consolas', 'Monaco', monospace;
+          font-size: 13px;
+          word-break: break-all;
+          display: block;
+          border: 1px solid #333;
+        }
+
+        a {
+          color: #4A90E2;
+          text-decoration: none;
+          font-weight: 500;
+
+          &:hover {
+            color: #5BA0F2;
+            text-decoration: underline;
+          }
+        }
+
+        p {
+          color: #bbb;
+          line-height: 1.5;
+          margin: 0;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}
+
+// 存款表单独立样式 - 与提款保持视觉一致但类名独立
+.DepositForm {
+  
+  // 存款信息显示样式
+  .DepositForm-depositInfo {
+    margin-top: 20px;
+
+    .DepositForm-minAmount {
+      color: #fff;
+      font-weight: 500;
+      font-size: 14px;
+      background: rgba(74, 144, 226, 0.1);
+      border: 1px solid rgba(74, 144, 226, 0.3);
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-bottom: 16px;
+    }
+
+    .DepositForm-warning {
+      color: #ffb84d;
+      font-size: 13px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      background: rgba(255, 184, 77, 0.1);
+      border: 1px solid rgba(255, 184, 77, 0.3);
+      border-radius: 6px;
+      padding: 10px;
+      line-height: 1.4;
+
+      i {
+        color: #ffb84d;
+        margin-top: 2px;
+        flex-shrink: 0;
+      }
+    }
+  }
+
+  // 存款平台选择器样式
+  .DepositForm-platformSelector {
+    position: relative;
+    margin-bottom: 24px;
+
+    .DepositForm-label {
+      color: #fff;
+      font-weight: 500;
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .DepositForm-platformDropdown {
+      background: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: #4A90E2;
+      }
+
+      .DepositForm-platformSelected {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+
+        .DepositForm-platformInfo {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+
+          .DepositForm-platformIcon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #4A90E2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+            overflow: hidden;
+
+            .platform-icon-image {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 50%;
+            }
+          }
+
+          .DepositForm-platformDetails {
+            .DepositForm-platformName {
+              color: #fff;
+              font-weight: 500;
+              font-size: 15px;
+              line-height: 1.2;
+            }
+          }
+        }
+      }
+
+      .DepositForm-dropdownIcon {
+        color: #888;
+        font-size: 12px;
+        margin-left: 8px;
+      }
+    }
+
+    .DepositForm-dropdownMenu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      border-radius: 12px;
+      margin-top: 4px;
+      z-index: 100;
+      max-height: 300px;
+      overflow-y: auto;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+
+      &::-webkit-scrollbar {
+        width: 4px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #666;
+        border-radius: 2px;
+
+        &:hover {
+          background: #888;
+        }
+      }
+
+      .DepositForm-dropdownItem {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border-bottom: 1px solid #333;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background: #333;
+        }
+
+        &.DepositForm-noData {
+          color: #888;
+          cursor: default;
+          justify-content: center;
+
+          &:hover {
+            background: transparent;
+          }
+        }
+
+        .DepositForm-platformIcon {
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          background: #4A90E2;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #fff;
+          font-size: 14px;
+          overflow: hidden;
+          flex-shrink: 0;
+
+          .platform-icon-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+          }
+        }
+
+        .DepositForm-platformName {
+          color: #fff;
+          font-weight: 500;
+          font-size: 14px;
+          flex: 1;
+        }
+      }
+    }
+  }
+}
