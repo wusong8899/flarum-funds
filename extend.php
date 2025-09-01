@@ -45,10 +45,10 @@ return [
         ->post('/deposit-records', 'deposit.records.create', Controller\CreateDepositRecordController::class)
         ->patch('/deposit-records/{id}', 'deposit.records.update', Controller\UpdateDepositRecordController::class)
         ->delete('/deposit-records/{id}', 'deposit.records.delete', Controller\DeleteDepositRecordController::class)
-        // Simple deposit records routes
-        ->get('/simple-deposit-records', 'simple-deposit.records.index', Controller\ListSimpleDepositRecordsController::class)
-        ->post('/simple-deposit-records', 'simple-deposit.records.create', Controller\CreateSimpleDepositRecordController::class)
-        ->patch('/simple-deposit-records/{id}', 'simple-deposit.records.update', Controller\UpdateSimpleDepositRecordController::class)
+        // Deposit records routes (simplified interface)
+        ->get('/deposit-records-simple', 'deposit.records.simple.index', Controller\ListDepositRecordsController::class)
+        ->post('/deposit-records-simple', 'deposit.records.simple.create', Controller\CreateDepositRecordController::class)
+        ->patch('/deposit-records-simple/{id}', 'deposit.records.simple.update', Controller\UpdateDepositRecordController::class)
         // Currency icons routes
         ->get('/currency-icons', 'currency-icons.index', Controller\CurrencyIcon\ListCurrencyIconsController::class)
         ->get('/currency-icons/{id}', 'currency-icons.show', Controller\CurrencyIcon\ShowCurrencyIconController::class)
@@ -59,7 +59,7 @@ return [
     (new Extend\Model(Flarum\User\User::class))
         ->hasMany('withdrawalRequests', Model\WithdrawalRequest::class)
         ->hasMany('depositRecords', Model\DepositRecord::class)
-        ->hasMany('simpleDepositRecords', Model\SimpleDepositRecord::class),
+        ->hasMany('simpleDepositRecords', Model\DepositRecord::class),
 
     // Register API serializers for our models
     (new Extend\ApiController(\Flarum\Api\Controller\ListUsersController::class))

@@ -6,12 +6,12 @@ namespace wusong8899\Funds\Api\Controller;
 
 use Flarum\Api\Controller\AbstractListController;
 use Flarum\Http\RequestUtil;
-use Flarum\User\Exception\PermissionDeniedException;
+use Flarum\Query\QueryCriteria;
+use Illuminate\Database\Eloquent\Builder;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use wusong8899\Funds\Api\Serializer\DepositRecordSerializer;
 use wusong8899\Funds\Model\DepositRecord;
-use Illuminate\Database\Eloquent\Builder;
 
 class ListDepositRecordsController extends AbstractListController
 {
@@ -19,13 +19,6 @@ class ListDepositRecordsController extends AbstractListController
 
     public $include = [
         'user',
-        'platform',
-        'processedByUser'
-    ];
-
-    public $optionalInclude = [
-        'user',
-        'platform',
         'processedByUser'
     ];
 
@@ -33,101 +26,66 @@ class ListDepositRecordsController extends AbstractListController
     {
         $actor = RequestUtil::getActor($request);
 
-        // Check permissions
-        if (!$actor->exists) {
-            throw new PermissionDeniedException();
-        }
+        // 确保用户已认证
+        $actor->assertRegistered();
 
-        $query = DepositRecord::query()
-            ->with(['user', 'platform', 'processedBy']);
+        $query = DepositRecord::query();
 
-        // Admin can see all records, users can only see their own
-        if (!$actor->hasPermission('wusong8899-funds.manageDepositRecords')) {
+        // 普通用户只能查看自己的记录
+        if (!$actor->isAdmin()) {
             $query->where('user_id', $actor->id);
         }
 
-        // Apply filters
+        // 应用过滤器
         $this->applyFilters($query, $request);
 
-        // Apply sorting
-        $this->applySorting($query, $request);
+        // 默认按创建时间降序排序
+        $query->latest();
 
-        // Apply pagination
+        // 预加载关联
+        $query->with($this->include);
+
+        // 分页
         $limit = $this->extractLimit($request);
         $offset = $this->extractOffset($request);
 
-        $records = $query->skip($offset)->take($limit + 1)->get();
-
-        $hasMoreResults = $records->count() > $limit;
-        if ($hasMoreResults) {
-            $records->pop();
-        }
-
-        $document->addPaginationLinks(
-            $request->getUri()->withQuery(''),
-            $request->getQueryParams(),
-            $offset,
-            $limit,
-            $hasMoreResults
-        );
-
-        return $records;
+        return $query->skip($offset)->take($limit + 1)->get();
     }
 
-    private function applyFilters(Builder $query, ServerRequestInterface $request): void
+    protected function applyFilters(Builder $query, ServerRequestInterface $request): void
     {
-        $filter = $request->getQueryParams()['filter'] ?? [];
+        $filters = $request->getQueryParams()['filter'] ?? [];
 
-        if (isset($filter['status'])) {
-            $query->where('status', $filter['status']);
-        }
-
-        if (isset($filter['platform_id'])) {
-            $query->where('platform_id', (int) $filter['platform_id']);
-        }
-
-        if (isset($filter['user_id'])) {
-            $query->where('user_id', (int) $filter['user_id']);
-        }
-
-        // Date range filters
-        if (isset($filter['from'])) {
-            $query->where('created_at', '>=', $filter['from']);
-        }
-
-        if (isset($filter['to'])) {
-            $query->where('created_at', '<=', $filter['to']);
-        }
-    }
-
-    private function applySorting(Builder $query, ServerRequestInterface $request): void
-    {
-        $sort = $request->getQueryParams()['sort'] ?? '-created_at';
-
-        $sortFields = explode(',', $sort);
-
-        foreach ($sortFields as $field) {
-            $direction = 'asc';
-
-            if (str_starts_with($field, '-')) {
-                $direction = 'desc';
-                $field = substr($field, 1);
+        // 按状态过滤
+        if (!empty($filters['status'])) {
+            $status = $filters['status'];
+            if (in_array($status, SimpleDepositRecord::STATUSES)) {
+                $query->where('status', $status);
             }
+        }
 
-            // Allowed sort fields
-            $allowedFields = [
-                'id',
-                'amount',
-                'status',
-                'created_at',
-                'updated_at',
-                'deposit_time',
-                'processed_at'
-            ];
+        // 按用户ID过滤（仅管理员）
+        if (!empty($filters['user']) && RequestUtil::getActor($request)->isAdmin()) {
+            $query->where('user_id', (int) $filters['user']);
+        }
 
-            if (in_array($field, $allowedFields)) {
-                $query->orderBy($field, $direction);
-            }
+        // 按创建时间范围过滤
+        if (!empty($filters['created_after'])) {
+            $query->where('created_at', '>=', $filters['created_after']);
+        }
+
+        if (!empty($filters['created_before'])) {
+            $query->where('created_at', '<=', $filters['created_before']);
+        }
+
+        // 搜索地址
+        if (!empty($filters['search'])) {
+            $search = '%' . $filters['search'] . '%';
+            $query->where(function (Builder $q) use ($search) {
+                $q->where('deposit_address', 'like', $search)
+                    ->orWhere('user_message', 'like', $search)
+                    ->orWhere('admin_notes', 'like', $search);
+            });
         }
     }
 }

@@ -13,36 +13,33 @@ class DepositRecordSerializer extends AbstractSerializer
     protected $type = 'deposit-records';
 
     /**
-     * Get the default set of serialized attributes for a model.
-     *
      * @param DepositRecord $record
-     * @return array
      */
-    protected function getDefaultAttributes($record)
+    protected function getDefaultAttributes($record): array
     {
         return [
             'id' => (int) $record->id,
             'userId' => (int) $record->user_id,
-            'platformId' => (int) $record->platform_id,
-            'platformAccount' => $record->platform_account,
-            'realName' => $record->real_name,
-            'amount' => (float) $record->amount,
-            'depositTime' => $this->formatDate($record->deposit_time),
-            'screenshotUrl' => $record->screenshot_url,
+            'depositAddress' => $record->deposit_address,
+            'qrCodeUrl' => $record->qr_code_url,
             'userMessage' => $record->user_message,
             'status' => $record->status,
-            'processedAt' => $this->formatDate($record->processed_at),
+            'statusText' => $record->getStatusText(),
+            'processedAt' => $record->processed_at,
             'processedBy' => $record->processed_by ? (int) $record->processed_by : null,
             'adminNotes' => $record->admin_notes,
-            'creditedAmount' => $record->credited_amount ? (float) $record->credited_amount : null,
-            'createdAt' => $this->formatDate($record->created_at),
-            'updatedAt' => $this->formatDate($record->updated_at),
+            'createdAt' => $record->created_at,
+            'updatedAt' => $record->updated_at,
+            'formattedCreatedAt' => $record->getFormattedCreatedAt(),
+            'formattedProcessedAt' => $record->getFormattedProcessedAt(),
+            'isPending' => $record->isPending(),
+            'isApproved' => $record->isApproved(),
+            'isRejected' => $record->isRejected(),
         ];
     }
 
     /**
-     * @param DepositRecord $record
-     * @return \Tobscure\JsonApi\Relationship
+     * 包含用户关系
      */
     protected function user($record)
     {
@@ -50,22 +47,12 @@ class DepositRecordSerializer extends AbstractSerializer
     }
 
     /**
-     * @param DepositRecord $record
-     * @return \Tobscure\JsonApi\Relationship
-     */
-    protected function platform($record)
-    {
-        return $this->hasOne($record, DepositPlatformSerializer::class);
-    }
-
-    /**
-     * @param DepositRecord $record
-     * @return \Tobscure\JsonApi\Relationship|null
+     * 包含处理人关系
      */
     protected function processedByUser($record)
     {
-        if ($record->processedBy) {
-            return $this->hasOne($record->processedBy, UserSerializer::class);
+        if ($record->processed_by) {
+            return $this->hasOne($record->processedByUser, UserSerializer::class);
         }
         return null;
     }

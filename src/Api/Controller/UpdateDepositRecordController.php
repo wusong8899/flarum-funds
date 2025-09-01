@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace wusong8899\Funds\Api\Controller;
 
 use Flarum\Api\Controller\AbstractShowController;
-use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
-use Flarum\User\Exception\PermissionDeniedException;
-use Illuminate\Database\ConnectionInterface;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Arr;
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
+use Illuminate\Validation\ValidationException;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use wusong8899\Funds\Api\Serializer\DepositRecordSerializer;
@@ -20,105 +17,113 @@ class UpdateDepositRecordController extends AbstractShowController
 {
     public $serializer = DepositRecordSerializer::class;
 
-    /**
-     * @var ConnectionInterface
-     */
-    protected $db;
-
-    /**
-     * @param ConnectionInterface $db
-     */
-    public function __construct(ConnectionInterface $db)
-    {
-        $this->db = $db;
-    }
-
     public $include = [
         'user',
-        'platform',
         'processedByUser'
     ];
+
+    protected $validation;
+
+    public function __construct(ValidationFactory $validation)
+    {
+        $this->validation = $validation;
+    }
 
     protected function data(ServerRequestInterface $request, Document $document)
     {
         $actor = RequestUtil::getActor($request);
-        $recordId = Arr::get($request->getQueryParams(), 'id');
-        $data = Arr::get($request->getParsedBody(), 'data.attributes', []);
+        $id = array_get($request->getQueryParams(), 'id');
 
-        // Check if user has permission to manage deposit records
-        if (!$actor->hasPermission('wusong8899-funds.manageDepositRecords')) {
-            throw new PermissionDeniedException();
+        $depositRecord = DepositRecord::findOrFail($id);
+
+        // 权限检查：管理员可以更新任何记录，用户只能更新自己待处理的记录
+        if (!$actor->isAdmin() && ($depositRecord->user_id !== $actor->id || !$depositRecord->isPending())) {
+            $actor->assertCan('update', $depositRecord);
         }
 
-        // Find the deposit record
-        $record = DepositRecord::with(['user', 'platform'])->find($recordId);
-        if (!$record) {
-            throw new ModelNotFoundException();
+        $attributes = $request->getParsedBody()['data']['attributes'] ?? [];
+
+        // 管理员更新（审核操作）
+        if ($actor->isAdmin() && isset($attributes['status'])) {
+            $this->processAdminUpdate($depositRecord, $attributes, $actor->id);
         }
-
-        // Check if record is still pending
-        if (!$record->isPending()) {
-            throw new ValidationException([
-                'status' => 'This deposit record has already been processed.'
-            ]);
-        }
-
-        $status = Arr::get($data, 'status');
-        $adminNotes = Arr::get($data, 'adminNotes', '');
-
-        if ($status === DepositRecord::STATUS_APPROVED) {
-            $this->approveRecord($record, $actor, $data, $adminNotes);
-        } elseif ($status === DepositRecord::STATUS_REJECTED) {
-            $this->rejectRecord($record, $actor, $adminNotes);
+        // 用户更新（仅限待处理的记录）
+        elseif ($depositRecord->user_id === $actor->id && $depositRecord->isPending()) {
+            $this->processUserUpdate($depositRecord, $attributes);
         } else {
-            throw new ValidationException([
-                'status' => 'Invalid status. Must be either approved or rejected.'
-            ]);
+            throw new \RuntimeException('无权限修改此记录');
         }
 
-        // Load relationships for response
-        $record->load(['user', 'platform', 'processedBy']);
+        $depositRecord->load($this->include);
 
-        return $record;
+        return $depositRecord;
     }
 
-    private function approveRecord(DepositRecord $record, $admin, array $data, string $notes): void
+    protected function processAdminUpdate(DepositRecord $record, array $attributes, int $adminId): void
     {
-        $creditedAmount = Arr::get($data, 'creditedAmount');
-        if ($creditedAmount !== null) {
-            $creditedAmount = (float) $creditedAmount;
-            if ($creditedAmount <= 0) {
-                throw new ValidationException([
-                    'creditedAmount' => 'Credited amount must be greater than zero.'
-                ]);
-            }
+        $validator = $this->validation->make($attributes, [
+            'status' => 'required|in:' . implode(',', DepositRecord::STATUSES),
+            'adminNotes' => 'nullable|string|max:1000'
+        ], [
+            'status.required' => '状态不能为空',
+            'status.in' => '状态值无效',
+            'adminNotes.max' => '管理员备注不能超过1000个字符'
+        ]);
+
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
         }
 
-        $this->db->transaction(function () use ($record, $admin, $creditedAmount, $notes) {
-            // Lock user record to prevent race conditions
-            $user = $record->user()->lockForUpdate()->first();
+        $status = $attributes['status'];
+        $adminNotes = $attributes['adminNotes'] ?? null;
 
-            // Calculate amount to credit (use credited amount if provided, otherwise use original amount)
-            $amountToCredit = $creditedAmount ?? $record->amount;
+        switch ($status) {
+            case DepositRecord::STATUS_APPROVED:
+                $record->approve($adminId, $adminNotes);
+                break;
+            case DepositRecord::STATUS_REJECTED:
+                $record->reject($adminId, $adminNotes);
+                break;
+            default:
+                $record->status = $status;
+                if ($adminNotes) {
+                    $record->admin_notes = $adminNotes;
+                }
+                break;
+        }
 
-            // Credit user balance
-            $currentBalance = (float) ($user->money ?? 0);
-            $user->money = $currentBalance + $amountToCredit;
-            $user->save();
-
-            // Update deposit record
-            $record->approve($admin, $amountToCredit, $notes);
-        });
+        $record->save();
     }
 
-    private function rejectRecord(DepositRecord $record, $admin, string $reason): void
+    protected function processUserUpdate(DepositRecord $record, array $attributes): void
     {
-        if (empty($reason)) {
-            throw new ValidationException([
-                'adminNotes' => 'Rejection reason is required when rejecting a deposit record.'
-            ]);
+        $validator = $this->validation->make($attributes, [
+            'depositAddress' => 'sometimes|required|string|max:255',
+            'qrCodeUrl' => 'nullable|url|max:500',
+            'userMessage' => 'nullable|string|max:1000'
+        ], [
+            'depositAddress.required' => '存款地址不能为空',
+            'depositAddress.max' => '存款地址不能超过255个字符',
+            'qrCodeUrl.url' => '二维码链接格式不正确',
+            'qrCodeUrl.max' => '二维码链接不能超过500个字符',
+            'userMessage.max' => '留言不能超过1000个字符'
+        ]);
+
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
         }
 
-        $record->reject($admin, $reason);
+        // 只更新允许用户修改的字段
+        if (isset($attributes['depositAddress'])) {
+            $record->deposit_address = $attributes['depositAddress'];
+        }
+        if (array_key_exists('qrCodeUrl', $attributes)) {
+            $record->qr_code_url = $attributes['qrCodeUrl'];
+        }
+        if (array_key_exists('userMessage', $attributes)) {
+            $record->user_message = $attributes['userMessage'];
+        }
+
+        $record->save();
     }
 }

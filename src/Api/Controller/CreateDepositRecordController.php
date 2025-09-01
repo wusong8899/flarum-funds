@@ -6,96 +6,74 @@ namespace wusong8899\Funds\Api\Controller;
 
 use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Http\RequestUtil;
-use Flarum\User\Exception\PermissionDeniedException;
-use Illuminate\Support\Arr;
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Validation\ValidationException;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use wusong8899\Funds\Api\Serializer\DepositRecordSerializer;
 use wusong8899\Funds\Model\DepositRecord;
-use wusong8899\Funds\Model\DepositPlatform;
-use wusong8899\Funds\Validator\DepositRecordValidator;
 
 class CreateDepositRecordController extends AbstractCreateController
 {
     public $serializer = DepositRecordSerializer::class;
 
-    public $include = [
-        'user',
-        'platform'
-    ];
+    protected $validation;
 
-    protected $validator;
-
-    public function __construct(DepositRecordValidator $validator)
+    public function __construct(ValidationFactory $validation)
     {
-        $this->validator = $validator;
+        $this->validation = $validation;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)
     {
         $actor = RequestUtil::getActor($request);
-        $data = Arr::get($request->getParsedBody(), 'data.attributes', []);
 
-        // Check if user is authenticated
-        if (!$actor->exists) {
-            throw new PermissionDeniedException();
+        // 确保用户已认证
+        $actor->assertRegistered();
+
+        $attributes = $request->getParsedBody()['data']['attributes'] ?? [];
+
+        // 验证输入数据
+        $validator = $this->validation->make($attributes, [
+            'depositAddress' => 'required|string|max:255',
+            'qrCodeUrl' => 'nullable|url|max:500',
+            'userMessage' => 'nullable|string|max:1000'
+        ], [
+            'depositAddress.required' => '存款地址不能为空',
+            'depositAddress.max' => '存款地址不能超过255个字符',
+            'qrCodeUrl.url' => '二维码链接格式不正确',
+            'qrCodeUrl.max' => '二维码链接不能超过500个字符',
+            'userMessage.max' => '留言不能超过1000个字符'
+        ]);
+
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
         }
 
-        // Check if user has permission to submit deposit records
-        if (!$actor->hasPermission('wusong8899-funds.submitDepositRecord')) {
-            throw new PermissionDeniedException();
+        // 检查用户是否有待处理的申请（可选：限制重复申请）
+        $pendingCount = DepositRecord::where('user_id', $actor->id)
+            ->where('status', DepositRecord::STATUS_PENDING)
+            ->count();
+
+        if ($pendingCount >= 3) { // 最多允许3个待处理申请
+            throw new ValidationException(
+                $this->validation->make([], []),
+                ['general' => ['您已有多个待处理的存款申请，请等待审核后再提交新申请']]
+            );
         }
 
-        // Validate platform exists and is active
-        $platformId = Arr::get($data, 'platformId');
-        $platform = DepositPlatform::where('id', $platformId)
-            ->where('is_active', true)
-            ->first();
+        // 创建存款记录
+        $depositRecord = DepositRecord::create([
+            'user_id' => $actor->id,
+            'deposit_address' => $attributes['depositAddress'],
+            'qr_code_url' => $attributes['qrCodeUrl'] ?? null,
+            'user_message' => $attributes['userMessage'] ?? null,
+            'status' => DepositRecord::STATUS_PENDING,
+        ]);
 
-        if (!$platform) {
-            throw new ValidationException([
-                'platformId' => 'Selected deposit platform is not available.'
-            ]);
-        }
+        // 加载关联关系
+        $depositRecord->load(['user']);
 
-        // Validate input data
-        $this->validator->assertValid($data);
-
-        // Validate amount against platform limits
-        $amount = (float) Arr::get($data, 'amount');
-        $minAmount = $platform->min_amount ?? 0;
-        $maxAmount = $platform->max_amount ?? PHP_FLOAT_MAX;
-
-        if ($amount < $minAmount) {
-            throw new ValidationException([
-                'amount' => "Amount must be at least {$minAmount} {$platform->symbol}"
-            ]);
-        }
-
-        if ($amount > $maxAmount) {
-            throw new ValidationException([
-                'amount' => "Amount cannot exceed {$maxAmount} {$platform->symbol}"
-            ]);
-        }
-
-        // Create the deposit record
-        $record = new DepositRecord();
-        $record->user_id = $actor->id;
-        $record->platform_id = $platformId;
-        $record->platform_account = Arr::get($data, 'platformAccount');
-        $record->real_name = Arr::get($data, 'realName');
-        $record->amount = $amount;
-        $record->deposit_time = new \DateTime(Arr::get($data, 'depositTime'));
-        $record->screenshot_url = Arr::get($data, 'screenshotUrl');
-        $record->user_message = Arr::get($data, 'userMessage');
-        $record->status = DepositRecord::STATUS_PENDING;
-
-        $record->save();
-
-        // Load relationships for response
-        $record->load(['user', 'platform']);
-
-        return $record;
+        return $depositRecord;
     }
 }

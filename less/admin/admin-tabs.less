@@ -43,30 +43,7 @@
   // These inherit base page styles from admin.less
 }
 
-// Shared Platform List Styles (used by both withdrawal and deposit sections)
-.PlatformList {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 20px;
-
-  // Empty state - apply to paragraphs inside
-  p {
-    text-align: center;
-    padding: 40px;
-    color: var(--muted-color);
-    background: var(--control-bg);
-    border-radius: 8px;
-    margin: 0;
-  }
-
-  // Mobile responsive
-  @media (max-width: 768px) {
-    gap: 8px;
-  }
-}
-
-// Deposit Platform Management Styles (kept for backward compatibility)
+// Deposit Platform Management Styles
 .DepositManagementSection {
   .DepositPlatforms {
     &-header {

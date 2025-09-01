@@ -13,11 +13,11 @@ import WithdrawalPlatform from '../../common/models/WithdrawalPlatform';
 import WithdrawalForm from './withdrawal/forms/WithdrawalForm';
 import TransactionHistory from './shared/TransactionHistory';
 
-// Deposit imports - 简化版本
-import type { SimpleDepositFormData } from './deposit/types/interfaces';
-import SimpleDepositForm from './deposit/forms/SimpleDepositForm';
-import SimpleDepositRecord from '../../common/models/SimpleDepositRecord';
-import simpleDepositService from '../../common/services/SimpleDepositService';
+// Deposit imports
+import type { DepositFormData } from './deposit/forms/DepositForm';
+import DepositForm from './deposit/forms/DepositForm';
+import DepositRecord from '../../common/models/DepositRecord';
+import depositService from '../../common/services/DepositService';
 
 // Services
 import { withdrawalService, platformService } from '../../common/services';
@@ -39,7 +39,7 @@ interface FundsPageState {
   submitting: boolean;
   
   // Simplified deposit state - 简化的存款状态
-  depositRecords: SimpleDepositRecord[];
+  depositRecords: DepositRecord[];
   submittingDeposit: boolean;
   
   // Shared state
@@ -334,8 +334,8 @@ export default class FundsPage extends Page<any, FundsPageState> {
   private renderDepositForm(): Mithril.Children {
     return (
       <div className="FundsPage-depositContent">
-        <SimpleDepositForm
-          onSubmit={this.handleSimpleDepositSubmit.bind(this)}
+        <DepositForm
+          onSubmit={this.handleDepositSubmit.bind(this)}
           onCancel={this.handleCancelDepositForm.bind(this)}
           submitting={this.state.submittingDeposit}
         />
@@ -354,10 +354,10 @@ export default class FundsPage extends Page<any, FundsPageState> {
               {icon('fas fa-history')}
             </div>
             <h3 className="FundsPage-emptyTitle">
-              {app.translator.trans('funds.forum.deposit.simple.no_history', {}, '暂无存款记录')}
+              {app.translator.trans('funds.forum.deposit.form.no_history', {}, '暂无存款记录')}
             </h3>
             <p className="FundsPage-emptyDescription">
-              {app.translator.trans('funds.forum.deposit.simple.no_history_description', {}, '您还没有提交过任何存款申请')}
+              {app.translator.trans('funds.forum.deposit.form.no_history_description', {}, '您还没有提交过任何存款申请')}
             </p>
           </div>
         </div>
@@ -367,7 +367,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
     return (
       <div className="FundsPage-depositContent">
         <div className="SimpleDepositHistory">
-          {depositRecords.map((record: SimpleDepositRecord) => (
+          {depositRecords.map((record: DepositRecord) => (
             <div key={record.id()} className="SimpleDepositHistory-item">
               <div className="SimpleDepositHistory-header">
                 <span className={`Badge Badge--${record.getStatusColor()}`}>
@@ -380,26 +380,26 @@ export default class FundsPage extends Page<any, FundsPageState> {
               </div>
               <div className="SimpleDepositHistory-content">
                 <div className="SimpleDepositHistory-address">
-                  <strong>{app.translator.trans('funds.forum.deposit.simple.deposit_address', {}, '存款地址')}:</strong>
+                  <strong>{app.translator.trans('funds.forum.deposit.form.deposit_address', {}, '存款地址')}:</strong>
                   <code>{record.getDisplayAddress()}</code>
                 </div>
                 {record.hasQrCode() && (
                   <div className="SimpleDepositHistory-qr">
-                    <strong>{app.translator.trans('funds.forum.deposit.simple.qr_code_url', {}, '收款二维码')}:</strong>
+                    <strong>{app.translator.trans('funds.forum.deposit.form.qr_code_url', {}, '收款二维码')}:</strong>
                     <a href={record.qrCodeUrl()} target="_blank" rel="noopener noreferrer">
-                      {app.translator.trans('funds.forum.deposit.simple.view_qr', {}, '查看二维码')}
+                      {app.translator.trans('funds.forum.deposit.form.view_qr', {}, '查看二维码')}
                     </a>
                   </div>
                 )}
                 {record.userMessage() && (
                   <div className="SimpleDepositHistory-message">
-                    <strong>{app.translator.trans('funds.forum.deposit.simple.user_message', {}, '留言')}:</strong>
+                    <strong>{app.translator.trans('funds.forum.deposit.form.user_message', {}, '留言')}:</strong>
                     <p>{record.userMessage()}</p>
                   </div>
                 )}
                 {record.adminNotes() && (
                   <div className="SimpleDepositHistory-adminNotes">
-                    <strong>{app.translator.trans('funds.forum.deposit.simple.admin_notes', {}, '管理员备注')}:</strong>
+                    <strong>{app.translator.trans('funds.forum.deposit.form.admin_notes', {}, '管理员备注')}:</strong>
                     <p>{record.adminNotes()}</p>
                   </div>
                 )}
@@ -570,22 +570,22 @@ export default class FundsPage extends Page<any, FundsPageState> {
     m.redraw();
   }
 
-  private async handleSimpleDepositSubmit(data: SimpleDepositFormData): Promise<void> {
+  private async handleDepositSubmit(data: DepositFormData): Promise<void> {
     if (this.state.submittingDeposit) return;
 
     this.state.submittingDeposit = true;
     m.redraw();
 
     try {
-      await simpleDepositService.create(data);
+      await depositService.create(data);
       
       app.alerts.show(
         { type: 'success', dismissible: true },
-        app.translator.trans('funds.forum.deposit.simple.submit_success', {}, '存款申请提交成功，请等待管理员审核')
+        app.translator.trans('funds.forum.deposit.form.submit_success', {}, '存款申请提交成功，请等待管理员审核')
       );
 
       // 重新加载存款记录
-      await this.loadSimpleDepositRecords();
+      await this.loadDepositRecords();
 
       // 切换到历史标签页显示刚提交的记录
       this.state.depositSubTab('history');
@@ -593,7 +593,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
     } catch (error: unknown) {
       console.error('Simple deposit submission failed:', error);
       
-      let errorMessage = app.translator.trans('funds.forum.deposit.simple.submit_error', {}, '提交失败，请重试').toString();
+      let errorMessage = app.translator.trans('funds.forum.deposit.form.submit_error', {}, '提交失败，请重试').toString();
       
       if (error instanceof ServiceError) {
         errorMessage = error.message;
@@ -620,7 +620,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
     try {
       await Promise.all([
         this.loadWithdrawalData(),
-        this.loadSimpleDepositRecords(),
+        this.loadDepositRecords(),
         this.loadUserBalance()
       ]);
       
@@ -656,9 +656,9 @@ export default class FundsPage extends Page<any, FundsPageState> {
   /**
    * 加载简化的存款记录
    */
-  private async loadSimpleDepositRecords(): Promise<void> {
+  private async loadDepositRecords(): Promise<void> {
     try {
-      const records = await simpleDepositService.getUserHistory();
+      const records = await depositService.getUserHistory();
       this.state.depositRecords = records;
     } catch (error) {
       console.error('Error loading simple deposit records:', error);
