@@ -260,7 +260,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
 
   private async updateDepositRecordStatus(record: GenericTransaction, status: string): Promise<void> {
     try {
-      await depositService.update(record as any, { status });
+      await depositService.update(record.id(), { status });
       await this.loadDepositRecords();
       
       app.alerts.show(
@@ -418,7 +418,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
         attributes.adminNotes = notes;
       }
       
-      await depositService.update(record, attributes);
+      await depositService.update(record.id(), attributes);
       await this.loadDepositRecords();
       
       app.alerts.show(
@@ -447,7 +447,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
 
   private async rejectDepositRecord(record: any, reason: string): Promise<void> {
     try {
-      await depositService.update(record, {
+      await depositService.update(record.id(), {
         status: 'rejected',
         adminNotes: reason
       });
