@@ -35,8 +35,11 @@ class CreateDepositRecordController extends AbstractCreateController
 
         // 验证输入数据
         $validator = $this->validation->make($attributes, [
+            'platformId' => 'required|integer|exists:wusong8899_funds_deposit_platforms,id',
             'userMessage' => 'nullable|string|max:1000'
         ], [
+            'platformId.required' => '平台ID不能为空',
+            'platformId.exists' => '指定的平台不存在',
             'userMessage.max' => '留言不能超过1000个字符'
         ]);
 
@@ -67,12 +70,13 @@ class CreateDepositRecordController extends AbstractCreateController
         // 创建存款记录
         $depositRecord = DepositRecord::create([
             'user_id' => $actor->id,
+            'platform_id' => $attributes['platformId'],
             'user_message' => $attributes['userMessage'] ?? null,
             'status' => DepositRecord::STATUS_PENDING,
         ]);
 
         // 加载关联关系
-        $depositRecord->load(['user']);
+        $depositRecord->load(['user', 'platform']);
 
         return $depositRecord;
     }

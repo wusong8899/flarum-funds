@@ -8,12 +8,14 @@ use Carbon\Carbon;
 use Flarum\Database\AbstractModel;
 use Flarum\User\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use wusong8899\Funds\Model\DepositPlatform;
 
 /**
  * 存款记录模型
  *
  * @property int $id
  * @property int $user_id
+ * @property int $platform_id 存款平台ID
  * @property string|null $user_message 用户留言
  * @property string $status 状态: pending, approved, rejected
  * @property \Carbon\Carbon|null $processed_at 处理时间
@@ -33,6 +35,7 @@ class DepositRecord extends AbstractModel
 
     protected $fillable = [
         'user_id',
+        'platform_id',
         'user_message',
         'status',
         'processed_at',
@@ -42,6 +45,7 @@ class DepositRecord extends AbstractModel
 
     protected $casts = [
         'user_id' => 'integer',
+        'platform_id' => 'integer',
         'processed_by' => 'integer',
         'processed_at' => 'datetime',
         'created_at' => 'datetime',
@@ -65,6 +69,14 @@ class DepositRecord extends AbstractModel
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * 关联存款平台
+     */
+    public function platform(): BelongsTo
+    {
+        return $this->belongsTo(DepositPlatform::class, 'platform_id');
     }
 
     /**

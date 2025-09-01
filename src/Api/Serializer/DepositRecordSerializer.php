@@ -6,6 +6,7 @@ namespace wusong8899\Funds\Api\Serializer;
 
 use Flarum\Api\Serializer\AbstractSerializer;
 use Flarum\Api\Serializer\UserSerializer;
+use wusong8899\Funds\Api\Serializer\DepositPlatformSerializer;
 use wusong8899\Funds\Model\DepositRecord;
 
 class DepositRecordSerializer extends AbstractSerializer
@@ -20,6 +21,7 @@ class DepositRecordSerializer extends AbstractSerializer
         return [
             'id' => (int) $record->id,
             'userId' => (int) $record->user_id,
+            'platformId' => (int) $record->platform_id,
             'userMessage' => $record->user_message,
             'status' => $record->status,
             'statusText' => $record->getStatusText(),
@@ -53,5 +55,13 @@ class DepositRecordSerializer extends AbstractSerializer
             return $this->hasOne($record->processedByUser, UserSerializer::class);
         }
         return null;
+    }
+
+    /**
+     * 包含存款平台关系
+     */
+    protected function platform($record)
+    {
+        return $this->hasOne($record, DepositPlatformSerializer::class);
     }
 }

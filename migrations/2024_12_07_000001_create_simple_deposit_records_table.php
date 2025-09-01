@@ -10,6 +10,7 @@ return [
             $schema->create('wusong8899_funds_deposit_records', function (Blueprint $table) {
                 $table->increments('id');
                 $table->unsignedInteger('user_id');
+                $table->unsignedInteger('platform_id'); // 存款平台ID
                 $table->text('user_message')->nullable(); // 用户留言
                 $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending'); // 状态
                 $table->timestamp('processed_at')->nullable(); // 处理时间
@@ -22,6 +23,10 @@ return [
                     ->references('id')->on('users')
                     ->onDelete('cascade');
                 
+                $table->foreign('platform_id')
+                    ->references('id')->on('wusong8899_funds_deposit_platforms')
+                    ->onDelete('cascade');
+                
                 $table->foreign('processed_by')
                     ->references('id')->on('users')
                     ->onDelete('set null');
@@ -29,6 +34,7 @@ return [
                 // 索引
                 $table->index(['user_id', 'created_at']); // 用户记录查询
                 $table->index(['status', 'created_at']); // 管理员状态查询
+                $table->index(['platform_id']); // 平台查询
                 $table->index(['created_at']); // 时间排序
                 $table->index(['processed_by']); // 处理人查询
             });

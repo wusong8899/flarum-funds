@@ -9,10 +9,6 @@ import { getAttr, getIdString } from '../../withdrawal/utils/modelHelpers';
 
 export interface DepositRecordFormData {
   platformId: number;
-  platformAccount: string;
-  amount: number;
-  depositTime: Date;
-  screenshotUrl?: string;
   userMessage?: string;
 }
 
@@ -279,10 +275,6 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
     // Prepare form data
     const formData: DepositRecordFormData = {
       platformId: parseInt(getIdString(platform)),
-      platformAccount: this.state.platformAccount(),
-      amount: amount,
-      depositTime: new Date(this.state.depositTime()),
-      screenshotUrl: this.state.screenshotUrl() || undefined,
       userMessage: this.state.userMessage() || undefined
     };
 
