@@ -41,7 +41,16 @@ class CreateNetworkTypeController extends AbstractCreateController
         ]);
 
         if ($validator->fails()) {
-            throw new \Flarum\Foundation\ValidationException($validator->errors()->toArray());
+            $errors = $validator->errors();
+            $flattenedErrors = [];
+            
+            foreach ($errors->toArray() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $flattenedErrors[] = $message;
+                }
+            }
+            
+            throw new \Flarum\Foundation\ValidationException($flattenedErrors);
         }
 
         return NetworkType::create([

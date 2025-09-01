@@ -7,7 +7,7 @@ namespace wusong8899\Funds\Api\Controller;
 use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Http\RequestUtil;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
-use Illuminate\Validation\ValidationException;
+use Flarum\Foundation\ValidationException;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use wusong8899\Funds\Api\Serializer\DepositRecordSerializer;
@@ -47,7 +47,16 @@ class CreateDepositRecordController extends AbstractCreateController
         ]);
 
         if ($validator->fails()) {
-            throw new ValidationException($validator);
+            $errors = $validator->errors();
+            $flattenedErrors = [];
+            
+            foreach ($errors->toArray() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $flattenedErrors[] = $message;
+                }
+            }
+            
+            throw new ValidationException($flattenedErrors);
         }
 
         // 检查用户是否有待处理的申请（可选：限制重复申请）
@@ -56,10 +65,9 @@ class CreateDepositRecordController extends AbstractCreateController
             ->count();
 
         if ($pendingCount >= 3) { // 最多允许3个待处理申请
-            throw new ValidationException(
-                $this->validation->make([], []),
-                ['general' => ['您已有多个待处理的存款申请，请等待审核后再提交新申请']]
-            );
+            throw new ValidationException([
+                '您已有多个待处理的存款申请，请等待审核后再提交新申请'
+            ]);
         }
 
         // 创建存款记录

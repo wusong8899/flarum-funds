@@ -78,7 +78,16 @@ class UpdateDepositPlatformController extends AbstractShowController
         $validator = $validatorFactory->make($attributes, $rules);
 
         if ($validator->fails()) {
-            throw new ValidationException($validator->errors()->toArray());
+            $errors = $validator->errors();
+            $flattenedErrors = [];
+            
+            foreach ($errors->toArray() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $flattenedErrors[] = $message;
+                }
+            }
+            
+            throw new ValidationException($flattenedErrors);
         }
 
         // Check if platform with same symbol+network already exists (excluding current)
@@ -93,7 +102,7 @@ class UpdateDepositPlatformController extends AbstractShowController
 
             if ($exists) {
                 throw new ValidationException([
-                    'symbol' => ['A platform with this currency and network combination already exists.']
+                    'A platform with this currency and network combination already exists.'
                 ]);
             }
         }
@@ -104,7 +113,7 @@ class UpdateDepositPlatformController extends AbstractShowController
 
         if (empty($address) && empty($addressTemplate)) {
             throw new ValidationException([
-                'address' => ['Either a static address or address template must be provided.']
+                'Either a static address or address template must be provided.'
             ]);
         }
     }

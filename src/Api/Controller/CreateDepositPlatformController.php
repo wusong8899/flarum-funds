@@ -75,7 +75,16 @@ class CreateDepositPlatformController extends AbstractCreateController
         $validator = $validatorFactory->make($attributes, $rules);
 
         if ($validator->fails()) {
-            throw new ValidationException($validator->errors()->toArray());
+            $errors = $validator->errors();
+            $flattenedErrors = [];
+            
+            foreach ($errors->toArray() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $flattenedErrors[] = $message;
+                }
+            }
+            
+            throw new ValidationException($flattenedErrors);
         }
 
         // Check if platform with same symbol+network already exists (only if network is provided)
@@ -86,7 +95,7 @@ class CreateDepositPlatformController extends AbstractCreateController
 
             if ($exists) {
                 throw new ValidationException([
-                    'symbol' => ['A platform with this currency and network combination already exists.']
+                    'A platform with this currency and network combination already exists.'
                 ]);
             }
         }
@@ -94,7 +103,7 @@ class CreateDepositPlatformController extends AbstractCreateController
         // Validate that address is provided
         if (empty($attributes['address'])) {
             throw new ValidationException([
-                'address' => ['A static address must be provided.']
+                'A static address must be provided.'
             ]);
         }
     }

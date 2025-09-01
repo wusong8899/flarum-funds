@@ -6,15 +6,23 @@ namespace wusong8899\Funds\Api\Controller\CurrencyIcon;
 
 use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Http\RequestUtil;
+use Illuminate\Contracts\Validation\Factory as ValidatorFactory;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use wusong8899\Funds\Api\Serializer\CurrencyIconSerializer;
 use wusong8899\Funds\Model\CurrencyIcon;
-use Illuminate\Validation\ValidationException;
+use Flarum\Foundation\ValidationException;
 
 class UpdateCurrencyIconController extends AbstractShowController
 {
     public $serializer = CurrencyIconSerializer::class;
+
+    protected ValidatorFactory $validator;
+
+    public function __construct(ValidatorFactory $validator)
+    {
+        $this->validator = $validator;
+    }
 
     protected function data(ServerRequestInterface $request, Document $document)
     {
@@ -38,8 +46,8 @@ class UpdateCurrencyIconController extends AbstractShowController
                 ->where('id', '!=', $currencyIcon->id)
                 ->first();
             if ($existingCurrency) {
-                throw ValidationException::withMessages([
-                    'currencySymbol' => ['Currency symbol already exists']
+                throw new ValidationException([
+                    'Currency symbol already exists'
                 ]);
             }
         }
@@ -84,10 +92,19 @@ class UpdateCurrencyIconController extends AbstractShowController
             'isActive' => 'nullable|boolean',
         ];
 
-        $validator = validator($attributes, $rules);
+        $validator = $this->validator->make($attributes, $rules);
 
         if ($validator->fails()) {
-            throw new ValidationException($validator);
+            $errors = $validator->errors();
+            $flattenedErrors = [];
+            
+            foreach ($errors->toArray() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $flattenedErrors[] = $message;
+                }
+            }
+            
+            throw new ValidationException($flattenedErrors);
         }
     }
 }

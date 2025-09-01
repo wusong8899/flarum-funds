@@ -6,15 +6,23 @@ namespace wusong8899\Funds\Api\Controller\CurrencyIcon;
 
 use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Http\RequestUtil;
+use Illuminate\Contracts\Validation\Factory as ValidatorFactory;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use wusong8899\Funds\Api\Serializer\CurrencyIconSerializer;
 use wusong8899\Funds\Model\CurrencyIcon;
-use Illuminate\Validation\ValidationException;
+use Flarum\Foundation\ValidationException;
 
 class CreateCurrencyIconController extends AbstractCreateController
 {
     public $serializer = CurrencyIconSerializer::class;
+
+    protected ValidatorFactory $validator;
+
+    public function __construct(ValidatorFactory $validator)
+    {
+        $this->validator = $validator;
+    }
 
     protected function data(ServerRequestInterface $request, Document $document)
     {
@@ -29,8 +37,8 @@ class CreateCurrencyIconController extends AbstractCreateController
         // Check for duplicate currency symbol
         $existingCurrency = CurrencyIcon::where('currency_symbol', strtoupper($attributes['currencySymbol']))->first();
         if ($existingCurrency) {
-            throw ValidationException::withMessages([
-                'currencySymbol' => ['Currency symbol already exists']
+            throw new ValidationException([
+                'Currency symbol already exists'
             ]);
         }
 
@@ -60,10 +68,19 @@ class CreateCurrencyIconController extends AbstractCreateController
             'isActive' => 'nullable|boolean',
         ];
 
-        $validator = validator($attributes, $rules);
+        $validator = $this->validator->make($attributes, $rules);
 
         if ($validator->fails()) {
-            throw new ValidationException($validator);
+            $errors = $validator->errors();
+            $flattenedErrors = [];
+            
+            foreach ($errors->toArray() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $flattenedErrors[] = $message;
+                }
+            }
+            
+            throw new ValidationException($flattenedErrors);
         }
     }
 }
