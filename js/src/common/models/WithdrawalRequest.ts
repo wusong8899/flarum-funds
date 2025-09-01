@@ -36,7 +36,7 @@ export default class WithdrawalRequest extends Model {
   // Computed properties
   apiEndpoint() {
     const id = this.id();
-    return id ? `/withdraw-requests/${id}` : "/withdraw-requests";
+    return id ? `/withdrawal-requests/${id}` : "/withdrawal-requests";
   }
 
   // Status helpers
@@ -126,7 +126,7 @@ export default class WithdrawalRequest extends Model {
    */
   clone(): WithdrawalRequest {
     const cloned = app.store.createRecord(
-      "withdraw-requests"
+      "withdrawal-requests"
     ) as WithdrawalRequest;
 
     // Copy relevant attributes but not status/timestamps

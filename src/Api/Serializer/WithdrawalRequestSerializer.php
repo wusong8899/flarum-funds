@@ -11,7 +11,7 @@ use wusong8899\Funds\Model\WithdrawalRequest;
 
 class WithdrawalRequestSerializer extends AbstractSerializer
 {
-    protected $type = 'withdraw-requests';
+    protected $type = 'withdrawal-requests';
 
     /**
      * @param WithdrawalRequest $request
