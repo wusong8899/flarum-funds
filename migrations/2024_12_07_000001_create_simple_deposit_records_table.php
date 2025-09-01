@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Builder;
 
 return [
     'up' => function (Builder $schema) {
-        // 创建简化的存款记录表
+        // 创建存款记录表
         if (!$schema->hasTable('wusong8899_funds_simple_deposit_records')) {
             $schema->create('wusong8899_funds_simple_deposit_records', function (Blueprint $table) {
                 $table->increments('id');

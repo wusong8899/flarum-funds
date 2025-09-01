@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class DepositRecord extends AbstractModel
 {
+    // Note: Table name retains 'simple' for backward compatibility with existing migrations
     protected $table = 'wusong8899_funds_simple_deposit_records';
 
     public $timestamps = true;

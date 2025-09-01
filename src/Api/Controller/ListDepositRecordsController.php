@@ -59,7 +59,7 @@ class ListDepositRecordsController extends AbstractListController
         // 按状态过滤
         if (!empty($filters['status'])) {
             $status = $filters['status'];
-            if (in_array($status, SimpleDepositRecord::STATUSES)) {
+            if (in_array($status, DepositRecord::STATUSES)) {
                 $query->where('status', $status);
             }
         }

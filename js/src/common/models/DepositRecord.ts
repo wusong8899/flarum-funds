@@ -1,7 +1,7 @@
 import Model from 'flarum/common/Model';
 import User from 'flarum/common/models/User';
 
-export default class SimpleDepositRecord extends Model {
+export default class DepositRecord extends Model {
   // 属性
   userId = Model.attribute<number>('userId');
   depositAddress = Model.attribute<string>('depositAddress');
@@ -58,14 +58,14 @@ export default class SimpleDepositRecord extends Model {
     if (currentUser.isAdmin()) return true;
     
     // 用户只能编辑自己的待处理记录
-    return this.userId() === currentUser.id() && this.isPending();
+    return this.userId().toString() === currentUser.id() && this.isPending();
   }
 
   canDelete(currentUser?: User): boolean {
     if (!currentUser) return false;
     
     // 只有管理员可以删除
-    return currentUser.isAdmin();
+    return currentUser.isAdmin() || false;
   }
 
   getDisplayAddress(): string {

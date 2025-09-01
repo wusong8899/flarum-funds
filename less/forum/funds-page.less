@@ -1310,6 +1310,101 @@
     }
   }
 
+  // Deposit history styles
+  .DepositHistory {
+    .DepositHistory-item {
+      background: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: #4a4a4a;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .DepositHistory-header {
+        background: #333;
+        padding: 15px 20px;
+        border-bottom: 1px solid #3a3a3a;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .Badge {
+          font-size: 12px;
+          font-weight: 600;
+          padding: 4px 8px;
+          border-radius: 6px;
+
+          i {
+            margin-right: 4px;
+          }
+        }
+
+        .DepositHistory-date {
+          font-size: 13px;
+          color: #888;
+        }
+      }
+
+      .DepositHistory-content {
+        padding: 20px;
+
+        .DepositHistory-address,
+        .DepositHistory-qr,
+        .DepositHistory-message,
+        .DepositHistory-adminNotes {
+          margin-bottom: 16px;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          strong {
+            display: block;
+            color: #fff;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+          }
+
+          code {
+            background: #1a1a1a;
+            color: #4A90E2;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            word-break: break-all;
+            display: block;
+            border: 1px solid #333;
+          }
+
+          a {
+            color: #4A90E2;
+            text-decoration: none;
+            font-weight: 500;
+
+            &:hover {
+              color: #5BA0F2;
+              text-decoration: underline;
+            }
+          }
+
+          p {
+            color: #bbb;
+            line-height: 1.5;
+            margin: 0;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+
   // Animation for smooth tab transitions
   .FundsPage-content>* {
     animation: fadeIn 0.2s ease-in-out;

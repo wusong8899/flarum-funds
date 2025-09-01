@@ -18,7 +18,6 @@ app.initializers.add('wusong8899-funds', () => {
   app.store.models['funds-requests'] = WithdrawalRequest;
   app.store.models['deposit-platforms'] = DepositPlatform;
   app.store.models['deposit-records'] = DepositRecord;
-  app.store.models['deposit-records-simple'] = DepositRecord;
 
   // New unified funds page
   app.routes.funds = { path: '/funds', component: FundsPage };

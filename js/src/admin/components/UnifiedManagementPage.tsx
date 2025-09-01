@@ -22,7 +22,7 @@ import { depositService, platformService } from '../../common/services';
 import { ServiceError } from '../../common/types/services';
 import Component from 'flarum/common/Component';
 
-// Simple placeholder components for custom tabs
+// Placeholder components for custom tabs
 class WithdrawalTabPlaceholder extends Component {
   view() {
     return <div>Withdrawals Content</div>;

@@ -310,7 +310,7 @@ export default class DepositRecordManagementSection extends Component<
     const recordId = record.id();
     const defaultAmount = record.amount();
 
-    // Simple approval - could be enhanced with a modal for custom amounts/notes
+    // Basic approval - could be enhanced with a modal for custom amounts/notes
     const creditedAmount = parseFloat(
       prompt(
         app.translator.trans('funds.admin.deposit.records.approve_prompt', {

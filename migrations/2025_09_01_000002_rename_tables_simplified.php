@@ -7,7 +7,7 @@ return [
     'up' => function (Builder $schema) {
         $connection = $schema->getConnection();
         
-        // Simple approach: Just rename tables
+        // Rename tables to add unified prefix
         // Foreign key constraints will be automatically handled by MySQL
         
         $tablesToRename = [
@@ -18,7 +18,7 @@ return [
             ['deposit_platforms', 'wusong8899_funds_deposit_platforms'],
             ['withdrawal_requests', 'wusong8899_funds_withdrawal_requests'],
             ['deposit_addresses', 'wusong8899_funds_deposit_addresses'],
-            ['simple_deposit_records', 'wusong8899_funds_simple_deposit_records'],
+            ['deposit_records', 'wusong8899_funds_deposit_records'],
             ['wusong8899_deposit_records', 'wusong8899_funds_deposit_records'],
         ];
         
@@ -40,7 +40,7 @@ return [
         $tablesToRename = [
             // [new_name, old_name] - reversed from up()
             ['wusong8899_funds_deposit_records', 'wusong8899_deposit_records'],
-            ['wusong8899_funds_simple_deposit_records', 'simple_deposit_records'],
+            ['wusong8899_funds_deposit_records', 'deposit_records'],
             ['wusong8899_funds_deposit_addresses', 'deposit_addresses'],
             ['wusong8899_funds_withdrawal_requests', 'withdrawal_requests'],
             ['wusong8899_funds_deposit_platforms', 'deposit_platforms'],

@@ -54,10 +54,10 @@ class DepositServiceImpl implements DepositService {
   async create(data: DepositFormData): Promise<DepositRecord> {
     const response = await app.request({
       method: 'POST',
-      url: app.forum.attribute('apiUrl') + '/deposit-records-simple',
+      url: app.forum.attribute('apiUrl') + '/deposit-records',
       body: {
         data: {
-          type: 'deposit-records-simple',
+          type: 'deposit-records',
           attributes: {
             depositAddress: data.depositAddress,
             qrCodeUrl: data.qrCodeUrl,
@@ -74,7 +74,7 @@ class DepositServiceImpl implements DepositService {
   async getUserHistory(): Promise<DepositRecord[]> {
     const response = await app.request({
       method: 'GET',
-      url: app.forum.attribute('apiUrl') + '/deposit-records-simple',
+      url: app.forum.attribute('apiUrl') + '/deposit-records',
       params: {
         include: 'user,processedByUser'
       }
@@ -95,7 +95,7 @@ class DepositServiceImpl implements DepositService {
 
     const response = await app.request({
       method: 'GET',
-      url: app.forum.attribute('apiUrl') + '/deposit-records-simple',
+      url: app.forum.attribute('apiUrl') + '/deposit-records',
       params
     });
 
@@ -105,10 +105,10 @@ class DepositServiceImpl implements DepositService {
   async update(recordId: number, data: Partial<DepositUpdateData>): Promise<DepositRecord> {
     const response = await app.request({
       method: 'PATCH',
-      url: `${app.forum.attribute('apiUrl')}/deposit-records-simple/${recordId}`,
+      url: `${app.forum.attribute('apiUrl')}/deposit-records/${recordId}`,
       body: {
         data: {
-          type: 'deposit-records-simple',
+          type: 'deposit-records',
           id: recordId,
           attributes: data
         }

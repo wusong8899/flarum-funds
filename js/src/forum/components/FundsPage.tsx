@@ -366,25 +366,25 @@ export default class FundsPage extends Page<any, FundsPageState> {
 
     return (
       <div className="FundsPage-depositContent">
-        <div className="SimpleDepositHistory">
+        <div className="DepositHistory">
           {depositRecords.map((record: DepositRecord) => (
-            <div key={record.id()} className="SimpleDepositHistory-item">
-              <div className="SimpleDepositHistory-header">
+            <div key={record.id()} className="DepositHistory-item">
+              <div className="DepositHistory-header">
                 <span className={`Badge Badge--${record.getStatusColor()}`}>
                   <i className={record.getStatusIcon()}></i>
                   {record.statusText()}
                 </span>
-                <span className="SimpleDepositHistory-date">
+                <span className="DepositHistory-date">
                   {record.formattedCreatedAt()}
                 </span>
               </div>
-              <div className="SimpleDepositHistory-content">
-                <div className="SimpleDepositHistory-address">
+              <div className="DepositHistory-content">
+                <div className="DepositHistory-address">
                   <strong>{app.translator.trans('funds.forum.deposit.form.deposit_address', {}, '存款地址')}:</strong>
                   <code>{record.getDisplayAddress()}</code>
                 </div>
                 {record.hasQrCode() && (
-                  <div className="SimpleDepositHistory-qr">
+                  <div className="DepositHistory-qr">
                     <strong>{app.translator.trans('funds.forum.deposit.form.qr_code_url', {}, '收款二维码')}:</strong>
                     <a href={record.qrCodeUrl()} target="_blank" rel="noopener noreferrer">
                       {app.translator.trans('funds.forum.deposit.form.view_qr', {}, '查看二维码')}
@@ -392,13 +392,13 @@ export default class FundsPage extends Page<any, FundsPageState> {
                   </div>
                 )}
                 {record.userMessage() && (
-                  <div className="SimpleDepositHistory-message">
+                  <div className="DepositHistory-message">
                     <strong>{app.translator.trans('funds.forum.deposit.form.user_message', {}, '留言')}:</strong>
                     <p>{record.userMessage()}</p>
                   </div>
                 )}
                 {record.adminNotes() && (
-                  <div className="SimpleDepositHistory-adminNotes">
+                  <div className="DepositHistory-adminNotes">
                     <strong>{app.translator.trans('funds.forum.deposit.form.admin_notes', {}, '管理员备注')}:</strong>
                     <p>{record.adminNotes()}</p>
                   </div>
@@ -591,7 +591,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
       this.state.depositSubTab('history');
 
     } catch (error: unknown) {
-      console.error('Simple deposit submission failed:', error);
+      console.error('Deposit submission failed:', error);
       
       let errorMessage = app.translator.trans('funds.forum.deposit.form.submit_error', {}, '提交失败，请重试').toString();
       
@@ -661,7 +661,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
       const records = await depositService.getUserHistory();
       this.state.depositRecords = records;
     } catch (error) {
-      console.error('Error loading simple deposit records:', error);
+      console.error('Error loading deposit records:', error);
       this.state.depositRecords = [];
     }
   }
