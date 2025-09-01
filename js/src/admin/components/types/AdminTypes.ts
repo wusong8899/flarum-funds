@@ -1,5 +1,5 @@
 export interface WithdrawalPlatform {
-  id: number;
+  id(): number;
   attributes: {
     name: string;
     symbol?: string;
@@ -98,4 +98,3 @@ export interface DepositPlatform {
   createdAt: Date;
   updatedAt: Date;
 }
-

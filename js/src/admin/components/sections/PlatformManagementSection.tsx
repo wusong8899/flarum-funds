@@ -32,7 +32,7 @@ export default class PlatformManagementSection extends Component<PlatformManagem
           ) : (
             platforms.map((platform) => (
               <GenericPlatformListItem
-                key={platform.id}
+                key={platform.id()}
                 platform={platform}
                 type="withdrawal"
                 style="card"
