@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace wusong8899\Funds\Model;
 
+use Carbon\Carbon;
 use Flarum\Database\AbstractModel;
 use Flarum\User\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -109,7 +110,7 @@ class DepositRecord extends AbstractModel
     public function approve(?int $processedBy = null, ?string $adminNotes = null): void
     {
         $this->status = self::STATUS_APPROVED;
-        $this->processed_at = now();
+        $this->processed_at = Carbon::now();
         $this->processed_by = $processedBy;
         if ($adminNotes) {
             $this->admin_notes = $adminNotes;
@@ -122,7 +123,7 @@ class DepositRecord extends AbstractModel
     public function reject(?int $processedBy = null, ?string $adminNotes = null): void
     {
         $this->status = self::STATUS_REJECTED;
-        $this->processed_at = now();
+        $this->processed_at = Carbon::now();
         $this->processed_by = $processedBy;
         if ($adminNotes) {
             $this->admin_notes = $adminNotes;
