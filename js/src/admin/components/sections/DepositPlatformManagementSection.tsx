@@ -58,15 +58,17 @@ export default class DepositPlatformManagementSection extends Component<DepositP
                 </div>
               ) : (
                 <div className="PlatformList">
-                  {platforms.map((platform) => (
-                    <GenericPlatformListItem
-                      key={typeof platform.id === 'function' ? platform.id() : platform.id}
-                      platform={platform}
-                      type="deposit"
-                      onToggleStatus={() => onTogglePlatformStatus(platform)}
-                      onDelete={() => onDeletePlatform(platform)}
-                    />
-                  ))}
+                  {platforms
+                    .filter((platform) => platform !== null && platform !== undefined)
+                    .map((platform) => (
+                      <GenericPlatformListItem
+                        key={typeof platform.id === 'function' ? platform.id() : platform.id}
+                        platform={platform}
+                        type="deposit"
+                        onToggleStatus={() => onTogglePlatformStatus(platform)}
+                        onDelete={() => onDeletePlatform(platform)}
+                      />
+                    ))}
                 </div>
               )}
             </div>

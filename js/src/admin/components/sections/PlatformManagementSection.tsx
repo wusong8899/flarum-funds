@@ -30,16 +30,18 @@ export default class PlatformManagementSection extends Component<PlatformManagem
           {platforms.length === 0 ? (
             <p>{app.translator.trans('funds.admin.platforms.empty')}</p>
           ) : (
-            platforms.map((platform) => (
-              <GenericPlatformListItem
-                key={platform.id()}
-                platform={platform}
-                type="withdrawal"
-                style="card"
-                onToggleStatus={onTogglePlatformStatus}
-                onDelete={onDeletePlatform}
-              />
-            ))
+            platforms
+              .filter((platform) => platform !== null && platform !== undefined)
+              .map((platform) => (
+                <GenericPlatformListItem
+                  key={platform.id()}
+                  platform={platform}
+                  type="withdrawal"
+                  style="card"
+                  onToggleStatus={onTogglePlatformStatus}
+                  onDelete={onDeletePlatform}
+                />
+              ))
           )}
         </div>
       </div>
