@@ -210,9 +210,7 @@ funds:
         user_message: 留言
         user_message_help: 为您的存款申请添加备注信息
         user_message_placeholder: 请填写相关说明或备注...
-        validation:
-          address_required: 存款地址不能为空
-          invalid_url: 请输入有效的URL地址
+        validation: {}
         view_qr: 查看二维码
       record:
         amount: 存款金额

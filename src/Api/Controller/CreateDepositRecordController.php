@@ -35,14 +35,8 @@ class CreateDepositRecordController extends AbstractCreateController
 
         // 验证输入数据
         $validator = $this->validation->make($attributes, [
-            'depositAddress' => 'required|string|max:255',
-            'qrCodeUrl' => 'nullable|url|max:500',
             'userMessage' => 'nullable|string|max:1000'
         ], [
-            'depositAddress.required' => '存款地址不能为空',
-            'depositAddress.max' => '存款地址不能超过255个字符',
-            'qrCodeUrl.url' => '二维码链接格式不正确',
-            'qrCodeUrl.max' => '二维码链接不能超过500个字符',
             'userMessage.max' => '留言不能超过1000个字符'
         ]);
 
