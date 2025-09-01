@@ -310,7 +310,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
       icon: 'fas fa-trash',
       onConfirm: async () => {
         try {
-          const record = app.store.getById('funds-requests', requestId);
+          const record = app.store.getById('withdraw-requests', requestId);
           if (record) {
             await record.delete();
             await this.loadTransactions();
