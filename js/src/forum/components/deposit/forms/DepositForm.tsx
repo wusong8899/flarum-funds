@@ -4,20 +4,25 @@ import Button from 'flarum/common/components/Button';
 import Stream from 'flarum/common/utils/Stream';
 import withAttr from 'flarum/common/utils/withAttr';
 import type Mithril from 'mithril';
+import DepositPlatform from '../../../../common/models/DepositPlatform';
+import DepositPlatformDropdown from '../selectors/DepositPlatformDropdown';
 
 export interface DepositFormData {
+  selectedPlatform: DepositPlatform | null;
   depositAddress: string;
   qrCodeUrl?: string;
   userMessage?: string;
 }
 
 interface DepositFormProps {
+  platforms: DepositPlatform[];
   onSubmit: (data: DepositFormData) => Promise<void>;
   onCancel: () => void;
   submitting: boolean;
 }
 
 interface DepositFormState {
+  selectedPlatform: Stream<DepositPlatform | null>;
   depositAddress: Stream<string>;
   qrCodeUrl: Stream<string>;
   userMessage: Stream<string>;
@@ -28,6 +33,7 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
     super.oninit(vnode);
     
     this.state = {
+      selectedPlatform: Stream(null),
       depositAddress: Stream(''),
       qrCodeUrl: Stream(''),
       userMessage: Stream('')
@@ -35,7 +41,7 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
   }
 
   view(vnode: Mithril.Vnode<DepositFormProps>): Mithril.Children {
-    const { submitting } = vnode.attrs;
+    const { platforms, submitting } = vnode.attrs;
 
     return (
       <div className="DepositForm">
@@ -50,6 +56,18 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
         </div>
 
         <form onsubmit={this.handleSubmit.bind(this)} className="DepositForm-form">
+          {/* 平台选择字段 */}
+          <div className="DepositForm-field">
+            <DepositPlatformDropdown
+              platforms={platforms}
+              selectedPlatform={this.state.selectedPlatform()}
+              onPlatformSelect={(platform: DepositPlatform) => {
+                this.state.selectedPlatform(platform);
+                // 清空地址字段，因为不同平台可能有不同地址
+                this.state.depositAddress('');
+              }}
+            />
+          </div>
           {/* 存款地址字段 */}
           <div className="DepositForm-field">
             <label className="DepositForm-label">
@@ -142,7 +160,15 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
 
     const { onSubmit } = this.attrs;
     
-    // 基本验证
+    // 验证必选字段
+    if (!this.state.selectedPlatform()) {
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        app.translator.trans('funds.forum.deposit.form.validation.platform_required')
+      );
+      return;
+    }
+    
     if (!this.state.depositAddress()) {
       app.alerts.show(
         { type: 'error', dismissible: true },
@@ -163,6 +189,7 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
 
     // 准备表单数据
     const formData: DepositFormData = {
+      selectedPlatform: this.state.selectedPlatform(),
       depositAddress: this.state.depositAddress(),
       qrCodeUrl: qrCodeUrl || undefined,
       userMessage: this.state.userMessage() || undefined
@@ -183,6 +210,7 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
 
   // 清空表单
   resetForm(): void {
+    this.state.selectedPlatform(null);
     this.state.depositAddress('');
     this.state.qrCodeUrl('');
     this.state.userMessage('');
