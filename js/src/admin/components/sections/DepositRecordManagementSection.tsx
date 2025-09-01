@@ -149,10 +149,6 @@ export default class DepositRecordManagementSection extends Component<
             </span>
           </div>
           
-          <div className="DepositRecordItem-row">
-            <span className="DepositRecordItem-label">Platform Account:</span>
-            <span className="DepositRecordItem-value">{this.getPlatformAccount(record)}</span>
-          </div>
           
           
           <div className="DepositRecordItem-row">
@@ -396,30 +392,6 @@ export default class DepositRecordManagementSection extends Component<
     return 0;
   }
 
-  private getPlatformAccount(record: DepositRecord): string {
-    if (typeof record.platformAccount === 'function') {
-      try {
-        return record.platformAccount();
-      } catch (error) {
-        console.warn('Failed to call platformAccount() method:', error);
-      }
-    }
-    
-    const recordAny = record as any;
-    if (recordAny.platformAccount) {
-      return recordAny.platformAccount;
-    }
-    
-    if (recordAny.attributes && recordAny.attributes.platformAccount) {
-      return recordAny.attributes.platformAccount;
-    }
-    
-    if (recordAny.attributes && recordAny.attributes.platform_account) {
-      return recordAny.attributes.platform_account;
-    }
-    
-    return '';
-  }
 
 
   private findPlatform(platforms: any[], platformId: number): any | null {

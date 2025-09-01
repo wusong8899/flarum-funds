@@ -252,9 +252,6 @@ withdrawal:
         hide_form: Hide Form
         form_title: Submit Deposit Record
         selected_platform: 'Selected Platform: {platform} ({symbol})'
-        platform_account: Platform Account
-        platform_account_placeholder: Enter your account on the deposit platform
-        platform_account_help: Your account ID/name on the deposit platform (required)
         real_name: Real Name
         optional: Optional
         real_name_placeholder: Your real name for verification

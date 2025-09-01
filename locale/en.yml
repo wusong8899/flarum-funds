@@ -232,9 +232,6 @@ funds:
         max_amount: Max Amount
         min_amount: Min Amount
         optional: Optional
-        platform_account: Platform Account
-        platform_account_help: Your account ID/name on the deposit platform (required)
-        platform_account_placeholder: Enter your account on the deposit platform
         real_name: Real Name
         real_name_placeholder: Your real name for verification
         screenshot_url: Screenshot URL

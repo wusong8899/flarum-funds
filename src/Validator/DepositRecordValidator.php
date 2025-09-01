@@ -12,7 +12,6 @@ class DepositRecordValidator extends AbstractValidator
     {
         return [
             'platformId' => ['required', 'integer', 'min:1'],
-            'platformAccount' => ['required', 'string', 'max:255'],
             'amount' => ['required', 'numeric', 'min:0.01'],
             'depositTime' => ['required', 'date'],
             'screenshotUrl' => ['nullable', 'url', 'max:500'],
@@ -25,8 +24,6 @@ class DepositRecordValidator extends AbstractValidator
         return [
             'platformId.required' => 'Please select a deposit platform.',
             'platformId.integer' => 'Invalid platform selection.',
-            'platformAccount.required' => 'Platform account is required.',
-            'platformAccount.max' => 'Platform account cannot exceed 255 characters.',
             'amount.required' => 'Deposit amount is required.',
             'amount.numeric' => 'Deposit amount must be a valid number.',
             'amount.min' => 'Deposit amount must be greater than zero.',
