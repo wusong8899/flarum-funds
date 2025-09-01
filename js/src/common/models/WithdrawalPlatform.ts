@@ -56,7 +56,7 @@ export default class WithdrawalPlatform extends Model {
   // Computed properties
   apiEndpoint() {
     const id = this.id();
-    return id ? `/funds-platforms/${id}` : "/funds-platforms";
+    return id ? `/withdrawal-platforms/${id}` : "/withdrawal-platforms";
   }
 
   // Helper methods
@@ -140,7 +140,7 @@ export default class WithdrawalPlatform extends Model {
    */
   clone(): WithdrawalPlatform {
     const cloned = app.store.createRecord(
-      "funds-platforms"
+      "withdrawal-platforms"
     ) as WithdrawalPlatform;
 
     // Copy relevant attributes but not id/timestamps
@@ -250,7 +250,7 @@ export default class WithdrawalPlatform extends Model {
       if (!id) {
         return false;
       }
-      const requests = await app.store.find("funds-requests", {
+      const requests = await app.store.find("withdrawal-requests", {
         filter: { platform: id, status: "pending" },
       });
 
@@ -308,7 +308,7 @@ export default class WithdrawalPlatform extends Model {
     if (error.response && error.response.errors) {
       const apiError = error.response.errors[0];
       return new ServiceError(
-        apiError.detail || "Failed to save funds platform",
+        apiError.detail || "Failed to save withdrawal platform",
         ServiceErrorType.VALIDATION_ERROR,
         apiError.code,
         apiError
@@ -316,7 +316,7 @@ export default class WithdrawalPlatform extends Model {
     }
 
     return new ServiceError(
-      error.message || "Failed to save funds platform",
+      error.message || "Failed to save withdrawal platform",
       ServiceErrorType.SERVER_ERROR
     );
   }
@@ -338,7 +338,7 @@ export default class WithdrawalPlatform extends Model {
     }
 
     return new ServiceError(
-      error.message || "Failed to delete funds platform",
+      error.message || "Failed to delete withdrawal platform",
       ServiceErrorType.SERVER_ERROR
     );
   }
