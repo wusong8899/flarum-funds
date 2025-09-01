@@ -267,6 +267,10 @@ funds:
         title: 暂无提款申请记录
       title: 提款历史
       transactions: 个请求
+      withdrawal_title: 提款历史
+      deposit_title: 存款历史
+      page:
+        title: 交易历史
     including_fee: （含 {fee} 手续费）
     info:
       final_amount: '到账金额: ${amount}'

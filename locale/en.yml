@@ -279,6 +279,10 @@ funds:
         title: No funds requests yet
       title: Withdrawal History
       transactions: requests
+      withdrawal_title: Withdrawal History
+      deposit_title: Deposit History
+      page:
+        title: Transaction History
     including_fee: (including {fee} fee)
     info:
       final_amount: "Final Amount: ${amount}"
