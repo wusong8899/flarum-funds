@@ -25,7 +25,6 @@ interface Transaction {
   accountDetails?: () => string;
   // Deposit record specific fields
   platformAccount?: () => string;
-  realName?: () => string;
   depositTime?: () => Date;
   screenshotUrl?: () => string;
   userMessage?: () => string;
@@ -151,7 +150,6 @@ export default class TransactionHistory extends Component<TransactionHistoryAttr
     transactionId: string
   ): Mithril.Children {
     const platformAccount = getAttr(transaction, 'platformAccount');
-    const realName = getAttr(transaction, 'realName');
     const depositTime = getDateFromAttr(transaction, 'depositTime');
     const screenshotUrl = getAttr(transaction, 'screenshotUrl');
     const userMessage = getAttr(transaction, 'userMessage');
@@ -210,12 +208,6 @@ export default class TransactionHistory extends Component<TransactionHistoryAttr
               <span className="DepositRecord-itemValue">{platformAccount}</span>
             </div>
             
-            {realName && (
-              <div className="DepositRecord-itemRow">
-                <span className="DepositRecord-itemLabel">Real Name:</span>
-                <span className="DepositRecord-itemValue">{realName}</span>
-              </div>
-            )}
             
             {userMessage && (
               <div className="DepositRecord-itemRow">

@@ -13,7 +13,6 @@ interface DepositRecord {
   userId(): number;
   platformId(): number;
   platformAccount(): string;
-  realName?(): string;
   amount(): number;
   depositTime(): Date;
   screenshotUrl?(): string;
@@ -112,11 +111,12 @@ export default class DepositRecordManagementSection extends Component<
   ): Mithril.Children {
     const recordId = record.id();
     const isProcessing = this.state.processingRecords.has(recordId);
-    const platform = this.findPlatform(platforms, record.platformId());
+    const platformId = this.getPlatformId(record);
+    const platform = this.findPlatform(platforms, platformId);
     const user = record.user?.();
-    const status = record.status();
-    const depositTime = record.depositTime();
-    const createdAt = record.createdAt();
+    const status = this.getRecordStatus(record);
+    const depositTime = this.getDepositTime(record);
+    const createdAt = this.getCreatedAt(record);
 
     return (
       <div key={`record-${recordId}`} className={`DepositRecordItem status-${status}`}>
@@ -126,13 +126,13 @@ export default class DepositRecordManagementSection extends Component<
               {user?.displayName?.() || 'Unknown User'}
             </span>
             <span className="DepositRecordItem-userId">
-              ID: {record.userId()}
+              ID: {this.getUserId(record)}
             </span>
           </div>
           
           <div className="DepositRecordItem-amount">
             <span className="DepositRecordItem-amountValue">
-              {record.amount()} {platform?.symbol?.() || ''}
+              {this.getAmount(record)} {platform?.symbol?.() || ''}
             </span>
             <div className={`DepositRecordItem-status status-${this.getStatusColor(status)}`}>
               {this.renderStatusIcon(status)}
@@ -151,15 +151,9 @@ export default class DepositRecordManagementSection extends Component<
           
           <div className="DepositRecordItem-row">
             <span className="DepositRecordItem-label">Platform Account:</span>
-            <span className="DepositRecordItem-value">{record.platformAccount()}</span>
+            <span className="DepositRecordItem-value">{this.getPlatformAccount(record)}</span>
           </div>
           
-          {record.realName?.() && (
-            <div className="DepositRecordItem-row">
-              <span className="DepositRecordItem-label">Real Name:</span>
-              <span className="DepositRecordItem-value">{record.realName()}</span>
-            </div>
-          )}
           
           <div className="DepositRecordItem-row">
             <span className="DepositRecordItem-label">Deposit Time:</span>
@@ -259,6 +253,174 @@ export default class DepositRecordManagementSection extends Component<
       </div>
     );
   }
+
+  private getPlatformId(record: DepositRecord): number {
+    // Try method call first (interface definition)
+    if (typeof record.platformId === 'function') {
+      try {
+        return record.platformId();
+      } catch (error) {
+        console.warn('Failed to call platformId() method:', error);
+      }
+    }
+    
+    // Fall back to attribute access (actual data structure)
+    const recordAny = record as any;
+    if (recordAny.platformId !== undefined) {
+      return parseInt(recordAny.platformId);
+    }
+    
+    // Try accessing from attributes
+    if (recordAny.attributes && recordAny.attributes.platformId !== undefined) {
+      return parseInt(recordAny.attributes.platformId);
+    }
+    
+    console.error('Could not find platformId in record:', record);
+    return 0;
+  }
+
+  private getRecordStatus(record: DepositRecord): string {
+    if (typeof record.status === 'function') {
+      try {
+        return record.status();
+      } catch (error) {
+        console.warn('Failed to call status() method:', error);
+      }
+    }
+    
+    const recordAny = record as any;
+    if (recordAny.status) {
+      return recordAny.status;
+    }
+    
+    if (recordAny.attributes && recordAny.attributes.status) {
+      return recordAny.attributes.status;
+    }
+    
+    return 'pending'; // default status
+  }
+
+  private getDepositTime(record: DepositRecord): Date {
+    if (typeof record.depositTime === 'function') {
+      try {
+        return record.depositTime();
+      } catch (error) {
+        console.warn('Failed to call depositTime() method:', error);
+      }
+    }
+    
+    const recordAny = record as any;
+    if (recordAny.depositTime) {
+      return new Date(recordAny.depositTime);
+    }
+    
+    if (recordAny.attributes && recordAny.attributes.depositTime) {
+      return new Date(recordAny.attributes.depositTime);
+    }
+    
+    if (recordAny.attributes && recordAny.attributes.deposit_time) {
+      return new Date(recordAny.attributes.deposit_time);
+    }
+    
+    return new Date(); // fallback to current time
+  }
+
+  private getCreatedAt(record: DepositRecord): Date {
+    if (typeof record.createdAt === 'function') {
+      try {
+        return record.createdAt();
+      } catch (error) {
+        console.warn('Failed to call createdAt() method:', error);
+      }
+    }
+    
+    const recordAny = record as any;
+    if (recordAny.createdAt) {
+      return new Date(recordAny.createdAt);
+    }
+    
+    if (recordAny.attributes && recordAny.attributes.createdAt) {
+      return new Date(recordAny.attributes.createdAt);
+    }
+    
+    if (recordAny.attributes && recordAny.attributes.created_at) {
+      return new Date(recordAny.attributes.created_at);
+    }
+    
+    return new Date(); // fallback to current time
+  }
+
+  private getUserId(record: DepositRecord): number {
+    if (typeof record.userId === 'function') {
+      try {
+        return record.userId();
+      } catch (error) {
+        console.warn('Failed to call userId() method:', error);
+      }
+    }
+    
+    const recordAny = record as any;
+    if (recordAny.userId !== undefined) {
+      return parseInt(recordAny.userId);
+    }
+    
+    if (recordAny.attributes && recordAny.attributes.userId !== undefined) {
+      return parseInt(recordAny.attributes.userId);
+    }
+    
+    if (recordAny.attributes && recordAny.attributes.user_id !== undefined) {
+      return parseInt(recordAny.attributes.user_id);
+    }
+    
+    return 0;
+  }
+
+  private getAmount(record: DepositRecord): number {
+    if (typeof record.amount === 'function') {
+      try {
+        return record.amount();
+      } catch (error) {
+        console.warn('Failed to call amount() method:', error);
+      }
+    }
+    
+    const recordAny = record as any;
+    if (recordAny.amount !== undefined) {
+      return parseFloat(recordAny.amount);
+    }
+    
+    if (recordAny.attributes && recordAny.attributes.amount !== undefined) {
+      return parseFloat(recordAny.attributes.amount);
+    }
+    
+    return 0;
+  }
+
+  private getPlatformAccount(record: DepositRecord): string {
+    if (typeof record.platformAccount === 'function') {
+      try {
+        return record.platformAccount();
+      } catch (error) {
+        console.warn('Failed to call platformAccount() method:', error);
+      }
+    }
+    
+    const recordAny = record as any;
+    if (recordAny.platformAccount) {
+      return recordAny.platformAccount;
+    }
+    
+    if (recordAny.attributes && recordAny.attributes.platformAccount) {
+      return recordAny.attributes.platformAccount;
+    }
+    
+    if (recordAny.attributes && recordAny.attributes.platform_account) {
+      return recordAny.attributes.platform_account;
+    }
+    
+    return '';
+  }
+
 
   private findPlatform(platforms: any[], platformId: number): any | null {
     return platforms.find(p => {

@@ -10,7 +10,6 @@ import { getAttr, getIdString } from '../../withdrawal/utils/modelHelpers';
 export interface DepositRecordFormData {
   platformId: number;
   platformAccount: string;
-  realName?: string;
   amount: number;
   depositTime: Date;
   screenshotUrl?: string;
@@ -26,7 +25,6 @@ interface DepositRecordFormProps {
 
 interface DepositRecordFormState {
   platformAccount: Stream<string>;
-  realName: Stream<string>;
   amount: Stream<string>;
   depositTime: Stream<string>;
   screenshotUrl: Stream<string>;
@@ -45,7 +43,6 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
     
     this.state = {
       platformAccount: Stream(''),
-      realName: Stream(''),
       amount: Stream(''),
       depositTime: Stream(localDateTime),
       screenshotUrl: Stream(''),
@@ -106,23 +103,6 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
             </div>
           </div>
 
-          {/* Real Name Field (Optional) */}
-          <div className="DepositRecordForm-field">
-            <label className="DepositRecordForm-label">
-              {app.translator.trans('funds.forum.deposit.record.real_name')}
-              <span className="DepositRecordForm-optional">
-                ({app.translator.trans('funds.forum.deposit.record.optional')})
-              </span>
-            </label>
-            <input
-              type="text"
-              className="DepositRecordForm-input"
-              placeholder={app.translator.trans('funds.forum.deposit.record.real_name_placeholder')}
-              value={this.state.realName()}
-              oninput={withAttr('value', this.state.realName)}
-              disabled={submitting}
-            />
-          </div>
 
           {/* Amount Field */}
           <div className="DepositRecordForm-field">
@@ -300,7 +280,6 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
     const formData: DepositRecordFormData = {
       platformId: parseInt(getIdString(platform)),
       platformAccount: this.state.platformAccount(),
-      realName: this.state.realName() || undefined,
       amount: amount,
       depositTime: new Date(this.state.depositTime()),
       screenshotUrl: this.state.screenshotUrl() || undefined,

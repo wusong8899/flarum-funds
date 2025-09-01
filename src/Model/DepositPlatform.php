@@ -85,7 +85,7 @@ class DepositPlatform extends AbstractModel
     }
 
     /**
-     * Get deposit address (simplified - no templates)
+     * Get deposit address
      */
     public function getDepositAddress(): ?string
     {

@@ -6,8 +6,8 @@ use Illuminate\Database\Schema\Builder;
 return [
     'up' => function (Builder $schema) {
         // 创建存款记录表
-        if (!$schema->hasTable('wusong8899_funds_simple_deposit_records')) {
-            $schema->create('wusong8899_funds_simple_deposit_records', function (Blueprint $table) {
+        if (!$schema->hasTable('wusong8899_funds_deposit_records')) {
+            $schema->create('wusong8899_funds_deposit_records', function (Blueprint $table) {
                 $table->increments('id');
                 $table->unsignedInteger('user_id');
                 $table->string('deposit_address', 255); // 存款地址
@@ -38,6 +38,6 @@ return [
     },
 
     'down' => function (Builder $schema) {
-        $schema->dropIfExists('wusong8899_funds_simple_deposit_records');
+        $schema->dropIfExists('wusong8899_funds_deposit_records');
     }
 ];
