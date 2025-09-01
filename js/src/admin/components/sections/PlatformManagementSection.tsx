@@ -26,7 +26,7 @@ export default class PlatformManagementSection extends Component<PlatformManagem
           submitting={submittingPlatform}
         />
 
-        <div className="WithdrawalManagementPage-platformList">
+        <div className="PlatformList">
           {platforms.length === 0 ? (
             <p>{app.translator.trans('funds.admin.platforms.empty')}</p>
           ) : (
