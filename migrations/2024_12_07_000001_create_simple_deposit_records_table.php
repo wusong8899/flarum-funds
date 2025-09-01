@@ -10,8 +10,6 @@ return [
             $schema->create('wusong8899_funds_deposit_records', function (Blueprint $table) {
                 $table->increments('id');
                 $table->unsignedInteger('user_id');
-                $table->string('deposit_address', 255); // 存款地址
-                $table->string('qr_code_url', 500)->nullable(); // 收款二维码URL
                 $table->text('user_message')->nullable(); // 用户留言
                 $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending'); // 状态
                 $table->timestamp('processed_at')->nullable(); // 处理时间
