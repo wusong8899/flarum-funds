@@ -1,8 +1,9 @@
 <?php
 
 use Flarum\Extend;
-use wusong8899\Withdrawal\Api\Controller;
-use wusong8899\Withdrawal\Model;
+use wusong8899\Funds\Api\Controller;
+use wusong8899\Funds\Api\Serializer;
+use wusong8899\Funds\Model;
 
 return [
     (new Extend\Frontend('forum'))
@@ -69,16 +70,16 @@ return [
 
     // Register serializers for our models
     (new Extend\ApiSerializer(\Flarum\Api\Serializer\ForumSerializer::class))
-        ->hasMany('withdrawalPlatforms', \wusong8899\Withdrawal\Api\Serializer\WithdrawalPlatformSerializer::class)
-        ->hasMany('withdrawalRequests', \wusong8899\Withdrawal\Api\Serializer\WithdrawalRequestSerializer::class)
-        ->hasMany('depositPlatforms', \wusong8899\Withdrawal\Api\Serializer\DepositPlatformSerializer::class)
-        ->hasMany('depositRecords', \wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer::class)
-        ->hasMany('networkTypes', \wusong8899\Withdrawal\Api\Serializer\NetworkTypeSerializer::class)
-        ->hasMany('currencyIcons', \wusong8899\Withdrawal\Api\Serializer\CurrencyIconSerializer::class),
+        ->hasMany('withdrawalPlatforms', Serializer\WithdrawalPlatformSerializer::class)
+        ->hasMany('withdrawalRequests', Serializer\WithdrawalRequestSerializer::class)
+        ->hasMany('depositPlatforms', Serializer\DepositPlatformSerializer::class)
+        ->hasMany('depositRecords', Serializer\DepositRecordSerializer::class)
+        ->hasMany('networkTypes', Serializer\NetworkTypeSerializer::class)
+        ->hasMany('currencyIcons', Serializer\CurrencyIconSerializer::class),
 
     (new Extend\ApiSerializer(\Flarum\Api\Serializer\UserSerializer::class))
-        ->hasMany('withdrawalRequests', \wusong8899\Withdrawal\Api\Serializer\WithdrawalRequestSerializer::class)
-        ->hasMany('depositRecords', \wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer::class),
+        ->hasMany('withdrawalRequests', Serializer\WithdrawalRequestSerializer::class)
+        ->hasMany('depositRecords', Serializer\DepositRecordSerializer::class),
 
     (new Extend\Settings())
         ->serializeToForum('wusong8899-funds.moneyIconUrl', 'wusong8899-funds.moneyIconUrl', null, 'https://i.mji.rip/2025/08/28/cd18932c68e9bbee9502b1fb6317cba9.png'),

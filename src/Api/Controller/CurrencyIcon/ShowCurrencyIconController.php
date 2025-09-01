@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Api\Controller\CurrencyIcon;
+namespace wusong8899\Funds\Api\Controller\CurrencyIcon;
 
 use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Http\RequestUtil;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use wusong8899\Withdrawal\Api\Serializer\CurrencyIconSerializer;
-use wusong8899\Withdrawal\Model\CurrencyIcon;
+use wusong8899\Funds\Api\Serializer\CurrencyIconSerializer;
+use wusong8899\Funds\Model\CurrencyIcon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ShowCurrencyIconController extends AbstractShowController

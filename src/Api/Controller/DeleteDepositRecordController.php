@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Api\Controller;
+namespace wusong8899\Funds\Api\Controller;
 
 use Flarum\Api\Controller\AbstractDeleteController;
 use Flarum\Http\RequestUtil;
 use Flarum\User\Exception\PermissionDeniedException;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
-use wusong8899\Withdrawal\Model\DepositRecord;
+use wusong8899\Funds\Model\DepositRecord;
 
 class DeleteDepositRecordController extends AbstractDeleteController
 {

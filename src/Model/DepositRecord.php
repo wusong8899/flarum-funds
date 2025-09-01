@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Model;
+namespace wusong8899\Funds\Model;
 
 use Flarum\Database\AbstractModel;
 use Flarum\User\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Carbon\Carbon;
-use wusong8899\Withdrawal\Model\DepositPlatform;
+use wusong8899\Funds\Model\DepositPlatform;
 
 /**
  * DepositRecord Model

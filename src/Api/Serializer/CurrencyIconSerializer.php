@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Api\Serializer;
+namespace wusong8899\Funds\Api\Serializer;
 
 use Flarum\Api\Serializer\AbstractSerializer;
-use wusong8899\Withdrawal\Model\CurrencyIcon;
+use wusong8899\Funds\Model\CurrencyIcon;
 
 class CurrencyIconSerializer extends AbstractSerializer
 {

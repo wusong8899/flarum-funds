@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Api\Controller;
+namespace wusong8899\Funds\Api\Controller;
 
 use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Http\RequestUtil;
@@ -11,8 +11,8 @@ use Flarum\Foundation\ValidationException;
 use Illuminate\Contracts\Validation\Factory as ValidatorFactory;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use wusong8899\Withdrawal\Api\Serializer\DepositPlatformSerializer;
-use wusong8899\Withdrawal\Model\DepositPlatform;
+use wusong8899\Funds\Api\Serializer\DepositPlatformSerializer;
+use wusong8899\Funds\Model\DepositPlatform;
 
 class UpdateDepositPlatformController extends AbstractShowController
 {

@@ -15,7 +15,7 @@
   },
   "extra": {
     "flarum-extension": {
-      "title": "Withdrawal",
+      "title": "Funds",
       "category": "feature",
       "icon": {
         "name": "fas fa-money-bill-transfer",
@@ -26,7 +26,7 @@
   },
   "autoload": {
     "psr-4": {
-      "wusong8899\\Withdrawal\\": "src/"
+      "wusong8899\\Funds\\": "src/"
     }
   },
   "require-dev": {

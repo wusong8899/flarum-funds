@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Api\Serializer;
+namespace wusong8899\Funds\Api\Serializer;
 
 use Flarum\Api\Serializer\AbstractSerializer;
 use Flarum\Api\Serializer\UserSerializer;
-use wusong8899\Withdrawal\Model\DepositRecord;
+use wusong8899\Funds\Model\DepositRecord;
 
 class DepositRecordSerializer extends AbstractSerializer
 {

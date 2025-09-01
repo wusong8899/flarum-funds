@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Repository;
+namespace wusong8899\Funds\Repository;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use wusong8899\Withdrawal\Model\WithdrawalPlatform;
+use wusong8899\Funds\Model\WithdrawalPlatform;
 
 class WithdrawalPlatformRepository
 {

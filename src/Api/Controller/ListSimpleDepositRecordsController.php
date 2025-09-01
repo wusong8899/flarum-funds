@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Api\Controller;
+namespace wusong8899\Funds\Api\Controller;
 
 use Flarum\Api\Controller\AbstractListController;
 use Flarum\Http\RequestUtil;
@@ -10,8 +10,8 @@ use Flarum\Query\QueryCriteria;
 use Illuminate\Database\Eloquent\Builder;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use wusong8899\Withdrawal\Api\Serializer\SimpleDepositRecordSerializer;
-use wusong8899\Withdrawal\Model\SimpleDepositRecord;
+use wusong8899\Funds\Api\Serializer\SimpleDepositRecordSerializer;
+use wusong8899\Funds\Model\SimpleDepositRecord;
 
 class ListSimpleDepositRecordsController extends AbstractListController
 {
@@ -83,8 +83,8 @@ class ListSimpleDepositRecordsController extends AbstractListController
             $search = '%' . $filters['search'] . '%';
             $query->where(function (Builder $q) use ($search) {
                 $q->where('deposit_address', 'like', $search)
-                  ->orWhere('user_message', 'like', $search)
-                  ->orWhere('admin_notes', 'like', $search);
+                    ->orWhere('user_message', 'like', $search)
+                    ->orWhere('admin_notes', 'like', $search);
             });
         }
     }

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Api\Controller\CurrencyIcon;
+namespace wusong8899\Funds\Api\Controller\CurrencyIcon;
 
 use Flarum\Api\Controller\AbstractDeleteController;
 use Flarum\Http\RequestUtil;
 use Psr\Http\Message\ServerRequestInterface;
-use wusong8899\Withdrawal\Model\CurrencyIcon;
+use wusong8899\Funds\Model\CurrencyIcon;
 use Illuminate\Validation\ValidationException;
 
 class DeleteCurrencyIconController extends AbstractDeleteController

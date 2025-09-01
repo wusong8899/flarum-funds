@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Api\Controller;
+namespace wusong8899\Funds\Api\Controller;
 
 use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Http\RequestUtil;
@@ -10,8 +10,8 @@ use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Validation\ValidationException;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use wusong8899\Withdrawal\Api\Serializer\SimpleDepositRecordSerializer;
-use wusong8899\Withdrawal\Model\SimpleDepositRecord;
+use wusong8899\Funds\Api\Serializer\SimpleDepositRecordSerializer;
+use wusong8899\Funds\Model\SimpleDepositRecord;
 
 class CreateSimpleDepositRecordController extends AbstractCreateController
 {

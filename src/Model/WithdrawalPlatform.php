@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Model;
+namespace wusong8899\Funds\Model;
 
 use Flarum\Database\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -268,5 +268,4 @@ class WithdrawalPlatform extends AbstractModel
 
         return null; // No network icon available
     }
-
 }

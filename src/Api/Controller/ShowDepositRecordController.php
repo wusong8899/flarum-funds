@@ -1,14 +1,14 @@
 <?php
 
-namespace wusong8899\Withdrawal\Api\Controller;
+namespace wusong8899\Funds\Api\Controller;
 
 use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Http\RequestUtil;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer;
-use wusong8899\Withdrawal\Model\DepositRecord;
+use wusong8899\Funds\Api\Serializer\DepositRecordSerializer;
+use wusong8899\Funds\Model\DepositRecord;
 
 class ShowDepositRecordController extends AbstractShowController
 {

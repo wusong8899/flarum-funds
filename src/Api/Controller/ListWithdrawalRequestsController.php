@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Api\Controller;
+namespace wusong8899\Funds\Api\Controller;
 
 use Flarum\Api\Controller\AbstractListController;
 use Flarum\Http\RequestUtil;
@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use wusong8899\Withdrawal\Api\Serializer\WithdrawalRequestSerializer;
-use wusong8899\Withdrawal\Model\WithdrawalRequest;
+use wusong8899\Funds\Api\Serializer\WithdrawalRequestSerializer;
+use wusong8899\Funds\Model\WithdrawalRequest;
 
 class ListWithdrawalRequestsController extends AbstractListController
 {

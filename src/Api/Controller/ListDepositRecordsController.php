@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Api\Controller;
+namespace wusong8899\Funds\Api\Controller;
 
 use Flarum\Api\Controller\AbstractListController;
 use Flarum\Http\RequestUtil;
 use Flarum\User\Exception\PermissionDeniedException;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use wusong8899\Withdrawal\Api\Serializer\DepositRecordSerializer;
-use wusong8899\Withdrawal\Model\DepositRecord;
+use wusong8899\Funds\Api\Serializer\DepositRecordSerializer;
+use wusong8899\Funds\Model\DepositRecord;
 use Illuminate\Database\Eloquent\Builder;
 
 class ListDepositRecordsController extends AbstractListController
@@ -116,8 +116,13 @@ class ListDepositRecordsController extends AbstractListController
 
             // Allowed sort fields
             $allowedFields = [
-                'id', 'amount', 'status', 'created_at', 'updated_at',
-                'deposit_time', 'processed_at'
+                'id',
+                'amount',
+                'status',
+                'created_at',
+                'updated_at',
+                'deposit_time',
+                'processed_at'
             ];
 
             if (in_array($field, $allowedFields)) {

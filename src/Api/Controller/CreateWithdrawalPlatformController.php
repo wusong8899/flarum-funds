@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Api\Controller;
+namespace wusong8899\Funds\Api\Controller;
 
 use Carbon\Carbon;
 use Flarum\Api\Controller\AbstractCreateController;
@@ -12,9 +12,9 @@ use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use wusong8899\Withdrawal\Api\Serializer\WithdrawalPlatformSerializer;
-use wusong8899\Withdrawal\Model\WithdrawalPlatform;
-use wusong8899\Withdrawal\Validator\WithdrawalPlatformValidator;
+use wusong8899\Funds\Api\Serializer\WithdrawalPlatformSerializer;
+use wusong8899\Funds\Model\WithdrawalPlatform;
+use wusong8899\Funds\Validator\WithdrawalPlatformValidator;
 
 class CreateWithdrawalPlatformController extends AbstractCreateController
 {

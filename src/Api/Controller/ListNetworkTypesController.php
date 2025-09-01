@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Api\Controller;
+namespace wusong8899\Funds\Api\Controller;
 
 use Flarum\Api\Controller\AbstractListController;
 use Flarum\Http\RequestUtil;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use wusong8899\Withdrawal\Api\Serializer\NetworkTypeSerializer;
-use wusong8899\Withdrawal\Model\NetworkType;
+use wusong8899\Funds\Api\Serializer\NetworkTypeSerializer;
+use wusong8899\Funds\Model\NetworkType;
 
 class ListNetworkTypesController extends AbstractListController
 {

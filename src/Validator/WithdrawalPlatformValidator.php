@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Validator;
+namespace wusong8899\Funds\Validator;
 
 use InvalidArgumentException;
 

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Api\Serializer;
+namespace wusong8899\Funds\Api\Serializer;
 
 use Flarum\Api\Serializer\AbstractSerializer;
 use Flarum\Api\Serializer\BasicUserSerializer;
 use Tobscure\JsonApi\Relationship;
-use wusong8899\Withdrawal\Model\WithdrawalRequest;
+use wusong8899\Funds\Model\WithdrawalRequest;
 
 class WithdrawalRequestSerializer extends AbstractSerializer
 {

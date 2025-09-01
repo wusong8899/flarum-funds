@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Api\Controller;
+namespace wusong8899\Funds\Api\Controller;
 
 use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Http\RequestUtil;
@@ -10,8 +10,8 @@ use Flarum\User\Exception\PermissionDeniedException;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use wusong8899\Withdrawal\Api\Serializer\WithdrawalPlatformSerializer;
-use wusong8899\Withdrawal\Model\WithdrawalPlatform;
+use wusong8899\Funds\Api\Serializer\WithdrawalPlatformSerializer;
+use wusong8899\Funds\Model\WithdrawalPlatform;
 
 class UpdateWithdrawalPlatformController extends AbstractShowController
 {

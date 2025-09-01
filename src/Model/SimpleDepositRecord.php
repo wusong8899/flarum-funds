@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Model;
+namespace wusong8899\Funds\Model;
 
 use Flarum\Database\AbstractModel;
 use Flarum\User\User;

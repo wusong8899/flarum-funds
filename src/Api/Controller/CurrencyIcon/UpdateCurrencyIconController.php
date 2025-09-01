@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Api\Controller\CurrencyIcon;
+namespace wusong8899\Funds\Api\Controller\CurrencyIcon;
 
 use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Http\RequestUtil;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use wusong8899\Withdrawal\Api\Serializer\CurrencyIconSerializer;
-use wusong8899\Withdrawal\Model\CurrencyIcon;
+use wusong8899\Funds\Api\Serializer\CurrencyIconSerializer;
+use wusong8899\Funds\Model\CurrencyIcon;
 use Illuminate\Validation\ValidationException;
 
 class UpdateCurrencyIconController extends AbstractShowController
@@ -30,11 +30,13 @@ class UpdateCurrencyIconController extends AbstractShowController
         $this->validateAttributes($attributes);
 
         // Check for duplicate currency symbol (if changing)
-        if (isset($attributes['currencySymbol']) &&
-            strtoupper($attributes['currencySymbol']) !== $currencyIcon->currency_symbol) {
+        if (
+            isset($attributes['currencySymbol']) &&
+            strtoupper($attributes['currencySymbol']) !== $currencyIcon->currency_symbol
+        ) {
             $existingCurrency = CurrencyIcon::where('currency_symbol', strtoupper($attributes['currencySymbol']))
-                                           ->where('id', '!=', $currencyIcon->id)
-                                           ->first();
+                ->where('id', '!=', $currencyIcon->id)
+                ->first();
             if ($existingCurrency) {
                 throw ValidationException::withMessages([
                     'currencySymbol' => ['Currency symbol already exists']

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Api\Controller;
+namespace wusong8899\Funds\Api\Controller;
 
 use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Http\RequestUtil;
@@ -11,10 +11,10 @@ use Illuminate\Support\Arr;
 use Flarum\Foundation\ValidationException;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use wusong8899\Withdrawal\Api\Serializer\WithdrawalRequestSerializer;
-use wusong8899\Withdrawal\Model\WithdrawalRequest;
-use wusong8899\Withdrawal\Model\WithdrawalPlatform;
-use wusong8899\Withdrawal\Validator\WithdrawalRequestValidator;
+use wusong8899\Funds\Api\Serializer\WithdrawalRequestSerializer;
+use wusong8899\Funds\Model\WithdrawalRequest;
+use wusong8899\Funds\Model\WithdrawalPlatform;
+use wusong8899\Funds\Validator\WithdrawalRequestValidator;
 
 class CreateWithdrawalRequestController extends AbstractCreateController
 {

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Repository;
+namespace wusong8899\Funds\Repository;
 
 use Flarum\User\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use wusong8899\Withdrawal\Model\WithdrawalRequest;
-use wusong8899\Withdrawal\Model\WithdrawalPlatform;
+use wusong8899\Funds\Model\WithdrawalRequest;
+use wusong8899\Funds\Model\WithdrawalPlatform;
 
 class WithdrawalRequestRepository
 {

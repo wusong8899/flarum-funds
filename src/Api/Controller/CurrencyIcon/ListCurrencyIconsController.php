@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Api\Controller\CurrencyIcon;
+namespace wusong8899\Funds\Api\Controller\CurrencyIcon;
 
 use Flarum\Api\Controller\AbstractListController;
 use Flarum\Http\RequestUtil;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use wusong8899\Withdrawal\Api\Serializer\CurrencyIconSerializer;
-use wusong8899\Withdrawal\Model\CurrencyIcon;
+use wusong8899\Funds\Api\Serializer\CurrencyIconSerializer;
+use wusong8899\Funds\Model\CurrencyIcon;
 
 class ListCurrencyIconsController extends AbstractListController
 {
@@ -34,12 +34,12 @@ class ListCurrencyIconsController extends AbstractListController
             $search = trim($filter['search']);
             $query->where(function ($q) use ($search) {
                 $q->where('currency_symbol', 'LIKE', "%{$search}%")
-                  ->orWhere('currency_name', 'LIKE', "%{$search}%");
+                    ->orWhere('currency_name', 'LIKE', "%{$search}%");
             });
         }
 
         return $query->orderBy('display_priority', 'desc')
-                     ->orderBy('currency_symbol')
-                     ->get();
+            ->orderBy('currency_symbol')
+            ->get();
     }
 }

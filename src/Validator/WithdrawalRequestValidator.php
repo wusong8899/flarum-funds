@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace wusong8899\Withdrawal\Validator;
+namespace wusong8899\Funds\Validator;
 
 use Flarum\User\User;
 use Flarum\Foundation\ValidationException;
-use wusong8899\Withdrawal\Model\WithdrawalPlatform;
+use wusong8899\Funds\Model\WithdrawalPlatform;
 
 class WithdrawalRequestValidator
 {
