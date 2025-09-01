@@ -334,7 +334,6 @@ export default class FundsPage extends Page<any, FundsPageState> {
   }
 
   private renderDepositForm(): Mithril.Children {
-    console.log('FundsPage: renderDepositForm - depositPlatforms:', this.state.depositPlatforms);
     return (
       <div className="FundsPage-depositContent">
         <DepositForm
@@ -669,8 +668,6 @@ export default class FundsPage extends Page<any, FundsPageState> {
 
       this.state.depositPlatforms = platforms;
       this.state.depositRecords = records;
-      console.log('FundsPage: Loaded deposit platforms:', platforms);
-      console.log('FundsPage: Deposit platform count:', platforms.length);
     } catch (error) {
       console.error('Error loading deposit data:', error);
       // Fallback to empty arrays

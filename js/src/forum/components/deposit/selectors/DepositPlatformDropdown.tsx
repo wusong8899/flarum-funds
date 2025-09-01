@@ -5,7 +5,7 @@ import type Mithril from 'mithril';
 import DepositPlatform from '../../../../common/models/DepositPlatform';
 import { getAttr } from '../../withdrawal/utils/modelHelpers';
 import { ICONS } from '../../withdrawal/utils/constants';
-import { getBestPlatformIcon, getCurrencyIcon, renderIcon } from '../../../../common/utils/IconResolver';
+import { getBestPlatformIcon, renderIcon } from '../../../../common/utils/IconResolver';
 import m from 'mithril';
 
 interface DepositPlatformDropdownProps {
@@ -31,26 +31,25 @@ export default class DepositPlatformDropdown extends Component<DepositPlatformDr
     const { showDropdown } = this.state;
 
     return (
-      <div className="FundsPage-platformSelector">
-        <div className="FundsPage-label">{app.translator.trans('funds.forum.deposit.platform_label')}</div>
+      <div className="WithdrawalPage-platformSelector">
+        <div className="WithdrawalPage-label">{app.translator.trans('funds.forum.deposit.platform_label')}</div>
         <div 
-          className="FundsPage-platformDropdown" 
+          className="WithdrawalPage-platformDropdown" 
           onclick={() => this.toggleDropdown()}
         >
-          <div className="FundsPage-platformSelected">
-            <div className="FundsPage-platformInfo">
-              <div className="FundsPage-platformIcon">
+          <div className="WithdrawalPage-platformSelected">
+            <div className="WithdrawalPage-platformInfo">
+              <div className="WithdrawalPage-platformIcon">
                 {this.renderPlatformIcon(selectedPlatform)}
               </div>
-              <div className="FundsPage-platformDetails">
-                <div className="FundsPage-platformName">
+              <div className="WithdrawalPage-platformDetails">
+                <div className="WithdrawalPage-platformName">
                   {this.getPlatformDisplayName(selectedPlatform)}
                 </div>
-                {selectedPlatform && this.renderPlatformSubtext(selectedPlatform)}
               </div>
             </div>
           </div>
-          {icon(ICONS.CHEVRON_DOWN, { className: 'FundsPage-dropdownIcon' })}
+          {icon(ICONS.CHEVRON_DOWN, { className: 'WithdrawalPage-dropdownIcon' })}
         </div>
 
         {showDropdown && this.renderPlatformDropdown()}
@@ -103,63 +102,22 @@ export default class DepositPlatformDropdown extends Component<DepositPlatformDr
     }
 
     const bestIcon = getBestPlatformIcon(platform);
-    return renderIcon(bestIcon, 'FundsPage-platformIconImage');
+    return renderIcon(bestIcon, 'platform-icon-image');
   }
 
-  private getCurrencyIconForSymbol(symbol: string, platforms: DepositPlatform[]): Mithril.Children {
-    // Find the first platform with this symbol to get currency icon
-    const platformWithSymbol = platforms.find(platform => getAttr(platform, 'symbol') === symbol);
-    
-    if (platformWithSymbol) {
-      const currencyIconRep = getCurrencyIcon(platformWithSymbol);
-      return renderIcon(currencyIconRep, 'FundsPage-currencyIcon');
-    }
-    
-    return icon('fas fa-coins');
-  }
-
-  private renderPlatformSubtext(platform: DepositPlatform): Mithril.Children {
-    const minAmount = getAttr(platform, 'minAmount');
-    const fee = getAttr(platform, 'fee');
-    const symbol = getAttr(platform, 'symbol');
-    
-    const parts: string[] = [];
-    
-    if (minAmount && minAmount > 0) {
-      parts.push(app.translator.trans('funds.forum.deposit.min_amount_short', {
-        amount: minAmount,
-        symbol: symbol
-      }).toString());
-    }
-    
-    if (fee && fee > 0) {
-      parts.push(app.translator.trans('funds.forum.deposit.fee_short', {
-        fee: fee,
-        symbol: symbol
-      }).toString());
-    }
-    
-    if (parts.length > 0) {
-      return (
-        <div className="FundsPage-platformSubtext">
-          {parts.join(' • ')}
-        </div>
-      );
-    }
-    
-    return null;
-  }
 
   private renderPlatformDropdown(): Mithril.Children {
     const { platforms } = this.attrs;
 
-    // Group platforms by currency and sort
-    const groupedPlatforms = this.groupPlatformsByCurrency(platforms);
+    // Filter active platforms
+    const validPlatforms = (platforms || []).filter(platform => 
+      platform && getAttr(platform, 'isActive')
+    );
     
-    if (Object.keys(groupedPlatforms).length === 0) {
+    if (validPlatforms.length === 0) {
       return (
-        <div className="FundsPage-dropdownMenu">
-          <div className="FundsPage-dropdownItem FundsPage-noData">
+        <div className="WithdrawalPage-dropdownMenu">
+          <div className="WithdrawalPage-dropdownItem WithdrawalPage-noData">
             {app.translator.trans('funds.forum.deposit.no_platforms')}
           </div>
         </div>
@@ -167,77 +125,25 @@ export default class DepositPlatformDropdown extends Component<DepositPlatformDr
     }
 
     return (
-      <div className="FundsPage-dropdownMenu">
-        {Object.entries(groupedPlatforms).flatMap(([currency, currencyPlatforms]) => [
-          // Currency header
-          <div key={`${currency}-header`} className="FundsPage-dropdownHeader">
-            <div className="FundsPage-currencyHeader">
-              <div className="FundsPage-currencyIcon">
-                {this.getCurrencyIconForSymbol(currency, platforms)}
-              </div>
-              <span className="FundsPage-currencyName">{currency}</span>
+      <div className="WithdrawalPage-dropdownMenu">
+        {validPlatforms.map(platform => (
+          <div 
+            key={platform.id()}
+            className="WithdrawalPage-dropdownItem"
+            onclick={() => this.selectPlatform(platform)}
+          >
+            <div className="WithdrawalPage-platformIcon">
+              {this.renderPlatformIcon(platform)}
             </div>
-          </div>,
-          // Platforms for this currency
-          ...currencyPlatforms.map(platform => (
-            <div 
-              key={platform.id()}
-              className="FundsPage-dropdownItem"
-              onclick={() => this.selectPlatform(platform)}
-            >
-              <div className="FundsPage-platformIcon">
-                {this.renderPlatformIcon(platform)}
-              </div>
-              <div className="FundsPage-platformInfo">
-                <div className="FundsPage-platformName">
-                  {this.getPlatformDisplayName(platform)}
-                </div>
-                {this.renderPlatformSubtext(platform)}
-              </div>
+            <div className="WithdrawalPage-platformName">
+              {this.getPlatformDisplayName(platform)}
             </div>
-          ))
-        ])}
+          </div>
+        ))}
       </div>
     );
   }
 
-  private groupPlatformsByCurrency(platforms: DepositPlatform[]): { [currency: string]: DepositPlatform[] } {
-    const grouped: { [currency: string]: DepositPlatform[] } = {};
-    
-    console.log('DepositPlatformDropdown: Grouping platforms, received:', platforms);
-    console.log('DepositPlatformDropdown: Platform count:', platforms ? platforms.length : 0);
-    
-    // Filter active platforms and group by currency
-    const validPlatforms = (platforms || []).filter(platform => {
-      const isActive = getAttr(platform, 'isActive');
-      console.log(`Platform ${getAttr(platform, 'name')}: isActive = ${isActive}`);
-      return platform && isActive;
-    });
-    
-    console.log('DepositPlatformDropdown: Valid platforms after filtering:', validPlatforms.length);
-
-    validPlatforms.forEach(platform => {
-      const symbol = getAttr(platform, 'symbol');
-      console.log(`Adding platform to group: ${getAttr(platform, 'name')} -> ${symbol}`);
-      if (!grouped[symbol]) {
-        grouped[symbol] = [];
-      }
-      grouped[symbol].push(platform);
-    });
-
-    console.log('DepositPlatformDropdown: Final grouped platforms:', grouped);
-
-    // Sort platforms within each currency group by network
-    Object.keys(grouped).forEach(currency => {
-      grouped[currency].sort((a, b) => {
-        const networkA = getAttr(a, 'network') || '';
-        const networkB = getAttr(b, 'network') || '';
-        return networkA.localeCompare(networkB);
-      });
-    });
-
-    return grouped;
-  }
 
   private selectPlatform(platform: DepositPlatform): void {
     const { onPlatformSelect } = this.attrs;
