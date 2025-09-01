@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class CurrencyIcon extends AbstractModel
 {
-    protected $table = 'currency_icons';
+    protected $table = 'wusong8899_funds_currency_icons';
 
     public $timestamps = true;
 

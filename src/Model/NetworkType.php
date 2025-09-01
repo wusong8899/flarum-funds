@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class NetworkType extends AbstractModel
 {
-    protected $table = 'network_types';
+    protected $table = 'wusong8899_funds_network_types';
 
     public $timestamps = true;
 

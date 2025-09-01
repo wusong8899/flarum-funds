@@ -6,9 +6,9 @@ use Illuminate\Database\Schema\Builder;
 
 return [
     'up' => function (Builder $schema) {
-        // 1. Create currency_icons table
-        if (!$schema->hasTable('currency_icons')) {
-            $schema->create('currency_icons', function (Blueprint $table) {
+        // 1. Create wusong8899_funds_currency_icons table
+        if (!$schema->hasTable('wusong8899_funds_currency_icons')) {
+            $schema->create('wusong8899_funds_currency_icons', function (Blueprint $table) {
                 $table->increments('id');
                 $table->string('currency_symbol', 10)->unique(); // USDT, BTC, ETH
                 $table->string('currency_name', 100); // Tether, Bitcoin, Ethereum
@@ -25,27 +25,27 @@ return [
             });
         }
 
-        // 2. Update network_types table - rename icon fields for clarity
-        if ($schema->hasTable('network_types')) {
-            $schema->table('network_types', function (Blueprint $table) use ($schema) {
+        // 2. Update wusong8899_funds_network_types table - rename icon fields for clarity
+        if ($schema->hasTable('wusong8899_funds_network_types')) {
+            $schema->table('wusong8899_funds_network_types', function (Blueprint $table) use ($schema) {
                 // Rename existing icon fields to be network-specific
-                if ($schema->hasColumn('network_types', 'icon_url')) {
+                if ($schema->hasColumn('wusong8899_funds_network_types', 'icon_url')) {
                     $table->renameColumn('icon_url', 'network_icon_url');
                 }
-                if ($schema->hasColumn('network_types', 'icon_class')) {
+                if ($schema->hasColumn('wusong8899_funds_network_types', 'icon_class')) {
                     $table->renameColumn('icon_class', 'network_icon_class');
                 }
             });
         }
 
-        // 3. Update deposit_platforms table - remove old fields and add explicit ones
-        if ($schema->hasTable('deposit_platforms')) {
-            $schema->table('deposit_platforms', function (Blueprint $table) use ($schema) {
+        // 3. Update wusong8899_funds_deposit_platforms table - remove old fields and add explicit ones
+        if ($schema->hasTable('wusong8899_funds_deposit_platforms')) {
+            $schema->table('wusong8899_funds_deposit_platforms', function (Blueprint $table) use ($schema) {
                 // Remove old generic icon fields
-                if ($schema->hasColumn('deposit_platforms', 'icon_url')) {
+                if ($schema->hasColumn('wusong8899_funds_deposit_platforms', 'icon_url')) {
                     $table->dropColumn('icon_url');
                 }
-                if ($schema->hasColumn('deposit_platforms', 'icon_class')) {
+                if ($schema->hasColumn('wusong8899_funds_deposit_platforms', 'icon_class')) {
                     $table->dropColumn('icon_class');
                 }
 
@@ -59,14 +59,14 @@ return [
             });
         }
 
-        // 4. Update withdrawal_platforms table - same changes
-        if ($schema->hasTable('withdrawal_platforms')) {
-            $schema->table('withdrawal_platforms', function (Blueprint $table) use ($schema) {
+        // 4. Update wusong8899_funds_withdrawal_platforms table - same changes
+        if ($schema->hasTable('wusong8899_funds_withdrawal_platforms')) {
+            $schema->table('wusong8899_funds_withdrawal_platforms', function (Blueprint $table) use ($schema) {
                 // Remove old generic icon fields
-                if ($schema->hasColumn('withdrawal_platforms', 'icon_url')) {
+                if ($schema->hasColumn('wusong8899_funds_withdrawal_platforms', 'icon_url')) {
                     $table->dropColumn('icon_url');
                 }
-                if ($schema->hasColumn('withdrawal_platforms', 'icon_class')) {
+                if ($schema->hasColumn('wusong8899_funds_withdrawal_platforms', 'icon_class')) {
                     $table->dropColumn('icon_class');
                 }
 
@@ -82,24 +82,24 @@ return [
     },
 
     'down' => function (Builder $schema) {
-        // Drop currency_icons table
-        $schema->dropIfExists('currency_icons');
+        // Drop wusong8899_funds_currency_icons table
+        $schema->dropIfExists('wusong8899_funds_currency_icons');
 
-        // Revert network_types table
-        if ($schema->hasTable('network_types')) {
-            $schema->table('network_types', function (Blueprint $table) use ($schema) {
-                if ($schema->hasColumn('network_types', 'network_icon_url')) {
+        // Revert wusong8899_funds_network_types table
+        if ($schema->hasTable('wusong8899_funds_network_types')) {
+            $schema->table('wusong8899_funds_network_types', function (Blueprint $table) use ($schema) {
+                if ($schema->hasColumn('wusong8899_funds_network_types', 'network_icon_url')) {
                     $table->renameColumn('network_icon_url', 'icon_url');
                 }
-                if ($schema->hasColumn('network_types', 'network_icon_class')) {
+                if ($schema->hasColumn('wusong8899_funds_network_types', 'network_icon_class')) {
                     $table->renameColumn('network_icon_class', 'icon_class');
                 }
             });
         }
 
-        // Revert deposit_platforms table
-        if ($schema->hasTable('deposit_platforms')) {
-            $schema->table('deposit_platforms', function (Blueprint $table) use ($schema) {
+        // Revert wusong8899_funds_deposit_platforms table
+        if ($schema->hasTable('wusong8899_funds_deposit_platforms')) {
+            $schema->table('wusong8899_funds_deposit_platforms', function (Blueprint $table) use ($schema) {
                 // Remove new fields
                 $table->dropColumn([
                     'currency_icon_override_url',
@@ -116,9 +116,9 @@ return [
             });
         }
 
-        // Revert withdrawal_platforms table
-        if ($schema->hasTable('withdrawal_platforms')) {
-            $schema->table('withdrawal_platforms', function (Blueprint $table) use ($schema) {
+        // Revert wusong8899_funds_withdrawal_platforms table
+        if ($schema->hasTable('wusong8899_funds_withdrawal_platforms')) {
+            $schema->table('wusong8899_funds_withdrawal_platforms', function (Blueprint $table) use ($schema) {
                 // Remove new fields
                 $table->dropColumn([
                     'currency_icon_override_url',

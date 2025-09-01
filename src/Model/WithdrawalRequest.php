@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class WithdrawalRequest extends AbstractModel
 {
-    protected $table = 'withdrawal_requests';
+    protected $table = 'wusong8899_funds_withdrawal_requests';
 
     public $timestamps = true;
 

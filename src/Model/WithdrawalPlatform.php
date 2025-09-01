@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class WithdrawalPlatform extends AbstractModel
 {
-    protected $table = 'withdrawal_platforms';
+    protected $table = 'wusong8899_funds_withdrawal_platforms';
 
     public $timestamps = true;
 

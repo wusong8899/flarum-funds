@@ -36,7 +36,7 @@ use wusong8899\Funds\Model\DepositPlatform;
  */
 class DepositRecord extends AbstractModel
 {
-    protected $table = 'wusong8899_deposit_records';
+    protected $table = 'wusong8899_funds_deposit_records';
 
     protected $fillable = [
         'user_id',

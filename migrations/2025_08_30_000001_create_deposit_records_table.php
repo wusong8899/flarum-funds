@@ -31,7 +31,7 @@ return [
                 
                 // Foreign key constraints
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                $table->foreign('platform_id')->references('id')->on('deposit_platforms')->onDelete('cascade');
+                $table->foreign('platform_id')->references('id')->on('wusong8899_funds_deposit_platforms')->onDelete('cascade');
                 $table->foreign('processed_by')->references('id')->on('users')->onDelete('set null');
                 
                 // Indexes for performance

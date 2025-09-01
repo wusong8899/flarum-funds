@@ -73,12 +73,12 @@ return [
         ];
 
         foreach ($currencies as $currency) {
-            $connection->table('currency_icons')->insert($currency);
+            $connection->table('wusong8899_funds_currency_icons')->insert($currency);
         }
     },
 
     'down' => function (Builder $schema) {
         $connection = $schema->getConnection();
-        $connection->table('currency_icons')->truncate();
+        $connection->table('wusong8899_funds_currency_icons')->truncate();
     }
 ];

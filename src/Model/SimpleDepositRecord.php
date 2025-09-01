@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class SimpleDepositRecord extends AbstractModel
 {
-    protected $table = 'simple_deposit_records';
+    protected $table = 'wusong8899_funds_simple_deposit_records';
 
     public $timestamps = true;
 

@@ -6,9 +6,9 @@ use Illuminate\Database\Schema\Builder;
 
 return [
     'up' => function (Builder $schema) {
-        // Create withdrawal_platforms table
-        if (!$schema->hasTable('withdrawal_platforms')) {
-            $schema->create('withdrawal_platforms', function (Blueprint $table) {
+        // Create wusong8899_funds_withdrawal_platforms table
+        if (!$schema->hasTable('wusong8899_funds_withdrawal_platforms')) {
+            $schema->create('wusong8899_funds_withdrawal_platforms', function (Blueprint $table) {
                 $table->increments('id');
                 $table->string('name');
                 $table->string('symbol')->nullable(); // Currency symbol
@@ -27,9 +27,9 @@ return [
             });
         }
 
-        // Create network_types table (needed before deposit_platforms due to foreign key)
-        if (!$schema->hasTable('network_types')) {
-            $schema->create('network_types', function (Blueprint $table) {
+        // Create wusong8899_funds_network_types table (needed before deposit_platforms due to foreign key)
+        if (!$schema->hasTable('wusong8899_funds_network_types')) {
+            $schema->create('wusong8899_funds_network_types', function (Blueprint $table) {
                 $table->increments('id');
                 $table->string('name'); // e.g., "TRON (TRC20)"
                 $table->string('code'); // e.g., "TRC20"
@@ -48,9 +48,9 @@ return [
             });
         }
 
-        // Create withdrawal_requests table
-        if (!$schema->hasTable('withdrawal_requests')) {
-            $schema->create('withdrawal_requests', function (Blueprint $table) {
+        // Create wusong8899_funds_withdrawal_requests table
+        if (!$schema->hasTable('wusong8899_funds_withdrawal_requests')) {
+            $schema->create('wusong8899_funds_withdrawal_requests', function (Blueprint $table) {
                 $table->increments('id');
                 $table->unsignedInteger('user_id');
                 $table->unsignedInteger('platform_id');
@@ -64,7 +64,7 @@ return [
 
                 // Foreign keys
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                $table->foreign('platform_id')->references('id')->on('withdrawal_platforms')->onDelete('cascade');
+                $table->foreign('platform_id')->references('id')->on('wusong8899_funds_withdrawal_platforms')->onDelete('cascade');
                 $table->foreign('approved_by')->references('id')->on('users')->onDelete('set null');
 
                 // Indexes
@@ -74,9 +74,9 @@ return [
             });
         }
 
-        // Create deposit_platforms table
-        if (!$schema->hasTable('deposit_platforms')) {
-            $schema->create('deposit_platforms', function (Blueprint $table) {
+        // Create wusong8899_funds_deposit_platforms table
+        if (!$schema->hasTable('wusong8899_funds_deposit_platforms')) {
+            $schema->create('wusong8899_funds_deposit_platforms', function (Blueprint $table) {
                 $table->increments('id');
                 $table->string('name'); // Platform name
                 $table->string('symbol'); // Currency symbol
@@ -95,7 +95,7 @@ return [
                 $table->timestamps();
 
                 // Foreign keys
-                $table->foreign('network_type_id')->references('id')->on('network_types')->onDelete('set null');
+                $table->foreign('network_type_id')->references('id')->on('wusong8899_funds_network_types')->onDelete('set null');
 
                 // Unique constraint
                 $table->unique(['symbol', 'network']);
@@ -107,9 +107,9 @@ return [
             });
         }
 
-        // Create deposit_addresses table
-        if (!$schema->hasTable('deposit_addresses')) {
-            $schema->create('deposit_addresses', function (Blueprint $table) {
+        // Create wusong8899_funds_deposit_addresses table
+        if (!$schema->hasTable('wusong8899_funds_deposit_addresses')) {
+            $schema->create('wusong8899_funds_deposit_addresses', function (Blueprint $table) {
                 $table->increments('id');
                 $table->unsignedInteger('user_id');
                 $table->unsignedInteger('platform_id');
@@ -118,7 +118,7 @@ return [
 
                 // Foreign keys
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                $table->foreign('platform_id')->references('id')->on('deposit_platforms')->onDelete('cascade');
+                $table->foreign('platform_id')->references('id')->on('wusong8899_funds_deposit_platforms')->onDelete('cascade');
 
                 // Unique constraint
                 $table->unique(['user_id', 'platform_id']);
@@ -133,10 +133,10 @@ return [
 
     'down' => function (Builder $schema) {
         // Drop tables in reverse order due to foreign key dependencies
-        $schema->dropIfExists('deposit_addresses');
-        $schema->dropIfExists('deposit_platforms');
-        $schema->dropIfExists('withdrawal_requests');
-        $schema->dropIfExists('network_types');
-        $schema->dropIfExists('withdrawal_platforms');
+        $schema->dropIfExists('wusong8899_funds_deposit_addresses');
+        $schema->dropIfExists('wusong8899_funds_deposit_platforms');
+        $schema->dropIfExists('wusong8899_funds_withdrawal_requests');
+        $schema->dropIfExists('wusong8899_funds_network_types');
+        $schema->dropIfExists('wusong8899_funds_withdrawal_platforms');
     }
 ];

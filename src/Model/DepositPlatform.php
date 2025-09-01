@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class DepositPlatform extends AbstractModel
 {
-    protected $table = 'deposit_platforms';
+    protected $table = 'wusong8899_funds_deposit_platforms';
 
     public $timestamps = true;
 
