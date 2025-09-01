@@ -42,10 +42,10 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
         <div className="DepositForm-header">
           <div className="DepositForm-title">
             <i className="fas fa-plus-circle"></i>
-            {app.translator.trans('funds.forum.deposit.form.form_title', {}, '存款申请')}
+            {app.translator.trans('funds.forum.deposit.form.form_title')}
           </div>
           <div className="DepositForm-description">
-            {app.translator.trans('funds.forum.deposit.form.form_description', {}, '请填写您的存款地址和收款二维码，我们会尽快处理您的申请。')}
+            {app.translator.trans('funds.forum.deposit.form.form_description')}
           </div>
         </div>
 
@@ -53,62 +53,62 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
           {/* 存款地址字段 */}
           <div className="DepositForm-field">
             <label className="DepositForm-label">
-              {app.translator.trans('funds.forum.deposit.form.deposit_address', {}, '存款地址')}
+              {app.translator.trans('funds.forum.deposit.form.deposit_address')}
               <span className="DepositForm-required">*</span>
             </label>
             <input
               type="text"
               className="DepositForm-input"
-              placeholder={app.translator.trans('funds.forum.deposit.form.deposit_address_placeholder', {}, '请输入您的存款地址...')}
+              placeholder={app.translator.trans('funds.forum.deposit.form.deposit_address_placeholder')}
               value={this.state.depositAddress()}
               oninput={withAttr('value', this.state.depositAddress)}
               required
               disabled={submitting}
             />
             <div className="DepositForm-help">
-              {app.translator.trans('funds.forum.deposit.form.deposit_address_help', {}, '请输入您用于接收存款的钱包地址或账号')}
+              {app.translator.trans('funds.forum.deposit.form.deposit_address_help')}
             </div>
           </div>
 
           {/* 收款二维码字段 */}
           <div className="DepositForm-field">
             <label className="DepositForm-label">
-              {app.translator.trans('funds.forum.deposit.form.qr_code_url', {}, '收款二维码')}
+              {app.translator.trans('funds.forum.deposit.form.qr_code_url')}
               <span className="DepositForm-optional">
-                ({app.translator.trans('funds.forum.deposit.form.optional', {}, '可选')})
+                ({app.translator.trans('funds.forum.deposit.form.optional')})
               </span>
             </label>
             <input
               type="url"
               className="DepositForm-input"
-              placeholder={app.translator.trans('funds.forum.deposit.form.qr_code_url_placeholder', {}, '请输入二维码图片链接...')}
+              placeholder={app.translator.trans('funds.forum.deposit.form.qr_code_url_placeholder')}
               value={this.state.qrCodeUrl()}
               oninput={withAttr('value', this.state.qrCodeUrl)}
               disabled={submitting}
             />
             <div className="DepositForm-help">
-              {app.translator.trans('funds.forum.deposit.form.qr_code_url_help', {}, '可选：上传您的收款二维码图片链接，方便其他人扫码转账')}
+              {app.translator.trans('funds.forum.deposit.form.qr_code_url_help')}
             </div>
           </div>
 
           {/* 留言字段 */}
           <div className="DepositForm-field">
             <label className="DepositForm-label">
-              {app.translator.trans('funds.forum.deposit.form.user_message', {}, '留言')}
+              {app.translator.trans('funds.forum.deposit.form.user_message')}
               <span className="DepositForm-optional">
-                ({app.translator.trans('funds.forum.deposit.form.optional', {}, '可选')})
+                ({app.translator.trans('funds.forum.deposit.form.optional')})
               </span>
             </label>
             <textarea
               className="DepositForm-textarea"
-              placeholder={app.translator.trans('funds.forum.deposit.form.user_message_placeholder', {}, '请输入您的留言或说明...')}
+              placeholder={app.translator.trans('funds.forum.deposit.form.user_message_placeholder')}
               value={this.state.userMessage()}
               oninput={withAttr('value', this.state.userMessage)}
               rows={4}
               disabled={submitting}
             ></textarea>
             <div className="DepositForm-help">
-              {app.translator.trans('funds.forum.deposit.form.user_message_help', {}, '可选：添加您的存款说明或特殊要求')}
+              {app.translator.trans('funds.forum.deposit.form.user_message_help')}
             </div>
           </div>
 
@@ -120,7 +120,7 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
               onclick={vnode.attrs.onCancel}
               disabled={submitting}
             >
-              {app.translator.trans('funds.forum.deposit.form.cancel', {}, '取消')}
+              {app.translator.trans('funds.forum.deposit.form.cancel')}
             </Button>
             
             <Button
@@ -129,7 +129,7 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
               loading={submitting}
               disabled={submitting}
             >
-              {app.translator.trans('funds.forum.deposit.form.submit', {}, '提交申请')}
+              {app.translator.trans('funds.forum.deposit.form.submit')}
             </Button>
           </div>
         </form>
@@ -146,7 +146,7 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
     if (!this.state.depositAddress()) {
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('funds.forum.deposit.form.validation.address_required', {}, '请输入存款地址')
+        app.translator.trans('funds.forum.deposit.form.validation.address_required')
       );
       return;
     }
@@ -156,7 +156,7 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
     if (qrCodeUrl && !this.isValidUrl(qrCodeUrl)) {
       app.alerts.show(
         { type: 'error', dismissible: true },
-        app.translator.trans('funds.forum.deposit.form.validation.invalid_url', {}, '请输入有效的二维码图片链接')
+        app.translator.trans('funds.forum.deposit.form.validation.invalid_url')
       );
       return;
     }
