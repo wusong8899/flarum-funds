@@ -258,13 +258,34 @@ export const FIELD_DISPLAY_NAMES = {
  * 字段验证规则
  */
 export const FIELD_VALIDATION_RULES = {
+  // === 基础字段 ===
   name: { required: true, minLength: 1, maxLength: 255 },
   symbol: { required: true, minLength: 1, maxLength: 50 },
   network: { required: false, maxLength: 50 },
   minAmount: { required: true, min: 0 },
-  maxAmount: { required: false, min: 0 },
-  fee: { required: true, min: 0 },
-  address: { required: true, minLength: 1, maxLength: 500 }, // 存款平台必要
+  maxAmount: { required: false, min: 0, max: 999999999 }, // 添加max限制
+  fee: { required: true, min: 0, max: 1000 }, // 添加max限制
+  isActive: { required: true },
+  networkTypeId: { required: false, min: 1 },
+  
+  // === 图标字段 ===
+  currencyIconOverrideUrl: { required: false, maxLength: 500 },
+  currencyIconOverrideClass: { required: false, maxLength: 100 },
+  networkIconOverrideUrl: { required: false, maxLength: 500 },
+  networkIconOverrideClass: { required: false, maxLength: 100 },
+  platformSpecificIconUrl: { required: false, maxLength: 500 },
+  platformSpecificIconClass: { required: false, maxLength: 100 },
+  
+  // === 存款平台特有字段 ===
+  address: { required: true, minLength: 10, maxLength: 500 }, // 存款平台必要
   qrCodeImageUrl: { required: false, maxLength: 500 },
+  iconUrl: { required: false, maxLength: 500 }, // 向后兼容
+  iconClass: { required: false, maxLength: 100 }, // 向后兼容
   warningText: { required: false, maxLength: 1000 },
+  networkConfig: { required: false },
+  
+  // === 系统字段 ===
+  id: { required: false, min: 1 },
+  createdAt: { required: false },
+  updatedAt: { required: false },
 } as const;

@@ -2,7 +2,6 @@ import Model from "flarum/common/Model";
 import { ServiceError, ServiceErrorType } from "../types/services";
 import { validateDepositPlatform } from "../utils/PlatformValidation";
 import { IconRepresentation } from "./CurrencyIcon";
-import { DepositPlatform as IDepositPlatform } from "../types/PlatformStructure";
 import app from "flarum/common/app";
 
 /**

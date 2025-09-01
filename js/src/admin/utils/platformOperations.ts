@@ -3,11 +3,11 @@ import type {
   PlatformOperations,
   TransactionOperations,
 } from "../components/shared/GenericManagementPage";
-import { 
-  sanitizeFormData, 
+import {
+  sanitizeFormData,
   validatePlatform,
-  PlatformType
 } from "../../common/utils/PlatformFieldManager";
+import { PlatformType } from "../../common/types/PlatformStructure";
 
 // Withdrawal platform operations - now using service layer
 export const createWithdrawalPlatformOperations =
@@ -15,16 +15,16 @@ export const createWithdrawalPlatformOperations =
     async create(formData: any) {
       try {
         // 使用统一的平台结构验证和清理数据
-        const platformType: PlatformType = 'withdrawal';
-        
+        const platformType: PlatformType = "withdrawal";
+
         // 清理和标准化表单数据
         const sanitizedData = sanitizeFormData(formData, platformType);
-        
+
         // 验证数据完整性
         const validation = validatePlatform(sanitizedData, platformType);
         if (!validation.valid) {
           const errorMessages = Object.values(validation.errors).flat();
-          throw new Error(errorMessages.join(', '));
+          throw new Error(errorMessages.join(", "));
         }
 
         // Import PlatformService dynamically to avoid circular dependencies
@@ -32,7 +32,10 @@ export const createWithdrawalPlatformOperations =
           "../../common/services/PlatformService"
         );
 
-        const result = await platformService.create("withdrawal", sanitizedData);
+        const result = await platformService.create(
+          "withdrawal",
+          sanitizedData
+        );
 
         app.alerts.show(
           { type: "success", dismissible: true },
@@ -121,33 +124,36 @@ export const createWithdrawalPlatformOperations =
     },
   });
 
-// Deposit platform operations - now using service layer
+// Deposit platform operations - now using service layer with unified validation
 export const createDepositPlatformOperations = (): PlatformOperations<any> => ({
   async create(formData: any) {
     try {
-      // Import PlatformService dynamically
+      // 使用统一的平台结构验证和清理数据
+      const platformType: PlatformType = "deposit";
+
+      // 清理和标准化表单数据
+      const sanitizedData = sanitizeFormData(formData, platformType);
+
+      // 验证数据完整性
+      const validation = validatePlatform(sanitizedData, platformType);
+      if (!validation.valid) {
+        const errorMessages = Object.values(validation.errors).flat();
+        throw new Error(errorMessages.join(", "));
+      }
+
+      // Import PlatformService dynamically to avoid circular dependencies
       const { platformService } = await import(
         "../../common/services/PlatformService"
       );
 
-      const attributes = {
-        name: formData.name,
-        symbol: formData.symbol,
-        network: formData.network,
-        minAmount: parseFloat(formData.minAmount) || 0,
-        maxAmount: formData.maxAmount ? parseFloat(formData.maxAmount) : null,
-        address: formData.address || null,
-        qrCodeImageUrl: formData.qrCodeImageUrl || null,
-        iconUrl: formData.iconUrl || null,
-        iconClass: formData.iconClass || null,
-        warningText: formData.warningText || null,
-        isActive: formData.isActive,
-      };
+      const result = await platformService.create("deposit", sanitizedData);
 
-      const result = await platformService.create("deposit", attributes);
-
-      // Success message is handled by the calling component (UnifiedManagementPage)
-      // to avoid duplicate messages
+      app.alerts.show(
+        { type: "success", dismissible: true },
+        app.translator
+          .trans("funds.admin.deposit.platforms.add_success")
+          .toString()
+      );
 
       return result;
     } catch (error) {
@@ -171,9 +177,16 @@ export const createDepositPlatformOperations = (): PlatformOperations<any> => ({
       );
 
       const result = await platformService.toggleStatus(platform);
+      const newStatus = result.isActive();
 
-      // Success message is handled by the calling component (UnifiedManagementPage)
-      // to avoid duplicate messages
+      app.alerts.show(
+        { type: "success", dismissible: true },
+        app.translator.trans(
+          `funds.admin.deposit.platforms.${
+            newStatus ? "enable" : "disable"
+          }_success`
+        )
+      );
 
       return result;
     } catch (error) {
@@ -181,9 +194,7 @@ export const createDepositPlatformOperations = (): PlatformOperations<any> => ({
         { type: "error", dismissible: true },
         error instanceof Error
           ? error.message
-          : app.translator
-              .trans("funds.admin.deposit.platforms.toggle_error")
-              .toString()
+          : "Failed to toggle deposit platform status"
       );
       throw error;
     }
@@ -198,16 +209,18 @@ export const createDepositPlatformOperations = (): PlatformOperations<any> => ({
 
       await platformService.delete(platform);
 
-      // Success message is handled by the calling component (UnifiedManagementPage)
-      // to avoid duplicate messages
+      app.alerts.show(
+        { type: "success", dismissible: true },
+        app.translator
+          .trans("funds.admin.deposit.platforms.delete_success")
+          .toString()
+      );
     } catch (error) {
       app.alerts.show(
         { type: "error", dismissible: true },
         error instanceof Error
           ? error.message
-          : app.translator
-              .trans("funds.admin.deposit.platforms.delete_error")
-              .toString()
+          : "Failed to delete deposit platform"
       );
       throw error;
     }
