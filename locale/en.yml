@@ -204,23 +204,29 @@ funds:
         title: Deposit
       platform_label: Deposit Platform
       form:
+        admin_notes: Admin Notes
         cancel: Cancel
         deposit_address: Deposit Address
         deposit_address_help: Enter your deposit receiving address
         deposit_address_placeholder: Enter or paste deposit address...
         form_description: Fill in the following information to submit your deposit request
         form_title: Deposit Request
+        no_history: No deposit records
+        no_history_description: You haven't submitted any deposit records yet. Records will appear here after you submit a deposit request.
         optional: Optional
         qr_code_url: Payment QR Code
         qr_code_url_help: Provide QR code URL for easy payment
         qr_code_url_placeholder: https://example.com/qrcode.png
         submit: Submit Request
+        submit_error: Failed to submit deposit request
+        submit_success: Deposit request submitted successfully
         user_message: Message
         user_message_help: Add notes or comments to your deposit request
         user_message_placeholder: Please fill in relevant notes or comments...
         validation:
           address_required: Deposit address cannot be empty
           invalid_url: Please enter a valid URL
+        view_qr: View QR Code
       record:
         amount: Amount
         amount_placeholder: Enter deposit amount

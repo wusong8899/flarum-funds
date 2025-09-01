@@ -191,23 +191,29 @@ funds:
         title: 存款
       platform_label: 存款平台
       form:
+        admin_notes: 管理员备注
         cancel: 取消
         deposit_address: 存款地址
         deposit_address_help: 输入您接收存款的地址
         deposit_address_placeholder: 输入或粘贴存款地址...
         form_description: 填写以下信息提交您的存款申请
         form_title: 存款申请
+        no_history: 暂无存款记录
+        no_history_description: 您还没有提交过存款记录。提交存款申请后，记录将在此显示。
         optional: 可选
         qr_code_url: 收款二维码
         qr_code_url_help: 提供收款二维码链接便于他人转账
         qr_code_url_placeholder: https://example.com/qrcode.png
         submit: 提交申请
+        submit_error: 提交存款申请失败
+        submit_success: 存款申请提交成功
         user_message: 留言
         user_message_help: 为您的存款申请添加备注信息
         user_message_placeholder: 请填写相关说明或备注...
         validation:
           address_required: 存款地址不能为空
           invalid_url: 请输入有效的URL地址
+        view_qr: 查看二维码
       record:
         amount: 存款金额
         amount_placeholder: 输入存款金额
