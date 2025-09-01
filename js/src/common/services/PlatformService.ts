@@ -1,6 +1,5 @@
 import app from 'flarum/common/app';
 import { 
-  PlatformServiceInterface, 
   QueryOptions, 
   ServiceError, 
   ServiceErrorType 
@@ -9,7 +8,7 @@ import {
 /**
  * Service for managing both funds and deposit platforms
  */
-export default class PlatformService implements PlatformServiceInterface {
+export default class PlatformService {
   private readonly withdrawalModelType = 'funds-platforms';
   private readonly depositModelType = 'deposit-platforms';
 
@@ -65,7 +64,7 @@ export default class PlatformService implements PlatformServiceInterface {
         queryParams.include = options.include;
       }
 
-      const result = await app.store.find(modelType, id, queryParams);
+      const result = await app.store.find(modelType, String(id), queryParams);
       return result;
     } catch (error) {
       if (this.isNotFoundError(error)) {
@@ -226,7 +225,7 @@ export default class PlatformService implements PlatformServiceInterface {
     try {
       // Get all requests/records for this platform
       const records = await app.store.find(requestType, {
-        filter: { platform: platformId },
+        platform: platformId,
         include: 'platform'
       });
 
@@ -285,7 +284,7 @@ export default class PlatformService implements PlatformServiceInterface {
    */
   canModify(_platform: any): boolean {
     const currentUser = app.session.user;
-    return currentUser && currentUser.isAdmin();
+    return !!(currentUser && currentUser.isAdmin());
   }
 
   /**
@@ -293,7 +292,7 @@ export default class PlatformService implements PlatformServiceInterface {
    */
   canCreate(): boolean {
     const currentUser = app.session.user;
-    return currentUser && currentUser.isAdmin();
+    return !!(currentUser && currentUser.isAdmin());
   }
 
   /**
@@ -301,7 +300,7 @@ export default class PlatformService implements PlatformServiceInterface {
    */
   canDelete(_platform: any): boolean {
     const currentUser = app.session.user;
-    return currentUser && currentUser.isAdmin();
+    return !!(currentUser && currentUser.isAdmin());
   }
 
   /**

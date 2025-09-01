@@ -8,12 +8,12 @@ export default class DepositPlatform extends Model {
   name = Model.attribute<string>('name');
   symbol = Model.attribute<string>('symbol');
   network = Model.attribute<string>('network');
-  networkTypeId = Model.attribute('networkTypeId');
+  networkTypeId = Model.attribute<number>('networkTypeId');
   displayName = Model.attribute<string>('displayName');
-  minAmount = Model.attribute('minAmount');
-  maxAmount = Model.attribute('maxAmount');
-  fee = Model.attribute('fee');
-  address = Model.attribute('address');
+  minAmount = Model.attribute<number>('minAmount');
+  maxAmount = Model.attribute<number>('maxAmount');
+  fee = Model.attribute<number>('fee');
+  address = Model.attribute<string>('address');
   qrCodeImageUrl = Model.attribute<string>('qrCodeImageUrl');
   // Three-tier icon system - computed properties
   currencyIconUrl = Model.attribute<string>('currencyIconUrl');
@@ -30,10 +30,10 @@ export default class DepositPlatform extends Model {
   networkIconOverrideUrl = Model.attribute<string>('networkIconOverrideUrl');
   networkIconOverrideClass = Model.attribute<string>('networkIconOverrideClass');
   warningText = Model.attribute<string>('warningText');
-  networkConfig = Model.attribute('networkConfig');
-  isActive = Model.attribute('isActive');
-  createdAt = Model.attribute('createdAt', Model.transformDate);
-  updatedAt = Model.attribute('updatedAt', Model.transformDate);
+  networkConfig = Model.attribute<any>('networkConfig');
+  isActive = Model.attribute<boolean>('isActive');
+  createdAt = Model.attribute<Date>('createdAt', (attr: string) => Model.transformDate(attr));
+  updatedAt = Model.attribute<Date>('updatedAt', (attr: string) => Model.transformDate(attr));
 
   // Relationships
   networkType = Model.hasOne('networkType');
@@ -57,7 +57,7 @@ export default class DepositPlatform extends Model {
   isValidAmount(amount: number): boolean {
     const min = this.minAmount() || 0;
     const max = this.maxAmount();
-    return amount >= min && (max === null || amount <= max);
+    return amount >= min && (!max || amount <= max);
   }
 
   getTotalCost(amount: number): number {
@@ -69,15 +69,15 @@ export default class DepositPlatform extends Model {
   /**
    * Save this platform with enhanced validation
    */
-  async save(attributes?: Record<string, any>): Promise<DepositPlatform> {
+  async save(attributes?: Record<string, any>): Promise<any> {
     // Validate before saving if attributes provided
     if (attributes) {
       this.validateAttributes(attributes);
     }
 
     try {
-      const result = await super.save(attributes);
-      return result as DepositPlatform;
+      const result = await super.save(attributes || {});
+      return result;
     } catch (error) {
       throw this.handleSaveError(error);
     }
@@ -142,8 +142,8 @@ export default class DepositPlatform extends Model {
       fee: this.fee(),
       address: this.address(),
       qrCodeImageUrl: this.qrCodeImageUrl(),
-      iconUrl: this.iconUrl(),
-      iconClass: this.iconClass(),
+      currencyIconUrl: this.currencyIconUrl(),
+      currencyIconClass: this.currencyIconClass(),
       warningText: this.warningText(),
       isActive: false // Clone as inactive by default
     });
@@ -184,7 +184,7 @@ export default class DepositPlatform extends Model {
    */
   canModify(): boolean {
     const currentUser = app.session.user;
-    return currentUser && currentUser.isAdmin();
+    return !!(currentUser && currentUser.isAdmin());
   }
 
   /**
@@ -192,7 +192,7 @@ export default class DepositPlatform extends Model {
    */
   canDelete(): boolean {
     const currentUser = app.session.user;
-    return currentUser && currentUser.isAdmin();
+    return !!(currentUser && currentUser.isAdmin());
   }
 
   /**
@@ -204,7 +204,7 @@ export default class DepositPlatform extends Model {
     
     // Only admins can view inactive platforms
     const currentUser = app.session.user;
-    return currentUser && currentUser.isAdmin();
+    return !!(currentUser && currentUser.isAdmin());
   }
 
   // Utility methods
@@ -215,7 +215,8 @@ export default class DepositPlatform extends Model {
   async isInUse(): Promise<boolean> {
     try {
       const records = await app.store.find('deposit-records', {
-        filter: { platform: this.id(), status: 'pending' }
+        platform: this.id(),
+        status: 'pending'
       });
       
       const recordsArray = Array.isArray(records) ? records : [records];
@@ -259,7 +260,7 @@ export default class DepositPlatform extends Model {
     
     // For now, we return the static address
     // In the future, this could be enhanced to support dynamic address generation
-    if (address) {
+    if (address && typeof address === 'string') {
       return address;
     }
     
@@ -275,7 +276,7 @@ export default class DepositPlatform extends Model {
    * Validate attributes before saving
    */
   private validateAttributes(attributes: Record<string, any>): void {
-    validateDepositPlatform(attributes, this.minAmount());
+    validateDepositPlatform(attributes, this.minAmount() || undefined);
   }
 
   /**

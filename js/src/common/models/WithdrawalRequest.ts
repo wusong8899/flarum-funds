@@ -22,8 +22,8 @@ export default class WithdrawalRequest extends Model {
   userId = Model.attribute<number>('userId');
   
   // Timestamps
-  createdAt = Model.attribute('createdAt', Model.transformDate);
-  updatedAt = Model.attribute('updatedAt', Model.transformDate);
+  createdAt = Model.attribute<Date>('createdAt', (attr: string) => Model.transformDate(attr));
+  updatedAt = Model.attribute<Date>('updatedAt', (attr: string) => Model.transformDate(attr));
   
   // Relationships
   user = Model.hasOne<User>('user');
@@ -76,15 +76,15 @@ export default class WithdrawalRequest extends Model {
   /**
    * Save this funds request with enhanced validation
    */
-  async save(attributes?: Record<string, any>): Promise<WithdrawalRequest> {
+  async save(attributes?: Record<string, any>): Promise<any> {
     // Validate before saving if attributes provided
     if (attributes) {
       this.validateAttributes(attributes);
     }
 
     try {
-      const result = await super.save(attributes);
-      return result as WithdrawalRequest;
+      const result = await super.save(attributes || {});
+      return result;
     } catch (error) {
       throw this.handleSaveError(error);
     }
@@ -180,7 +180,7 @@ export default class WithdrawalRequest extends Model {
     if (currentUser.isAdmin()) return true;
 
     // Users can only modify their own pending requests
-    return this.userId() === currentUser.id() && this.canBeModified();
+    return String(this.userId()) === currentUser.id() && this.canBeModified();
   }
 
   /**
@@ -194,7 +194,7 @@ export default class WithdrawalRequest extends Model {
     if (currentUser.isAdmin()) return true;
 
     // Users can only delete their own pending requests
-    return this.userId() === currentUser.id() && this.canBeModified();
+    return String(this.userId()) === currentUser.id() && this.canBeModified();
   }
 
   /**
@@ -208,7 +208,7 @@ export default class WithdrawalRequest extends Model {
     if (currentUser.isAdmin()) return true;
 
     // Users can only view their own requests
-    return this.userId() === currentUser.id();
+    return String(this.userId()) === currentUser.id();
   }
 
   // Validation methods

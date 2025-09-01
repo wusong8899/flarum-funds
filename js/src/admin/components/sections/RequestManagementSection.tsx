@@ -1,7 +1,7 @@
 import app from 'flarum/admin/app';
 import Component from 'flarum/common/Component';
 import type Mithril from 'mithril';
-import { WithdrawalRequest } from '../types/AdminTypes';
+import WithdrawalRequest from '../../../common/models/WithdrawalRequest';
 import WithdrawalRequestItem from '../items/WithdrawalRequestItem';
 
 export interface RequestManagementSectionAttrs {
@@ -14,15 +14,8 @@ export default class RequestManagementSection extends Component<RequestManagemen
   view(): Mithril.Children {
     const { requests, onUpdateRequestStatus, onDeleteRequest } = this.attrs;
 
-    const pendingRequests = requests.filter(r => {
-      const status = (typeof r.status === 'function' ? r.status() : r.attributes?.status) || 'pending';
-      return status === 'pending';
-    });
-    
-    const processedRequests = requests.filter(r => {
-      const status = (typeof r.status === 'function' ? r.status() : r.attributes?.status) || 'pending';
-      return status !== 'pending';
-    });
+    const pendingRequests = requests.filter(r => r.status() === 'pending');
+    const processedRequests = requests.filter(r => r.status() !== 'pending');
 
     return (
       <div className="WithdrawalManagementPage-section">
@@ -35,7 +28,7 @@ export default class RequestManagementSection extends Component<RequestManagemen
           ) : (
             pendingRequests.map((request) => (
               <WithdrawalRequestItem
-                key={typeof request.id === 'function' ? request.id() : request.id}
+                key={request.id()}
                 request={request}
                 showActions={true}
                 showDelete={true}
@@ -53,7 +46,7 @@ export default class RequestManagementSection extends Component<RequestManagemen
           ) : (
             processedRequests.map((request) => (
               <WithdrawalRequestItem
-                key={typeof request.id === 'function' ? request.id() : request.id}
+                key={request.id()}
                 request={request}
                 showActions={false}
                 showDelete={true}

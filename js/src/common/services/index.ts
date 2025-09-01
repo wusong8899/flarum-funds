@@ -118,8 +118,7 @@ export function getServiceStats() {
     services: Object.keys(serviceRegistry),
     capabilities: {
       crud: checkServiceCapabilities('find').funds && checkServiceCapabilities('create').deposit,
-      settings: checkServiceCapabilities('saveSetting').settings,
-      addresses: checkServiceCapabilities('generateAddress').address
+      settings: checkServiceCapabilities('saveSetting').settings
     }
   };
 }

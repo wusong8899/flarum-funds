@@ -52,8 +52,8 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
         include: options.include || 'user,platform'
       };
 
-      const result = await app.store.find(this.modelType, id, queryParams);
-      return result as WithdrawalRequest;
+      const result = await app.store.find(this.modelType, String(id), queryParams);
+      return result as unknown as WithdrawalRequest;
     } catch (error) {
       if (this.isNotFoundError(error)) {
         return null;
@@ -263,7 +263,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
     }
 
     const currentUser = app.session.user;
-    if (!currentUser || (request.userId() !== currentUser.id() && !currentUser.isAdmin())) {
+    if (!currentUser || (String(request.userId()) !== currentUser.id() && !currentUser.isAdmin())) {
       throw new ServiceError(
         'You can only cancel your own requests',
         ServiceErrorType.PERMISSION_DENIED
@@ -284,7 +284,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
     if (currentUser.isAdmin()) return true;
 
     // Users can only modify their own pending requests
-    return model.userId() === currentUser.id() && model.canBeModified();
+    return String(model.userId()) === currentUser.id() && model.canBeModified();
   }
 
   /**
@@ -292,7 +292,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
    */
   canCreate(): boolean {
     const currentUser = app.session.user;
-    return currentUser && !currentUser.isGuest();
+    return !!currentUser;
   }
 
   /**
@@ -306,7 +306,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
     if (currentUser.isAdmin()) return true;
 
     // Users can only delete their own pending requests
-    return model.userId() === currentUser.id() && model.canBeModified();
+    return String(model.userId()) === currentUser.id() && model.canBeModified();
   }
 
   /**
@@ -315,7 +315,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
   async getPlatforms(): Promise<WithdrawalPlatform[]> {
     try {
       const platforms = await app.store.find(this.platformModelType, {
-        filter: { isActive: true },
+        isActive: true,
         sort: 'name'
       });
       
@@ -332,7 +332,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
     const { platformId, amount } = data;
 
     // Get platform details
-    const platform = await app.store.find(this.platformModelType, platformId);
+    const platform = await app.store.find(this.platformModelType, String(platformId)) as unknown as WithdrawalPlatform;
     if (!platform) {
       throw new ServiceError(
         'Invalid platform selected',
@@ -341,7 +341,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
     }
 
     // Check if platform is active
-    if (!platform.isActive()) {
+    if (!platform.isActive?.()) {
       throw new ServiceError(
         'Selected platform is not available',
         ServiceErrorType.VALIDATION_ERROR
@@ -349,8 +349,8 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
     }
 
     // Validate amount limits
-    const minAmount = platform.minAmount();
-    const maxAmount = platform.maxAmount();
+    const minAmount = platform.minAmount?.() || 0;
+    const maxAmount = platform.maxAmount?.();
     
     if (amount < minAmount) {
       throw new ServiceError(
@@ -370,7 +370,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
     const currentUser = app.session.user;
     if (currentUser) {
       const userBalance = parseFloat(currentUser.attribute('money') || '0');
-      const fee = platform.fee ? platform.fee() : 0;
+      const fee = platform.fee?.() || 0;
       const totalRequired = amount + fee;
 
       if (userBalance < totalRequired) {

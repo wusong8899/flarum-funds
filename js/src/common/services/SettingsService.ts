@@ -159,7 +159,7 @@ export default class SettingsService implements SettingsServiceInterface {
    */
   canManageSettings(): boolean {
     const currentUser = app.session.user;
-    return currentUser && currentUser.isAdmin();
+    return !!(currentUser && currentUser.isAdmin());
   }
 
   /**

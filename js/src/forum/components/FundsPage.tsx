@@ -639,7 +639,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
   private async loadWithdrawalData(): Promise<void> {
     try {
       const [platforms, requests] = await Promise.all([
-        platformService.getActive('withdrawal'),
+        platformService.getActive('funds'),
         withdrawalService.getUserHistory()
       ]);
 

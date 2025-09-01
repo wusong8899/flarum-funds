@@ -65,7 +65,7 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
       minAmount,
       maxAmount,
       symbol,
-      platformAttributes: platform?.attributes,
+      platformAttributes: platform,
       minAmountType: typeof minAmount,
       maxAmountType: typeof maxAmount
     });

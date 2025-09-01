@@ -186,17 +186,15 @@ export const createDepositPlatformOperations = (): PlatformOperations<any> => ({
 
 // Withdrawal request operations - now using service layer
 export const createWithdrawalRequestOperations = (): TransactionOperations<any> => ({
-  async updateStatus(request: any, status: string) {
+  async updateStatus(request: any, status: string): Promise<void> {
     try {
       // Import WithdrawalService dynamically
       const { withdrawalService } = await import('../../common/services/WithdrawalService');
       
-      const result = await withdrawalService.update(request, { status });
+      await withdrawalService.update(request, { status });
       
       // Success message is handled by the calling component (GenericManagementPage)
       // to avoid duplicate messages
-      
-      return result;
     } catch (error) {
       app.alerts.show(
         { type: 'error', dismissible: true },
@@ -223,17 +221,15 @@ export const createWithdrawalRequestOperations = (): TransactionOperations<any> 
 
 // Deposit record operations - now using service layer
 export const createDepositRecordOperations = (): TransactionOperations<any> => ({
-  async updateStatus(record: any, status: string) {
+  async updateStatus(record: any, status: string): Promise<void> {
     try {
       // Import DepositService dynamically
       const { depositService } = await import('../../common/services/DepositService');
       
-      const result = await depositService.update(record, { status });
+      await depositService.update(record, { status });
       
       // Success message is handled by the calling component
       // to avoid duplicate messages
-      
-      return result;
     } catch (error) {
       app.alerts.show(
         { type: 'error', dismissible: true },

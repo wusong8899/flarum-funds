@@ -7,7 +7,7 @@ export interface IconRepresentation {
 }
 
 export default class CurrencyIcon extends Model {
-  id = Model.attribute<number>('id');
+  id = Model.attribute<string>('id');
   currencySymbol = Model.attribute<string>('currencySymbol');
   currencyName = Model.attribute<string>('currencyName');
   currencyIconUrl = Model.attribute<string>('currencyIconUrl');
@@ -15,8 +15,8 @@ export default class CurrencyIcon extends Model {
   currencyUnicodeSymbol = Model.attribute<string>('currencyUnicodeSymbol');
   displayPriority = Model.attribute<number>('displayPriority');
   isActive = Model.attribute<boolean>('isActive');
-  createdAt = Model.attribute<Date>('createdAt', Model.transformDate);
-  updatedAt = Model.attribute<Date>('updatedAt', Model.transformDate);
+  createdAt = Model.attribute<Date>('createdAt', (attr: string) => Model.transformDate(attr));
+  updatedAt = Model.attribute<Date>('updatedAt', (attr: string) => Model.transformDate(attr));
 
   // Additional computed attributes from serializer
   bestIcon = Model.attribute<IconRepresentation>('bestIcon');

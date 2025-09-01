@@ -79,15 +79,15 @@ export default class WithdrawalPlatform extends Model {
   /**
    * Save this platform with enhanced validation
    */
-  async save(attributes?: Record<string, any>): Promise<WithdrawalPlatform> {
+  async save(attributes?: Record<string, any>): Promise<any> {
     // Validate before saving if attributes provided
     if (attributes) {
       this.validateAttributes(attributes);
     }
 
     try {
-      const result = await super.save(attributes);
-      return result as WithdrawalPlatform;
+      const result = await super.save(attributes || {});
+      return result;
     } catch (error) {
       throw this.handleSaveError(error);
     }
@@ -216,7 +216,7 @@ export default class WithdrawalPlatform extends Model {
    */
   canModify(): boolean {
     const currentUser = app.session.user;
-    return currentUser && currentUser.isAdmin();
+    return !!(currentUser && currentUser.isAdmin());
   }
 
   /**
@@ -224,7 +224,7 @@ export default class WithdrawalPlatform extends Model {
    */
   canDelete(): boolean {
     const currentUser = app.session.user;
-    return currentUser && currentUser.isAdmin();
+    return !!(currentUser && currentUser.isAdmin());
   }
 
   /**
@@ -236,7 +236,7 @@ export default class WithdrawalPlatform extends Model {
 
     // Only admins can view inactive platforms
     const currentUser = app.session.user;
-    return currentUser && currentUser.isAdmin();
+    return !!(currentUser && currentUser.isAdmin());
   }
 
   // Utility methods
@@ -247,7 +247,8 @@ export default class WithdrawalPlatform extends Model {
   async isInUse(): Promise<boolean> {
     try {
       const requests = await app.store.find("funds-requests", {
-        filter: { platform: this.id(), status: "pending" },
+        platform: this.id(),
+        status: "pending"
       });
 
       const requestsArray = Array.isArray(requests) ? requests : [requests];

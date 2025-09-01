@@ -143,11 +143,6 @@ export interface WithdrawalServiceInterface extends BaseService<any> {
  */
 export interface DepositServiceInterface extends BaseService<any> {
   /**
-   * Generate deposit address for user
-   */
-  generateAddress(platformId: number): Promise<string>;
-
-  /**
    * Get user's deposit history
    */
   getUserHistory(userId?: number, options?: QueryOptions): Promise<any[]>;
@@ -214,13 +209,6 @@ export interface SettingsServiceInterface {
   getAllWithdrawalSettings(): Promise<Record<string, any>>;
 }
 
-/**
- * Address service interface for managing deposit addresses
- */
-export interface AddressServiceInterface {
-  generateAddress(platformId: number, userId?: number): Promise<string>;
-  canGenerateAddress(): boolean;
-}
 
 /**
  * Cache service for managing local data storage

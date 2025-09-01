@@ -306,12 +306,17 @@ export default class DepositPage extends Page<any, DepositPageState> {
     }
   }
 
-  private async loadDepositAddress(platform: DepositPlatform): Promise<void> {
+  private loadDepositAddress(platform: DepositPlatform): void {
     this.addressData.loading = true;
     m.redraw();
 
     try {
-      const address = await depositService.generateAddress(getAttr(platform, 'id'));
+      // Get address directly from platform configuration
+      const address = platform.address();
+      if (!address) {
+        throw new Error('Platform does not have a configured deposit address');
+      }
+
       this.addressData = {
         address,
         platform,

@@ -1,6 +1,7 @@
 import { IconRepresentation } from '../models/CurrencyIcon';
+import type Mithril from 'mithril';
 
-declare const m: any;
+declare const m: Mithril.Static;
 
 /**
  * Icon priority order for display resolution

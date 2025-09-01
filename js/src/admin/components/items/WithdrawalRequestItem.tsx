@@ -18,36 +18,21 @@ export default class WithdrawalRequestItem extends Component<WithdrawalRequestIt
     const request = this.attrs.request;
     const { showActions, showDelete = false } = this.attrs;
     
-    // Handle Flarum Model instances
-    const requestId = typeof request.id === 'function' ? request.id() : request.id;
-    const amount = typeof request.amount === 'function' ? request.amount() : (request.attributes?.amount || 0);
-    const status = typeof request.status === 'function' ? request.status() : (request.attributes?.status || 'pending');
-    const accountDetails = typeof request.accountDetails === 'function' ? request.accountDetails() : 
-      (request.attributes?.accountDetails || request.attributes?.account_details || 'N/A');
-    const createdDate = typeof request.createdAt === 'function' ? request.createdAt() : (request.attributes?.createdAt || null);
+    // Use model methods directly
+    const requestId = request.id();
+    const amount = request.amount();
+    const status = request.status();
+    const accountDetails = request.accountDetails();
+    const createdDate = request.createdAt();
     
     // Get user info
-    let userName = 'Unknown User';
-    if (typeof request.user === 'function') {
-      const userData = request.user();
-      if (userData && typeof userData.displayName === 'function') {
-        userName = userData.displayName();
-      } else if (userData && userData.attributes?.displayName) {
-        userName = userData.attributes.displayName;
-      }
-    }
+    const userData = request.user();
+    const userName = userData ? userData.displayName() : 'Unknown User';
     
-    // Get platform info - simplified approach using Flarum Model relationships
-    let platformName = 'Unknown Platform';
-    let platformSymbol = 'N/A';
-    
-    if (typeof request.platform === 'function') {
-      const platform = request.platform();
-      if (platform) {
-        platformName = typeof platform.name === 'function' ? platform.name() : (platform.attributes?.name || 'Unknown Platform');
-        platformSymbol = typeof platform.symbol === 'function' ? platform.symbol() : (platform.attributes?.symbol || 'N/A');
-      }
-    }
+    // Get platform info
+    const platform = request.platform();
+    const platformName = platform ? platform.name() : 'Unknown Platform';
+    const platformSymbol = platform ? platform.symbol() : 'N/A';
     
     const statusClass = `status-${status}`;
     

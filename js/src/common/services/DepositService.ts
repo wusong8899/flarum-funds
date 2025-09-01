@@ -19,9 +19,19 @@ export interface DepositService {
   getAll(filters?: DepositFilters): Promise<DepositRecord[]>;
 
   /**
+   * 查找存款记录
+   */
+  find(params?: any): Promise<DepositRecord[]>;
+
+  /**
    * 更新存款记录
    */
   update(recordId: number, data: Partial<DepositUpdateData>): Promise<DepositRecord>;
+
+  /**
+   * 删除存款记录
+   */
+  delete(record: DepositRecord): Promise<void>;
 
   /**
    * 审核存款记录（管理员）
@@ -67,7 +77,7 @@ class DepositServiceImpl implements DepositService {
       }
     });
 
-    const record = app.store.pushPayload<DepositRecord>(response);
+    const record = app.store.pushPayload(response) as DepositRecord;
     return Array.isArray(record) ? record[0] : record;
   }
 
@@ -80,7 +90,7 @@ class DepositServiceImpl implements DepositService {
       }
     });
 
-    return app.store.pushPayload<DepositRecord[]>(response);
+    return app.store.pushPayload(response) as DepositRecord[];
   }
 
   async getAll(filters: DepositFilters = {}): Promise<DepositRecord[]> {
@@ -99,7 +109,7 @@ class DepositServiceImpl implements DepositService {
       params
     });
 
-    return app.store.pushPayload<DepositRecord[]>(response);
+    return app.store.pushPayload(response) as DepositRecord[];
   }
 
   async update(recordId: number, data: Partial<DepositUpdateData>): Promise<DepositRecord> {
@@ -115,7 +125,7 @@ class DepositServiceImpl implements DepositService {
       }
     });
 
-    const record = app.store.pushPayload<DepositRecord>(response);
+    const record = app.store.pushPayload(response) as DepositRecord;
     return Array.isArray(record) ? record[0] : record;
   }
 
@@ -132,6 +142,26 @@ class DepositServiceImpl implements DepositService {
       adminNotes
     });
   }
+
+  async find(params: any = {}): Promise<DepositRecord[]> {
+    const response = await app.request({
+      method: 'GET',
+      url: app.forum.attribute('apiUrl') + '/deposit-records',
+      params
+    });
+
+    return app.store.pushPayload(response) as DepositRecord[];
+  }
+
+  async delete(record: DepositRecord): Promise<void> {
+    await app.request({
+      method: 'DELETE',
+      url: `${app.forum.attribute('apiUrl')}/deposit-records/${record.id()}`
+    });
+
+    app.store.remove(record);
+  }
+
 }
 
 // 导出单例服务实例
