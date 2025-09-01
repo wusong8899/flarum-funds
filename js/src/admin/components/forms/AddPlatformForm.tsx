@@ -19,6 +19,7 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
   private minAmount = Stream('');
   private maxAmount = Stream('');
   private fee = Stream('');
+  private isActive = Stream(true);
   // Three-tier icon system
   private currencyIconOverrideUrl = Stream('');
   private currencyIconOverrideClass = Stream('');
@@ -90,6 +91,22 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
                 placeholder="0.0005"
                 bidi={this.fee}
               />
+            </div>
+          </div>
+          
+          <div className="Form-row">
+            <div className="Form-col">
+              <label className="checkbox">
+                <input
+                  type="checkbox"
+                  checked={this.isActive()}
+                  onchange={(e: Event) => {
+                    const target = e.target as HTMLInputElement;
+                    this.isActive(target.checked);
+                  }}
+                />
+                {app.translator.trans('funds.admin.platforms.is_active')}
+              </label>
             </div>
           </div>
           
@@ -225,6 +242,7 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
       minAmount: this.minAmount(),
       maxAmount: this.maxAmount(),
       fee: this.fee(),
+      isActive: this.isActive(),
       // Three-tier icon system
       currencyIconOverrideUrl: this.currencyIconOverrideUrl(),
       currencyIconOverrideClass: this.currencyIconOverrideClass(),
@@ -247,6 +265,7 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
     this.minAmount('');
     this.maxAmount('');
     this.fee('');
+    this.isActive(true);
     // Clear three-tier icon fields
     this.currencyIconOverrideUrl('');
     this.currencyIconOverrideClass('');

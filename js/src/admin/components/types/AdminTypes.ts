@@ -61,6 +61,7 @@ export interface PlatformFormData {
   minAmount: string;
   maxAmount: string;
   fee: string;
+  isActive?: boolean;
   // Three-tier icon system
   currencyIconOverrideUrl: string;
   currencyIconOverrideClass: string;
