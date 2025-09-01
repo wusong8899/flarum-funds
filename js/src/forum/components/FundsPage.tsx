@@ -382,18 +382,6 @@ export default class FundsPage extends Page<any, FundsPageState> {
                 </span>
               </div>
               <div className="DepositHistory-content">
-                <div className="DepositHistory-address">
-                  <strong>{app.translator.trans('funds.forum.deposit.form.deposit_address')}:</strong>
-                  <code>{record.getDisplayAddress()}</code>
-                </div>
-                {record.hasQrCode() && (
-                  <div className="DepositHistory-qr">
-                    <strong>{app.translator.trans('funds.forum.deposit.form.qr_code_url')}:</strong>
-                    <a href={record.qrCodeUrl()} target="_blank" rel="noopener noreferrer">
-                      {app.translator.trans('funds.forum.deposit.form.view_qr')}
-                    </a>
-                  </div>
-                )}
                 {record.userMessage() && (
                   <div className="DepositHistory-message">
                     <strong>{app.translator.trans('funds.forum.deposit.form.user_message')}:</strong>
