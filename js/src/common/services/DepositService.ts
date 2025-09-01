@@ -159,10 +159,25 @@ class DepositServiceImpl implements DepositService {
   }
 
   async find(params: any = {}): Promise<DepositRecord[]> {
+    // Ensure we only include valid relationships for DepositRecord
+    const validParams = { ...params };
+    if (validParams.include) {
+      // Filter out 'platform' from include since DepositRecord doesn't have platform relationship
+      validParams.include = validParams.include
+        .split(',')
+        .filter((rel: string) => rel.trim() !== 'platform')
+        .join(',');
+      
+      // If no valid includes remain, remove the include parameter
+      if (!validParams.include) {
+        delete validParams.include;
+      }
+    }
+
     const response = await app.request({
       method: "GET",
       url: app.forum.attribute("apiUrl") + "/deposit-records",
-      params,
+      params: validParams,
     });
 
     return app.store.pushPayload(
