@@ -2,6 +2,7 @@ import Model from "flarum/common/Model";
 import { ServiceError, ServiceErrorType } from "../types/services";
 import { validateWithdrawalPlatform } from "../utils/PlatformValidation";
 import { IconRepresentation } from "./CurrencyIcon";
+import { WithdrawalPlatform as IWithdrawalPlatform } from "../types/PlatformStructure";
 import app from "flarum/common/app";
 
 /**

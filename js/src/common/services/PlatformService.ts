@@ -248,9 +248,10 @@ export default class PlatformService {
 
     try {
       // Get all requests/records for this platform
+      const includeParams = type === "withdrawal" ? "platform" : "user,processedByUser";
       const records = await app.store.find(requestType, {
         filter: { platform: platformId.toString() },
-        include: "platform",
+        include: includeParams,
       });
 
       const recordArray = Array.isArray(records) ? records : [records];

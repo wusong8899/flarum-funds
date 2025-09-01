@@ -2,8 +2,14 @@ import Model from "flarum/common/Model";
 import { ServiceError, ServiceErrorType } from "../types/services";
 import { validateDepositPlatform } from "../utils/PlatformValidation";
 import { IconRepresentation } from "./CurrencyIcon";
+import { DepositPlatform as IDepositPlatform } from "../types/PlatformStructure";
 import app from "flarum/common/app";
 
+/**
+ * DepositPlatform model for Flarum
+ *
+ * Uses the unified platform structure defined in PlatformStructure.ts
+ */
 export default class DepositPlatform extends Model {
   name = Model.attribute<string>("name");
   symbol = Model.attribute<string>("symbol");

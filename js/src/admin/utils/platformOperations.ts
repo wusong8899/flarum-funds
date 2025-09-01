@@ -3,30 +3,36 @@ import type {
   PlatformOperations,
   TransactionOperations,
 } from "../components/shared/GenericManagementPage";
+import { 
+  sanitizeFormData, 
+  validatePlatform,
+  PlatformType
+} from "../../common/utils/PlatformFieldManager";
 
 // Withdrawal platform operations - now using service layer
 export const createWithdrawalPlatformOperations =
   (): PlatformOperations<any> => ({
     async create(formData: any) {
       try {
+        // 使用统一的平台结构验证和清理数据
+        const platformType: PlatformType = 'withdrawal';
+        
+        // 清理和标准化表单数据
+        const sanitizedData = sanitizeFormData(formData, platformType);
+        
+        // 验证数据完整性
+        const validation = validatePlatform(sanitizedData, platformType);
+        if (!validation.valid) {
+          const errorMessages = Object.values(validation.errors).flat();
+          throw new Error(errorMessages.join(', '));
+        }
+
         // Import PlatformService dynamically to avoid circular dependencies
         const { platformService } = await import(
           "../../common/services/PlatformService"
         );
 
-        const attributes = {
-          name: formData.name,
-          symbol: formData.symbol,
-          network: formData.network || null,
-          minAmount: parseFloat(formData.minAmount),
-          maxAmount: parseFloat(formData.maxAmount),
-          fee: parseFloat(formData.fee || "0"),
-          iconUrl: formData.iconUrl || null,
-          iconClass: formData.iconClass || null,
-          isActive: true,
-        };
-
-        const result = await platformService.create("withdrawal", attributes);
+        const result = await platformService.create("withdrawal", sanitizedData);
 
         app.alerts.show(
           { type: "success", dismissible: true },
