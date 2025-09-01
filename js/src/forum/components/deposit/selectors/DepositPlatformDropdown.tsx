@@ -204,18 +204,28 @@ export default class DepositPlatformDropdown extends Component<DepositPlatformDr
   private groupPlatformsByCurrency(platforms: DepositPlatform[]): { [currency: string]: DepositPlatform[] } {
     const grouped: { [currency: string]: DepositPlatform[] } = {};
     
+    console.log('DepositPlatformDropdown: Grouping platforms, received:', platforms);
+    console.log('DepositPlatformDropdown: Platform count:', platforms ? platforms.length : 0);
+    
     // Filter active platforms and group by currency
-    const validPlatforms = (platforms || []).filter(platform => 
-      platform && getAttr(platform, 'isActive')
-    );
+    const validPlatforms = (platforms || []).filter(platform => {
+      const isActive = getAttr(platform, 'isActive');
+      console.log(`Platform ${getAttr(platform, 'name')}: isActive = ${isActive}`);
+      return platform && isActive;
+    });
+    
+    console.log('DepositPlatformDropdown: Valid platforms after filtering:', validPlatforms.length);
 
     validPlatforms.forEach(platform => {
       const symbol = getAttr(platform, 'symbol');
+      console.log(`Adding platform to group: ${getAttr(platform, 'name')} -> ${symbol}`);
       if (!grouped[symbol]) {
         grouped[symbol] = [];
       }
       grouped[symbol].push(platform);
     });
+
+    console.log('DepositPlatformDropdown: Final grouped platforms:', grouped);
 
     // Sort platforms within each currency group by network
     Object.keys(grouped).forEach(currency => {

@@ -111,11 +111,17 @@ export default class DepositPage extends Page<any, DepositPageState> {
   }
 
   private renderDepositTab(): Mithril.Children {
-    const availablePlatforms = (this.state.platforms || []).filter(platform => 
-      platform && getAttr(platform, 'isActive')
-    );
+    console.log('renderDepositTab: this.state.platforms =', this.state.platforms);
+    const availablePlatforms = (this.state.platforms || []).filter(platform => {
+      const isActive = getAttr(platform, 'isActive');
+      console.log(`renderDepositTab: Platform ${getAttr(platform, 'name')}: isActive = ${isActive}`);
+      return platform && isActive;
+    });
+    
+    console.log('renderDepositTab: availablePlatforms.length =', availablePlatforms.length);
 
     if (availablePlatforms.length === 0) {
+      console.log('renderDepositTab: Showing empty state');
       return (
         <div className="DepositPage-emptyState">
           <div className="DepositPage-emptyIcon">
@@ -285,11 +291,26 @@ export default class DepositPage extends Page<any, DepositPageState> {
 
   private async loadPlatforms(): Promise<void> {
     try {
+      console.log('Loading deposit platforms...');
       this.state.platforms = await platformService.find('deposit');
+      console.log('Loaded platforms:', this.state.platforms);
+      console.log('Number of platforms:', this.state.platforms.length);
+      
+      // Log each platform's details
+      this.state.platforms.forEach((platform, index) => {
+        console.log(`Platform ${index}:`, {
+          id: platform.id ? platform.id() : 'no id',
+          name: platform.name ? platform.name() : 'no name',
+          symbol: platform.symbol ? platform.symbol() : 'no symbol',
+          isActive: platform.isActive ? platform.isActive() : 'no isActive field'
+        });
+      });
       
       // 使用共享逻辑创建平台选择状态
       this.platformState = createPlatformSelectionState(this.state.platforms);
       this.currencies = this.platformState.currencies;
+      console.log('Platform state currencies:', this.currencies);
+      console.log('Currency groups:', this.platformState.currencyGroups);
 
       this.state.loading = false;
       m.redraw();
