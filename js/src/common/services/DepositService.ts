@@ -57,8 +57,7 @@ export interface DepositFilters {
 }
 
 export interface DepositUpdateData {
-  depositAddress?: string;
-  qrCodeUrl?: string;
+  platformId?: number;
   userMessage?: string;
   status?: string;
   adminNotes?: string;
@@ -66,6 +65,16 @@ export interface DepositUpdateData {
 
 class DepositServiceImpl implements DepositService {
   async create(data: DepositFormData): Promise<DepositRecord> {
+    // Extract platformId from the selected platform
+    if (!data.selectedPlatform) {
+      throw new Error('Selected platform is required');
+    }
+
+    const platformId = parseInt(data.selectedPlatform.id() as string);
+    if (!platformId) {
+      throw new Error('Platform ID is required');
+    }
+
     const response = await app.request({
       method: "POST",
       url: app.forum.attribute("apiUrl") + "/deposit-records",
@@ -73,8 +82,7 @@ class DepositServiceImpl implements DepositService {
         data: {
           type: "deposit-records",
           attributes: {
-            depositAddress: data.depositAddress,
-            qrCodeUrl: data.qrCodeUrl,
+            platformId: platformId,
             userMessage: data.userMessage,
           },
         },
