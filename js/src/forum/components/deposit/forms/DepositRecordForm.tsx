@@ -59,6 +59,17 @@ export default class DepositRecordForm extends Component<DepositRecordFormProps,
     const maxAmount = getAttr(platform, 'maxAmount');
     const symbol = getAttr(platform, 'symbol') || '';
 
+    // Debug logging - can be removed after verification
+    console.log('DepositRecordForm platform data:', {
+      platform,
+      minAmount,
+      maxAmount,
+      symbol,
+      platformAttributes: platform?.attributes,
+      minAmountType: typeof minAmount,
+      maxAmountType: typeof maxAmount
+    });
+
     return (
       <div className="DepositRecordForm">
         <div className="DepositRecordForm-header">
