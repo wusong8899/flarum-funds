@@ -4,6 +4,8 @@ import {
   ServiceError,
   ServiceErrorType,
 } from "../types/services";
+import WithdrawalRequest from "../models/WithdrawalRequest";
+import DepositRecord from "../models/DepositRecord";
 
 /**
  * Service for managing both funds and deposit platforms
@@ -253,15 +255,39 @@ export default class PlatformService {
 
       const recordArray = Array.isArray(records) ? records : [records];
 
-      // Calculate statistics
+      // Calculate statistics with proper typing
       const stats = {
         total: recordArray.length,
-        pending: recordArray.filter((r) => r.status() === "pending").length,
-        approved: recordArray.filter(
-          (r) => r.status() === "approved" || r.status() === "confirmed"
-        ).length,
-        rejected: recordArray.filter((r) => r.status() === "rejected").length,
-        totalAmount: recordArray.reduce((sum, r) => sum + (r.amount() || 0), 0),
+        pending: recordArray.filter((r) => {
+          if (type === "withdrawal") {
+            return (r as WithdrawalRequest).status() === "pending";
+          } else {
+            return (r as DepositRecord).status() === "pending";
+          }
+        }).length,
+        approved: recordArray.filter((r) => {
+          if (type === "withdrawal") {
+            return (r as WithdrawalRequest).status() === "approved";
+          } else {
+            const status = (r as DepositRecord).status();
+            return status === "approved" || status === "confirmed";
+          }
+        }).length,
+        rejected: recordArray.filter((r) => {
+          if (type === "withdrawal") {
+            return (r as WithdrawalRequest).status() === "rejected";
+          } else {
+            return (r as DepositRecord).status() === "rejected";
+          }
+        }).length,
+        totalAmount: recordArray.reduce((sum, r) => {
+          if (type === "withdrawal") {
+            return sum + ((r as WithdrawalRequest).amount() || 0);
+          } else {
+            // DepositRecord might not have amount field, return sum as is
+            return sum;
+          }
+        }, 0),
       };
 
       return stats;
