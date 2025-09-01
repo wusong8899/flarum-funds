@@ -50,21 +50,29 @@ class CreateWithdrawalPlatformController extends AbstractCreateController
         // Extract validated fields
         $name = (string) Arr::get($attributes, 'name', '');
         $symbol = (string) Arr::get($attributes, 'symbol', '');
+        $network = (string) Arr::get($attributes, 'network', '');
         $minAmount = (float) Arr::get($attributes, 'minAmount', 0);
         $maxAmount = (float) Arr::get($attributes, 'maxAmount', 0);
         $fee = (float) Arr::get($attributes, 'fee', 0);
-        $iconUrl = Arr::get($attributes, 'iconUrl');
-        $iconClass = Arr::get($attributes, 'iconClass');
         $isActive = (bool) Arr::get($attributes, 'isActive', true);
+        
+        // Three-tier icon system fields
+        $currencyIconOverrideUrl = Arr::get($attributes, 'currencyIconOverrideUrl');
+        $currencyIconOverrideClass = Arr::get($attributes, 'currencyIconOverrideClass');
+        $networkIconOverrideUrl = Arr::get($attributes, 'networkIconOverrideUrl');
+        $networkIconOverrideClass = Arr::get($attributes, 'networkIconOverrideClass');
 
         $platform = new WithdrawalPlatform();
         $platform->name = trim($name);
         $platform->symbol = trim($symbol);
+        $platform->network = trim($network);
         $platform->min_amount = $minAmount;
         $platform->max_amount = $maxAmount;
         $platform->fee = $fee;
-        $platform->icon_url = $iconUrl ? trim((string) $iconUrl) : null;
-        $platform->icon_class = $iconClass ? trim((string) $iconClass) : null;
+        $platform->currency_icon_override_url = $currencyIconOverrideUrl ? trim((string) $currencyIconOverrideUrl) : null;
+        $platform->currency_icon_override_class = $currencyIconOverrideClass ? trim((string) $currencyIconOverrideClass) : null;
+        $platform->network_icon_override_url = $networkIconOverrideUrl ? trim((string) $networkIconOverrideUrl) : null;
+        $platform->network_icon_override_class = $networkIconOverrideClass ? trim((string) $networkIconOverrideClass) : null;
         $platform->is_active = $isActive;
         $platform->created_at = Carbon::now();
         $platform->save();

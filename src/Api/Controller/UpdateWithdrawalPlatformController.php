@@ -58,12 +58,25 @@ class UpdateWithdrawalPlatformController extends AbstractShowController
             $platform->fee = (float) $attributes['fee'];
         }
 
-        if (isset($attributes['iconUrl'])) {
-            $platform->icon_url = $attributes['iconUrl'] ? (string) $attributes['iconUrl'] : null;
+        if (isset($attributes['network'])) {
+            $platform->network = (string) $attributes['network'];
         }
 
-        if (isset($attributes['iconClass'])) {
-            $platform->icon_class = $attributes['iconClass'] ? (string) $attributes['iconClass'] : null;
+        // Three-tier icon system updates
+        if (isset($attributes['currencyIconOverrideUrl'])) {
+            $platform->currency_icon_override_url = $attributes['currencyIconOverrideUrl'] ? (string) $attributes['currencyIconOverrideUrl'] : null;
+        }
+
+        if (isset($attributes['currencyIconOverrideClass'])) {
+            $platform->currency_icon_override_class = $attributes['currencyIconOverrideClass'] ? (string) $attributes['currencyIconOverrideClass'] : null;
+        }
+
+        if (isset($attributes['networkIconOverrideUrl'])) {
+            $platform->network_icon_override_url = $attributes['networkIconOverrideUrl'] ? (string) $attributes['networkIconOverrideUrl'] : null;
+        }
+
+        if (isset($attributes['networkIconOverrideClass'])) {
+            $platform->network_icon_override_class = $attributes['networkIconOverrideClass'] ? (string) $attributes['networkIconOverrideClass'] : null;
         }
 
         if (isset($attributes['isActive'])) {

@@ -72,11 +72,14 @@ class WithdrawalPlatformRepository
         $platform = new WithdrawalPlatform();
         $platform->name = $data['name'];
         $platform->symbol = $data['symbol'];
+        $platform->network = $data['network'] ?? '';
         $platform->min_amount = $data['min_amount'];
         $platform->max_amount = $data['max_amount'];
         $platform->fee = $data['fee'] ?? 0;
-        $platform->icon_url = $data['icon_url'] ?? null;
-        $platform->icon_class = $data['icon_class'] ?? null;
+        $platform->currency_icon_override_url = $data['currency_icon_override_url'] ?? null;
+        $platform->currency_icon_override_class = $data['currency_icon_override_class'] ?? null;
+        $platform->network_icon_override_url = $data['network_icon_override_url'] ?? null;
+        $platform->network_icon_override_class = $data['network_icon_override_class'] ?? null;
         $platform->is_active = $data['is_active'] ?? true;
         $platform->save();
 
@@ -98,6 +101,9 @@ class WithdrawalPlatformRepository
         if (isset($data['symbol'])) {
             $platform->symbol = $data['symbol'];
         }
+        if (isset($data['network'])) {
+            $platform->network = $data['network'];
+        }
         if (isset($data['min_amount'])) {
             $platform->min_amount = $data['min_amount'];
         }
@@ -107,11 +113,17 @@ class WithdrawalPlatformRepository
         if (isset($data['fee'])) {
             $platform->fee = $data['fee'];
         }
-        if (isset($data['icon_url'])) {
-            $platform->icon_url = $data['icon_url'];
+        if (isset($data['currency_icon_override_url'])) {
+            $platform->currency_icon_override_url = $data['currency_icon_override_url'];
         }
-        if (isset($data['icon_class'])) {
-            $platform->icon_class = $data['icon_class'];
+        if (isset($data['currency_icon_override_class'])) {
+            $platform->currency_icon_override_class = $data['currency_icon_override_class'];
+        }
+        if (isset($data['network_icon_override_url'])) {
+            $platform->network_icon_override_url = $data['network_icon_override_url'];
+        }
+        if (isset($data['network_icon_override_class'])) {
+            $platform->network_icon_override_class = $data['network_icon_override_class'];
         }
         if (isset($data['is_active'])) {
             $platform->is_active = $data['is_active'];
