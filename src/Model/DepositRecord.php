@@ -14,8 +14,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @property int $id
  * @property int $user_id
- * @property string $deposit_address 存款地址
- * @property string|null $qr_code_url 收款二维码URL
  * @property string|null $user_message 用户留言
  * @property string $status 状态: pending, approved, rejected
  * @property \Carbon\Carbon|null $processed_at 处理时间
@@ -35,8 +33,6 @@ class DepositRecord extends AbstractModel
 
     protected $fillable = [
         'user_id',
-        'deposit_address',
-        'qr_code_url',
         'user_message',
         'status',
         'processed_at',

@@ -20,8 +20,6 @@ class DepositRecordSerializer extends AbstractSerializer
         return [
             'id' => (int) $record->id,
             'userId' => (int) $record->user_id,
-            'depositAddress' => $record->deposit_address,
-            'qrCodeUrl' => $record->qr_code_url,
             'userMessage' => $record->user_message,
             'status' => $record->status,
             'statusText' => $record->getStatusText(),

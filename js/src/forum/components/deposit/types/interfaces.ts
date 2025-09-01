@@ -11,8 +11,6 @@ export interface DepositPageState {
 
 // 存款表单数据
 export interface DepositFormData {
-  depositAddress: string;
-  qrCodeUrl?: string;
   userMessage?: string;
   selectedPlatform: any; // Selected platform for deposit
 }
@@ -21,13 +19,10 @@ export interface DepositFormData {
 export interface DepositAddressData {
   address: string;
   platform: any;
-  qrCodeUrl?: string;
   loading?: boolean;
 }
 
 // 存款表单状态
 export interface DepositFormState {
-  depositAddress: Stream<string>;
-  qrCodeUrl: Stream<string>;
   userMessage: Stream<string>;
 }

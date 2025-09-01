@@ -67,8 +67,6 @@ class CreateDepositRecordController extends AbstractCreateController
         // 创建存款记录
         $depositRecord = DepositRecord::create([
             'user_id' => $actor->id,
-            'deposit_address' => $attributes['depositAddress'],
-            'qr_code_url' => $attributes['qrCodeUrl'] ?? null,
             'user_message' => $attributes['userMessage'] ?? null,
             'status' => DepositRecord::STATUS_PENDING,
         ]);

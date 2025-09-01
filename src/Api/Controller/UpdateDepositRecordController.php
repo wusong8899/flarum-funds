@@ -108,12 +108,6 @@ class UpdateDepositRecordController extends AbstractShowController
         }
 
         // 只更新允许用户修改的字段
-        if (isset($attributes['depositAddress'])) {
-            $record->deposit_address = $attributes['depositAddress'];
-        }
-        if (array_key_exists('qrCodeUrl', $attributes)) {
-            $record->qr_code_url = $attributes['qrCodeUrl'];
-        }
         if (array_key_exists('userMessage', $attributes)) {
             $record->user_message = $attributes['userMessage'];
         }
