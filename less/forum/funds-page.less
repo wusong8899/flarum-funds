@@ -117,6 +117,8 @@
       white-space: nowrap;
       border-radius: 4px 4px 0 0;
       transition: all 0.2s ease;
+      min-width: 60px;
+      text-align: center;
 
       &.active {
         color: #fff;
@@ -143,13 +145,166 @@
       @media (max-width: 480px) {
         padding: 6px 10px;
         font-size: 12px;
+        min-width: 50px;
       }
+    }
+  }
+
+  // Content area styles
+  .FundsPage-withdrawalContent,
+  .FundsPage-depositContent {
+    background: transparent;
+    border-radius: 8px;
+    padding: 0;
+    min-height: 300px;
+    
+    // Smooth transitions for content switching
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    
+    &.switching {
+      opacity: 0;
+      transform: translateY(10px);
     }
   }
 
   .FundsPage-content {
     padding: 20px;
     color: #fff;
+    
+    @media (max-width: 480px) {
+      padding: 16px;
+    }
+  }
+
+  // Enhanced responsive design
+  @media (max-width: 480px) {
+    padding: 10px;
+
+    .FundsPage-modal {
+      max-width: none;
+      width: 100%;
+      max-height: 95vh;
+      border-radius: 12px;
+    }
+
+    .FundsPage-header {
+      padding: 16px 16px 0;
+      flex-wrap: wrap;
+      gap: 10px;
+
+      .FundsPage-tabs {
+        flex: 1;
+        
+        .FundsPage-tab {
+          flex: 1;
+          text-align: center;
+          min-width: 0;
+        }
+      }
+
+      .FundsPage-close {
+        order: -1;
+        margin-left: auto;
+      }
+    }
+
+    .FundsPage-subTabs {
+      margin: 12px 0 16px 0;
+      
+      .FundsPage-subTab {
+        flex: 1;
+      }
+    }
+  }
+
+  // Medium screen optimizations
+  @media (max-width: 768px) and (min-width: 481px) {
+    .FundsPage-modal {
+      max-width: 90vw;
+    }
+  }
+
+  // Simplified Deposit Interface Styles
+  .FundsPage-depositTab {
+    .SimpleDepositForm {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      
+      .SimpleDepositForm-content {
+        background: #2a2a2a;
+        border: 1px solid #3a3a3a;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        
+        h3 {
+          color: #fff;
+          font-size: 16px;
+          margin-bottom: 16px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          
+          .SimpleDepositForm-icon {
+            color: #4A90E2;
+          }
+        }
+        
+        .SimpleDepositForm-notice {
+          background: rgba(74, 144, 226, 0.1);
+          border: 1px solid rgba(74, 144, 226, 0.3);
+          border-radius: 8px;
+          padding: 12px;
+          margin-bottom: 16px;
+          color: #4A90E2;
+          font-size: 13px;
+          line-height: 1.4;
+          
+          .fas {
+            margin-right: 6px;
+            opacity: 0.8;
+          }
+        }
+        
+        .SimpleDepositForm-instructions {
+          color: #bbb;
+          font-size: 14px;
+          line-height: 1.5;
+          margin-bottom: 16px;
+          
+          p {
+            margin-bottom: 8px;
+            
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+          
+          strong {
+            color: #fff;
+          }
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .SimpleDepositForm-content {
+          padding: 16px;
+          margin-bottom: 16px;
+          
+          h3 {
+            font-size: 15px;
+          }
+          
+          .SimpleDepositForm-instructions {
+            font-size: 13px;
+          }
+        }
+      }
+    }
   }
 
   // Empty state styles

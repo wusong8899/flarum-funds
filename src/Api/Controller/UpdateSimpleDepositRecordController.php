@@ -33,9 +33,9 @@ class UpdateSimpleDepositRecordController extends AbstractShowController
     {
         $actor = RequestUtil::getActor($request);
         $id = array_get($request->getQueryParams(), 'id');
-        
+
         $depositRecord = SimpleDepositRecord::findOrFail($id);
-        
+
         // 权限检查：管理员可以更新任何记录，用户只能更新自己待处理的记录
         if (!$actor->isAdmin() && ($depositRecord->user_id !== $actor->id || !$depositRecord->isPending())) {
             $actor->assertCan('update', $depositRecord);
@@ -46,7 +46,7 @@ class UpdateSimpleDepositRecordController extends AbstractShowController
         // 管理员更新（审核操作）
         if ($actor->isAdmin() && isset($attributes['status'])) {
             $this->processAdminUpdate($depositRecord, $attributes, $actor->id);
-        } 
+        }
         // 用户更新（仅限待处理的记录）
         elseif ($depositRecord->user_id === $actor->id && $depositRecord->isPending()) {
             $this->processUserUpdate($depositRecord, $attributes);
@@ -55,7 +55,7 @@ class UpdateSimpleDepositRecordController extends AbstractShowController
         }
 
         $depositRecord->load($this->include);
-        
+
         return $depositRecord;
     }
 

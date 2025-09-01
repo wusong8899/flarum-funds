@@ -20,7 +20,7 @@ import SimpleDepositRecord from '../../common/models/SimpleDepositRecord';
 import simpleDepositService from '../../common/services/SimpleDepositService';
 
 // Services
-import { withdrawalService } from '../../common/services';
+import { withdrawalService, platformService } from '../../common/services';
 import { ServiceError } from '../../common/types/services';
 
 // Utilities

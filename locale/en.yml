@@ -291,3 +291,6 @@ funds:
     tabs:
       funds: Withdrawal
       history: History
+    funds:
+      description: Unified funds management interface with withdrawal and deposit functionality
+      title: Funds Management

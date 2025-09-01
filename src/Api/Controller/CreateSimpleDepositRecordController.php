@@ -27,7 +27,7 @@ class CreateSimpleDepositRecordController extends AbstractCreateController
     protected function data(ServerRequestInterface $request, Document $document)
     {
         $actor = RequestUtil::getActor($request);
-        
+
         // 确保用户已认证
         $actor->assertRegistered();
 

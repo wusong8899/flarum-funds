@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * 简化的存款记录模型
- * 
+ *
  * @property int $id
  * @property int $user_id
  * @property string $deposit_address 存款地址
@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $admin_notes 管理员备注
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * 
+ *
  * @property-read User $user
  * @property-read User|null $processedByUser
  */

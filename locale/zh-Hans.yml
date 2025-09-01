@@ -278,3 +278,6 @@ funds:
     tabs:
       funds: 提款
       history: 申请记录
+    funds:
+      description: 统一的资金管理界面，包含提款和存款功能
+      title: 资金管理
