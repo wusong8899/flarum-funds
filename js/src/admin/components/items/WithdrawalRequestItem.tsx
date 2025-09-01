@@ -3,7 +3,7 @@ import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
 import humanTime from 'flarum/common/helpers/humanTime';
 import type Mithril from 'mithril';
-import { WithdrawalRequest } from '../types/AdminTypes';
+import WithdrawalRequest from '../../../common/models/WithdrawalRequest';
 
 export interface WithdrawalRequestItemAttrs {
   request: WithdrawalRequest;

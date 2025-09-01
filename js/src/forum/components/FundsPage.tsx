@@ -354,10 +354,10 @@ export default class FundsPage extends Page<any, FundsPageState> {
               {icon('fas fa-history')}
             </div>
             <h3 className="FundsPage-emptyTitle">
-              {app.translator.trans('funds.forum.deposit.form.no_history', {}, '暂无存款记录')}
+              {app.translator.trans('funds.forum.deposit.form.no_history')}
             </h3>
             <p className="FundsPage-emptyDescription">
-              {app.translator.trans('funds.forum.deposit.form.no_history_description', {}, '您还没有提交过任何存款申请')}
+              {app.translator.trans('funds.forum.deposit.form.no_history_description')}
             </p>
           </div>
         </div>
@@ -380,26 +380,26 @@ export default class FundsPage extends Page<any, FundsPageState> {
               </div>
               <div className="DepositHistory-content">
                 <div className="DepositHistory-address">
-                  <strong>{app.translator.trans('funds.forum.deposit.form.deposit_address', {}, '存款地址')}:</strong>
+                  <strong>{app.translator.trans('funds.forum.deposit.form.deposit_address')}:</strong>
                   <code>{record.getDisplayAddress()}</code>
                 </div>
                 {record.hasQrCode() && (
                   <div className="DepositHistory-qr">
-                    <strong>{app.translator.trans('funds.forum.deposit.form.qr_code_url', {}, '收款二维码')}:</strong>
+                    <strong>{app.translator.trans('funds.forum.deposit.form.qr_code_url')}:</strong>
                     <a href={record.qrCodeUrl()} target="_blank" rel="noopener noreferrer">
-                      {app.translator.trans('funds.forum.deposit.form.view_qr', {}, '查看二维码')}
+                      {app.translator.trans('funds.forum.deposit.form.view_qr')}
                     </a>
                   </div>
                 )}
                 {record.userMessage() && (
                   <div className="DepositHistory-message">
-                    <strong>{app.translator.trans('funds.forum.deposit.form.user_message', {}, '留言')}:</strong>
+                    <strong>{app.translator.trans('funds.forum.deposit.form.user_message')}:</strong>
                     <p>{record.userMessage()}</p>
                   </div>
                 )}
                 {record.adminNotes() && (
                   <div className="DepositHistory-adminNotes">
-                    <strong>{app.translator.trans('funds.forum.deposit.form.admin_notes', {}, '管理员备注')}:</strong>
+                    <strong>{app.translator.trans('funds.forum.deposit.form.admin_notes')}:</strong>
                     <p>{record.adminNotes()}</p>
                   </div>
                 )}
@@ -581,7 +581,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
       
       app.alerts.show(
         { type: 'success', dismissible: true },
-        app.translator.trans('funds.forum.deposit.form.submit_success', {}, '存款申请提交成功，请等待管理员审核')
+        app.translator.trans('funds.forum.deposit.form.submit_success')
       );
 
       // 重新加载存款记录
@@ -593,7 +593,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
     } catch (error: unknown) {
       console.error('Deposit submission failed:', error);
       
-      let errorMessage = app.translator.trans('funds.forum.deposit.form.submit_error', {}, '提交失败，请重试').toString();
+      let errorMessage = app.translator.trans('funds.forum.deposit.form.submit_error').toString();
       
       if (error instanceof ServiceError) {
         errorMessage = error.message;
