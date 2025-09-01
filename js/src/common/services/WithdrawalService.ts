@@ -12,8 +12,8 @@ import {
  * Service for managing funds requests with proper CRUD operations
  */
 export default class WithdrawalService implements WithdrawalServiceInterface {
-  private readonly modelType = "funds-requests";
-  private readonly platformModelType = "funds-platforms";
+  private readonly modelType = "withdrawal-requests";
+  private readonly platformModelType = "withdrawal-platforms";
 
   /**
    * Find multiple funds requests

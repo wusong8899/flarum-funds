@@ -7,8 +7,8 @@ import DepositRecord from "../common/models/DepositRecord";
 
 app.initializers.add("wusong8899-funds", () => {
   // Register models in store
-  app.store.models["funds-platforms"] = WithdrawalPlatform as any;
-  app.store.models["funds-requests"] = WithdrawalRequest as any;
+  app.store.models["withdrawal-platforms"] = WithdrawalPlatform as any;
+  app.store.models["withdrawal-requests"] = WithdrawalRequest as any;
   app.store.models["deposit-platforms"] = DepositPlatform as any;
   app.store.models["deposit-records"] = DepositRecord as any;
 
