@@ -1,27 +1,31 @@
-import app from 'flarum/common/app';
-import { 
-  QueryOptions, 
-  ServiceError, 
-  ServiceErrorType 
-} from '../types/services';
+import app from "flarum/common/app";
+import {
+  QueryOptions,
+  ServiceError,
+  ServiceErrorType,
+} from "../types/services";
 
 /**
  * Service for managing both funds and deposit platforms
  */
 export default class PlatformService {
-  private readonly withdrawalModelType = 'funds-platforms';
-  private readonly depositModelType = 'deposit-platforms';
+  private readonly withdrawalModelType = "withdrawal-platforms";
+  private readonly depositModelType = "deposit-platforms";
 
   /**
    * Find multiple platforms of specified type
    */
-  async find(type: 'funds' | 'deposit', options: QueryOptions = {}): Promise<any[]> {
-    const modelType = type === 'funds' ? this.withdrawalModelType : this.depositModelType;
-    
+  async find(
+    type: "withdrawal" | "deposit",
+    options: QueryOptions = {}
+  ): Promise<any[]> {
+    const modelType =
+      type === "withdrawal" ? this.withdrawalModelType : this.depositModelType;
+
     try {
       const queryParams: any = {
-        sort: options.sort || 'name',
-        ...options
+        sort: options.sort || "name",
+        ...options,
       };
 
       // Add pagination if specified
@@ -50,15 +54,16 @@ export default class PlatformService {
    * Find a single platform by ID
    */
   async findById(
-    type: 'funds' | 'deposit', 
-    id: string | number, 
+    type: "withdrawal" | "deposit",
+    id: string | number,
     options: QueryOptions = {}
   ): Promise<any | null> {
-    const modelType = type === 'funds' ? this.withdrawalModelType : this.depositModelType;
-    
+    const modelType =
+      type === "withdrawal" ? this.withdrawalModelType : this.depositModelType;
+
     try {
       const queryParams: any = {};
-      
+
       // Include relationships if specified
       if (options.include) {
         queryParams.include = options.include;
@@ -77,15 +82,19 @@ export default class PlatformService {
   /**
    * Create a new platform
    */
-  async create(type: 'funds' | 'deposit', attributes: Record<string, any>): Promise<any> {
-    const modelType = type === 'funds' ? this.withdrawalModelType : this.depositModelType;
-    
+  async create(
+    type: "withdrawal" | "deposit",
+    attributes: Record<string, any>
+  ): Promise<any> {
+    const modelType =
+      type === "withdrawal" ? this.withdrawalModelType : this.depositModelType;
+
     try {
       // Validate required fields based on platform type
       this.validateCreateAttributes(type, attributes);
 
       const platform = app.store.createRecord(modelType);
-      
+
       const savedPlatform = await platform.save(attributes);
       return savedPlatform;
     } catch (error) {
@@ -100,7 +109,7 @@ export default class PlatformService {
     try {
       if (!this.canModify(platform)) {
         throw new ServiceError(
-          'You do not have permission to modify this platform',
+          "You do not have permission to modify this platform",
           ServiceErrorType.PERMISSION_DENIED
         );
       }
@@ -108,7 +117,7 @@ export default class PlatformService {
       const updatedPlatform = await platform.save(attributes);
       return updatedPlatform;
     } catch (error) {
-      throw this.handleError(error, 'Failed to update platform');
+      throw this.handleError(error, "Failed to update platform");
     }
   }
 
@@ -119,27 +128,30 @@ export default class PlatformService {
     try {
       if (!this.canDelete(platform)) {
         throw new ServiceError(
-          'You do not have permission to delete this platform',
+          "You do not have permission to delete this platform",
           ServiceErrorType.PERMISSION_DENIED
         );
       }
 
       await platform.delete();
     } catch (error) {
-      throw this.handleError(error, 'Failed to delete platform');
+      throw this.handleError(error, "Failed to delete platform");
     }
   }
 
   /**
    * Get active platforms only
    */
-  async getActive(type: 'funds' | 'deposit', options: QueryOptions = {}): Promise<any[]> {
+  async getActive(
+    type: "withdrawal" | "deposit",
+    options: QueryOptions = {}
+  ): Promise<any[]> {
     const queryOptions = {
       ...options,
       filter: {
         isActive: true,
-        ...options.filter
-      }
+        ...options.filter,
+      },
     };
 
     return await this.find(type, queryOptions);
@@ -151,7 +163,7 @@ export default class PlatformService {
   async toggleStatus(platform: any): Promise<any> {
     if (!app.session.user?.isAdmin()) {
       throw new ServiceError(
-        'Admin permissions required',
+        "Admin permissions required",
         ServiceErrorType.PERMISSION_DENIED
       );
     }
@@ -166,7 +178,7 @@ export default class PlatformService {
   async updateConfig(platform: any, config: Record<string, any>): Promise<any> {
     if (!app.session.user?.isAdmin()) {
       throw new ServiceError(
-        'Admin permissions required',
+        "Admin permissions required",
         ServiceErrorType.PERMISSION_DENIED
       );
     }
@@ -177,21 +189,27 @@ export default class PlatformService {
   /**
    * Get platforms by symbol
    */
-  async getBySymbol(symbol: string, type: 'funds' | 'deposit'): Promise<any[]> {
+  async getBySymbol(
+    symbol: string,
+    type: "withdrawal" | "deposit"
+  ): Promise<any[]> {
     return await this.find(type, {
       filter: { symbol: symbol },
-      sort: 'name'
+      sort: "name",
     });
   }
 
   /**
    * Validate platform limits for an amount
    */
-  validateAmount(platform: any, amount: number): { valid: boolean; errors: string[] } {
+  validateAmount(
+    platform: any,
+    amount: number
+  ): { valid: boolean; errors: string[] } {
     const errors: string[] = [];
 
-    if (typeof amount !== 'number' || amount <= 0) {
-      errors.push('Amount must be a positive number');
+    if (typeof amount !== "number" || amount <= 0) {
+      errors.push("Amount must be a positive number");
       return { valid: false, errors };
     }
 
@@ -212,21 +230,25 @@ export default class PlatformService {
   /**
    * Get platform statistics (admin only)
    */
-  async getPlatformStats(type: 'funds' | 'deposit', platformId: number): Promise<any> {
+  async getPlatformStats(
+    type: "withdrawal" | "deposit",
+    platformId: number
+  ): Promise<any> {
     if (!app.session.user?.isAdmin()) {
       throw new ServiceError(
-        'Admin permissions required',
+        "Admin permissions required",
         ServiceErrorType.PERMISSION_DENIED
       );
     }
 
-    const requestType = type === 'funds' ? 'funds-requests' : 'deposit-records';
-    
+    const requestType =
+      type === "withdrawal" ? "withdrawal-requests" : "deposit-records";
+
     try {
       // Get all requests/records for this platform
       const records = await app.store.find(requestType, {
-        platform: platformId,
-        include: 'platform'
+        filter: { platform: platformId.toString() },
+        include: "platform",
       });
 
       const recordArray = Array.isArray(records) ? records : [records];
@@ -234,22 +256,26 @@ export default class PlatformService {
       // Calculate statistics
       const stats = {
         total: recordArray.length,
-        pending: recordArray.filter(r => r.status() === 'pending').length,
-        approved: recordArray.filter(r => r.status() === 'approved' || r.status() === 'confirmed').length,
-        rejected: recordArray.filter(r => r.status() === 'rejected').length,
-        totalAmount: recordArray.reduce((sum, r) => sum + (r.amount() || 0), 0)
+        pending: recordArray.filter((r) => r.status() === "pending").length,
+        approved: recordArray.filter(
+          (r) => r.status() === "approved" || r.status() === "confirmed"
+        ).length,
+        rejected: recordArray.filter((r) => r.status() === "rejected").length,
+        totalAmount: recordArray.reduce((sum, r) => sum + (r.amount() || 0), 0),
       };
 
       return stats;
     } catch (error) {
-      throw this.handleError(error, 'Failed to fetch platform statistics');
+      throw this.handleError(error, "Failed to fetch platform statistics");
     }
   }
 
   /**
    * Get platforms grouped by symbol
    */
-  async getPlatformsBySymbolGrouped(type: 'funds' | 'deposit'): Promise<Record<string, any[]>> {
+  async getPlatformsBySymbolGrouped(
+    type: "withdrawal" | "deposit"
+  ): Promise<Record<string, any[]>> {
     const platforms = await this.getActive(type);
     const grouped: Record<string, any[]> = {};
 
@@ -268,14 +294,14 @@ export default class PlatformService {
    * Sort platforms by criteria
    */
   async getSortedPlatforms(
-    type: 'funds' | 'deposit', 
-    sortBy: 'name' | 'symbol' | 'createdAt' | 'fee' = 'name',
-    direction: 'asc' | 'desc' = 'asc'
+    type: "withdrawal" | "deposit",
+    sortBy: "name" | "symbol" | "createdAt" | "fee" = "name",
+    direction: "asc" | "desc" = "asc"
   ): Promise<any[]> {
-    const sortString = direction === 'desc' ? `-${sortBy}` : sortBy;
-    
+    const sortString = direction === "desc" ? `-${sortBy}` : sortBy;
+
     return await this.getActive(type, {
-      sort: sortString
+      sort: sortString,
     });
   }
 
@@ -306,9 +332,12 @@ export default class PlatformService {
   /**
    * Validate create attributes based on platform type
    */
-  private validateCreateAttributes(type: 'funds' | 'deposit', attributes: any): void {
-    const commonRequired = ['name', 'symbol', 'minAmount'];
-    
+  private validateCreateAttributes(
+    type: "withdrawal" | "deposit",
+    attributes: any
+  ): void {
+    const commonRequired = ["name", "symbol", "minAmount"];
+
     // Only common fields are required (removed address requirement)
     const required = commonRequired;
 
@@ -321,35 +350,38 @@ export default class PlatformService {
       }
     }
 
-    if (typeof attributes.minAmount !== 'number' || attributes.minAmount < 0) {
+    if (typeof attributes.minAmount !== "number" || attributes.minAmount < 0) {
       throw new ServiceError(
-        'minAmount must be a non-negative number',
+        "minAmount must be a non-negative number",
         ServiceErrorType.VALIDATION_ERROR
       );
     }
 
     if (attributes.maxAmount !== undefined) {
-      if (typeof attributes.maxAmount !== 'number' || attributes.maxAmount < attributes.minAmount) {
+      if (
+        typeof attributes.maxAmount !== "number" ||
+        attributes.maxAmount < attributes.minAmount
+      ) {
         throw new ServiceError(
-          'maxAmount must be a number greater than or equal to minAmount',
+          "maxAmount must be a number greater than or equal to minAmount",
           ServiceErrorType.VALIDATION_ERROR
         );
       }
     }
 
     if (attributes.fee !== undefined) {
-      if (typeof attributes.fee !== 'number' || attributes.fee < 0) {
+      if (typeof attributes.fee !== "number" || attributes.fee < 0) {
         throw new ServiceError(
-          'fee must be a non-negative number',
+          "fee must be a non-negative number",
           ServiceErrorType.VALIDATION_ERROR
         );
       }
     }
 
     // Validate symbol format (basic validation)
-    if (typeof attributes.symbol !== 'string' || !attributes.symbol.trim()) {
+    if (typeof attributes.symbol !== "string" || !attributes.symbol.trim()) {
       throw new ServiceError(
-        'Symbol is required',
+        "Symbol is required",
         ServiceErrorType.VALIDATION_ERROR
       );
     }
@@ -375,9 +407,9 @@ export default class PlatformService {
     }
 
     // Handle network errors
-    if (error.name === 'TypeError' || error.message?.includes('fetch')) {
+    if (error.name === "TypeError" || error.message?.includes("fetch")) {
       return new ServiceError(
-        'Network error occurred',
+        "Network error occurred",
         ServiceErrorType.NETWORK_ERROR
       );
     }
@@ -393,9 +425,11 @@ export default class PlatformService {
    * Check if error is a not found error
    */
   private isNotFoundError(error: any): boolean {
-    return error.status === 404 || 
-           error.response?.status === 404 ||
-           error.message?.includes('not found');
+    return (
+      error.status === 404 ||
+      error.response?.status === 404 ||
+      error.message?.includes("not found")
+    );
   }
 }
 

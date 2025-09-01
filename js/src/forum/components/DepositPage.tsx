@@ -13,7 +13,7 @@ import ImageDisplay from './deposit/components/ImageDisplay';
 import TransactionHistory from './shared/TransactionHistory';
 import DepositPlatformDropdown from './deposit/selectors/DepositPlatformDropdown';
 import { getAttr } from './withdrawal/utils/modelHelpers';
-import { depositService } from '../../common/services';
+import { depositService, platformService } from '../../common/services';
 import { 
   createPlatformSelectionState, 
   handleCurrencyChange, 
@@ -26,12 +26,14 @@ export default class DepositPage extends Page<any, DepositPageState> {
     platforms: [],
     transactions: [],
     loading: true,
+    submitting: false,
     activeTab: Stream('deposit')
   };
 
   private formData: DepositFormData = {
     selectedPlatform: Stream<DepositPlatform | null>(null),
-    userMessage: Stream('')
+    userMessage: Stream(''),
+    depositAddress: ''
   };
 
   private addressData: DepositAddressData = {
@@ -283,7 +285,7 @@ export default class DepositPage extends Page<any, DepositPageState> {
 
   private async loadPlatforms(): Promise<void> {
     try {
-      this.state.platforms = await depositService.getPlatforms();
+      this.state.platforms = await platformService.find('deposit');
       
       // 使用共享逻辑创建平台选择状态
       this.platformState = createPlatformSelectionState(this.state.platforms);

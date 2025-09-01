@@ -1,16 +1,16 @@
-import app from 'flarum/common/app';
-import { 
-  ServiceError, 
+import app from "flarum/common/app";
+import {
+  ServiceError,
   ServiceErrorType,
-  SettingsServiceInterface 
-} from '../types/services';
+  SettingsServiceInterface,
+} from "../types/services";
 
 /**
  * Service for managing Flarum admin settings
  * Provides type-safe settings operations with proper error handling
  */
 export default class SettingsService implements SettingsServiceInterface {
-  private readonly settingsEndpoint = '/settings';
+  private readonly settingsEndpoint = "/settings";
 
   /**
    * Get a setting value
@@ -38,9 +38,9 @@ export default class SettingsService implements SettingsServiceInterface {
   async saveSetting(key: string, value: any): Promise<void> {
     try {
       // Validate inputs
-      if (!key || typeof key !== 'string') {
+      if (!key || typeof key !== "string") {
         throw new ServiceError(
-          'Setting key must be a non-empty string',
+          "Setting key must be a non-empty string",
           ServiceErrorType.VALIDATION_ERROR
         );
       }
@@ -49,14 +49,13 @@ export default class SettingsService implements SettingsServiceInterface {
       const storageValue = this.prepareValueForStorage(value);
 
       // Make the API request using Flarum's store mechanism
-      const settings = app.store.createRecord('settings');
+      const settings = app.store.createRecord("settings");
       await settings.save({ [key]: storageValue });
-      
+
       // Update the forum attribute immediately for UI consistency
       if (app.forum) {
         app.forum.pushAttributes({ [key]: value });
       }
-
     } catch (error) {
       throw this.handleError(error, `Failed to save setting: ${key}`);
     }
@@ -68,9 +67,9 @@ export default class SettingsService implements SettingsServiceInterface {
   async saveSettings(settings: Record<string, any>): Promise<void> {
     try {
       // Validate inputs
-      if (!settings || typeof settings !== 'object') {
+      if (!settings || typeof settings !== "object") {
         throw new ServiceError(
-          'Settings must be an object',
+          "Settings must be an object",
           ServiceErrorType.VALIDATION_ERROR
         );
       }
@@ -80,7 +79,7 @@ export default class SettingsService implements SettingsServiceInterface {
       const forumAttributes: Record<string, any> = {};
 
       for (const [key, value] of Object.entries(settings)) {
-        if (!key || typeof key !== 'string') {
+        if (!key || typeof key !== "string") {
           throw new ServiceError(
             `Setting key '${key}' must be a non-empty string`,
             ServiceErrorType.VALIDATION_ERROR
@@ -91,16 +90,15 @@ export default class SettingsService implements SettingsServiceInterface {
       }
 
       // Make the API request
-      const settingsRecord = app.store.createRecord('settings');
+      const settingsRecord = app.store.createRecord("settings");
       await settingsRecord.save(preparedSettings);
-      
+
       // Update forum attributes
       if (app.forum) {
         app.forum.pushAttributes(forumAttributes);
       }
-
     } catch (error) {
-      throw this.handleError(error, 'Failed to save multiple settings');
+      throw this.handleError(error, "Failed to save multiple settings");
     }
   }
 
@@ -109,16 +107,15 @@ export default class SettingsService implements SettingsServiceInterface {
    */
   async deleteSetting(key: string): Promise<void> {
     try {
-      if (!key || typeof key !== 'string') {
+      if (!key || typeof key !== "string") {
         throw new ServiceError(
-          'Setting key must be a non-empty string',
+          "Setting key must be a non-empty string",
           ServiceErrorType.VALIDATION_ERROR
         );
       }
 
       // Set to null to delete the setting
       await this.saveSetting(key, null);
-
     } catch (error) {
       throw this.handleError(error, `Failed to delete setting: ${key}`);
     }
@@ -129,17 +126,17 @@ export default class SettingsService implements SettingsServiceInterface {
    */
   async getSettingsWithPrefix(prefix: string): Promise<Record<string, any>> {
     try {
-      if (!prefix || typeof prefix !== 'string') {
+      if (!prefix || typeof prefix !== "string") {
         throw new ServiceError(
-          'Prefix must be a non-empty string',
+          "Prefix must be a non-empty string",
           ServiceErrorType.VALIDATION_ERROR
         );
       }
 
       const settings: Record<string, any> = {};
-      
+
       if (app.forum) {
-        const attributes = app.forum.data.attributes;
+        const attributes = app.forum.data.attributes ?? {};
         for (const [key, value] of Object.entries(attributes)) {
           if (key.startsWith(prefix)) {
             settings[key] = value;
@@ -148,9 +145,11 @@ export default class SettingsService implements SettingsServiceInterface {
       }
 
       return settings;
-
     } catch (error) {
-      throw this.handleError(error, `Failed to get settings with prefix: ${prefix}`);
+      throw this.handleError(
+        error,
+        `Failed to get settings with prefix: ${prefix}`
+      );
     }
   }
 
@@ -165,7 +164,11 @@ export default class SettingsService implements SettingsServiceInterface {
   /**
    * Get extension-specific setting with proper namespace
    */
-  async getExtensionSetting(extension: string, key: string, defaultValue?: any): Promise<any> {
+  async getExtensionSetting(
+    extension: string,
+    key: string,
+    defaultValue?: any
+  ): Promise<any> {
     const fullKey = `${extension}.${key}`;
     return await this.getSetting(fullKey, defaultValue);
   }
@@ -173,7 +176,11 @@ export default class SettingsService implements SettingsServiceInterface {
   /**
    * Save extension-specific setting with proper namespace
    */
-  async saveExtensionSetting(extension: string, key: string, value: any): Promise<void> {
+  async saveExtensionSetting(
+    extension: string,
+    key: string,
+    value: any
+  ): Promise<void> {
     const fullKey = `${extension}.${key}`;
     return await this.saveSetting(fullKey, value);
   }
@@ -182,21 +189,25 @@ export default class SettingsService implements SettingsServiceInterface {
    * Get funds extension settings
    */
   async getWithdrawalSetting(key: string, defaultValue?: any): Promise<any> {
-    return await this.getExtensionSetting('wusong8899-funds', key, defaultValue);
+    return await this.getExtensionSetting(
+      "wusong8899-funds",
+      key,
+      defaultValue
+    );
   }
 
   /**
    * Save funds extension setting
    */
   async saveWithdrawalSetting(key: string, value: any): Promise<void> {
-    return await this.saveExtensionSetting('wusong8899-funds', key, value);
+    return await this.saveExtensionSetting("wusong8899-funds", key, value);
   }
 
   /**
    * Get all funds extension settings
    */
   async getAllWithdrawalSettings(): Promise<Record<string, any>> {
-    return await this.getSettingsWithPrefix('wusong8899-funds.');
+    return await this.getSettingsWithPrefix("wusong8899-funds.");
   }
 
   /**
@@ -204,21 +215,21 @@ export default class SettingsService implements SettingsServiceInterface {
    */
   private prepareValueForStorage(value: any): string {
     if (value === null || value === undefined) {
-      return '';
+      return "";
     }
-    
-    if (typeof value === 'string') {
+
+    if (typeof value === "string") {
       return value;
     }
-    
-    if (typeof value === 'boolean') {
-      return value ? '1' : '0';
+
+    if (typeof value === "boolean") {
+      return value ? "1" : "0";
     }
-    
-    if (typeof value === 'number') {
+
+    if (typeof value === "number") {
       return String(value);
     }
-    
+
     // Objects and arrays get JSON stringified
     return JSON.stringify(value);
   }
@@ -234,7 +245,7 @@ export default class SettingsService implements SettingsServiceInterface {
     // Handle permission errors
     if (error.status === 403 || error.response?.status === 403) {
       return new ServiceError(
-        'Admin permissions required to manage settings',
+        "Admin permissions required to manage settings",
         ServiceErrorType.PERMISSION_DENIED
       );
     }
@@ -251,9 +262,9 @@ export default class SettingsService implements SettingsServiceInterface {
     }
 
     // Handle network errors
-    if (error.name === 'TypeError' || error.message?.includes('fetch')) {
+    if (error.name === "TypeError" || error.message?.includes("fetch")) {
       return new ServiceError(
-        'Network error occurred while managing settings',
+        "Network error occurred while managing settings",
         ServiceErrorType.NETWORK_ERROR
       );
     }

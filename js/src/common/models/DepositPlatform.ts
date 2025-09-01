@@ -1,47 +1,57 @@
-import Model from 'flarum/common/Model';
-import { ServiceError, ServiceErrorType } from '../types/services';
-import { validateDepositPlatform } from '../utils/PlatformValidation';
-import { IconRepresentation } from './CurrencyIcon';
-import app from 'flarum/common/app';
+import Model from "flarum/common/Model";
+import { ServiceError, ServiceErrorType } from "../types/services";
+import { validateDepositPlatform } from "../utils/PlatformValidation";
+import { IconRepresentation } from "./CurrencyIcon";
+import app from "flarum/common/app";
 
 export default class DepositPlatform extends Model {
-  name = Model.attribute<string>('name');
-  symbol = Model.attribute<string>('symbol');
-  network = Model.attribute<string>('network');
-  networkTypeId = Model.attribute<number>('networkTypeId');
-  displayName = Model.attribute<string>('displayName');
-  minAmount = Model.attribute<number>('minAmount');
-  maxAmount = Model.attribute<number>('maxAmount');
-  fee = Model.attribute<number>('fee');
-  address = Model.attribute<string>('address');
-  qrCodeImageUrl = Model.attribute<string>('qrCodeImageUrl');
+  name = Model.attribute<string>("name");
+  symbol = Model.attribute<string>("symbol");
+  network = Model.attribute<string>("network");
+  networkTypeId = Model.attribute<number>("networkTypeId");
+  displayName = Model.attribute<string>("displayName");
+  minAmount = Model.attribute<number>("minAmount");
+  maxAmount = Model.attribute<number>("maxAmount");
+  fee = Model.attribute<number>("fee");
+  address = Model.attribute<string>("address");
+  qrCodeImageUrl = Model.attribute<string>("qrCodeImageUrl");
   // Three-tier icon system - computed properties
-  currencyIconUrl = Model.attribute<string>('currencyIconUrl');
-  currencyIconClass = Model.attribute<string>('currencyIconClass');
-  currencyUnicodeSymbol = Model.attribute<string>('currencyUnicodeSymbol');
-  networkIconUrl = Model.attribute<string>('networkIconUrl');
-  networkIconClass = Model.attribute<string>('networkIconClass');
-  platformSpecificIconUrl = Model.attribute<string>('platformSpecificIconUrl');
-  platformSpecificIconClass = Model.attribute<string>('platformSpecificIconClass');
-  
+  currencyIconUrl = Model.attribute<string>("currencyIconUrl");
+  currencyIconClass = Model.attribute<string>("currencyIconClass");
+  currencyUnicodeSymbol = Model.attribute<string>("currencyUnicodeSymbol");
+  networkIconUrl = Model.attribute<string>("networkIconUrl");
+  networkIconClass = Model.attribute<string>("networkIconClass");
+  platformSpecificIconUrl = Model.attribute<string>("platformSpecificIconUrl");
+  platformSpecificIconClass = Model.attribute<string>(
+    "platformSpecificIconClass"
+  );
+
   // Override fields for admin configuration
-  currencyIconOverrideUrl = Model.attribute<string>('currencyIconOverrideUrl');
-  currencyIconOverrideClass = Model.attribute<string>('currencyIconOverrideClass');
-  networkIconOverrideUrl = Model.attribute<string>('networkIconOverrideUrl');
-  networkIconOverrideClass = Model.attribute<string>('networkIconOverrideClass');
-  warningText = Model.attribute<string>('warningText');
-  networkConfig = Model.attribute<any>('networkConfig');
-  isActive = Model.attribute<boolean>('isActive');
-  createdAt = Model.attribute<Date>('createdAt', (attr: string) => Model.transformDate(attr));
-  updatedAt = Model.attribute<Date>('updatedAt', (attr: string) => Model.transformDate(attr));
+  currencyIconOverrideUrl = Model.attribute<string>("currencyIconOverrideUrl");
+  currencyIconOverrideClass = Model.attribute<string>(
+    "currencyIconOverrideClass"
+  );
+  networkIconOverrideUrl = Model.attribute<string>("networkIconOverrideUrl");
+  networkIconOverrideClass = Model.attribute<string>(
+    "networkIconOverrideClass"
+  );
+  warningText = Model.attribute<string>("warningText");
+  networkConfig = Model.attribute<any>("networkConfig");
+  isActive = Model.attribute<boolean>("isActive");
+  createdAt = Model.attribute<Date>("createdAt", (attr: unknown) =>
+    Model.transformDate(attr as string)
+  );
+  updatedAt = Model.attribute<Date>("updatedAt", (attr: unknown) =>
+    Model.transformDate(attr as string)
+  );
 
   // Relationships
-  networkType = Model.hasOne('networkType');
+  networkType = Model.hasOne("networkType");
 
   // Icon representations from serializer
-  bestIcon = Model.attribute<IconRepresentation>('bestIcon');
-  currencyIcon = Model.attribute<IconRepresentation>('currencyIcon');
-  networkIcon = Model.attribute<IconRepresentation>('networkIcon');
+  bestIcon = Model.attribute<IconRepresentation>("bestIcon");
+  currencyIcon = Model.attribute<IconRepresentation>("currencyIcon");
+  networkIcon = Model.attribute<IconRepresentation>("networkIcon");
 
   // Helper methods
   getDisplayName(): string {
@@ -89,7 +99,7 @@ export default class DepositPlatform extends Model {
   async delete(): Promise<void> {
     if (!this.canDelete()) {
       throw new ServiceError(
-        'You do not have permission to delete this platform',
+        "You do not have permission to delete this platform",
         ServiceErrorType.PERMISSION_DENIED
       );
     }
@@ -97,7 +107,7 @@ export default class DepositPlatform extends Model {
     // Check if platform is in use
     if (await this.isInUse()) {
       throw new ServiceError(
-        'Cannot delete platform that has pending deposit records',
+        "Cannot delete platform that has pending deposit records",
         ServiceErrorType.VALIDATION_ERROR
       );
     }
@@ -115,13 +125,13 @@ export default class DepositPlatform extends Model {
   async toggleStatus(): Promise<DepositPlatform> {
     if (!this.canModify()) {
       throw new ServiceError(
-        'You do not have permission to modify this platform',
+        "You do not have permission to modify this platform",
         ServiceErrorType.PERMISSION_DENIED
       );
     }
 
     return await this.save({
-      isActive: !this.isActive()
+      isActive: !this.isActive(),
     });
   }
 
@@ -129,11 +139,13 @@ export default class DepositPlatform extends Model {
    * Clone this platform for creating a similar one
    */
   clone(): DepositPlatform {
-    const cloned = app.store.createRecord('deposit-platforms') as DepositPlatform;
-    
+    const cloned = app.store.createRecord(
+      "deposit-platforms"
+    ) as DepositPlatform;
+
     // Copy relevant attributes but not id/timestamps
     cloned.pushAttributes({
-      name: this.name() + ' (Copy)',
+      name: this.name() + " (Copy)",
       symbol: this.symbol(),
       network: this.network(),
       networkTypeId: this.networkTypeId(),
@@ -145,7 +157,7 @@ export default class DepositPlatform extends Model {
       currencyIconUrl: this.currencyIconUrl(),
       currencyIconClass: this.currencyIconClass(),
       warningText: this.warningText(),
-      isActive: false // Clone as inactive by default
+      isActive: false, // Clone as inactive by default
     });
 
     return cloned;
@@ -159,8 +171,8 @@ export default class DepositPlatform extends Model {
   validateAmount(amount: number): { valid: boolean; errors: string[] } {
     const errors: string[] = [];
 
-    if (typeof amount !== 'number' || amount <= 0) {
-      errors.push('Amount must be a positive number');
+    if (typeof amount !== "number" || amount <= 0) {
+      errors.push("Amount must be a positive number");
       return { valid: false, errors };
     }
 
@@ -201,7 +213,7 @@ export default class DepositPlatform extends Model {
   canView(): boolean {
     // All authenticated users can view active platforms
     if (this.isActive()) return true;
-    
+
     // Only admins can view inactive platforms
     const currentUser = app.session.user;
     return !!(currentUser && currentUser.isAdmin());
@@ -214,11 +226,14 @@ export default class DepositPlatform extends Model {
    */
   async isInUse(): Promise<boolean> {
     try {
-      const records = await app.store.find('deposit-records', {
-        platform: this.id(),
-        status: 'pending'
+      const id = this.id();
+      if (!id) {
+        return false;
+      }
+      const records = await app.store.find("deposit-records", {
+        filter: { platform: id.toString(), status: "pending" },
       });
-      
+
       const recordsArray = Array.isArray(records) ? records : [records];
       return recordsArray.length > 0;
     } catch {
@@ -233,7 +248,7 @@ export default class DepositPlatform extends Model {
   getFormattedFee(): string {
     const fee = this.fee() || 0;
     if (fee === 0) {
-      return 'Free';
+      return "Free";
     }
     return `${fee} ${this.symbol()}`;
   }
@@ -257,15 +272,15 @@ export default class DepositPlatform extends Model {
    */
   generateDepositAddress(_userId?: number): string {
     const address = this.address();
-    
+
     // For now, we return the static address
     // In the future, this could be enhanced to support dynamic address generation
-    if (address && typeof address === 'string') {
+    if (address && typeof address === "string") {
       return address;
     }
-    
+
     throw new ServiceError(
-      'No deposit address configured for this platform',
+      "No deposit address configured for this platform",
       ServiceErrorType.VALIDATION_ERROR
     );
   }
@@ -291,7 +306,7 @@ export default class DepositPlatform extends Model {
     if (error.response && error.response.errors) {
       const apiError = error.response.errors[0];
       return new ServiceError(
-        apiError.detail || 'Failed to save deposit platform',
+        apiError.detail || "Failed to save deposit platform",
         ServiceErrorType.VALIDATION_ERROR,
         apiError.code,
         apiError
@@ -299,7 +314,7 @@ export default class DepositPlatform extends Model {
     }
 
     return new ServiceError(
-      error.message || 'Failed to save deposit platform',
+      error.message || "Failed to save deposit platform",
       ServiceErrorType.SERVER_ERROR
     );
   }
@@ -315,13 +330,13 @@ export default class DepositPlatform extends Model {
     // Handle permission errors
     if (error.status === 403 || error.response?.status === 403) {
       return new ServiceError(
-        'You do not have permission to delete this platform',
+        "You do not have permission to delete this platform",
         ServiceErrorType.PERMISSION_DENIED
       );
     }
 
     return new ServiceError(
-      error.message || 'Failed to delete deposit platform',
+      error.message || "Failed to delete deposit platform",
       ServiceErrorType.SERVER_ERROR
     );
   }

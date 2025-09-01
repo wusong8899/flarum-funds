@@ -1,19 +1,19 @@
-import app from 'flarum/common/app';
-import WithdrawalRequest from '../models/WithdrawalRequest';
-import WithdrawalPlatform from '../models/WithdrawalPlatform';
-import { 
-  WithdrawalServiceInterface, 
-  QueryOptions, 
-  ServiceError, 
-  ServiceErrorType
-} from '../types/services';
+import app from "flarum/common/app";
+import WithdrawalRequest from "../models/WithdrawalRequest";
+import WithdrawalPlatform from "../models/WithdrawalPlatform";
+import {
+  WithdrawalServiceInterface,
+  QueryOptions,
+  ServiceError,
+  ServiceErrorType,
+} from "../types/services";
 
 /**
  * Service for managing funds requests with proper CRUD operations
  */
 export default class WithdrawalService implements WithdrawalServiceInterface {
-  private readonly modelType = 'funds-requests';
-  private readonly platformModelType = 'funds-platforms';
+  private readonly modelType = "funds-requests";
+  private readonly platformModelType = "funds-platforms";
 
   /**
    * Find multiple funds requests
@@ -21,9 +21,9 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
   async find(options: QueryOptions = {}): Promise<WithdrawalRequest[]> {
     try {
       const queryParams: any = {
-        include: options.include || 'user,platform',
-        sort: options.sort || '-created_at',
-        ...options
+        include: options.include || "user,platform",
+        sort: options.sort || "-created_at",
+        ...options,
       };
 
       // Add pagination if specified
@@ -37,22 +37,29 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
       }
 
       const results = await app.store.find(this.modelType, queryParams);
-      return Array.isArray(results) ? results : [results];
+      return results as unknown as WithdrawalRequest[];
     } catch (error) {
-      throw this.handleError(error, 'Failed to fetch funds requests');
+      throw this.handleError(error, "Failed to fetch funds requests");
     }
   }
 
   /**
    * Find a single funds request by ID
    */
-  async findById(id: string | number, options: QueryOptions = {}): Promise<WithdrawalRequest | null> {
+  async findById(
+    id: string | number,
+    options: QueryOptions = {}
+  ): Promise<WithdrawalRequest | null> {
     try {
       const queryParams: any = {
-        include: options.include || 'user,platform'
+        include: options.include || "user,platform",
       };
 
-      const result = await app.store.find(this.modelType, String(id), queryParams);
+      const result = await app.store.find(
+        this.modelType,
+        String(id),
+        queryParams
+      );
       return result as unknown as WithdrawalRequest;
     } catch (error) {
       if (this.isNotFoundError(error)) {
@@ -70,23 +77,28 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
       // Validate required fields
       this.validateCreateAttributes(attributes);
 
-      const request = app.store.createRecord(this.modelType) as WithdrawalRequest;
-      
+      const request = app.store.createRecord(
+        this.modelType
+      ) as WithdrawalRequest;
+
       const savedRequest = await request.save(attributes);
       return savedRequest as WithdrawalRequest;
     } catch (error) {
-      throw this.handleError(error, 'Failed to create funds request');
+      throw this.handleError(error, "Failed to create funds request");
     }
   }
 
   /**
    * Update an existing funds request
    */
-  async update(model: WithdrawalRequest, attributes: Record<string, any>): Promise<WithdrawalRequest> {
+  async update(
+    model: WithdrawalRequest,
+    attributes: Record<string, any>
+  ): Promise<WithdrawalRequest> {
     try {
       if (!this.canModify(model)) {
         throw new ServiceError(
-          'You do not have permission to modify this funds request',
+          "You do not have permission to modify this funds request",
           ServiceErrorType.PERMISSION_DENIED
         );
       }
@@ -94,7 +106,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
       const updatedModel = await model.save(attributes);
       return updatedModel as WithdrawalRequest;
     } catch (error) {
-      throw this.handleError(error, 'Failed to update funds request');
+      throw this.handleError(error, "Failed to update funds request");
     }
   }
 
@@ -105,14 +117,14 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
     try {
       if (!this.canDelete(model)) {
         throw new ServiceError(
-          'You do not have permission to delete this funds request',
+          "You do not have permission to delete this funds request",
           ServiceErrorType.PERMISSION_DENIED
         );
       }
 
       await model.delete();
     } catch (error) {
-      throw this.handleError(error, 'Failed to delete funds request');
+      throw this.handleError(error, "Failed to delete funds request");
     }
   }
 
@@ -133,25 +145,28 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
         platformId: data.platformId,
         amount: data.amount,
         accountDetails: data.accountDetails,
-        message: data.message || '',
-        status: 'pending'
+        message: data.message || "",
+        status: "pending",
       };
 
       return await this.create(attributes);
     } catch (error) {
-      throw this.handleError(error, 'Failed to submit funds request');
+      throw this.handleError(error, "Failed to submit funds request");
     }
   }
 
   /**
    * Get user's funds history
    */
-  async getUserHistory(userId?: number, options: QueryOptions = {}): Promise<WithdrawalRequest[]> {
+  async getUserHistory(
+    userId?: number,
+    options: QueryOptions = {}
+  ): Promise<WithdrawalRequest[]> {
     const targetUserId = userId || app.session.user?.id();
-    
+
     if (!targetUserId) {
       throw new ServiceError(
-        'User not authenticated',
+        "User not authenticated",
         ServiceErrorType.PERMISSION_DENIED
       );
     }
@@ -160,10 +175,10 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
       ...options,
       filter: {
         user: targetUserId,
-        ...options.filter
+        ...options.filter,
       },
-      include: options.include || 'platform',
-      sort: options.sort || '-created_at'
+      include: options.include || "platform",
+      sort: options.sort || "-created_at",
     };
 
     return await this.find(queryOptions);
@@ -172,10 +187,12 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
   /**
    * Get pending requests (admin only)
    */
-  async getPendingRequests(options: QueryOptions = {}): Promise<WithdrawalRequest[]> {
+  async getPendingRequests(
+    options: QueryOptions = {}
+  ): Promise<WithdrawalRequest[]> {
     if (!app.session.user?.isAdmin()) {
       throw new ServiceError(
-        'Admin permissions required',
+        "Admin permissions required",
         ServiceErrorType.PERMISSION_DENIED
       );
     }
@@ -183,11 +200,11 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
     const queryOptions = {
       ...options,
       filter: {
-        status: 'pending',
-        ...options.filter
+        status: "pending",
+        ...options.filter,
       },
-      include: options.include || 'user,platform',
-      sort: options.sort || 'created_at'
+      include: options.include || "user,platform",
+      sort: options.sort || "created_at",
     };
 
     return await this.find(queryOptions);
@@ -196,23 +213,26 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
   /**
    * Approve a funds request (admin only)
    */
-  async approve(request: WithdrawalRequest, message?: string): Promise<WithdrawalRequest> {
+  async approve(
+    request: WithdrawalRequest,
+    message?: string
+  ): Promise<WithdrawalRequest> {
     if (!app.session.user?.isAdmin()) {
       throw new ServiceError(
-        'Admin permissions required',
+        "Admin permissions required",
         ServiceErrorType.PERMISSION_DENIED
       );
     }
 
     if (!request.isPending()) {
       throw new ServiceError(
-        'Only pending requests can be approved',
+        "Only pending requests can be approved",
         ServiceErrorType.VALIDATION_ERROR
       );
     }
 
     const attributes: any = {
-      status: 'approved'
+      status: "approved",
     };
 
     if (message) {
@@ -225,23 +245,26 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
   /**
    * Reject a funds request (admin only)
    */
-  async reject(request: WithdrawalRequest, reason?: string): Promise<WithdrawalRequest> {
+  async reject(
+    request: WithdrawalRequest,
+    reason?: string
+  ): Promise<WithdrawalRequest> {
     if (!app.session.user?.isAdmin()) {
       throw new ServiceError(
-        'Admin permissions required',
+        "Admin permissions required",
         ServiceErrorType.PERMISSION_DENIED
       );
     }
 
     if (!request.isPending()) {
       throw new ServiceError(
-        'Only pending requests can be rejected',
+        "Only pending requests can be rejected",
         ServiceErrorType.VALIDATION_ERROR
       );
     }
 
     const attributes: any = {
-      status: 'rejected'
+      status: "rejected",
     };
 
     if (reason) {
@@ -257,15 +280,18 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
   async cancel(request: WithdrawalRequest): Promise<any> {
     if (!request.canBeModified()) {
       throw new ServiceError(
-        'This request cannot be cancelled',
+        "This request cannot be cancelled",
         ServiceErrorType.VALIDATION_ERROR
       );
     }
 
     const currentUser = app.session.user;
-    if (!currentUser || (String(request.userId()) !== currentUser.id() && !currentUser.isAdmin())) {
+    if (
+      !currentUser ||
+      (String(request.userId()) !== currentUser.id() && !currentUser.isAdmin())
+    ) {
       throw new ServiceError(
-        'You can only cancel your own requests',
+        "You can only cancel your own requests",
         ServiceErrorType.PERMISSION_DENIED
       );
     }
@@ -314,14 +340,11 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
    */
   async getPlatforms(): Promise<WithdrawalPlatform[]> {
     try {
-      const platforms = await app.store.find(this.platformModelType, {
-        isActive: true,
-        sort: 'name'
-      });
-      
-      return Array.isArray(platforms) ? platforms : [platforms];
+      const platforms = await app.store.find(this.platformModelType);
+
+      return platforms as unknown as WithdrawalPlatform[];
     } catch (error) {
-      throw this.handleError(error, 'Failed to fetch funds platforms');
+      throw this.handleError(error, "Failed to fetch funds platforms");
     }
   }
 
@@ -332,10 +355,13 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
     const { platformId, amount } = data;
 
     // Get platform details
-    const platform = await app.store.find(this.platformModelType, String(platformId)) as unknown as WithdrawalPlatform;
+    const platform = (await app.store.find(
+      this.platformModelType,
+      String(platformId)
+    )) as unknown as WithdrawalPlatform;
     if (!platform) {
       throw new ServiceError(
-        'Invalid platform selected',
+        "Invalid platform selected",
         ServiceErrorType.VALIDATION_ERROR
       );
     }
@@ -343,7 +369,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
     // Check if platform is active
     if (!platform.isActive?.()) {
       throw new ServiceError(
-        'Selected platform is not available',
+        "Selected platform is not available",
         ServiceErrorType.VALIDATION_ERROR
       );
     }
@@ -351,7 +377,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
     // Validate amount limits
     const minAmount = platform.minAmount?.() || 0;
     const maxAmount = platform.maxAmount?.();
-    
+
     if (amount < minAmount) {
       throw new ServiceError(
         `Minimum funds amount is ${minAmount}`,
@@ -369,7 +395,7 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
     // Check user balance
     const currentUser = app.session.user;
     if (currentUser) {
-      const userBalance = parseFloat(currentUser.attribute('money') || '0');
+      const userBalance = parseFloat(currentUser.attribute("money") || "0");
       const fee = platform.fee?.() || 0;
       const totalRequired = amount + fee;
 
@@ -386,8 +412,8 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
    * Validate create attributes
    */
   private validateCreateAttributes(attributes: any): void {
-    const required = ['platformId', 'amount', 'accountDetails'];
-    
+    const required = ["platformId", "amount", "accountDetails"];
+
     for (const field of required) {
       if (!attributes[field]) {
         throw new ServiceError(
@@ -397,9 +423,9 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
       }
     }
 
-    if (typeof attributes.amount !== 'number' || attributes.amount <= 0) {
+    if (typeof attributes.amount !== "number" || attributes.amount <= 0) {
       throw new ServiceError(
-        'Amount must be a positive number',
+        "Amount must be a positive number",
         ServiceErrorType.VALIDATION_ERROR
       );
     }
@@ -425,9 +451,9 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
     }
 
     // Handle network errors
-    if (error.name === 'TypeError' || error.message?.includes('fetch')) {
+    if (error.name === "TypeError" || error.message?.includes("fetch")) {
       return new ServiceError(
-        'Network error occurred',
+        "Network error occurred",
         ServiceErrorType.NETWORK_ERROR
       );
     }
@@ -443,9 +469,11 @@ export default class WithdrawalService implements WithdrawalServiceInterface {
    * Check if error is a not found error
    */
   private isNotFoundError(error: any): boolean {
-    return error.status === 404 || 
-           error.response?.status === 404 ||
-           error.message?.includes('not found');
+    return (
+      error.status === 404 ||
+      error.response?.status === 404 ||
+      error.message?.includes("not found")
+    );
   }
 }
 

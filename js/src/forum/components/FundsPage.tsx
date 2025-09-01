@@ -634,19 +634,19 @@ export default class FundsPage extends Page<any, FundsPageState> {
   }
 
   /**
-   * Load funds platforms and user requests using service layer
+   * Load withdrawal platforms and user requests using service layer
    */
   private async loadWithdrawalData(): Promise<void> {
     try {
       const [platforms, requests] = await Promise.all([
-        platformService.getActive('funds'),
+        platformService.getActive('withdrawal'),
         withdrawalService.getUserHistory()
       ]);
 
       this.state.withdrawalPlatforms = platforms as WithdrawalPlatform[];
       this.state.withdrawalRequests = requests;
     } catch (error) {
-      console.error('Error loading funds data:', error);
+      console.error('Error loading withdrawal data:', error);
       // Fallback to empty arrays
       this.state.withdrawalPlatforms = [];
       this.state.withdrawalRequests = [];
@@ -702,10 +702,8 @@ export default class FundsPage extends Page<any, FundsPageState> {
       const requests = await withdrawalService.getUserHistory();
       this.state.withdrawalRequests = requests;
     } catch (error) {
-      console.error('Error loading funds requests:', error);
+      console.error('Error loading withdrawal requests:', error);
       this.state.withdrawalRequests = [];
     }
   }
-
-  // 移除复杂的地址生成逻辑 - 简化版本不再需要这个方法
 }

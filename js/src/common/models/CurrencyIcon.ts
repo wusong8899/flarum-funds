@@ -1,25 +1,29 @@
-import Model from 'flarum/common/Model';
+import Model from "flarum/common/Model";
 
 export interface IconRepresentation {
-  type: 'currency_url' | 'currency_class' | 'currency_unicode' | 'fallback';
+  type: "currency_url" | "currency_class" | "currency_unicode" | "fallback";
   value: string;
   alt?: string;
 }
 
 export default class CurrencyIcon extends Model {
-  id = Model.attribute<string>('id');
-  currencySymbol = Model.attribute<string>('currencySymbol');
-  currencyName = Model.attribute<string>('currencyName');
-  currencyIconUrl = Model.attribute<string>('currencyIconUrl');
-  currencyIconClass = Model.attribute<string>('currencyIconClass');
-  currencyUnicodeSymbol = Model.attribute<string>('currencyUnicodeSymbol');
-  displayPriority = Model.attribute<number>('displayPriority');
-  isActive = Model.attribute<boolean>('isActive');
-  createdAt = Model.attribute<Date>('createdAt', (attr: string) => Model.transformDate(attr));
-  updatedAt = Model.attribute<Date>('updatedAt', (attr: string) => Model.transformDate(attr));
+  id = Model.attribute<string>("id");
+  currencySymbol = Model.attribute<string>("currencySymbol");
+  currencyName = Model.attribute<string>("currencyName");
+  currencyIconUrl = Model.attribute<string>("currencyIconUrl");
+  currencyIconClass = Model.attribute<string>("currencyIconClass");
+  currencyUnicodeSymbol = Model.attribute<string>("currencyUnicodeSymbol");
+  displayPriority = Model.attribute<number>("displayPriority");
+  isActive = Model.attribute<boolean>("isActive");
+  createdAt = Model.attribute<Date>("createdAt", (attr: unknown) =>
+    Model.transformDate(attr as string)
+  );
+  updatedAt = Model.attribute<Date>("updatedAt", (attr: unknown) =>
+    Model.transformDate(attr as string)
+  );
 
   // Additional computed attributes from serializer
-  bestIcon = Model.attribute<IconRepresentation>('bestIcon');
+  bestIcon = Model.attribute<IconRepresentation>("bestIcon");
 
   /**
    * Get the best available icon representation
@@ -33,29 +37,29 @@ export default class CurrencyIcon extends Model {
     // Fallback logic if bestIcon isn't available
     if (this.currencyIconUrl()) {
       return {
-        type: 'currency_url',
+        type: "currency_url",
         value: this.currencyIconUrl()!,
-        alt: this.currencySymbol()
+        alt: this.currencySymbol(),
       };
     }
 
     if (this.currencyIconClass()) {
       return {
-        type: 'currency_class',
-        value: this.currencyIconClass()!
+        type: "currency_class",
+        value: this.currencyIconClass()!,
       };
     }
 
     if (this.currencyUnicodeSymbol()) {
       return {
-        type: 'currency_unicode',
-        value: this.currencyUnicodeSymbol()!
+        type: "currency_unicode",
+        value: this.currencyUnicodeSymbol()!,
       };
     }
 
     return {
-      type: 'fallback',
-      value: 'fas fa-coins'
+      type: "fallback",
+      value: "fas fa-coins",
     };
   }
 
@@ -86,11 +90,11 @@ export default class CurrencyIcon extends Model {
   getDisplayName(): string {
     const name = this.currencyName();
     const symbol = this.currencySymbol();
-    
+
     if (name && symbol) {
       return `${name} (${symbol})`;
     }
-    
-    return name || symbol || 'Unknown Currency';
+
+    return name || symbol || "Unknown Currency";
   }
 }

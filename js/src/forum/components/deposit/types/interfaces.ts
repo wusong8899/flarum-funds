@@ -22,6 +22,7 @@ export interface DepositAddressData {
   address: string;
   platform: any;
   qrCodeUrl?: string;
+  loading?: boolean;
 }
 
 // 存款表单状态

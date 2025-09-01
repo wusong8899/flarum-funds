@@ -246,9 +246,12 @@ export default class WithdrawalPlatform extends Model {
    */
   async isInUse(): Promise<boolean> {
     try {
+      const id = this.id();
+      if (!id) {
+        return false;
+      }
       const requests = await app.store.find("funds-requests", {
-        platform: this.id(),
-        status: "pending"
+        filter: { platform: id, status: "pending" },
       });
 
       const requestsArray = Array.isArray(requests) ? requests : [requests];

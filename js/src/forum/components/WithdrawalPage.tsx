@@ -129,7 +129,7 @@ export default class WithdrawalPage extends Page<any, any> {
         transactions={this.state.requests}
         platforms={this.state.platforms}
         loading={false}
-        type="funds"
+        type="withdrawal"
       />
     );
   }
