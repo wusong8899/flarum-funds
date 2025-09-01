@@ -38,7 +38,8 @@ interface FundsPageState {
   loadingBalance: boolean;
   submitting: boolean;
   
-  // Simplified deposit state - 简化的存款状态
+  // Deposit state - 存款状态
+  depositPlatforms: any[]; // DepositPlatform[]
   depositRecords: DepositRecord[];
   submittingDeposit: boolean;
   
@@ -56,6 +57,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
     userBalance: 0,
     loadingBalance: true,
     submitting: false,
+    depositPlatforms: [],
     depositRecords: [],
     submittingDeposit: false,
     loading: true,
@@ -332,9 +334,11 @@ export default class FundsPage extends Page<any, FundsPageState> {
   }
 
   private renderDepositForm(): Mithril.Children {
+    console.log('FundsPage: renderDepositForm - depositPlatforms:', this.state.depositPlatforms);
     return (
       <div className="FundsPage-depositContent">
         <DepositForm
+          platforms={this.state.depositPlatforms}
           onSubmit={this.handleDepositSubmit.bind(this)}
           onCancel={this.handleCancelDepositForm.bind(this)}
           submitting={this.state.submittingDeposit}
@@ -620,7 +624,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
     try {
       await Promise.all([
         this.loadWithdrawalData(),
-        this.loadDepositRecords(),
+        this.loadDepositData(),
         this.loadUserBalance()
       ]);
       
@@ -654,7 +658,29 @@ export default class FundsPage extends Page<any, FundsPageState> {
   }
 
   /**
-   * 加载简化的存款记录
+   * Load deposit platforms and user records using service layer
+   */
+  private async loadDepositData(): Promise<void> {
+    try {
+      const [platforms, records] = await Promise.all([
+        platformService.getActive('deposit'),
+        depositService.getUserHistory()
+      ]);
+
+      this.state.depositPlatforms = platforms;
+      this.state.depositRecords = records;
+      console.log('FundsPage: Loaded deposit platforms:', platforms);
+      console.log('FundsPage: Deposit platform count:', platforms.length);
+    } catch (error) {
+      console.error('Error loading deposit data:', error);
+      // Fallback to empty arrays
+      this.state.depositPlatforms = [];
+      this.state.depositRecords = [];
+    }
+  }
+
+  /**
+   * 加载简化的存款记录（用于表单提交后刷新）
    */
   private async loadDepositRecords(): Promise<void> {
     try {
