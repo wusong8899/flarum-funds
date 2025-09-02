@@ -21,7 +21,7 @@ export default class DepositPlatformManagementSection extends Component<DepositP
   private editingPlatform: DepositPlatform | null = null;
 
   view(vnode: Mithril.Vnode<DepositPlatformManagementSectionAttrs>): Mithril.Children {
-    const { platforms, submittingPlatform, onAddPlatform, onTogglePlatformStatus, onDeletePlatform, onEditPlatform } = vnode.attrs;
+    const { platforms, submittingPlatform, onAddPlatform, onTogglePlatformStatus, onDeletePlatform } = vnode.attrs;
 
     return (
       <div className="DepositPlatformManagementSection">
@@ -123,12 +123,7 @@ export default class DepositPlatformManagementSection extends Component<DepositP
   }
 
   private async handleEditSubmit(id: number, formData: DepositPlatformFormData): Promise<void> {
-    try {
-      await this.attrs.onEditPlatform(id, formData);
-      this.editingPlatform = null;
-    } catch (error) {
-      // Error handling is done in modal
-      throw error;
-    }
+    await this.attrs.onEditPlatform(id, formData);
+    this.editingPlatform = null;
   }
 }

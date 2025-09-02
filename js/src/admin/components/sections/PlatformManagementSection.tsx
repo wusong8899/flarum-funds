@@ -5,7 +5,7 @@ import { WithdrawalPlatform, PlatformFormData } from '../types/AdminTypes';
 import AddPlatformForm from '../forms/AddPlatformForm';
 import GenericPlatformListItem from '../shared/GenericPlatformListItem';
 import EditPlatformModal from '../modals/EditPlatformModal';
-import Stream from 'flarum/common/utils/Stream';
+
 
 export interface PlatformManagementSectionAttrs {
   platforms: WithdrawalPlatform[];
@@ -20,7 +20,7 @@ export default class PlatformManagementSection extends Component<PlatformManagem
   private editingPlatform: WithdrawalPlatform | null = null;
 
   view(): Mithril.Children {
-    const { platforms, submittingPlatform, onAddPlatform, onTogglePlatformStatus, onDeletePlatform, onEditPlatform } = this.attrs;
+    const { platforms, submittingPlatform, onAddPlatform, onTogglePlatformStatus, onDeletePlatform } = this.attrs;
 
     return (
       <div className="WithdrawalManagementPage-section">
@@ -58,17 +58,7 @@ export default class PlatformManagementSection extends Component<PlatformManagem
     this.editingPlatform = platform;
     app.modal.show(EditPlatformModal, {
       platform: platform,
-      onEditPlatform: (id: number, formData: any) => this.handleEditSubmit(id, formData)
+      onEditPlatform: this.attrs.onEditPlatform
     });
-  }
-
-  private async handleEditSubmit(id: number, formData: PlatformFormData): Promise<void> {
-    try {
-      await this.attrs.onEditPlatform(id, formData);
-      this.editingPlatform = null;
-    } catch (error) {
-      // Error handling is done in modal
-      throw error;
-    }
   }
 }

@@ -54,6 +54,47 @@ export const createWithdrawalPlatformOperations =
       }
     },
 
+    async update(platform: any, formData: any) {
+      try {
+        // 使用统一的平台结构验证和清理数据
+        const platformType: PlatformType = "withdrawal";
+
+        // 清理和标准化表单数据
+        const sanitizedData = sanitizeFormData(formData, platformType);
+
+        // 验证数据完整性
+        const validation = validatePlatform(sanitizedData, platformType);
+        if (!validation.valid) {
+          const errorMessages = Object.values(validation.errors).flat();
+          throw new Error(errorMessages.join(", "));
+        }
+
+        // Import PlatformService dynamically to avoid circular dependencies
+        const { platformService } = await import(
+          "../../common/services/PlatformService"
+        );
+
+        const result = await platformService.update(platform, sanitizedData);
+
+        app.alerts.show(
+          { type: "success", dismissible: true },
+          app.translator.trans("funds.admin.platforms.edit_success").toString()
+        );
+
+        return result;
+      } catch (error) {
+        app.alerts.show(
+          { type: "error", dismissible: true },
+          error instanceof Error
+            ? error.message
+            : app.translator
+                .trans("funds.admin.platforms.edit_error")
+                .toString()
+        );
+        throw error;
+      }
+    },
+
     async toggleStatus(platform: any) {
       try {
         // Import PlatformService dynamically
@@ -163,6 +204,49 @@ export const createDepositPlatformOperations = (): PlatformOperations<any> => ({
           ? error.message
           : app.translator
               .trans("funds.admin.deposit.platforms.add_error")
+              .toString()
+      );
+      throw error;
+    }
+  },
+
+  async update(platform: any, formData: any) {
+    try {
+      // 使用统一的平台结构验证和清理数据
+      const platformType: PlatformType = "deposit";
+
+      // 清理和标准化表单数据
+      const sanitizedData = sanitizeFormData(formData, platformType);
+
+      // 验证数据完整性
+      const validation = validatePlatform(sanitizedData, platformType);
+      if (!validation.valid) {
+        const errorMessages = Object.values(validation.errors).flat();
+        throw new Error(errorMessages.join(", "));
+      }
+
+      // Import PlatformService dynamically to avoid circular dependencies
+      const { platformService } = await import(
+        "../../common/services/PlatformService"
+      );
+
+      const result = await platformService.update(platform, sanitizedData);
+
+      app.alerts.show(
+        { type: "success", dismissible: true },
+        app.translator
+          .trans("funds.admin.deposit.platforms.edit_success")
+          .toString()
+      );
+
+      return result;
+    } catch (error) {
+      app.alerts.show(
+        { type: "error", dismissible: true },
+        error instanceof Error
+          ? error.message
+          : app.translator
+              .trans("funds.admin.deposit.platforms.edit_error")
               .toString()
       );
       throw error;

@@ -21,6 +21,7 @@ export interface GenericTransaction {
 
 export interface PlatformOperations<T extends GenericPlatform> {
   create: (data: any) => Promise<T>;
+  update?: (platform: T, data: any) => Promise<T>;
   toggleStatus: (platform: T) => Promise<void>;
   delete: (platform: T) => Promise<void>;
   load: () => Promise<T[]>;
@@ -152,6 +153,7 @@ export default abstract class GenericManagementPage<
       
       // Platform management callbacks
       onAddPlatform: this.addPlatform.bind(this),
+      onEditPlatform: this.editPlatform.bind(this),
       onTogglePlatformStatus: this.togglePlatformStatus.bind(this),
       onDeletePlatform: this.deletePlatform.bind(this),
       
@@ -194,6 +196,48 @@ export default abstract class GenericManagementPage<
       m.redraw();
     } catch (error) {
       console.error('Error toggling platform status:', error);
+    }
+  }
+
+  protected async editPlatform(id: number, formData: any): Promise<void> {
+    const config = this.getConfig();
+    
+    // Check if platform operations support update
+    if (!config.platformOperations.update) {
+      console.error('Platform update operation not supported');
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        'Platform update operation not supported'
+      );
+      return;
+    }
+
+    try {
+      // Find the platform by ID
+      const platform = this.platforms.find(p => {
+        const platformId = typeof p.id === 'function' ? p.id() : p.id;
+        return platformId === id || platformId === String(id);
+      });
+
+      if (!platform) {
+        throw new Error('Platform not found');
+      }
+
+      await config.platformOperations.update(platform, formData);
+      await this.loadPlatforms();
+      m.redraw();
+      
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans(`${config.translations.platformPrefix}.edit_success`)
+      );
+    } catch (error) {
+      console.error('Error editing platform:', error);
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        app.translator.trans(`${config.translations.platformPrefix}.edit_error`)
+      );
+      throw error;
     }
   }
 

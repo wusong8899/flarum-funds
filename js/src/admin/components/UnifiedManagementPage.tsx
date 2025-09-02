@@ -85,6 +85,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
             platforms={this.platforms}
             submittingPlatform={this.submittingPlatform}
             onAddPlatform={this.addPlatform.bind(this)}
+            onEditPlatform={this.editPlatform.bind(this)}
             onTogglePlatformStatus={this.togglePlatformStatus.bind(this)}
             onDeletePlatform={this.deletePlatform.bind(this)}
           />
