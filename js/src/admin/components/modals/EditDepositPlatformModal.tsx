@@ -1,5 +1,5 @@
 import app from 'flarum/admin/app';
-import Modal from 'flarum/common/components/Modal';
+import Modal, { IInternalModalAttrs } from 'flarum/common/components/Modal';
 import Button from 'flarum/common/components/Button';
 import Switch from 'flarum/common/components/Switch';
 import Stream from 'flarum/common/utils/Stream';
@@ -9,7 +9,7 @@ import { DepositPlatformFormData } from '../forms/AddDepositPlatformForm';
 import { FormValidator } from '../../../common/utils/formValidators';
 import m from 'mithril';
 
-export interface EditDepositPlatformModalAttrs {
+export interface EditDepositPlatformModalAttrs extends IInternalModalAttrs {
   platform: DepositPlatform;
   onEdit: (id: number, formData: DepositPlatformFormData) => Promise<void>;
 }

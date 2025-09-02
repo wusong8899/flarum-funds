@@ -58,7 +58,7 @@ export default class PlatformManagementSection extends Component<PlatformManagem
     this.editingPlatform = platform;
     app.modal.show(EditPlatformModal, {
       platform: platform,
-      onEdit: this.handleEditSubmit.bind(this)
+      onEdit: (id: number, formData: any) => this.handleEditSubmit(id, formData)
     });
   }
 
