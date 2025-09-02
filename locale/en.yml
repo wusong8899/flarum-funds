@@ -17,10 +17,10 @@ funds:
         enable_success: Deposit platform enabled successfully
         fee: Fee
         fee_help: Fee charged for this deposit platform (optional, defaults to 0)
-        icon_class: Platform Icon CSS Class
-        icon_class_help: Enter Font Awesome class for this specific deposit platform/network
-        icon_url: Platform Icon Image URL
-        icon_url_help: Enter image URL for this specific deposit platform/network
+        platform_icon_class: Platform Icon CSS Class
+        platform_icon_class_help: Enter Font Awesome class for this specific deposit platform/network
+        platform_icon_url: Platform Icon Image URL
+        platform_icon_url_help: Enter image URL for this specific deposit platform/network
         inactive: Inactive
         is_active: Active
         load_error: Failed to load deposit platforms
@@ -98,10 +98,6 @@ funds:
       add_error: Failed to add platform
       add_placeholder: Enter platform name
       add_success: Platform added successfully
-      currency_icon_override_class: Currency Icon CSS Class (Optional)
-      currency_icon_override_class_help: Override currency icon with Font Awesome class (e.g., fab fa-bitcoin)
-      currency_icon_override_url: Currency Icon URL (Optional)
-      currency_icon_override_url_help: Override currency icon with custom image URL (e.g., https://example.com/btc-icon.png)
       delete: Delete
       delete_cancel_button: Cancel
       delete_confirm: Are you sure you want to delete {name}?
@@ -117,10 +113,12 @@ funds:
       enable: Enable
       enable_success: Platform enabled successfully
       fee: Fee
-      icon_configuration: Icon Configuration
-      icon_configuration_help:
-        "Configure icons with priority: Platform-specific → Network → Currency. Higher priority icons
-        override lower ones."
+      platform_icon: Platform Icon
+      platform_icon_help: Configure custom icon for this specific platform
+      platform_icon_url: Platform Icon URL
+      platform_icon_url_help: Enter image URL for this specific platform icon
+      platform_icon_class: Platform Icon CSS Class
+      platform_icon_class_help: Enter Font Awesome class for this specific platform icon
       inactive: Inactive
       is_active: Active
       load_error: Load Error Error
@@ -130,14 +128,6 @@ funds:
       name: Platform Name
       network: Network (Optional)
       network_help: Enter network name (e.g., TRC20, ERC20, BSC) - leave empty if not applicable
-      network_icon_override_class: Network Icon CSS Class (Optional)
-      network_icon_override_class_help: Override network icon with Font Awesome class (e.g., fas fa-network-wired)
-      network_icon_override_url: Network Icon URL (Optional)
-      network_icon_override_url_help: Override network icon with custom image URL (e.g., https://example.com/tron-icon.png)
-      platform_specific_icon_class: Platform Specific Icon Class
-      platform_specific_icon_class_help: Platform Specific Icon Class Help
-      platform_specific_icon_url: Platform Specific Icon Url
-      platform_specific_icon_url_help: Platform Specific Icon Url Help
       symbol: Currency Symbol
       title: Withdrawal Platforms
       toggle_error: Failed to toggle platform status

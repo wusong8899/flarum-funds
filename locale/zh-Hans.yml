@@ -20,10 +20,10 @@ funds:
         enable_success: 存款平台已启用
         fee: 手续费
         fee_help: 该存款平台的手续费（可选，默认为0）
-        icon_class: 平台专属图标CSS类
-        icon_class_help: 输入此特定存款平台/网络的字体图标类
-        icon_url: 平台专属图标URL
-        icon_url_help: 输入此特定存款平台/网络的图标URL
+        platform_icon_class: 平台图标CSS类
+        platform_icon_class_help: 输入此特定存款平台的字体图标类
+        platform_icon_url: 平台图标URL
+        platform_icon_url_help: 输入此特定存款平台的图标URL
         inactive: 禁用
         is_active: 启用
         max_amount: 最大金额
