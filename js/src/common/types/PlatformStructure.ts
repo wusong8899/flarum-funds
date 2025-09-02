@@ -32,18 +32,10 @@ export interface BasePlatformFields {
   maxAmount?: number | null;
   /** 网络类型ID - 关联到NetworkType表 */
   networkTypeId?: number | null;
-  /** 自定义货币图标URL */
-  currencyIconOverrideUrl?: string | null;
-  /** 自定义货币图标CSS类 */
-  currencyIconOverrideClass?: string | null;
-  /** 自定义网络图标URL */
-  networkIconOverrideUrl?: string | null;
-  /** 自定义网络图标CSS类 */
-  networkIconOverrideClass?: string | null;
-  /** 平台特定图标URL */
-  platformSpecificIconUrl?: string | null;
-  /** 平台特定图标CSS类 */
-  platformSpecificIconClass?: string | null;
+  /** 平台图标URL (简化图标系统) */
+  platformIconUrl?: string | null;
+  /** 平台图标CSS类 (简化图标系统) */
+  platformIconClass?: string | null;
   
   // === 系统字段 (System Fields) ===
   id?: number;
@@ -115,9 +107,7 @@ export const PLATFORM_FIELD_CATEGORIES = {
   OPTIONAL: {
     COMMON: [
       'network', 'maxAmount', 'networkTypeId',
-      'currencyIconOverrideUrl', 'currencyIconOverrideClass',
-      'networkIconOverrideUrl', 'networkIconOverrideClass', 
-      'platformSpecificIconUrl', 'platformSpecificIconClass'
+      'platformIconUrl', 'platformIconClass'
     ] as const,
     WITHDRAWAL: [] as const,
     DEPOSIT: [
@@ -232,13 +222,9 @@ export const FIELD_DISPLAY_NAMES = {
   isActive: '启用状态',
   networkTypeId: '网络类型',
   
-  // 图标字段
-  currencyIconOverrideUrl: '货币图标URL',
-  currencyIconOverrideClass: '货币图标CSS类',
-  networkIconOverrideUrl: '网络图标URL', 
-  networkIconOverrideClass: '网络图标CSS类',
-  platformSpecificIconUrl: '平台图标URL',
-  platformSpecificIconClass: '平台图标CSS类',
+  // 图标字段 (简化系统)
+  platformIconUrl: '平台图标URL',
+  platformIconClass: '平台图标CSS类',
   
   // 存款平台特有字段
   address: '收款地址',
@@ -268,13 +254,9 @@ export const FIELD_VALIDATION_RULES = {
   isActive: { required: true },
   networkTypeId: { required: false, min: 1 },
   
-  // === 图标字段 ===
-  currencyIconOverrideUrl: { required: false, maxLength: 500 },
-  currencyIconOverrideClass: { required: false, maxLength: 100 },
-  networkIconOverrideUrl: { required: false, maxLength: 500 },
-  networkIconOverrideClass: { required: false, maxLength: 100 },
-  platformSpecificIconUrl: { required: false, maxLength: 500 },
-  platformSpecificIconClass: { required: false, maxLength: 100 },
+  // === 图标字段 (简化系统) ===
+  platformIconUrl: { required: false, maxLength: 500 },
+  platformIconClass: { required: false, maxLength: 100 },
   
   // === 存款平台特有字段 ===
   address: { required: true, minLength: 10, maxLength: 500 }, // 存款平台必要
