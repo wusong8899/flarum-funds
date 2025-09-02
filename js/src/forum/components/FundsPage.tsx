@@ -1,33 +1,36 @@
-import app from 'flarum/forum/app';
-import Page from 'flarum/common/components/Page';
-import Button from 'flarum/common/components/Button';
-import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
-import Stream from 'flarum/common/utils/Stream';
-import icon from 'flarum/common/helpers/icon';
-import m from 'mithril';
-import type Mithril from 'mithril';
+import app from "flarum/forum/app";
+import Page from "flarum/common/components/Page";
+import Button from "flarum/common/components/Button";
+import LoadingIndicator from "flarum/common/components/LoadingIndicator";
+import Stream from "flarum/common/utils/Stream";
+import icon from "flarum/common/helpers/icon";
+import m from "mithril";
+import type Mithril from "mithril";
 
 // Withdrawal imports
-import type { WithdrawalFormData } from './withdrawal/types/interfaces';
-import WithdrawalPlatform from '../../common/models/WithdrawalPlatform';
-import WithdrawalForm from './withdrawal/forms/WithdrawalForm';
-import TransactionHistory from './shared/TransactionHistory';
+import type { WithdrawalFormData } from "./withdrawal/types/interfaces";
+import WithdrawalPlatform from "../../common/models/WithdrawalPlatform";
+import WithdrawalForm from "./withdrawal/forms/WithdrawalForm";
+import TransactionHistory from "./shared/TransactionHistory";
 
 // Deposit imports
-import type { DepositFormData } from './deposit/forms/DepositForm';
-import DepositForm from './deposit/forms/DepositForm';
-import DepositRecord from '../../common/models/DepositRecord';
-import depositService from '../../common/services/DepositService';
+import type { DepositFormData } from "./deposit/forms/DepositForm";
+import DepositForm from "./deposit/forms/DepositForm";
+import DepositRecord from "../../common/models/DepositRecord";
+import depositService from "../../common/services/DepositService";
 
 // Services
-import { withdrawalService, platformService } from '../../common/services';
-import { ServiceError } from '../../common/types/services';
+import { withdrawalService, platformService } from "../../common/services";
+import { ServiceError } from "../../common/types/services";
 
 // Utilities
-import { getAttr, getIdString } from './withdrawal/utils/modelHelpers';
-import { extractErrorMessage, type FlarumApiError } from '../../common/types/api';
+import { getAttr, getIdString } from "./withdrawal/utils/modelHelpers";
+import {
+  extractErrorMessage,
+  type FlarumApiError,
+} from "../../common/types/api";
 
-type TabType = 'withdrawal' | 'deposit' | 'history';
+type TabType = "withdrawal" | "deposit" | "history";
 
 interface FundsPageState {
   // Withdrawal state
@@ -36,12 +39,12 @@ interface FundsPageState {
   userBalance: number;
   loadingBalance: boolean;
   submitting: boolean;
-  
+
   // Deposit state - 存款状态
   depositPlatforms: any[]; // DepositPlatform[]
   depositRecords: DepositRecord[];
   submittingDeposit: boolean;
-  
+
   // Shared state
   loading: boolean;
   activeTab: Stream<TabType>;
@@ -58,15 +61,15 @@ export default class FundsPage extends Page<any, FundsPageState> {
     depositRecords: [],
     submittingDeposit: false,
     loading: true,
-    activeTab: Stream('withdrawal')
+    activeTab: Stream("withdrawal"),
   };
 
   // Withdrawal form data
   private withdrawalFormData: WithdrawalFormData = {
-    amount: Stream(''),
+    amount: Stream(""),
     selectedPlatform: Stream<WithdrawalPlatform | null>(null),
-    accountDetails: Stream(''),
-    message: Stream('')
+    accountDetails: Stream(""),
+    message: Stream(""),
   };
 
   // 简化的存款表单数据不需要复杂的状态管理
@@ -76,13 +79,13 @@ export default class FundsPage extends Page<any, FundsPageState> {
 
     // Parse URL to determine initial tab and sub-tab
     const urlParams = new URLSearchParams(window.location.search);
-    const tabParam = urlParams.get('tab');
-    
+    const tabParam = urlParams.get("tab");
+
     // Handle URL parameters to set appropriate tab
     if (tabParam) {
       // Handle legacy sub-tab URLs by redirecting to main tabs
-      if (tabParam === 'withdrawal-history' || tabParam === 'deposit-history') {
-        this.state.activeTab('history');
+      if (tabParam === "withdrawal-history" || tabParam === "deposit-history") {
+        this.state.activeTab("history");
       } else if (this.isValidTab(tabParam)) {
         this.state.activeTab(tabParam as TabType);
       }
@@ -95,42 +98,39 @@ export default class FundsPage extends Page<any, FundsPageState> {
     this.loadAllData();
   }
 
-
   private isValidTab(tab: string): boolean {
-    return ['withdrawal', 'deposit', 'history'].includes(tab);
+    return ["withdrawal", "deposit", "history"].includes(tab);
   }
-
-
 
   private updateUrl(): void {
     const currentTab = this.state.activeTab();
     const params = new URLSearchParams();
-    
-    params.set('tab', currentTab);
+
+    params.set("tab", currentTab);
 
     const newUrl = `${window.location.pathname}?${params.toString()}`;
-    window.history.replaceState({}, '', newUrl);
+    window.history.replaceState({}, "", newUrl);
   }
 
   private updatePageTitle(): void {
     const tab = this.state.activeTab();
-    let titleKey = 'funds.forum.page.title'; // default
-    
+    let titleKey = "funds.forum.page.title"; // default
+
     switch (tab) {
-      case 'withdrawal':
-        titleKey = 'funds.forum.page.title';
+      case "withdrawal":
+        titleKey = "funds.forum.page.title";
         break;
-      case 'deposit':
-        titleKey = 'funds.forum.deposit.page.title';
+      case "deposit":
+        titleKey = "funds.forum.deposit.page.title";
         break;
-      case 'history':
-        titleKey = 'funds.forum.history.page.title';
+      case "history":
+        titleKey = "funds.forum.history.page.title";
         break;
     }
-    
+
     // Fixed: Convert NestedStringArray to string using toString()
     const title = app.translator.trans(titleKey);
-    app.setTitle(typeof title === 'string' ? title : title.toString());
+    app.setTitle(typeof title === "string" ? title : title.toString());
   }
 
   view() {
@@ -148,9 +148,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
       <div className="FundsPage">
         <div className="FundsPage-modal">
           {this.renderHeader()}
-          <div className="FundsPage-content">
-            {this.renderActiveTab()}
-          </div>
+          <div className="FundsPage-content">{this.renderActiveTab()}</div>
         </div>
       </div>
     );
@@ -158,27 +156,33 @@ export default class FundsPage extends Page<any, FundsPageState> {
 
   private renderHeader(): Mithril.Children {
     const activeTab = this.state.activeTab();
-    
+
     return (
       <div className="FundsPage-header">
         <div className="FundsPage-tabs">
-          <div 
-            className={`FundsPage-tab ${activeTab === 'withdrawal' ? 'active' : ''}`}
-            onclick={() => this.handleTabChange('withdrawal')}
+          <div
+            className={`FundsPage-tab ${
+              activeTab === "withdrawal" ? "active" : ""
+            }`}
+            onclick={() => this.handleTabChange("withdrawal")}
           >
-            {app.translator.trans('funds.forum.tabs.funds')}
+            {app.translator.trans("funds.forum.tabs.funds")}
           </div>
-          <div 
-            className={`FundsPage-tab ${activeTab === 'deposit' ? 'active' : ''}`}
-            onclick={() => this.handleTabChange('deposit')}
+          <div
+            className={`FundsPage-tab ${
+              activeTab === "deposit" ? "active" : ""
+            }`}
+            onclick={() => this.handleTabChange("deposit")}
           >
-            {app.translator.trans('funds.forum.deposit.tabs.deposit')}
+            {app.translator.trans("funds.forum.deposit.tabs.deposit")}
           </div>
-          <div 
-            className={`FundsPage-tab ${activeTab === 'history' ? 'active' : ''}`}
-            onclick={() => this.handleTabChange('history')}
+          <div
+            className={`FundsPage-tab ${
+              activeTab === "history" ? "active" : ""
+            }`}
+            onclick={() => this.handleTabChange("history")}
           >
-            {app.translator.trans('funds.forum.tabs.history')}
+            {app.translator.trans("funds.forum.tabs.history")}
           </div>
         </div>
         <Button
@@ -192,13 +196,13 @@ export default class FundsPage extends Page<any, FundsPageState> {
 
   private renderActiveTab(): Mithril.Children {
     const activeTab = this.state.activeTab();
-    
+
     switch (activeTab) {
-      case 'withdrawal':
+      case "withdrawal":
         return this.renderWithdrawalTab();
-      case 'deposit':
+      case "deposit":
         return this.renderDepositTab();
-      case 'history':
+      case "history":
         return this.renderHistoryTab();
       default:
         return this.renderWithdrawalTab();
@@ -210,20 +214,22 @@ export default class FundsPage extends Page<any, FundsPageState> {
   }
 
   private renderWithdrawalForm(): Mithril.Children {
-    const validPlatforms = (this.state.withdrawalPlatforms || []).filter(platform => !!platform);
+    const validPlatforms = (this.state.withdrawalPlatforms || []).filter(
+      (platform) => !!platform
+    );
 
     if (validPlatforms.length === 0) {
       return (
         <div className="FundsPage-withdrawalContent">
           <div className="WithdrawalPage-emptyState">
             <div className="WithdrawalPage-emptyIcon">
-              {icon('fas fa-coins')}
+              {icon("fas fa-coins")}
             </div>
             <h3 className="WithdrawalPage-emptyTitle">
-              {app.translator.trans('funds.forum.no_platforms')}
+              {app.translator.trans("funds.forum.no_platforms")}
             </h3>
             <p className="WithdrawalPage-emptyDescription">
-              {app.translator.trans('funds.forum.no_platforms_description')}
+              {app.translator.trans("funds.forum.no_platforms_description")}
             </p>
           </div>
         </div>
@@ -282,14 +288,14 @@ export default class FundsPage extends Page<any, FundsPageState> {
       return (
         <div className="FundsPage-depositContent">
           <div className="FundsPage-emptyState">
-            <div className="FundsPage-emptyIcon">
-              {icon('fas fa-history')}
-            </div>
+            <div className="FundsPage-emptyIcon">{icon("fas fa-history")}</div>
             <h3 className="FundsPage-emptyTitle">
-              {app.translator.trans('funds.forum.deposit.form.no_history')}
+              {app.translator.trans("funds.forum.deposit.form.no_history")}
             </h3>
             <p className="FundsPage-emptyDescription">
-              {app.translator.trans('funds.forum.deposit.form.no_history_description')}
+              {app.translator.trans(
+                "funds.forum.deposit.form.no_history_description"
+              )}
             </p>
           </div>
         </div>
@@ -313,13 +319,23 @@ export default class FundsPage extends Page<any, FundsPageState> {
               <div className="DepositHistory-content">
                 {record.userMessage() && (
                   <div className="DepositHistory-message">
-                    <strong>{app.translator.trans('funds.forum.deposit.form.user_message')}:</strong>
+                    <strong>
+                      {app.translator.trans(
+                        "funds.forum.deposit.form.user_message"
+                      )}
+                      :
+                    </strong>
                     <p>{record.userMessage()}</p>
                   </div>
                 )}
                 {record.adminNotes() && (
                   <div className="DepositHistory-adminNotes">
-                    <strong>{app.translator.trans('funds.forum.deposit.form.admin_notes')}:</strong>
+                    <strong>
+                      {app.translator.trans(
+                        "funds.forum.deposit.form.admin_notes"
+                      )}
+                      :
+                    </strong>
                     <p>{record.adminNotes()}</p>
                   </div>
                 )}
@@ -341,14 +357,12 @@ export default class FundsPage extends Page<any, FundsPageState> {
       return (
         <div className="FundsPage-historyContent">
           <div className="FundsPage-emptyState">
-            <div className="FundsPage-emptyIcon">
-              {icon('fas fa-history')}
-            </div>
+            <div className="FundsPage-emptyIcon">{icon("fas fa-history")}</div>
             <h3 className="FundsPage-emptyTitle">
-              {app.translator.trans('funds.forum.history.empty.title')}
+              {app.translator.trans("funds.forum.history.empty.title")}
             </h3>
             <p className="FundsPage-emptyDescription">
-              {app.translator.trans('funds.forum.history.empty.description')}
+              {app.translator.trans("funds.forum.history.empty.description")}
             </p>
           </div>
         </div>
@@ -360,7 +374,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
         {hasWithdrawals && (
           <div className="FundsPage-historySection">
             <h3 className="FundsPage-sectionTitle">
-              {app.translator.trans('funds.forum.history.withdrawal_title')}
+              {app.translator.trans("funds.forum.history.withdrawal_title")}
             </h3>
             <TransactionHistory
               transactions={withdrawalRequests}
@@ -374,7 +388,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
         {hasDeposits && (
           <div className="FundsPage-historySection">
             <h3 className="FundsPage-sectionTitle">
-              {app.translator.trans('funds.forum.history.deposit_title')}
+              {app.translator.trans("funds.forum.history.deposit_title")}
             </h3>
             <div className="DepositHistory">
               {depositRecords.map((record: DepositRecord) => (
@@ -391,13 +405,23 @@ export default class FundsPage extends Page<any, FundsPageState> {
                   <div className="DepositHistory-content">
                     {record.userMessage() && (
                       <div className="DepositHistory-message">
-                        <strong>{app.translator.trans('funds.forum.deposit.form.user_message')}:</strong>
+                        <strong>
+                          {app.translator.trans(
+                            "funds.forum.deposit.form.user_message"
+                          )}
+                          :
+                        </strong>
                         <p>{record.userMessage()}</p>
                       </div>
                     )}
                     {record.adminNotes() && (
                       <div className="DepositHistory-adminNotes">
-                        <strong>{app.translator.trans('funds.forum.deposit.form.admin_notes')}:</strong>
+                        <strong>
+                          {app.translator.trans(
+                            "funds.forum.deposit.form.admin_notes"
+                          )}
+                          :
+                        </strong>
                         <p>{record.adminNotes()}</p>
                       </div>
                     )}
@@ -413,13 +437,11 @@ export default class FundsPage extends Page<any, FundsPageState> {
 
   // 移除复杂的存款选择器和信息显示 - 简化版本不再需要这些方法
 
-
   private handleTabChange(tab: TabType): void {
     this.state.activeTab(tab);
     this.updatePageTitle();
     this.updateUrl();
   }
-
 
   // Withdrawal methods (copied from WithdrawalPage)
   private getWithdrawalFormDataForComponent() {
@@ -429,11 +451,13 @@ export default class FundsPage extends Page<any, FundsPageState> {
       selectedPlatform: selectedPlatform,
       amount: this.withdrawalFormData.amount(),
       accountDetails: this.withdrawalFormData.accountDetails(),
-      message: this.withdrawalFormData.message()
+      message: this.withdrawalFormData.message(),
     };
   }
 
-  private handleWithdrawalFormDataChange(data: Partial<WithdrawalFormData>): void {
+  private handleWithdrawalFormDataChange(
+    data: Partial<WithdrawalFormData>
+  ): void {
     if (data.selectedPlatform !== undefined) {
       this.withdrawalFormData.selectedPlatform(data.selectedPlatform);
     }
@@ -457,28 +481,28 @@ export default class FundsPage extends Page<any, FundsPageState> {
     try {
       await this.loadUserBalance(true);
 
-      const fee = getAttr(selectedPlatform, 'fee') || 0;
-      const maxAmount = getAttr(selectedPlatform, 'maxAmount') || Infinity;
+      const fee = getAttr(selectedPlatform, "fee") || 0;
+      const maxAmount = getAttr(selectedPlatform, "maxAmount") || Infinity;
       let availableAmount = this.state.userBalance - fee;
-      
+
       if (maxAmount < Infinity && availableAmount > maxAmount) {
         availableAmount = maxAmount;
       }
-      
+
       if (availableAmount > 0) {
         this.withdrawalFormData.amount(availableAmount.toString());
         m.redraw();
       } else {
         app.alerts.show(
-          { type: 'warning', dismissible: true },
-          app.translator.trans('funds.forum.insufficient_balance')
+          { type: "warning", dismissible: true },
+          app.translator.trans("funds.forum.insufficient_balance")
         );
       }
     } catch (error) {
-      console.error('Error refreshing balance:', error);
+      console.error("Error refreshing balance:", error);
       app.alerts.show(
-        { type: 'error', dismissible: true },
-        app.translator.trans('funds.forum.balance_refresh_error')
+        { type: "error", dismissible: true },
+        app.translator.trans("funds.forum.balance_refresh_error")
       );
     }
   }
@@ -498,8 +522,8 @@ export default class FundsPage extends Page<any, FundsPageState> {
     const amountNum = parseFloat(amount);
     if (isNaN(amountNum) || amountNum <= 0) {
       app.alerts.show(
-        { type: 'warning', dismissible: true },
-        app.translator.trans('funds.forum.invalid_amount')
+        { type: "warning", dismissible: true },
+        app.translator.trans("funds.forum.invalid_amount")
       );
       return;
     }
@@ -511,51 +535,47 @@ export default class FundsPage extends Page<any, FundsPageState> {
         platformId: parseInt(getIdString(selectedPlatform), 10),
         amount: amountNum,
         accountDetails,
-        message: this.withdrawalFormData.message()
+        message: this.withdrawalFormData.message(),
       });
 
       // Clear form
-      this.withdrawalFormData.amount('');
-      this.withdrawalFormData.accountDetails('');
-      this.withdrawalFormData.message('');
+      this.withdrawalFormData.amount("");
+      this.withdrawalFormData.accountDetails("");
+      this.withdrawalFormData.message("");
       this.withdrawalFormData.selectedPlatform(null);
 
       // Refresh data
       await Promise.all([
         this.loadUserBalance(true),
-        this.loadWithdrawalRequests()
+        this.loadWithdrawalRequests(),
       ]);
 
       app.alerts.show(
-        { type: 'success', dismissible: true },
-        app.translator.trans('funds.forum.submit_success')
+        { type: "success", dismissible: true },
+        app.translator.trans("funds.forum.submit_success")
       );
-
     } catch (error: unknown) {
-      console.error('Withdrawal request failed:', error);
-      
-      let errorMessage = app.translator.trans('funds.forum.error').toString();
-      
+      console.error("Withdrawal request failed:", error);
+
+      let errorMessage = app.translator.trans("funds.forum.error").toString();
+
       if (error instanceof ServiceError) {
         errorMessage = error.message;
       } else {
         errorMessage = extractErrorMessage(
-          error as FlarumApiError, 
+          error as FlarumApiError,
           errorMessage
         );
       }
-      
-      app.alerts.show(
-        { type: 'error', dismissible: true },
-        errorMessage
-      );
+
+      app.alerts.show({ type: "error", dismissible: true }, errorMessage);
     } finally {
       this.state.submitting = false;
     }
   }
 
   // Deposit methods - simplified platform selection
-  
+
   // 简化的存款处理方法
   private handleCancelDepositForm(): void {
     // 简单的取消操作，可以添加清空表单逻辑
@@ -570,23 +590,24 @@ export default class FundsPage extends Page<any, FundsPageState> {
 
     try {
       await depositService.create(data);
-      
+
       app.alerts.show(
-        { type: 'success', dismissible: true },
-        app.translator.trans('funds.forum.deposit.form.submit_success')
+        { type: "success", dismissible: true },
+        app.translator.trans("funds.forum.deposit.form.submit_success")
       );
 
       // 重新加载存款记录
       await this.loadDepositRecords();
 
       // 切换到历史标签页显示刚提交的记录
-      this.state.activeTab('history');
-
+      this.state.activeTab("history");
     } catch (error: unknown) {
-      console.error('Deposit submission failed:', error);
-      
-      let errorMessage = app.translator.trans('funds.forum.deposit.form.submit_error').toString();
-      
+      console.error("Deposit submission failed:", error);
+
+      let errorMessage = app.translator
+        .trans("funds.forum.deposit.form.submit_error")
+        .toString();
+
       if (error instanceof ServiceError) {
         errorMessage = error.message;
       } else {
@@ -595,17 +616,13 @@ export default class FundsPage extends Page<any, FundsPageState> {
           errorMessage
         );
       }
-      
-      app.alerts.show(
-        { type: 'error', dismissible: true },
-        errorMessage
-      );
+
+      app.alerts.show({ type: "error", dismissible: true }, errorMessage);
     } finally {
       this.state.submittingDeposit = false;
       m.redraw();
     }
   }
-
 
   // Data loading methods
   private async loadAllData(): Promise<void> {
@@ -613,13 +630,13 @@ export default class FundsPage extends Page<any, FundsPageState> {
       await Promise.all([
         this.loadWithdrawalData(),
         this.loadDepositData(),
-        this.loadUserBalance()
+        this.loadUserBalance(),
       ]);
-      
+
       this.state.loading = false;
       m.redraw();
     } catch (error) {
-      console.error('Error loading data:', error);
+      console.error("Error loading data:", error);
       this.state.loading = false;
       m.redraw();
     }
@@ -631,14 +648,14 @@ export default class FundsPage extends Page<any, FundsPageState> {
   private async loadWithdrawalData(): Promise<void> {
     try {
       const [platforms, requests] = await Promise.all([
-        platformService.getActive('withdrawal'),
-        withdrawalService.getUserHistory()
+        platformService.getActive("withdrawal"),
+        withdrawalService.getUserHistory(),
       ]);
 
       this.state.withdrawalPlatforms = platforms as WithdrawalPlatform[];
       this.state.withdrawalRequests = requests;
     } catch (error) {
-      console.error('Error loading withdrawal data:', error);
+      console.error("Error loading withdrawal data:", error);
       // Fallback to empty arrays
       this.state.withdrawalPlatforms = [];
       this.state.withdrawalRequests = [];
@@ -651,14 +668,14 @@ export default class FundsPage extends Page<any, FundsPageState> {
   private async loadDepositData(): Promise<void> {
     try {
       const [platforms, records] = await Promise.all([
-        platformService.getActive('deposit'),
-        depositService.getUserHistory()
+        platformService.getActive("deposit"),
+        depositService.getUserHistory(),
       ]);
 
       this.state.depositPlatforms = platforms;
       this.state.depositRecords = records;
     } catch (error) {
-      console.error('Error loading deposit data:', error);
+      console.error("Error loading deposit data:", error);
       // Fallback to empty arrays
       this.state.depositPlatforms = [];
       this.state.depositRecords = [];
@@ -673,7 +690,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
       const records = await depositService.getUserHistory();
       this.state.depositRecords = records;
     } catch (error) {
-      console.error('Error loading deposit records:', error);
+      console.error("Error loading deposit records:", error);
       this.state.depositRecords = [];
     }
   }
@@ -681,29 +698,32 @@ export default class FundsPage extends Page<any, FundsPageState> {
   private async loadUserBalance(forceRefresh = false): Promise<void> {
     try {
       this.state.loadingBalance = true;
-      
+
       if (forceRefresh && app.session.user) {
         const userId = app.session.user.id();
         if (!userId) {
-          throw new Error('User ID not available');
+          throw new Error("User ID not available");
         }
-        
+
         // Refresh user data through the store
-        const updatedUser = await app.store.find('users', userId);
-        
+        const updatedUser = await app.store.find("users", userId);
+
         if (updatedUser) {
-          this.state.userBalance = parseFloat(updatedUser.attribute('money')) || 0;
+          this.state.userBalance =
+            parseFloat(updatedUser.attribute("money")) || 0;
         } else {
           this.state.userBalance = 0;
         }
       } else {
-        this.state.userBalance = parseFloat(app.session.user?.attribute('money') || '0');
+        this.state.userBalance = parseFloat(
+          app.session.user?.attribute("money") || "0"
+        );
       }
-      
+
       this.state.loadingBalance = false;
       m.redraw();
     } catch (error) {
-      console.error('Error loading user balance:', error);
+      console.error("Error loading user balance:", error);
       this.state.loadingBalance = false;
       m.redraw();
     }
@@ -714,7 +734,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
       const requests = await withdrawalService.getUserHistory();
       this.state.withdrawalRequests = requests;
     } catch (error) {
-      console.error('Error loading withdrawal requests:', error);
+      console.error("Error loading withdrawal requests:", error);
       this.state.withdrawalRequests = [];
     }
   }
