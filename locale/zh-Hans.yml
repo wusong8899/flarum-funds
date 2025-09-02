@@ -6,36 +6,22 @@ funds:
   admin:
     # 存款管理区域
     deposit:
-      approved_success: 申请已通过
       # 存款平台管理
       platforms:
-        active: 启用
         add_button: 添加平台
         add_error: 添加存款平台失败
         add_success: 存款平台添加成功
         address: 存款地址（必填）
         address_help: 输入该平台的存款地址
-        custom_network: 自定义网络名称（可选）
-        delete: 删除
         delete_error: 删除存款平台失败
         delete_success: 存款平台删除成功
-        edit: 编辑
         edit_button: 更新平台
         edit_error: 更新存款平台失败
         edit_success: 存款平台更新成功
         edit_title: 编辑存款平台
-        disable: 禁用
-        disable_success: 存款平台已禁用
         empty: 未配置存款平台
-        enable: 启用
-        enable_success: 存款平台已启用
         fee: 手续费
         fee_help: 该存款平台的手续费（可选，默认为0）
-        platform_icon_class: 平台图标CSS类
-        platform_icon_class_help: 输入此特定存款平台的字体图标类
-        platform_icon_url: 平台图标URL
-        platform_icon_url_help: 输入此特定存款平台的图标URL
-        inactive: 禁用
         is_active: 启用
         max_amount: 最大金额
         min_amount: 最小金额
@@ -46,46 +32,26 @@ funds:
         required_fields_error: 请填写必需字段：平台名称、货币符号和存款地址
         symbol: 货币符号
         title: 存款平台管理
-        toggle_error: 切换平台状态失败
         warning_text: 警告文本
       # 存款记录管理 - 管理员审核界面
       records:
         approve: 通过
         approve_error: 审核存款记录失败
-        approve_notes_prompt: 管理员备注（可选）：
-        approve_prompt: "输入到账金额（默认: {amount}）："
+        approve: 通过
+        approve_error: 审核存款记录失败
         approve_success: 存款记录审核通过
-        delete: 删除
-        delete_cancel_button: 取消
-        delete_confirm_button: 删除
-        delete_confirm_message: 确定要删除 {user} 的存款记录（{amount}）吗？
-        delete_confirm_title: 确认删除
-        delete_error: 删除存款记录失败
-        delete_success: 存款记录删除成功
         empty:
           description: 用户提交的存款记录将在此显示，等待审核。
           title: 暂无存款记录
         invalid_amount: 请输入大于零的有效金额
-        # 支持复数形式，基于计数
-        pending_count: "{count, plural, =0 {暂无待审核记录} other {# 条待审核}}"
         reject: 拒绝
         reject_error: 拒绝存款记录失败
-        reject_reason_prompt: 输入拒绝原因：
-        reject_reason_required: 拒绝原因不能为空
         reject_success: 存款记录已拒绝
         status:
           approved: 已通过
           pending: 待审核
           rejected: 已拒绝
         title: 存款记录管理
-        # 支持复数形式，基于计数
-        total_count: "{count, plural, =0 {暂无记录} other {共 # 条记录}}"
-      rejected_success: 申请已拒绝
-      status:
-        approved: 已通过
-        pending: 待审核
-        rejected: 已拒绝
-      update_error: 更新申请失败
     # 网络类型管理 (TRC20, ERC20, BSC 等)
     network_types:
       add_button: 添加网络类型
@@ -135,8 +101,6 @@ funds:
       enable: 启用
       enable_success: 平台已启用
       fee: 手续费
-      icon_configuration: 图标配置
-      icon_configuration_help: 配置图标优先级：平台专属 → 网络 → 货币。高优先级图标会覆盖低优先级图标。
       inactive: 禁用
       is_active: 启用
       max_amount: 最大金额
@@ -221,7 +185,8 @@ funds:
         user_message: 留言
         user_message_help: 为您的存款申请添加备注信息
         user_message_placeholder: 请填写相关说明或备注...
-        validation: {}
+        validation:
+          platform_required: 请选择存款平台
         view_qr: 查看二维码
       record:
         amount: 存款金额
@@ -254,6 +219,7 @@ funds:
           amount_too_low: 金额 {amount} 低于最小额度 {min} {symbol}
           invalid_amount: 请输入有效金额
           required_fields: 所有必填字段必须填写
+          deposit_time_required: 请选择存款时间
       scan_or_use_address: 扫码或使用以下地址完成存款
       select_platform: 选择平台
       tabs:

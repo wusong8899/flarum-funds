@@ -8,31 +8,20 @@ funds:
     deposit:
       # Deposit platform management
       platforms:
-        active: Active
         add_button: Add Platform
         add_error: Failed to add deposit platform
         add_success: Deposit platform added successfully
         address: Deposit Address (Required)
         address_help: Enter the deposit address for this platform
-        custom_network: Custom Network Name (Optional)
-        delete_button: Delete
         delete_error: Failed to delete deposit platform
         delete_success: Deposit platform deleted successfully
-        edit: Edit
         edit_button: Update Platform
         edit_error: Failed to update deposit platform
         edit_success: Deposit platform updated successfully
         edit_title: Edit Deposit Platform
-        disable_success: Deposit platform disabled successfully
         empty: No deposit platforms configured
-        enable_success: Deposit platform enabled successfully
         fee: Fee
         fee_help: Fee charged for this deposit platform (optional, defaults to 0)
-        platform_icon_class: Platform Icon CSS Class
-        platform_icon_class_help: Enter Font Awesome class for this specific deposit platform/network
-        platform_icon_url: Platform Icon Image URL
-        platform_icon_url_help: Enter image URL for this specific deposit platform/network
-        inactive: Inactive
         is_active: Active
         load_error: Failed to load deposit platforms
         max_amount: Maximum Amount
@@ -42,48 +31,30 @@ funds:
         qr_code_image_help: Enter QR code image URL (optional)
         qr_code_image_url: QR Code Image URL
         required_fields_error: "Please fill required fields: platform name, currency symbol and deposit address"
-        status_error: Failed to update platform status
-        status_updated: Platform status updated successfully
         symbol: Currency Symbol
         title: Deposit Platform Management
-        toggle_error: Failed to toggle platform status
         warning_text: Warning Text
       # Deposit record management - admin approval interface
       records:
         approve: Approve
         approve_error: Failed to approve deposit record
-        approve_notes_prompt: "Admin notes (optional):"
-        approve_prompt: "Enter credited amount (default: {amount}):"
+        approve: Approve
+        approve_error: Failed to approve deposit record
         approve_success: Deposit record approved successfully
-        delete: Delete
-        delete_cancel_button: Cancel
-        delete_confirm_button: Delete
-        delete_confirm_message: Are you sure you want to delete deposit record for {user} ({amount})?
-        delete_confirm_title: Confirm Delete
-        delete_error: Failed to delete deposit record
-        delete_success: Deposit record deleted successfully
         empty:
           description: User-submitted deposit records will appear here for review.
           title: No deposit records
         invalid_amount: Please enter a valid amount greater than zero
         load_error: Failed to load deposit records
-        # Supports pluralization based on count
-        pending_count: "{count, plural, =0 {No pending records} one {# pending record} other {# pending records}}"
         reject: Reject
         reject_error: Failed to reject deposit record
-        reject_reason_prompt: "Enter rejection reason:"
-        reject_reason_required: Rejection reason is required
         reject_success: Deposit record rejected successfully
         status:
           approved: Approved
           pending: Pending
           rejected: Rejected
-        status_error: Failed to update record status
-        status_updated: Record status updated successfully
         title: Deposit Record Management
-        # Supports pluralization based on count
-        total_count: "{count, plural, =0 {No records} one {# record total} other {# records total}}"
-        update_error: Failed to update deposit record
+        load_error: Failed to load deposit records
     # Network type management (TRC20, ERC20, BSC, etc.)
     network_types:
       add_button: Add Network Type
@@ -235,6 +206,7 @@ funds:
         validation:
           address_required: Deposit address cannot be empty
           invalid_url: Please enter a valid URL
+          platform_required: Please select a deposit platform
         view_qr: View QR Code
       record:
         amount: Amount
@@ -266,6 +238,7 @@ funds:
           amount_too_low: Amount {amount} is below minimum {min} {symbol}
           invalid_amount: Please enter a valid amount
           required_fields: All required fields must be filled
+          deposit_time_required: Please select a deposit time
       scan_or_use_address: Scan the QR code or copy the deposit address below.
       select_currency_network: Select Currency Network
       select_platform: Select Platform
