@@ -114,23 +114,21 @@ export default class FundsPage extends Page<any, FundsPageState> {
 
   private updatePageTitle(): void {
     const tab = this.state.activeTab();
-    let titleKey = "funds.forum.page.title"; // default
+    let titleKey = "资金"; // default
 
     switch (tab) {
       case "withdrawal":
-        titleKey = "funds.forum.page.title";
+        titleKey = "提款";
         break;
       case "deposit":
-        titleKey = "funds.forum.deposit.page.title";
+        titleKey = "存款";
         break;
       case "history":
-        titleKey = "funds.forum.history.page.title";
+        titleKey = "历史";
         break;
     }
 
-    // Fixed: Convert NestedStringArray to string using toString()
-    const title = app.translator.trans(titleKey);
-    app.setTitle(typeof title === "string" ? title : title.toString());
+    app.setTitle(titleKey);
   }
 
   view() {
