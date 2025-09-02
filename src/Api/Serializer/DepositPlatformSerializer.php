@@ -29,19 +29,9 @@ class DepositPlatformSerializer extends AbstractSerializer
             'address' => $platform->address,
             'qrCodeImageUrl' => $platform->qr_code_image_url,
             'warningText' => $platform->warning_text,
-            // Three-tier icon system
-            'currencyIconUrl' => $platform->getCurrencyIconUrl(),
-            'currencyIconClass' => $platform->getCurrencyIconClass(),
-            'currencyUnicodeSymbol' => $platform->getCurrencyUnicodeSymbol(),
-            'networkIconUrl' => $platform->getNetworkIconUrl(),
-            'networkIconClass' => $platform->getNetworkIconClass(),
-            'platformSpecificIconUrl' => $platform->getPlatformSpecificIconUrl(),
-            'platformSpecificIconClass' => $platform->getPlatformSpecificIconClass(),
-            // Override fields for admin
-            'currencyIconOverrideUrl' => $platform->currency_icon_override_url,
-            'currencyIconOverrideClass' => $platform->currency_icon_override_class,
-            'networkIconOverrideUrl' => $platform->network_icon_override_url,
-            'networkIconOverrideClass' => $platform->network_icon_override_class,
+            // Platform icon system
+            'platformIconUrl' => $platform->getPlatformIconUrl(),
+            'platformIconClass' => $platform->getPlatformIconClass(),
             'networkConfig' => $platform->network_config,
             'isActive' => $platform->is_active,
             'createdAt' => $platform->created_at,
@@ -55,21 +45,5 @@ class DepositPlatformSerializer extends AbstractSerializer
     public function bestIcon($platform)
     {
         return $platform->getBestIcon();
-    }
-
-    /**
-     * Include currency-specific icon
-     */
-    public function currencyIcon($platform)
-    {
-        return $platform->getCurrencyIcon();
-    }
-
-    /**
-     * Include network-specific icon
-     */
-    public function networkIcon($platform)
-    {
-        return $platform->getNetworkIcon();
     }
 }

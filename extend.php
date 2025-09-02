@@ -45,12 +45,7 @@ return [
         ->post('/deposit-records', 'deposit.records.create', Controller\CreateDepositRecordController::class)
         ->patch('/deposit-records/{id}', 'deposit.records.update', Controller\UpdateDepositRecordController::class)
         ->delete('/deposit-records/{id}', 'deposit.records.delete', Controller\DeleteDepositRecordController::class)
-        // Currency icons routes
-        ->get('/currency-icons', 'currency-icons.index', Controller\CurrencyIcon\ListCurrencyIconsController::class)
-        ->get('/currency-icons/{id}', 'currency-icons.show', Controller\CurrencyIcon\ShowCurrencyIconController::class)
-        ->post('/currency-icons', 'currency-icons.create', Controller\CurrencyIcon\CreateCurrencyIconController::class)
-        ->patch('/currency-icons/{id}', 'currency-icons.update', Controller\CurrencyIcon\UpdateCurrencyIconController::class)
-        ->delete('/currency-icons/{id}', 'currency-icons.delete', Controller\CurrencyIcon\DeleteCurrencyIconController::class),
+,
 
     (new Extend\Model(Flarum\User\User::class))
         ->hasMany('withdrawalRequests', Model\WithdrawalRequest::class)
@@ -70,7 +65,7 @@ return [
         ->hasMany('depositPlatforms', Serializer\DepositPlatformSerializer::class)
         ->hasMany('depositRecords', Serializer\DepositRecordSerializer::class)
         ->hasMany('networkTypes', Serializer\NetworkTypeSerializer::class)
-        ->hasMany('currencyIcons', Serializer\CurrencyIconSerializer::class),
+,
 
     (new Extend\ApiSerializer(\Flarum\Api\Serializer\UserSerializer::class))
         ->hasMany('withdrawalRequests', Serializer\WithdrawalRequestSerializer::class)

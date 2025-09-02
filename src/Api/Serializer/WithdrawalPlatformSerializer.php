@@ -27,19 +27,9 @@ class WithdrawalPlatformSerializer extends AbstractSerializer
             'maxAmount' => (float) $platform->max_amount,
             'fee' => (float) $platform->fee,
             'isActive' => (bool) $platform->is_active,
-            // Three-tier icon system
-            'currencyIconUrl' => $platform->getCurrencyIconUrl(),
-            'currencyIconClass' => $platform->getCurrencyIconClass(),
-            'currencyUnicodeSymbol' => $platform->getCurrencyUnicodeSymbol(),
-            'networkIconUrl' => $platform->getNetworkIconUrl(),
-            'networkIconClass' => $platform->getNetworkIconClass(),
-            'platformSpecificIconUrl' => $platform->getPlatformSpecificIconUrl(),
-            'platformSpecificIconClass' => $platform->getPlatformSpecificIconClass(),
-            // Override fields for admin
-            'currencyIconOverrideUrl' => $platform->currency_icon_override_url,
-            'currencyIconOverrideClass' => $platform->currency_icon_override_class,
-            'networkIconOverrideUrl' => $platform->network_icon_override_url,
-            'networkIconOverrideClass' => $platform->network_icon_override_class,
+            // Platform icon system
+            'platformIconUrl' => $platform->getPlatformIconUrl(),
+            'platformIconClass' => $platform->getPlatformIconClass(),
             'createdAt' => $this->formatDate($platform->created_at),
             'updatedAt' => $this->formatDate($platform->updated_at),
         ];
@@ -51,21 +41,5 @@ class WithdrawalPlatformSerializer extends AbstractSerializer
     public function bestIcon($platform)
     {
         return $platform->getBestIcon();
-    }
-
-    /**
-     * Include currency-specific icon
-     */
-    public function currencyIcon($platform)
-    {
-        return $platform->getCurrencyIcon();
-    }
-
-    /**
-     * Include network-specific icon
-     */
-    public function networkIcon($platform)
-    {
-        return $platform->getNetworkIcon();
     }
 }

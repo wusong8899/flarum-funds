@@ -20,11 +20,9 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
   private maxAmount = Stream('');
   private fee = Stream('');
   private isActive = Stream(true);
-  // Three-tier icon system
-  private currencyIconOverrideUrl = Stream('');
-  private currencyIconOverrideClass = Stream('');
-  private networkIconOverrideUrl = Stream('');
-  private networkIconOverrideClass = Stream('');
+  // Platform icon system
+  private platformIconUrl = Stream('');
+  private platformIconClass = Stream('');
 
   view(): Mithril.Children {
     return (
@@ -110,56 +108,31 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
             </div>
           </div>
           
-          {/* Three-tier icon system */}
+          {/* Platform icon system */}
           <div className="Form-section">
-            <h4>{app.translator.trans('funds.admin.platforms.icon_configuration')}</h4>
-            <p className="helpText">{app.translator.trans('funds.admin.platforms.icon_configuration_help')}</p>
+            <h4>{app.translator.trans('funds.admin.platforms.platform_icon')}</h4>
+            <p className="helpText">{app.translator.trans('funds.admin.platforms.platform_icon_help')}</p>
             
-            {/* Currency Icon Override */}
             <div className="Form-row">
               <div className="Form-col">
-                <label>{app.translator.trans('funds.admin.platforms.currency_icon_override_url')}</label>
+                <label>{app.translator.trans('funds.admin.platforms.platform_icon_url')}</label>
                 <input
                   type="url"
                   className="FormControl"
-                  placeholder="https://example.com/currency-icon.png"
-                  bidi={this.currencyIconOverrideUrl}
+                  placeholder="https://example.com/platform-icon.png"
+                  bidi={this.platformIconUrl}
                 />
-                <small className="helpText">{app.translator.trans('funds.admin.platforms.currency_icon_override_url_help')}</small>
+                <small className="helpText">{app.translator.trans('funds.admin.platforms.platform_icon_url_help')}</small>
               </div>
               <div className="Form-col">
-                <label>{app.translator.trans('funds.admin.platforms.currency_icon_override_class')}</label>
+                <label>{app.translator.trans('funds.admin.platforms.platform_icon_class')}</label>
                 <input
                   type="text"
                   className="FormControl"
                   placeholder="fab fa-bitcoin"
-                  bidi={this.currencyIconOverrideClass}
+                  bidi={this.platformIconClass}
                 />
-                <small className="helpText">{app.translator.trans('funds.admin.platforms.currency_icon_override_class_help')}</small>
-              </div>
-            </div>
-            
-            {/* Network Icon Override */}
-            <div className="Form-row">
-              <div className="Form-col">
-                <label>{app.translator.trans('funds.admin.platforms.network_icon_override_url')}</label>
-                <input
-                  type="url"
-                  className="FormControl"
-                  placeholder="https://example.com/network-icon.png"
-                  bidi={this.networkIconOverrideUrl}
-                />
-                <small className="helpText">{app.translator.trans('funds.admin.platforms.network_icon_override_url_help')}</small>
-              </div>
-              <div className="Form-col">
-                <label>{app.translator.trans('funds.admin.platforms.network_icon_override_class')}</label>
-                <input
-                  type="text"
-                  className="FormControl"
-                  placeholder="fas fa-network-wired"
-                  bidi={this.networkIconOverrideClass}
-                />
-                <small className="helpText">{app.translator.trans('funds.admin.platforms.network_icon_override_class_help')}</small>
+                <small className="helpText">{app.translator.trans('funds.admin.platforms.platform_icon_class_help')}</small>
               </div>
             </div>
           </div>
@@ -205,15 +178,10 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
         validator.custom(false, 'maxAmount', errorMessage);
       }
 
-      // Optional URL validations for three-tier icon system
-      if (this.currencyIconOverrideUrl() && this.currencyIconOverrideUrl().trim()) {
-        const currencyIconUrlLabel = app.translator.trans('funds.admin.platforms.currency_icon_override_url').toString();
-        validator.url(this.currencyIconOverrideUrl(), 'currencyIconOverrideUrl', currencyIconUrlLabel);
-      }
-      
-      if (this.networkIconOverrideUrl() && this.networkIconOverrideUrl().trim()) {
-        const networkIconUrlLabel = app.translator.trans('funds.admin.platforms.network_icon_override_url').toString();
-        validator.url(this.networkIconOverrideUrl(), 'networkIconOverrideUrl', networkIconUrlLabel);
+      // Optional URL validation for platform icon
+      if (this.platformIconUrl() && this.platformIconUrl().trim()) {
+        const platformIconUrlLabel = app.translator.trans('funds.admin.platforms.platform_icon_url').toString();
+        validator.url(this.platformIconUrl(), 'platformIconUrl', platformIconUrlLabel);
       }
 
       const result = validator.getResult();
@@ -243,11 +211,9 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
       maxAmount: this.maxAmount(),
       fee: this.fee(),
       isActive: this.isActive(),
-      // Three-tier icon system
-      currencyIconOverrideUrl: this.currencyIconOverrideUrl(),
-      currencyIconOverrideClass: this.currencyIconOverrideClass(),
-      networkIconOverrideUrl: this.networkIconOverrideUrl(),
-      networkIconOverrideClass: this.networkIconOverrideClass()
+      // Platform icon system
+      platformIconUrl: this.platformIconUrl(),
+      platformIconClass: this.platformIconClass()
     };
 
     try {
@@ -266,11 +232,9 @@ export default class AddPlatformForm extends Component<AddPlatformFormAttrs> {
     this.maxAmount('');
     this.fee('');
     this.isActive(true);
-    // Clear three-tier icon fields
-    this.currencyIconOverrideUrl('');
-    this.currencyIconOverrideClass('');
-    this.networkIconOverrideUrl('');
-    this.networkIconOverrideClass('');
+    // Clear platform icon fields
+    this.platformIconUrl('');
+    this.platformIconClass('');
     m.redraw();
   }
 }

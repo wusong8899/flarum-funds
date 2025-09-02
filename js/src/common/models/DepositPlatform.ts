@@ -1,7 +1,7 @@
 import Model from "flarum/common/Model";
 import { ServiceError, ServiceErrorType } from "../types/services";
 import { validateDepositPlatform } from "../utils/PlatformValidation";
-import { IconRepresentation } from "./CurrencyIcon";
+import { IconRepresentation } from "../utils/IconResolver";
 import app from "flarum/common/app";
 
 /**
@@ -20,26 +20,9 @@ export default class DepositPlatform extends Model {
   fee = Model.attribute<number>("fee");
   address = Model.attribute<string>("address");
   qrCodeImageUrl = Model.attribute<string>("qrCodeImageUrl");
-  // Three-tier icon system - computed properties
-  currencyIconUrl = Model.attribute<string>("currencyIconUrl");
-  currencyIconClass = Model.attribute<string>("currencyIconClass");
-  currencyUnicodeSymbol = Model.attribute<string>("currencyUnicodeSymbol");
-  networkIconUrl = Model.attribute<string>("networkIconUrl");
-  networkIconClass = Model.attribute<string>("networkIconClass");
-  platformSpecificIconUrl = Model.attribute<string>("platformSpecificIconUrl");
-  platformSpecificIconClass = Model.attribute<string>(
-    "platformSpecificIconClass"
-  );
-
-  // Override fields for admin configuration
-  currencyIconOverrideUrl = Model.attribute<string>("currencyIconOverrideUrl");
-  currencyIconOverrideClass = Model.attribute<string>(
-    "currencyIconOverrideClass"
-  );
-  networkIconOverrideUrl = Model.attribute<string>("networkIconOverrideUrl");
-  networkIconOverrideClass = Model.attribute<string>(
-    "networkIconOverrideClass"
-  );
+  // Platform icon system
+  platformIconUrl = Model.attribute<string>("platformIconUrl");
+  platformIconClass = Model.attribute<string>("platformIconClass");
   warningText = Model.attribute<string>("warningText");
   networkConfig = Model.attribute<any>("networkConfig");
   isActive = Model.attribute<boolean>("isActive");
@@ -55,8 +38,6 @@ export default class DepositPlatform extends Model {
 
   // Icon representations from serializer
   bestIcon = Model.attribute<IconRepresentation>("bestIcon");
-  currencyIcon = Model.attribute<IconRepresentation>("currencyIcon");
-  networkIcon = Model.attribute<IconRepresentation>("networkIcon");
 
   // Helper methods
   getDisplayName(): string {
@@ -159,8 +140,8 @@ export default class DepositPlatform extends Model {
       fee: this.fee(),
       address: this.address(),
       qrCodeImageUrl: this.qrCodeImageUrl(),
-      currencyIconUrl: this.currencyIconUrl(),
-      currencyIconClass: this.currencyIconClass(),
+      platformIconUrl: this.platformIconUrl(),
+      platformIconClass: this.platformIconClass(),
       warningText: this.warningText(),
       isActive: false, // Clone as inactive by default
     });
