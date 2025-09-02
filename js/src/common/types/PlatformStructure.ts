@@ -181,12 +181,8 @@ export function createDefaultPlatformData(platformType: PlatformType): Partial<P
     network: null,
     maxAmount: null,
     networkTypeId: null,
-    currencyIconOverrideUrl: null,
-    currencyIconOverrideClass: null,
-    networkIconOverrideUrl: null,
-    networkIconOverrideClass: null,
-    platformSpecificIconUrl: null,
-    platformSpecificIconClass: null,
+    platformIconUrl: null,
+    platformIconClass: null,
   };
 
   if (platformType === 'withdrawal') {

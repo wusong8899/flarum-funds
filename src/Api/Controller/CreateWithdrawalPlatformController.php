@@ -56,11 +56,9 @@ class CreateWithdrawalPlatformController extends AbstractCreateController
         $fee = (float) Arr::get($attributes, 'fee', 0);
         $isActive = (bool) Arr::get($attributes, 'isActive', true);
         
-        // Three-tier icon system fields
-        $currencyIconOverrideUrl = Arr::get($attributes, 'currencyIconOverrideUrl');
-        $currencyIconOverrideClass = Arr::get($attributes, 'currencyIconOverrideClass');
-        $networkIconOverrideUrl = Arr::get($attributes, 'networkIconOverrideUrl');
-        $networkIconOverrideClass = Arr::get($attributes, 'networkIconOverrideClass');
+        // Simplified platform icon system fields
+        $platformIconUrl = Arr::get($attributes, 'platformIconUrl');
+        $platformIconClass = Arr::get($attributes, 'platformIconClass');
 
         $platform = new WithdrawalPlatform();
         $platform->name = trim($name);
@@ -69,10 +67,8 @@ class CreateWithdrawalPlatformController extends AbstractCreateController
         $platform->min_amount = $minAmount;
         $platform->max_amount = $maxAmount;
         $platform->fee = $fee;
-        $platform->currency_icon_override_url = $currencyIconOverrideUrl ? trim((string) $currencyIconOverrideUrl) : null;
-        $platform->currency_icon_override_class = $currencyIconOverrideClass ? trim((string) $currencyIconOverrideClass) : null;
-        $platform->network_icon_override_url = $networkIconOverrideUrl ? trim((string) $networkIconOverrideUrl) : null;
-        $platform->network_icon_override_class = $networkIconOverrideClass ? trim((string) $networkIconOverrideClass) : null;
+        $platform->platform_icon_url = $platformIconUrl ? trim((string) $platformIconUrl) : null;
+        $platform->platform_icon_class = $platformIconClass ? trim((string) $platformIconClass) : null;
         $platform->is_active = $isActive;
         $platform->created_at = Carbon::now();
         $platform->save();

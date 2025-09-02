@@ -98,25 +98,10 @@ export default class DepositPlatformDropdown extends Component<DepositPlatformDr
 
   private renderPlatformIcon(platform: DepositPlatform | null): Mithril.Children {
     if (!platform) {
-      console.log('No platform selected, showing default icon');
       return icon('fas fa-coins');
     }
 
-    // Debug: log the full platform object
-    console.log('Full platform object:', platform);
-    console.log('Platform attributes:', platform.attributes);
-    console.log('Platform id():', platform.id());
-    console.log('Platform name():', platform.name());
-    console.log('Platform platformIconUrl():', platform.platformIconUrl());
-    console.log('Platform platformIconClass():', platform.platformIconClass());
-
-    // Test both direct method calls and getAttr helper
-    console.log('getAttr name:', getAttr(platform, 'name'));
-    console.log('getAttr platformIconUrl:', getAttr(platform, 'platformIconUrl'));
-    console.log('getAttr platformIconClass:', getAttr(platform, 'platformIconClass'));
-
     const bestIcon = getBestPlatformIcon(platform);
-    console.log('bestIcon result:', bestIcon);
     return renderIcon(bestIcon, 'platform-icon-image');
   }
 

@@ -36,13 +36,9 @@ class CreateDepositPlatformController extends AbstractCreateController
             'max_amount' => $attributes['maxAmount'] ?? null,
             'address' => $attributes['address'] ?? null,
             'qr_code_image_url' => $attributes['qrCodeImageUrl'] ?? null,
-            // Three-tier icon system
-            'currency_icon_override_url' => $attributes['currencyIconOverrideUrl'] ?? null,
-            'currency_icon_override_class' => $attributes['currencyIconOverrideClass'] ?? null,
-            'network_icon_override_url' => $attributes['networkIconOverrideUrl'] ?? null,
-            'network_icon_override_class' => $attributes['networkIconOverrideClass'] ?? null,
-            'platform_specific_icon_url' => $attributes['platformSpecificIconUrl'] ?? null,
-            'platform_specific_icon_class' => $attributes['platformSpecificIconClass'] ?? null,
+            // Simplified platform icon system
+            'platform_icon_url' => $attributes['platformIconUrl'] ?? null,
+            'platform_icon_class' => $attributes['platformIconClass'] ?? null,
             'warning_text' => $attributes['warningText'] ?? null,
             'network_config' => $attributes['networkConfig'] ?? null,
             'is_active' => $attributes['isActive'] ?? true,
@@ -60,13 +56,9 @@ class CreateDepositPlatformController extends AbstractCreateController
             'maxAmount' => 'nullable|numeric|min:0',
             'address' => 'nullable|string|max:500',
             'qrCodeImageUrl' => 'nullable|url|max:500',
-            // Three-tier icon system validation
-            'currencyIconOverrideUrl' => 'nullable|url|max:500',
-            'currencyIconOverrideClass' => 'nullable|string|max:100',
-            'networkIconOverrideUrl' => 'nullable|url|max:500',
-            'networkIconOverrideClass' => 'nullable|string|max:100',
-            'platformSpecificIconUrl' => 'nullable|url|max:500',
-            'platformSpecificIconClass' => 'nullable|string|max:100',
+            // Simplified platform icon system validation
+            'platformIconUrl' => 'nullable|url|max:500',
+            'platformIconClass' => 'nullable|string|max:100',
             'warningText' => 'nullable|string|max:1000',
             'isActive' => 'boolean',
         ];

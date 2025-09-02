@@ -81,8 +81,8 @@ export interface DepositPlatform {
   address?: string;
   qrCodeImageUrl?: string;
   // Simplified platform icon system
-  platformSpecificIconUrl?: string;
-  platformSpecificIconClass?: string;
+  platformIconUrl?: string;
+  platformIconClass?: string;
   warningText?: string;
   networkConfig?: any;
   isActive: boolean;

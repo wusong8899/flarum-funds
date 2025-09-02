@@ -62,21 +62,13 @@ class UpdateWithdrawalPlatformController extends AbstractShowController
             $platform->network = (string) $attributes['network'];
         }
 
-        // Three-tier icon system updates
-        if (isset($attributes['currencyIconOverrideUrl'])) {
-            $platform->currency_icon_override_url = $attributes['currencyIconOverrideUrl'] ? (string) $attributes['currencyIconOverrideUrl'] : null;
+        // Simplified platform icon system updates
+        if (isset($attributes['platformIconUrl'])) {
+            $platform->platform_icon_url = $attributes['platformIconUrl'] ? (string) $attributes['platformIconUrl'] : null;
         }
 
-        if (isset($attributes['currencyIconOverrideClass'])) {
-            $platform->currency_icon_override_class = $attributes['currencyIconOverrideClass'] ? (string) $attributes['currencyIconOverrideClass'] : null;
-        }
-
-        if (isset($attributes['networkIconOverrideUrl'])) {
-            $platform->network_icon_override_url = $attributes['networkIconOverrideUrl'] ? (string) $attributes['networkIconOverrideUrl'] : null;
-        }
-
-        if (isset($attributes['networkIconOverrideClass'])) {
-            $platform->network_icon_override_class = $attributes['networkIconOverrideClass'] ? (string) $attributes['networkIconOverrideClass'] : null;
+        if (isset($attributes['platformIconClass'])) {
+            $platform->platform_icon_class = $attributes['platformIconClass'] ? (string) $attributes['platformIconClass'] : null;
         }
 
         if (isset($attributes['isActive'])) {

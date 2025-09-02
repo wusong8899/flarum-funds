@@ -38,13 +38,9 @@ class UpdateDepositPlatformController extends AbstractShowController
             'min_amount' => $attributes['minAmount'] ?? $platform->min_amount,
             'max_amount' => $attributes['maxAmount'] ?? $platform->max_amount,
             'address' => $attributes['address'] ?? $platform->address,
-            // Three-tier icon system
-            'currency_icon_override_url' => $attributes['currencyIconOverrideUrl'] ?? $platform->currency_icon_override_url,
-            'currency_icon_override_class' => $attributes['currencyIconOverrideClass'] ?? $platform->currency_icon_override_class,
-            'network_icon_override_url' => $attributes['networkIconOverrideUrl'] ?? $platform->network_icon_override_url,
-            'network_icon_override_class' => $attributes['networkIconOverrideClass'] ?? $platform->network_icon_override_class,
-            'platform_specific_icon_url' => $attributes['platformSpecificIconUrl'] ?? $platform->platform_specific_icon_url,
-            'platform_specific_icon_class' => $attributes['platformSpecificIconClass'] ?? $platform->platform_specific_icon_class,
+            // Simplified platform icon system
+            'platform_icon_url' => $attributes['platformIconUrl'] ?? $platform->platform_icon_url,
+            'platform_icon_class' => $attributes['platformIconClass'] ?? $platform->platform_icon_class,
             'warning_text' => $attributes['warningText'] ?? $platform->warning_text,
             'network_config' => $attributes['networkConfig'] ?? $platform->network_config,
             'is_active' => $attributes['isActive'] ?? $platform->is_active,
@@ -63,13 +59,9 @@ class UpdateDepositPlatformController extends AbstractShowController
             'maxAmount' => 'sometimes|nullable|numeric|min:0',
             'address' => 'sometimes|nullable|string|max:500',
             'qrCodeImageUrl' => 'sometimes|nullable|url|max:500',
-            // Three-tier icon system validation
-            'currencyIconOverrideUrl' => 'sometimes|nullable|url|max:500',
-            'currencyIconOverrideClass' => 'sometimes|nullable|string|max:100',
-            'networkIconOverrideUrl' => 'sometimes|nullable|url|max:500',
-            'networkIconOverrideClass' => 'sometimes|nullable|string|max:100',
-            'platformSpecificIconUrl' => 'sometimes|nullable|url|max:500',
-            'platformSpecificIconClass' => 'sometimes|nullable|string|max:100',
+            // Simplified platform icon system validation
+            'platformIconUrl' => 'sometimes|nullable|url|max:500',
+            'platformIconClass' => 'sometimes|nullable|string|max:100',
             'warningText' => 'sometimes|nullable|string|max:1000',
             'isActive' => 'sometimes|boolean',
         ];

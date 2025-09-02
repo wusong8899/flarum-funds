@@ -58,8 +58,8 @@ export default class EditDepositPlatformModal extends Modal<EditDepositPlatformM
     this.formData.address(platform.address || '');
     this.formData.qrCodeImageUrl(platform.qrCodeImageUrl || '');
     // Use simplified icon system
-    this.formData.platformIconUrl(platform.platformSpecificIconUrl || '');
-    this.formData.platformIconClass(platform.platformSpecificIconClass || '');
+    this.formData.platformIconUrl(platform.platformIconUrl || '');
+    this.formData.platformIconClass(platform.platformIconClass || '');
     this.formData.warningText(platform.warningText || '');
     this.formData.isActive(platform.isActive ?? true);
   }
