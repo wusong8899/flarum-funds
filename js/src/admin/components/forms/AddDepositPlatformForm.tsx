@@ -192,7 +192,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
             
             <div className="Form-row">
               <div className="Form-group">
-                <label>{app.translator.trans('funds.admin.platforms.platform_icon_url')}</label>
+                <label>平台图标URL</label>
                 <input
                   type="url"
                   className="FormControl"
@@ -200,10 +200,10 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
                   bidi={this.formData.platformIconUrl}
                   disabled={submitting}
                 />
-                <div className="helpText">{app.translator.trans('funds.admin.platforms.platform_icon_url_help')}</div>
+                <div className="helpText">请输入平台图标的URL</div>
               </div>
               <div className="Form-group">
-                <label>{app.translator.trans('funds.admin.platforms.platform_icon_class')}</label>
+                <label>平台图标CSS类</label>
                 <input
                   type="text"
                   className="FormControl"
@@ -211,7 +211,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
                   bidi={this.formData.platformIconClass}
                   disabled={submitting}
                 />
-                <div className="helpText">{app.translator.trans('funds.admin.platforms.platform_icon_class_help')}</div>
+                <div className="helpText">请输入平台图标的CSS类</div>
               </div>
             </div>
           </div>
@@ -219,7 +219,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
 
           <div className="Form-group">
             <label>
-              {app.translator.trans('funds.admin.deposit.platforms.warning_text')}
+              警告文本
             </label>
             <textarea
               className="FormControl"
@@ -232,7 +232,7 @@ export default class AddDepositPlatformForm extends Component<AddDepositPlatform
 
           <div className="Form-group">
             <Switch state={this.formData.isActive()} onchange={this.formData.isActive} disabled={submitting}>
-              {app.translator.trans('funds.admin.deposit.platforms.is_active')}
+              是否激活
             </Switch>
           </div>
 
