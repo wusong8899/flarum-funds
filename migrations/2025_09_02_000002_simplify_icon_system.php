@@ -29,10 +29,12 @@ return [
 
             // Rename platform_specific_* to platform_icon_*
             $schema->table('wusong8899_funds_withdrawal_platforms', function (Blueprint $table) use ($schema) {
-                if ($schema->hasColumn('wusong8899_funds_withdrawal_platforms', 'platform_specific_icon_url')) {
+                if ($schema->hasColumn('wusong8899_funds_withdrawal_platforms', 'platform_specific_icon_url') && 
+                    !$schema->hasColumn('wusong8899_funds_withdrawal_platforms', 'platform_icon_url')) {
                     $table->renameColumn('platform_specific_icon_url', 'platform_icon_url');
                 }
-                if ($schema->hasColumn('wusong8899_funds_withdrawal_platforms', 'platform_specific_icon_class')) {
+                if ($schema->hasColumn('wusong8899_funds_withdrawal_platforms', 'platform_specific_icon_class') && 
+                    !$schema->hasColumn('wusong8899_funds_withdrawal_platforms', 'platform_icon_class')) {
                     $table->renameColumn('platform_specific_icon_class', 'platform_icon_class');
                 }
             });
@@ -58,10 +60,12 @@ return [
 
             // Rename platform_specific_* to platform_icon_*
             $schema->table('wusong8899_funds_deposit_platforms', function (Blueprint $table) use ($schema) {
-                if ($schema->hasColumn('wusong8899_funds_deposit_platforms', 'platform_specific_icon_url')) {
+                if ($schema->hasColumn('wusong8899_funds_deposit_platforms', 'platform_specific_icon_url') && 
+                    !$schema->hasColumn('wusong8899_funds_deposit_platforms', 'platform_icon_url')) {
                     $table->renameColumn('platform_specific_icon_url', 'platform_icon_url');
                 }
-                if ($schema->hasColumn('wusong8899_funds_deposit_platforms', 'platform_specific_icon_class')) {
+                if ($schema->hasColumn('wusong8899_funds_deposit_platforms', 'platform_specific_icon_class') && 
+                    !$schema->hasColumn('wusong8899_funds_deposit_platforms', 'platform_icon_class')) {
                     $table->renameColumn('platform_specific_icon_class', 'platform_icon_class');
                 }
             });
