@@ -54,16 +54,6 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
 
     return (
       <div className="DepositForm">
-        <div className="DepositForm-header">
-          <div className="DepositForm-title">
-            <i className="fas fa-plus-circle"></i>
-            {app.translator.trans('funds.forum.deposit.form.form_title')}
-          </div>
-          <div className="DepositForm-description">
-            {app.translator.trans('funds.forum.deposit.form.form_description')}
-          </div>
-        </div>
-
         <form onsubmit={this.handleSubmit.bind(this)} className="DepositForm-form">
           {/* 平台选择字段 */}
           <div className="DepositForm-field">
