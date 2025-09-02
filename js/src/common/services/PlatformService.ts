@@ -45,8 +45,21 @@ export default class PlatformService {
         queryParams.include = options.include;
       }
 
+      console.log(`PlatformService.find - API call for ${modelType} with params:`, queryParams);
       const results = await app.store.find(modelType, queryParams);
-      return Array.isArray(results) ? results : [results];
+      console.log(`PlatformService.find - API response for ${modelType}:`, results);
+      
+      if (Array.isArray(results)) {
+        console.log(`PlatformService.find - First platform data sample:`, results[0]);
+        if (results[0]) {
+          console.log(`PlatformService.find - First platform attributes:`, results[0].attributes);
+        }
+        return results;
+      } else {
+        console.log(`PlatformService.find - Single platform data:`, results);
+        console.log(`PlatformService.find - Single platform attributes:`, results.attributes);
+        return [results];
+      }
     } catch (error) {
       throw this.handleError(error, `Failed to fetch ${type} platforms`);
     }
