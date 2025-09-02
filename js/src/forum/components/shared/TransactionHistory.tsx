@@ -62,8 +62,8 @@ export default class TransactionHistory extends Component<TransactionHistoryAttr
     return (
       <div className={`${type}History`}>
         <div className={`${type}History-header`}>
-          <h3>{app.translator.trans('funds.forum.history.title')}</h3>
-          <span className={`${type}History-count`}>{transactions.length} {app.translator.trans('funds.forum.history.transactions', { count: transactions.length })}</span>
+          <h3>{type === 'withdrawal' ? '提款历史' : '存款历史'}</h3>
+          <span className={`${type}History-count`}>{transactions.length} {type === 'withdrawal' ? '次提款' : '次存款'}</span>
         </div>
         
         <div className={`${type}History-list`}>

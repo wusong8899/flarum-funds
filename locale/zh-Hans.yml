@@ -152,7 +152,6 @@ funds:
       empty:
         description: 您还没有提交过提款申请。点击"提款"标签页提交您的第一个申请。
         title: 暂无提款申请记录
-      title: 提款历史
     insufficient_balance: 余额不足，无法填入最大金额
     invalid_amount: 请输入大于零的有效金额
     limits:
