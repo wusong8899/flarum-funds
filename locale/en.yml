@@ -18,6 +18,11 @@ funds:
         delete_button: Delete
         delete_error: Failed to delete deposit platform
         delete_success: Deposit platform deleted successfully
+        edit: Edit
+        edit_button: Update Platform
+        edit_error: Failed to update deposit platform
+        edit_success: Deposit platform updated successfully
+        edit_title: Edit Deposit Platform
         disable_success: Deposit platform disabled successfully
         empty: No deposit platforms configured
         enable_success: Deposit platform enabled successfully
@@ -118,6 +123,11 @@ funds:
       delete_error: Failed to delete platform
       delete_success: Platform deleted successfully
       disable: Disable
+      edit: Edit
+      edit_button: Update Platform
+      edit_error: Failed to update platform
+      edit_success: Platform updated successfully
+      edit_title: Edit Withdrawal Platform
       disable_success: Platform disabled successfully
       empty: No platforms configured
       enable: Enable

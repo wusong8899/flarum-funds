@@ -19,6 +19,11 @@ funds:
         delete: 删除
         delete_error: 删除存款平台失败
         delete_success: 存款平台删除成功
+        edit: 编辑
+        edit_button: 更新平台
+        edit_error: 更新存款平台失败
+        edit_success: 存款平台更新成功
+        edit_title: 编辑存款平台
         disable: 禁用
         disable_success: 存款平台已禁用
         empty: 未配置存款平台
@@ -124,6 +129,11 @@ funds:
       delete_error: 删除平台失败
       delete_success: 平台删除成功
       disable: 禁用
+      edit: 编辑
+      edit_button: 更新平台
+      edit_error: 更新平台失败
+      edit_success: 平台更新成功
+      edit_title: 编辑提款平台
       disable_success: 平台已禁用
       empty: 未配置平台
       enable: 启用
