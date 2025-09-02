@@ -30,18 +30,18 @@ interface GenericPlatformListItemAttrs {
   type: 'funds' | 'deposit';
   onToggleStatus: (platform?: GenericPlatform) => Promise<void>;
   onDelete: (platform?: GenericPlatform) => Promise<void>;
-  onEdit?: (platform?: GenericPlatform) => void;
+  onEditPlatform?: (platform?: GenericPlatform) => void;
   style?: 'card' | 'list';
 }
 
 export default class GenericPlatformListItem extends Component<GenericPlatformListItemAttrs> {
   view(vnode: Mithril.Vnode<GenericPlatformListItemAttrs>): Mithril.Children {
-    const { platform, type, onToggleStatus, onDelete, onEdit, style = 'card' } = vnode.attrs;
+    const { platform, type, onToggleStatus, onDelete, onEditPlatform, style = 'card' } = vnode.attrs;
 
     if (style === 'card') {
-      return this.renderCardStyle(platform, type, onToggleStatus, onDelete, onEdit);
+      return this.renderCardStyle(platform, type, onToggleStatus, onDelete, onEditPlatform);
     } else {
-      return this.renderListStyle(platform, type, onToggleStatus, onDelete, onEdit);
+      return this.renderListStyle(platform, type, onToggleStatus, onDelete, onEditPlatform);
     }
   }
 
@@ -50,7 +50,7 @@ export default class GenericPlatformListItem extends Component<GenericPlatformLi
     type: string,
     onToggleStatus: (platform?: GenericPlatform) => Promise<void>,
     onDelete: (platform?: GenericPlatform) => Promise<void>,
-    onEdit?: (platform?: GenericPlatform) => void
+    onEditPlatform?: (platform?: GenericPlatform) => void
   ): Mithril.Children {
     const platformData = this.extractPlatformData(platform);
     const translationPrefix = (type === 'funds' || type === 'withdrawal') ? 'funds.admin.platforms' : 'funds.admin.deposit.platforms';
@@ -84,10 +84,10 @@ export default class GenericPlatformListItem extends Component<GenericPlatformLi
           >
             {app.translator.trans(`${translationPrefix}.${platformData.isActive ? 'disable' : 'enable'}`)}
           </Button>
-          {onEdit && (
+          {onEditPlatform && (
             <Button
               className="Button Button--secondary"
-              onclick={() => onEdit(platform)}
+              onclick={() => onEditPlatform(platform)}
             >
               {app.translator.trans(`${translationPrefix}.edit`)}
             </Button>
@@ -108,7 +108,7 @@ export default class GenericPlatformListItem extends Component<GenericPlatformLi
     type: string,
     onToggleStatus: (platform?: GenericPlatform) => Promise<void>,
     onDelete: (platform?: GenericPlatform) => Promise<void>,
-    onEdit?: (platform?: GenericPlatform) => void
+    onEditPlatform?: (platform?: GenericPlatform) => void
   ): Mithril.Children {
     const platformData = this.extractPlatformData(platform);
     const translationPrefix = (type === 'funds' || type === 'withdrawal') ? 'funds.admin.platforms' : 'funds.admin.deposit.platforms';
@@ -165,11 +165,11 @@ export default class GenericPlatformListItem extends Component<GenericPlatformLi
               }
             </Switch>
             
-            {onEdit && (
+            {onEditPlatform && (
               <Button
                 className="Button Button--icon Button--flat"
                 icon="fas fa-edit"
-                onclick={() => onEdit(platform)}
+                onclick={() => onEditPlatform(platform)}
                 title={app.translator.trans(`${translationPrefix}.edit`)}
               />
             )}

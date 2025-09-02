@@ -45,7 +45,7 @@ export default class PlatformManagementSection extends Component<PlatformManagem
                   style="card"
                   onToggleStatus={onTogglePlatformStatus}
                   onDelete={onDeletePlatform}
-                  onEdit={this.handleEdit.bind(this)}
+                  onEditPlatform={this.handleEdit.bind(this)}
                 />
               ))
           )}
