@@ -179,12 +179,7 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
     const address = getAttr(platform, 'address');
     const minAmount = getAttr(platform, 'minAmount') || 0;
     const symbol = getAttr(platform, 'symbol');
-    const warningText = getAttr(platform, 'warningText') || 
-      app.translator.trans('funds.forum.deposit.default_warning', {
-        currency: symbol,
-        network: getAttr(platform, 'network'),
-        minAmount
-      });
+    const warningText = getAttr(platform, 'warningText');
 
     return (
       <div className="DepositForm-depositInfo">
@@ -235,12 +230,14 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
           />
         </div>
 
+        {warningText && (
         <div className="DepositForm-field">
           <div className="DepositForm-warning">
             <i className="fas fa-info-circle"></i>
             <span>{warningText}</span>
           </div>
         </div>
+        )}
       </div>
     );
   }
