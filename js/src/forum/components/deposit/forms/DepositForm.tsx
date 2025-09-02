@@ -152,7 +152,7 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
             <Button
               type="button"
               className="Button Button--secondary DepositForm-cancelButton"
-              onclick={vnode.attrs.onCancel}
+              onclick={() => app.modal.close()}
               disabled={submitting}
             >
               {app.translator.trans('funds.forum.deposit.form.cancel')}
