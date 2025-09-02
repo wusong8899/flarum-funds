@@ -19,8 +19,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float $fee
  * @property string|null $address
  * @property string|null $qr_code_image_url
- * @property string|null $icon_url
- * @property string|null $icon_class
+ * @property string|null $platform_icon_url
+ * @property string|null $platform_icon_class
  * @property string|null $warning_text
  * @property array|null $network_config
  * @property bool $is_active

@@ -164,7 +164,7 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
               loading={submitting}
               disabled={submitting}
             >
-              {app.translator.trans('funds.forum.deposit.form.submit')}
+              { app.translator.trans('funds.forum.deposit.form.submit') }
             </Button>
           </div>
         </form>
@@ -214,10 +214,7 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
         {minAmount > 0 && (
           <div className="DepositForm-field">
             <div className="DepositForm-minAmount">
-              {app.translator.trans('funds.forum.deposit.min_amount', {
-                amount: minAmount,
-                currency: symbol
-              })}
+              最少存款金额：{minAmount} {symbol}
             </div>
           </div>
         )}

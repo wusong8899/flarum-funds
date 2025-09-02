@@ -98,10 +98,12 @@ export default class DepositPlatformDropdown extends Component<DepositPlatformDr
 
   private renderPlatformIcon(platform: DepositPlatform | null): Mithril.Children {
     if (!platform) {
+      console.log('platform is null');
       return icon('fas fa-coins');
     }
 
     const bestIcon = getBestPlatformIcon(platform);
+    console.log('bestIcon', bestIcon);
     return renderIcon(bestIcon, 'platform-icon-image');
   }
 
