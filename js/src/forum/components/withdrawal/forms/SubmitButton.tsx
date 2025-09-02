@@ -31,9 +31,9 @@ export default class SubmitButton extends Component<SubmitButtonProps> {
     const symbol = this.getSymbol(selectedPlatform);
 
     return (
-      <div className="WithdrawalPage-submitSection">
+      <div className="FundsPage-withdrawal-SubmitSection">
         <Button
-          className="WithdrawalPage-submitButton"
+          className="FundsPage-withdrawal-SubmitButton"
           loading={submitting}
           disabled={!canSubmit}
           onclick={onSubmit}
@@ -42,7 +42,7 @@ export default class SubmitButton extends Component<SubmitButtonProps> {
         </Button>
 
         {numericAmount > 0 && (
-          <div className="WithdrawalPage-finalAmount">
+          <div className="FundsPage-withdrawal-FinalAmount">
             {app.translator.trans('funds.forum.final_amount', { 
               amount: finalAmount.toFixed(DEFAULTS.BALANCE_PRECISION), 
               symbol 

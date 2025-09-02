@@ -30,22 +30,22 @@ export default class AmountInput extends Component<AmountInputProps> {
     const fee = this.getFee(selectedPlatform);
 
     return (
-      <div className="WithdrawalPage-amountSection">
-        <div className="WithdrawalPage-formGroup">
-          <div className="WithdrawalPage-label">
+      <div className="FundsPage-withdrawal-AmountSection">
+        <div className="FundsPage-withdrawal-FormGroup">
+          <div className="FundsPage-withdrawal-Label">
             {app.translator.trans('funds.forum.form.amount')}
           </div>
 
-          <div className="WithdrawalPage-amountInput">
+          <div className="FundsPage-withdrawal-AmountInput">
             <input
               type="text"
-              className="WithdrawalPage-input"
+              className="FundsPage-withdrawal-Input"
               placeholder="0.00000000"
               value={amount}
               oninput={(e: Event) => onAmountChange((e.target as HTMLInputElement).value)}
             />
             <Button
-              className="WithdrawalPage-allButton"
+              className="FundsPage-withdrawal-AllButton"
               onclick={onFillAllAmount}
               disabled={loadingBalance}
             >
@@ -53,20 +53,20 @@ export default class AmountInput extends Component<AmountInputProps> {
             </Button>
           </div>
 
-          <div className="WithdrawalPage-amountLimits">
-            <div className="WithdrawalPage-limitRow">
-              <span className="WithdrawalPage-limitLabel">
+          <div className="FundsPage-withdrawal-AmountLimits">
+            <div className="FundsPage-withdrawal-LimitRow">
+              <span className="FundsPage-withdrawal-LimitLabel">
                 {app.translator.trans('funds.forum.limits.min_max')}
               </span>
-              <span className="WithdrawalPage-limitValue">
+              <span className="FundsPage-withdrawal-LimitValue">
                 {icon(ICONS.COINS)} {minAmount} ~ {maxAmount}
               </span>
             </div>
-            <div className="WithdrawalPage-limitRow">
-              <span className="WithdrawalPage-limitLabel">
+            <div className="FundsPage-withdrawal-LimitRow">
+              <span className="FundsPage-withdrawal-LimitLabel">
                 {app.translator.trans('funds.forum.limits.fee')}
               </span>
-              <span className="WithdrawalPage-limitValue">
+              <span className="FundsPage-withdrawal-LimitValue">
                 {icon(ICONS.COINS)} {fee}
               </span>
             </div>

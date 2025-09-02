@@ -31,28 +31,28 @@ export default class PlatformSelector extends Component<PlatformSelectorProps, P
     const { showDropdown } = this.state;
 
     return (
-      <div className="WithdrawalPage-platformSelector">
-        <div className="WithdrawalPage-label">提取平台</div>
+      <div className="FundsPage-withdrawal-PlatformSelector">
+        <div className="FundsPage-withdrawal-Label">提取平台</div>
         <div 
-          className="WithdrawalPage-platformDropdown" 
+          className="FundsPage-withdrawal-PlatformDropdown" 
           onclick={() => this.toggleDropdown()}
         >
-          <div className="WithdrawalPage-platformSelected">
-            <div className="WithdrawalPage-platformInfo">
-              <div className="WithdrawalPage-platformIcon">
+          <div className="FundsPage-withdrawal-PlatformSelected">
+            <div className="FundsPage-withdrawal-PlatformInfo">
+              <div className="FundsPage-withdrawal-PlatformIcon">
                 <PlatformIcon 
                   platform={selectedPlatform} 
                   size="medium"
                 />
               </div>
-              <div className="WithdrawalPage-platformDetails">
-                <div className="WithdrawalPage-platformName">
+              <div className="FundsPage-withdrawal-PlatformDetails">
+                <div className="FundsPage-withdrawal-PlatformName">
                   {this.getPlatformName(selectedPlatform)}
                 </div>
               </div>
             </div>
           </div>
-          {icon(ICONS.CHEVRON_DOWN, { className: 'WithdrawalPage-dropdownIcon' })}
+          {icon(ICONS.CHEVRON_DOWN, { className: 'FundsPage-withdrawal-DropdownIcon' })}
         </div>
 
         {showDropdown && this.renderPlatformDropdown()}
@@ -79,8 +79,8 @@ export default class PlatformSelector extends Component<PlatformSelectorProps, P
 
     if (validPlatforms.length === 0) {
       return (
-        <div className="WithdrawalPage-dropdownMenu">
-          <div className="WithdrawalPage-dropdownItem WithdrawalPage-noData">
+        <div className="FundsPage-withdrawal-DropdownMenu">
+          <div className="FundsPage-withdrawal-DropdownItem FundsPage-withdrawal-NoData">
             {app.translator.trans('funds.forum.no_platforms')}
           </div>
         </div>
@@ -88,17 +88,17 @@ export default class PlatformSelector extends Component<PlatformSelectorProps, P
     }
 
     return (
-      <div className="WithdrawalPage-dropdownMenu">
+      <div className="FundsPage-withdrawal-DropdownMenu">
         {validPlatforms.map(platform => (
           <div 
             key={platform.id()}
-            className="WithdrawalPage-dropdownItem"
+            className="FundsPage-withdrawal-DropdownItem"
             onclick={() => this.selectPlatform(platform)}
           >
-            <div className="WithdrawalPage-platformIcon">
+            <div className="FundsPage-withdrawal-PlatformIcon">
               <PlatformIcon platform={platform} size="small" />
             </div>
-            <div className="WithdrawalPage-platformName">
+            <div className="FundsPage-withdrawal-PlatformName">
               {getAttr(platform, 'displayName') || getAttr(platform, 'name')}
             </div>
           </div>

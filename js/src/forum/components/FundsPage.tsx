@@ -221,14 +221,14 @@ export default class FundsPage extends Page<any, FundsPageState> {
     if (validPlatforms.length === 0) {
       return (
         <div className="FundsPage-withdrawalContent">
-          <div className="WithdrawalPage-emptyState">
-            <div className="WithdrawalPage-emptyIcon">
+          <div className="FundsPage-emptyState">
+            <div className="FundsPage-emptyIcon">
               {icon("fas fa-coins")}
             </div>
-            <h3 className="WithdrawalPage-emptyTitle">
+            <h3 className="FundsPage-emptyTitle">
               {app.translator.trans("funds.forum.no_platforms")}
             </h3>
-            <p className="WithdrawalPage-emptyDescription">
+            <p className="FundsPage-emptyDescription">
               {app.translator.trans("funds.forum.no_platforms_description")}
             </p>
           </div>

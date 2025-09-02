@@ -17,7 +17,7 @@ export default class StatusBadge extends Component<StatusBadgeProps> {
     const statusLabel = this.getStatusLabel(status);
 
     return (
-      <div className={`WithdrawalPage-historyStatus ${statusClass} ${className}`}>
+      <div className={`FundsPage-withdrawal-HistoryStatus ${statusClass} ${className}`}>
         {statusLabel}
       </div>
     );

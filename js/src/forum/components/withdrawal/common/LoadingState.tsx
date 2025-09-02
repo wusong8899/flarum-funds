@@ -8,7 +8,7 @@ export default function LoadingState(props: LoadingStateProps): JSX.Element {
   const { className = '' } = props;
   
   return (
-    <div className={`WithdrawalPage-loading ${className}`}>
+    <div className={`FundsPage-loading ${className}`}>
       <LoadingIndicator />
     </div>
   );

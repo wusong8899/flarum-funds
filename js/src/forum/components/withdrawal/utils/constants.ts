@@ -40,15 +40,15 @@ export const DEFAULTS = {
  * CSS class names
  */
 export const CSS_CLASSES = {
-  WITHDRAWAL_PAGE: 'WithdrawalPage',
-  MODAL: 'WithdrawalPage-modal',
-  HEADER: 'WithdrawalPage-header',
-  TABS: 'WithdrawalPage-tabs',
-  TAB: 'WithdrawalPage-tab',
+  FUNDS_PAGE: 'FundsPage',
+  MODAL: 'FundsPage-modal',
+  HEADER: 'FundsPage-header',
+  TABS: 'FundsPage-tabs',
+  TAB: 'FundsPage-tab',
   TAB_ACTIVE: 'active',
-  CONTENT: 'WithdrawalPage-content',
-  LOADING: 'WithdrawalPage-loading',
-  EMPTY_STATE: 'WithdrawalPage-emptyState',
+  CONTENT: 'FundsPage-content',
+  LOADING: 'FundsPage-loading',
+  EMPTY_STATE: 'FundsPage-emptyState',
 } as const;
 
 /**

@@ -24,25 +24,25 @@ export default class AddressInput extends Component<AddressInputProps> {
     const symbol = this.getSymbol(selectedPlatform);
 
     return (
-      <div className="WithdrawalPage-addressSection">
-        <div className="WithdrawalPage-formGroup">
-          <div className="WithdrawalPage-addressHeader">
-            <span className="WithdrawalPage-label">
+      <div className="FundsPage-withdrawal-AddressSection">
+        <div className="FundsPage-withdrawal-FormGroup">
+          <div className="FundsPage-withdrawal-AddressHeader">
+            <span className="FundsPage-withdrawal-Label">
               {app.translator.trans('funds.forum.form.address', { symbol })}
-              <span className="WithdrawalPage-required">*</span>
+              <span className="FundsPage-withdrawal-Required">*</span>
             </span>
           </div>
 
-          <div className="WithdrawalPage-addressInput">
+          <div className="FundsPage-withdrawal-AddressInput">
             <input
               type="text"
-              className="WithdrawalPage-input"
+              className="FundsPage-withdrawal-Input"
               placeholder={app.translator.trans('funds.forum.form.address_placeholder')}
               value={accountDetails}
               oninput={(e: Event) => onAccountDetailsChange((e.target as HTMLInputElement).value)}
             />
             <button 
-              className="WithdrawalPage-pasteButton" 
+              className="FundsPage-withdrawal-PasteButton" 
               onclick={() => this.pasteFromClipboard()}
             >
               {icon(ICONS.PASTE)}

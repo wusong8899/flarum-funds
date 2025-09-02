@@ -33,37 +33,37 @@ export default class HistoryItem extends Component<HistoryItemProps> {
     console.log('Looking for platform with ID:', platformId, 'Available platforms:', platforms.map(p => ({ id: getIdString(p), name: getAttr(p, 'name') })));
 
     return (
-      <div key={getIdString(request)} className="WithdrawalPage-historyItem">
-        <div className="WithdrawalPage-historyHeader">
-          <div className="WithdrawalPage-historyPlatform">
-            <div className="WithdrawalPage-platformIcon">
+      <div key={getIdString(request)} className="FundsPage-withdrawal-HistoryItem">
+        <div className="FundsPage-withdrawal-HistoryHeader">
+          <div className="FundsPage-withdrawal-HistoryPlatform">
+            <div className="FundsPage-withdrawal-PlatformIcon">
               <PlatformIcon platform={platform} size="small" />
             </div>
-            <div className="WithdrawalPage-historyInfo">
-              <div className="WithdrawalPage-historyPlatformName">
+            <div className="FundsPage-withdrawal-HistoryInfo">
+              <div className="FundsPage-withdrawal-HistoryPlatformName">
                 {this.getPlatformName(platform)}
               </div>
-              <div className="WithdrawalPage-historyDate">
+              <div className="FundsPage-withdrawal-HistoryDate">
                 {date.toLocaleDateString()} {date.toLocaleTimeString()}
               </div>
             </div>
           </div>
           <StatusBadge status={status} />
         </div>
-        <div className="WithdrawalPage-historyDetails">
-          <div className="WithdrawalPage-historyAmount">
-            <span className="WithdrawalPage-historyLabel">
+        <div className="FundsPage-withdrawal-HistoryDetails">
+          <div className="FundsPage-withdrawal-HistoryAmount">
+            <span className="FundsPage-withdrawal-HistoryLabel">
               {app.translator.trans('funds.forum.history.amount')}:
             </span>
-            <span className="WithdrawalPage-historyValue">
+            <span className="FundsPage-withdrawal-HistoryValue">
               {amount} {this.getPlatformSymbol(platform)}
             </span>
           </div>
-          <div className="WithdrawalPage-historyAddress">
-            <span className="WithdrawalPage-historyLabel">
+          <div className="FundsPage-withdrawal-HistoryAddress">
+            <span className="FundsPage-withdrawal-HistoryLabel">
               {app.translator.trans('funds.forum.history.address')}:
             </span>
-            <span className="WithdrawalPage-historyValue">
+            <span className="FundsPage-withdrawal-HistoryValue">
               {accountDetails}
             </span>
           </div>

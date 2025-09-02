@@ -14,14 +14,14 @@ export default class EmptyState extends Component<EmptyStateProps> {
     const { iconName, title, description, className = '' } = this.attrs;
     
     return (
-      <div className={`WithdrawalPage-emptyState ${className}`}>
-        <div className="WithdrawalPage-emptyIcon">
+      <div className={`FundsPage-emptyState ${className}`}>
+        <div className="FundsPage-emptyIcon">
           {icon(iconName)}
         </div>
-        <h3 className="WithdrawalPage-emptyTitle">
+        <h3 className="FundsPage-emptyTitle">
           {title}
         </h3>
-        <p className="WithdrawalPage-emptyDescription">
+        <p className="FundsPage-emptyDescription">
           {description}
         </p>
       </div>
