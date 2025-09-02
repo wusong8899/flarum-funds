@@ -7,14 +7,14 @@ import ConfirmModal from '../../../common/components/shared/ConfirmModal';
 
 // Generic interfaces for platform management
 export interface GenericPlatform {
-  id?: () => string | number;
+  id: () => number;
   name?: () => string;
   isActive?: () => boolean;
   [key: string]: any;
 }
 
 export interface GenericTransaction {
-  id?: () => string | number;
+  id: () => number;
   status?: () => string;
   [key: string]: any;
 }
@@ -216,7 +216,7 @@ export default abstract class GenericManagementPage<
       // Find the platform by ID
       const platform = this.platforms.find(p => {
         const platformId = typeof p.id === 'function' ? p.id() : p.id;
-        return platformId === id || platformId === String(id);
+        return platformId === id
       });
 
       if (!platform) {

@@ -106,6 +106,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
             platforms={this.depositPlatforms}
             submittingPlatform={this.submittingPlatform}
             onAddPlatform={this.addDepositPlatform.bind(this)}
+            onEditPlatform={this.editDepositPlatform.bind(this)}
             onTogglePlatformStatus={this.toggleDepositPlatformStatus.bind(this)}
             onDeletePlatform={this.deleteDepositPlatform.bind(this)}
           />
@@ -214,6 +215,54 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
         { type: 'error', dismissible: true },
         errorMessage
       );
+    }
+  }
+
+  private async editDepositPlatform(id: number, formData: any): Promise<void> {
+    try {
+      // Find the platform by ID
+      const platform = this.depositPlatforms.find(p => {
+        const platformId = typeof p.id === 'function' ? p.id() : p.id;
+        return platformId === id;
+      });
+
+      if (!platform) {
+        throw new Error('Deposit platform not found');
+      }
+
+      // Convert numeric fields from strings to numbers
+      const attributes = {
+        ...formData,
+        minAmount: parseFloat(formData.minAmount) || 0,
+        maxAmount: formData.maxAmount && formData.maxAmount.trim() ? parseFloat(formData.maxAmount) : null,
+        fee: formData.fee && formData.fee.trim() ? parseFloat(formData.fee) : 0,
+        isActive: formData.isActive !== undefined ? formData.isActive : true
+      };
+
+      await platformService.update(platform, attributes);
+      await this.loadDepositPlatforms();
+      
+      app.alerts.show(
+        { type: 'success', dismissible: true },
+        app.translator.trans('funds.admin.deposit.platforms.edit_success')
+      );
+      
+      m.redraw();
+    } catch (error) {
+      console.error('Error editing deposit platform:', error);
+      
+      let errorMessage = app.translator.trans('funds.admin.deposit.platforms.edit_error').toString();
+      
+      if (error instanceof ServiceError) {
+        errorMessage = error.message;
+      }
+      
+      app.alerts.show(
+        { type: 'error', dismissible: true },
+        errorMessage
+      );
+      
+      throw error;
     }
   }
 
@@ -397,7 +446,7 @@ export default class UnifiedManagementPage extends GenericManagementPage<Generic
         sort: '-createdAt'
       });
       
-      this.depositRecords = records as GenericTransaction[];
+      this.depositRecords = records as unknown as GenericTransaction[];
       console.log('Loaded deposit records:', this.depositRecords);
     } catch (error) {
       console.error('Error loading deposit records:', error);

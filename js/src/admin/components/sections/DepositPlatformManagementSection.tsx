@@ -72,7 +72,7 @@ export default class DepositPlatformManagementSection extends Component<DepositP
                         type="deposit"
                         onToggleStatus={() => onTogglePlatformStatus(platform)}
                         onDelete={() => onDeletePlatform(platform)}
-                        onEdit={this.handleEdit.bind(this)}
+                        onEditPlatform={this.handleEdit.bind(this)}
                       />
                     ))}
                 </div>
