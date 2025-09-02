@@ -369,10 +369,6 @@ export default class EditDepositPlatformModal extends Modal<EditDepositPlatformM
     try {
       await this.attrs.onEditPlatform(this.attrs.platform.id, formData);
       this.hide();
-      app.alerts.show(
-        { type: 'success', dismissible: true },
-        app.translator.trans('funds.admin.deposit.platforms.edit_success')
-      );
     } catch (error) {
       console.error('Edit deposit platform error:', error);
       app.alerts.show(

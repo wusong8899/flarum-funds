@@ -226,11 +226,6 @@ export default abstract class GenericManagementPage<
       await config.platformOperations.update(platform, formData);
       await this.loadPlatforms();
       m.redraw();
-      
-      app.alerts.show(
-        { type: 'success', dismissible: true },
-        app.translator.trans(`${config.translations.platformPrefix}.edit_success`)
-      );
     } catch (error) {
       console.error('Error editing platform:', error);
       app.alerts.show(

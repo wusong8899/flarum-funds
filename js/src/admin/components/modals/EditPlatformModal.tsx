@@ -264,10 +264,6 @@ export default class EditPlatformModal extends Modal<EditPlatformModalAttrs> {
     try {
       await this.attrs.onEditPlatform(this.attrs.platform.id(), formData);
       this.hide();
-      app.alerts.show(
-        { type: 'success', dismissible: true },
-        app.translator.trans('funds.admin.platforms.edit_success')
-      );
     } catch (error) {
       console.error('Edit platform error:', error);
       app.alerts.show(
