@@ -61,7 +61,14 @@ export default class TransactionHistory extends Component<TransactionHistoryAttr
 
     return (
       <div className={`${type}History`}>
-        <div className={`${type}History-header`}>
+        <div
+          className={`${type}History-header`}
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+        >
           <h3>{type === 'withdrawal' ? '提款历史' : '存款历史'}</h3>
           <span 
             className={`${type}History-count`}
