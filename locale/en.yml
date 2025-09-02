@@ -166,7 +166,7 @@ funds:
         deposit: Deposit
     error: Failed to submit funds request
     form:
-      address: {symbol} Address
+      address: "{symbol} Address"
       address_placeholder: Enter or paste funds address...
       all_button: All
       amount: Amount

@@ -138,7 +138,7 @@ funds:
         deposit: 存款
     error: 提款申请提交失败
     form:
-      address: {symbol} 收款地址
+      address: "{symbol} 收款地址"
       address_placeholder: 输入或粘贴取款地址...
       all_button: 全部
       amount: 金额
