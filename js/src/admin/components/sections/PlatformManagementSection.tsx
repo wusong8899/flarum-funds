@@ -50,16 +50,6 @@ export default class PlatformManagementSection extends Component<PlatformManagem
               ))
           )}
         </div>
-        
-        {this.editingPlatform && (
-          <EditPlatformModal
-            platform={this.editingPlatform}
-            onEdit={this.handleEditSubmit.bind(this)}
-            onhide={() => {
-              this.editingPlatform = null;
-            }}
-          />
-        )}
       </div>
     );
   }
