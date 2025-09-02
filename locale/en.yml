@@ -1,6 +1,12 @@
+# Flarum Funds Extension - English Translations
+# This extension provides withdrawal and deposit functionality for virtual currencies
+
 funds:
+  # Admin interface translations
   admin:
+    # Deposit management section
     deposit:
+      # Deposit platform management
       platforms:
         active: Active
         add_button: Add Platform
@@ -9,7 +15,7 @@ funds:
         address: Deposit Address (Required)
         address_help: Enter the deposit address for this platform
         custom_network: Custom Network Name (Optional)
-        delete: Delete
+        delete_button: Delete
         delete_error: Failed to delete deposit platform
         delete_success: Deposit platform deleted successfully
         disable_success: Deposit platform disabled successfully
@@ -37,13 +43,14 @@ funds:
         title: Deposit Platform Management
         toggle_error: Failed to toggle platform status
         warning_text: Warning Text
+      # Deposit record management - admin approval interface
       records:
-        approve: Approve
+        approve_button: Approve
         approve_error: Failed to approve deposit record
         approve_notes_prompt: "Admin notes (optional):"
         approve_prompt: "Enter credited amount (default: {amount}):"
         approve_success: Deposit record approved successfully
-        delete: Delete
+        delete_button: Delete
         delete_cancel_button: Cancel
         delete_confirm_button: Delete
         delete_confirm_message: Are you sure you want to delete deposit record for {user} ({amount})?
@@ -55,8 +62,9 @@ funds:
           title: No deposit records
         invalid_amount: Please enter a valid amount greater than zero
         load_error: Failed to load deposit records
-        pending_count: "{count} pending"
-        reject: Reject
+        # Supports pluralization based on count
+        pending_count: "{count, plural, =0 {No pending records} one {# pending record} other {# pending records}}"
+        reject_button: Reject
         reject_error: Failed to reject deposit record
         reject_reason_prompt: "Enter rejection reason:"
         reject_reason_required: Rejection reason is required
@@ -68,8 +76,10 @@ funds:
         status_error: Failed to update record status
         status_updated: Record status updated successfully
         title: Deposit Record Management
-        total_count: "{count} records total"
+        # Supports pluralization based on count
+        total_count: "{count, plural, =0 {No records} one {# record total} other {# records total}}"
         update_error: Failed to update deposit record
+    # Network type management (TRC20, ERC20, BSC, etc.)
     network_types:
       add_button: Add Network Type
       code: Network Code
@@ -92,16 +102,16 @@ funds:
       updated: Network type updated successfully
     page:
       title: Funds Management
+    # Withdrawal platform management
     platforms:
       active: Active
       add_button: Add Platform
       add_error: Failed to add platform
       add_placeholder: Enter platform name
       add_success: Platform added successfully
-      delete: Delete
+      delete_button: Delete
       delete_cancel_button: Cancel
       delete_confirm: Are you sure you want to delete {name}?
-      delete_confirm_base: Are you sure you want to delete {name}?
       delete_confirm_button: Delete
       delete_confirm_message: Are you sure you want to delete platform "{name}"? This action cannot be undone.
       delete_confirm_title: Confirm Delete
@@ -121,7 +131,7 @@ funds:
       platform_icon_class_help: Enter Font Awesome class for this specific platform icon
       inactive: Inactive
       is_active: Active
-      load_error: Load Error Error
+      load_error: Failed to load platforms
       max_amount: Maximum Amount
       max_min_error: Maximum amount must be greater than or equal to minimum amount
       min_amount: Minimum Amount
@@ -131,23 +141,24 @@ funds:
       symbol: Currency Symbol
       title: Withdrawal Platforms
       toggle_error: Failed to toggle platform status
+    # Withdrawal request management - admin approval interface
     requests:
       account_details: Account Details
-      approve: Approve
+      approve_button: Approve
       approved_success: Request approved successfully
-      delete: Delete
+      delete_button: Delete
       delete_cancel_button: Cancel
       delete_confirm_button: Confirm Delete
       delete_confirm_message: Are you sure you want to delete funds request "{info}"? This action cannot be undone.
       delete_confirm_title: Confirm Delete Request
       delete_error: Failed to delete funds request
       delete_success: Withdrawal request deleted successfully
-      load_error: Load Error Error
+      load_error: Failed to load requests
       no_pending: No pending requests
       no_processed: No processed requests
       pending_title: Pending Requests
       processed_title: Processed Requests
-      reject: Reject
+      reject_button: Reject
       rejected_success: Request rejected successfully
       status:
         approved: Approved
@@ -163,19 +174,21 @@ funds:
       deposits: Deposits
       network_types: Network Types
       withdrawals: Withdrawals
+  # Forum interface translations - user-facing interface
   forum:
+    # Validation messages with variables: {amount}, {maximum}, {platform}
     amount_above_maximum: Amount {amount} exceeds maximum {maximum} for {platform}
     amount_below_minimum: Amount {amount} is below minimum {minimum} for {platform}
     available_balance: "Available balance: {amount}"
     balance:
-      amount: "Available: ${amount}"
+      amount: "Available: {amount}"
       loading: Loading balance...
       title: Available Balance
     balance_refresh_error: Failed to refresh balance. Please try again.
     clipboard_error: Clipboard access not available. Please paste manually.
     deposit:
       address_copied: Address Copied
-      address_load_error: Address Load Error Error
+      address_load_error: Failed to load deposit address
       copy_failed: Copy Failed
       default_warning: Please ensure you are depositing {currency} on the {network} network. Minimum deposit is {minAmount}.
       fee: "Deposit fee: {fee} {currency}"
@@ -185,7 +198,7 @@ funds:
           description: Your deposit records will appear here once you make a deposit.
           title: No deposits yet
         title: Deposit History
-        transactions: records
+        transactions: "{count, plural, one {record} other {records}}"
       min_amount: "Minimum deposit: {amount} {currency}"
       min_amount_short: "Min: {amount} {symbol}"
       no_platforms: No deposit platforms available
@@ -195,7 +208,7 @@ funds:
       platform_label: Deposit Platform
       form:
         admin_notes: Admin Notes
-        cancel: Cancel
+        cancel_button: Cancel
         deposit_address: Deposit Address
         deposit_address_help: Copy the address below to make your deposit
         form_description: Fill in the following information to submit your deposit request
@@ -203,7 +216,7 @@ funds:
         no_history: No deposit records
         no_history_description: You haven't submitted any deposit records yet. Records will appear here after you submit a deposit request.
         optional: Optional
-        submit: Submit Request
+        submit_button: Submit Request
         submit_error: Failed to submit deposit request
         submit_success: Deposit request submitted successfully
         user_message: Message
@@ -216,7 +229,7 @@ funds:
       record:
         amount: Amount
         amount_placeholder: Enter deposit amount
-        cancel: Cancel
+        cancel_button: Cancel
         deposit_time: Deposit Time
         deposit_time_help: When you made the deposit (auto-filled with current time)
         form_title: Submit Deposit Record
@@ -233,7 +246,7 @@ funds:
         selected_platform: "Selected Platform: {platform} ({symbol})"
         server_error: Server error occurred. Please try again later.
         show_form: Submit Deposit Record
-        submit: Submit Record
+        submit_button: Submit Record
         submit_error: Failed to submit deposit record
         submit_success: Deposit record submitted successfully and is pending admin approval
         user_message: Message
@@ -270,17 +283,17 @@ funds:
         description: You haven't made any funds requests. Click the Withdrawal tab to submit your first request.
         title: No funds requests yet
       title: Withdrawal History
-      transactions: requests
+      transactions: "{count, plural, one {request} other {requests}}"
       withdrawal_title: Withdrawal History
       deposit_title: Deposit History
       page:
         title: Transaction History
     including_fee: (including {fee} fee)
     info:
-      final_amount: "Final Amount: ${amount}"
-      maximum_amount: "Maximum Amount: ${amount}"
-      minimum_amount: "Minimum Amount: ${amount}"
-      withdrawal_fee: "Withdrawal Fee: ${amount}"
+      final_amount: "Final Amount: {amount}"
+      maximum_amount: "Maximum Amount: {amount}"
+      minimum_amount: "Minimum Amount: {amount}"
+      withdrawal_fee: "Withdrawal Fee: {amount}"
     insufficient_balance: Insufficient balance to fill maximum amount
     insufficient_balance_detailed: "Insufficient balance. Required: {required}, Available: {available} {feeText}"
     invalid_amount: Please enter a valid amount greater than zero
@@ -298,7 +311,7 @@ funds:
       approved: Approved
       pending: Pending
       rejected: Rejected
-    submit_success: Submit Success Success
+    submit_success: Withdrawal request submitted successfully
     success: Withdrawal request submitted successfully
     tabs:
       funds: Withdrawal

@@ -1,7 +1,13 @@
+# Flarum 资金管理扩展 - 中文翻译
+# 此扩展提供虚拟货币的提款和存款功能
+
 funds:
+  # 管理面板界面翻译
   admin:
+    # 存款管理区域
     deposit:
       approved_success: 申请已通过
+      # 存款平台管理
       platforms:
         active: 启用
         add_button: 添加平台
@@ -37,6 +43,7 @@ funds:
         title: 存款平台管理
         toggle_error: 切换平台状态失败
         warning_text: 警告文本
+      # 存款记录管理 - 管理员审核界面
       records:
         approve: 通过
         approve_error: 审核存款记录失败
@@ -54,7 +61,8 @@ funds:
           description: 用户提交的存款记录将在此显示，等待审核。
           title: 暂无存款记录
         invalid_amount: 请输入大于零的有效金额
-        pending_count: '{count} 条待审核'
+        # 支持复数形式，基于计数
+        pending_count: '{count, plural, =0 {暂无待审核记录} other {# 条待审核}}'
         reject: 拒绝
         reject_error: 拒绝存款记录失败
         reject_reason_prompt: 输入拒绝原因：
@@ -65,13 +73,15 @@ funds:
           pending: 待审核
           rejected: 已拒绝
         title: 存款记录管理
-        total_count: 共 {count} 条记录
+        # 支持复数形式，基于计数
+        total_count: '{count, plural, =0 {暂无记录} other {共 # 条记录}}'
       rejected_success: 申请已拒绝
       status:
         approved: 已通过
         pending: 待审核
         rejected: 已拒绝
       update_error: 更新申请失败
+    # 网络类型管理 (TRC20, ERC20, BSC 等)
     network_types:
       add_button: 添加网络类型
       code: 网络代码
@@ -94,6 +104,7 @@ funds:
       updated: 网络类型更新成功
     page:
       title: 资金管理
+    # 提款平台管理
     platforms:
       active: 启用
       add_button: 添加平台
@@ -107,7 +118,6 @@ funds:
       delete: 删除
       delete_cancel_button: 取消
       delete_confirm: 确定要删除 {name} 吗？
-      delete_confirm_base: 确定要删除 {name} 吗？
       delete_confirm_button: 删除
       delete_confirm_message: 确定要删除平台 "{name}" 吗？此操作不可撤销。
       delete_confirm_title: 确认删除
@@ -136,6 +146,7 @@ funds:
       symbol: 货币符号
       title: 提款平台
       toggle_error: 切换平台状态失败
+    # 提款申请管理 - 管理员审核界面
     requests:
       account_details: 收款账号
       approve: 审核通过
@@ -160,12 +171,14 @@ funds:
       deposits: 存款管理
       network_types: 网络类型
       withdrawals: 提款管理
+  # 论坛界面翻译 - 用户界面
   forum:
+    # 验证消息，包含变量: {amount}, {maximum}, {platform}
     amount_above_maximum: 金额 {amount} 超过 {platform} 的最大限额 {maximum}
     amount_below_minimum: 金额 {amount} 低于 {platform} 的最小限额 {minimum}
     available_balance: '可提现金额: {amount}'
     balance:
-      amount: '可用: ${amount}'
+      amount: '可用: {amount}'
       loading: 正在加载余额...
       title: 可用余额
     balance_refresh_error: 刷新余额失败，请重试
@@ -182,7 +195,7 @@ funds:
           description: 您还没有进行过存款。完成存款后，存款记录将在此显示。
           title: 暂无存款记录
         title: 存款历史
-        transactions: 条记录
+        transactions: '{count, plural, other {条记录}}'
       min_amount: '最小存款金额为: {amount} {currency}'
       min_amount_short: '最小: {amount} {symbol}'
       no_platforms: 暂无可用存款方式
@@ -268,17 +281,17 @@ funds:
         description: 您还没有提交过提款申请。点击"提款"标签页提交您的第一个申请。
         title: 暂无提款申请记录
       title: 提款历史
-      transactions: 个请求
+      transactions: '{count, plural, other {个请求}}'
       withdrawal_title: 提款历史
       deposit_title: 存款历史
       page:
         title: 交易历史
     including_fee: （含 {fee} 手续费）
     info:
-      final_amount: '到账金额: ${amount}'
-      maximum_amount: '最大金额: ${amount}'
-      minimum_amount: '最小金额: ${amount}'
-      withdrawal_fee: '提款手续费: ${amount}'
+      final_amount: '到账金额: {amount}'
+      maximum_amount: '最大金额: {amount}'
+      minimum_amount: '最小金额: {amount}'
+      withdrawal_fee: '提款手续费: {amount}'
     insufficient_balance: 余额不足，无法填入最大金额
     insufficient_balance_detailed: '余额不足。需要: {required}，可用: {available} {feeText}'
     invalid_amount: 请输入大于零的有效金额

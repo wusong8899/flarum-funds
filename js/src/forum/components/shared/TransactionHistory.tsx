@@ -63,7 +63,7 @@ export default class TransactionHistory extends Component<TransactionHistoryAttr
       <div className={`${type}History`}>
         <div className={`${type}History-header`}>
           <h3>{app.translator.trans('funds.forum.history.title')}</h3>
-          <span className={`${type}History-count`}>{transactions.length} {app.translator.trans('funds.forum.history.transactions')}</span>
+          <span className={`${type}History-count`}>{transactions.length} {app.translator.trans('funds.forum.history.transactions', { count: transactions.length })}</span>
         </div>
         
         <div className={`${type}History-list`}>
