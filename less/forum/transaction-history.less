@@ -1,0 +1,623 @@
+// Transaction History Component Styles
+// This file contains styles for both withdrawal and deposit history components
+
+// ============================================================================
+// Common History Container Styles
+// ============================================================================
+
+.withdrawalHistory,
+.depositHistory,
+.fundsHistory {
+  margin-top: 20px;
+
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #3a3a3a;
+
+    h3 {
+      margin: 0;
+      color: #fff;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    &-count {
+      color: #888;
+      font-size: 14px;
+      font-weight: 500;
+      background: #2a2a2a;
+      padding: 4px 12px;
+      border-radius: 12px;
+      border: 1px solid #3a3a3a;
+    }
+  }
+
+  &-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &-loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: #888;
+  }
+
+  &-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #888;
+
+    .EmptyState-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .EmptyState-title {
+      color: #fff;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .EmptyState-description {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  }
+}
+
+// ============================================================================
+// Withdrawal History Styles
+// ============================================================================
+
+.FundsPage-withdrawal-HistoryItem {
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #4a4a4a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .FundsPage-withdrawal-HistoryHeader {
+    background: #333;
+    padding: 16px 20px;
+    border-bottom: 1px solid #3a3a3a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .FundsPage-withdrawal-HistoryPlatform {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .FundsPage-withdrawal-PlatformIcon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: #2a2a2a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #3a3a3a;
+
+        img {
+          width: 24px;
+          height: 24px;
+          border-radius: 4px;
+        }
+
+        i {
+          font-size: 20px;
+          color: #4A90E2;
+        }
+      }
+
+      .FundsPage-withdrawal-HistoryInfo {
+        .FundsPage-withdrawal-HistoryPlatformName {
+          color: #fff;
+          font-size: 16px;
+          font-weight: 600;
+          margin-bottom: 4px;
+        }
+
+        .FundsPage-withdrawal-HistoryDate {
+          color: #888;
+          font-size: 13px;
+        }
+      }
+    }
+
+    .StatusBadge {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+
+      &.status-pending {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+        border: 1px solid rgba(255, 193, 7, 0.3);
+      }
+
+      &.status-approved {
+        background: rgba(40, 167, 69, 0.2);
+        color: #28a745;
+        border: 1px solid rgba(40, 167, 69, 0.3);
+      }
+
+      &.status-rejected {
+        background: rgba(220, 53, 69, 0.2);
+        color: #dc3545;
+        border: 1px solid rgba(220, 53, 69, 0.3);
+      }
+    }
+  }
+
+  .FundsPage-withdrawal-HistoryDetails {
+    padding: 20px;
+    background: #252525;
+
+    .FundsPage-withdrawal-HistoryAmount,
+    .FundsPage-withdrawal-HistoryAddress {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .FundsPage-withdrawal-HistoryLabel {
+        color: #aaa;
+        font-size: 14px;
+        font-weight: 500;
+        margin-right: 8px;
+        min-width: 80px;
+      }
+
+      .FundsPage-withdrawal-HistoryValue {
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        flex: 1;
+        word-break: break-all;
+      }
+    }
+
+    .FundsPage-withdrawal-HistoryAmount .FundsPage-withdrawal-HistoryValue {
+      color: #4A90E2;
+      font-size: 16px;
+    }
+  }
+}
+
+// ============================================================================
+// Deposit History Styles
+// ============================================================================
+
+.DepositRecord-item {
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #4a4a4a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .DepositRecord-itemHeader {
+    background: #333;
+    padding: 16px 20px;
+    border-bottom: 1px solid #3a3a3a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .DepositRecord-itemPlatform {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .DepositRecord-itemIcon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: #2a2a2a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #3a3a3a;
+
+        img {
+          width: 24px;
+          height: 24px;
+          border-radius: 4px;
+        }
+
+        i {
+          font-size: 20px;
+          color: #28a745;
+        }
+      }
+
+      .DepositRecord-itemInfo {
+        .DepositRecord-itemCurrency {
+          color: #fff;
+          font-size: 16px;
+          font-weight: 600;
+          margin-bottom: 4px;
+          display: block;
+        }
+
+        .DepositRecord-itemType {
+          color: #888;
+          font-size: 13px;
+        }
+      }
+    }
+
+    .DepositRecord-itemAmount {
+      text-align: right;
+
+      .DepositRecord-itemAmountValue {
+        color: #28a745;
+        font-size: 18px;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .DepositRecord-itemStatus {
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+
+        &.status-warning {
+          background: rgba(255, 193, 7, 0.2);
+          color: #ffc107;
+          border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        &.status-success {
+          background: rgba(40, 167, 69, 0.2);
+          color: #28a745;
+          border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        &.status-danger {
+          background: rgba(220, 53, 69, 0.2);
+          color: #dc3545;
+          border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+
+        &.status-secondary {
+          background: rgba(108, 117, 125, 0.2);
+          color: #6c757d;
+          border: 1px solid rgba(108, 117, 125, 0.3);
+        }
+
+        i {
+          font-size: 10px;
+        }
+      }
+    }
+  }
+
+  .DepositRecord-itemDetails {
+    background: #252525;
+
+    .DepositRecord-itemMeta {
+      padding: 16px 20px;
+      border-bottom: 1px solid #3a3a3a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      .DepositRecord-itemTime,
+      .DepositRecord-itemDepositTime {
+        color: #888;
+        font-size: 13px;
+      }
+    }
+
+    .DepositRecord-itemInfo {
+      padding: 16px 20px;
+
+      .DepositRecord-itemRow {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 12px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .DepositRecord-itemLabel {
+          color: #aaa;
+          font-size: 14px;
+          font-weight: 500;
+          margin-right: 12px;
+          min-width: 100px;
+          flex-shrink: 0;
+        }
+
+        .DepositRecord-itemValue {
+          color: #fff;
+          font-size: 14px;
+          flex: 1;
+          word-break: break-word;
+          line-height: 1.4;
+        }
+
+        .DepositRecord-itemLink {
+          color: #4A90E2;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          transition: all 0.2s ease;
+
+          &:hover {
+            color: #3a7bc8;
+            text-decoration: underline;
+          }
+
+          i {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+
+    .DepositRecord-itemProcessed {
+      padding: 16px 20px;
+      border-top: 1px solid #3a3a3a;
+      background: #1f1f1f;
+
+      .DepositRecord-itemProcessedTime {
+        color: #28a745;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .DepositRecord-itemCredited {
+        color: #4A90E2;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .DepositRecord-itemNotes {
+        .DepositRecord-itemLabel {
+          color: #aaa;
+          font-size: 14px;
+          font-weight: 500;
+          margin-bottom: 6px;
+          display: block;
+        }
+
+        .DepositRecord-itemValue {
+          color: #fff;
+          font-size: 14px;
+          line-height: 1.4;
+          padding: 12px;
+          background: #2a2a2a;
+          border-radius: 6px;
+          border: 1px solid #3a3a3a;
+        }
+      }
+    }
+  }
+}
+
+// ============================================================================
+// Responsive Design
+// ============================================================================
+
+@media (max-width: 768px) {
+  .FundsPage-withdrawal-HistoryItem,
+  .DepositRecord-item {
+    margin-bottom: 12px;
+
+    .FundsPage-withdrawal-HistoryHeader,
+    .DepositRecord-itemHeader {
+      padding: 12px 16px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+
+      .StatusBadge,
+      .DepositRecord-itemAmount {
+        align-self: flex-end;
+      }
+    }
+
+    .FundsPage-withdrawal-HistoryDetails,
+    .DepositRecord-itemDetails .DepositRecord-itemInfo,
+    .DepositRecord-itemDetails .DepositRecord-itemMeta,
+    .DepositRecord-itemDetails .DepositRecord-itemProcessed {
+      padding: 12px 16px;
+    }
+
+    .DepositRecord-itemMeta {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .DepositRecord-itemRow {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .DepositRecord-itemLabel {
+        margin-bottom: 4px;
+        margin-right: 0;
+        min-width: auto;
+      }
+    }
+  }
+
+  .withdrawalHistory,
+  .depositHistory,
+  .fundsHistory {
+    &-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+
+      &-count {
+        align-self: flex-end;
+      }
+    }
+  }
+}
+
+// ============================================================================
+// Loading and Empty States
+// ============================================================================
+
+.LoadingState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #888;
+
+  .LoadingIndicator {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #3a3a3a;
+    border-top-color: #4A90E2;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+.EmptyState {
+  text-align: center;
+  padding: 60px 20px;
+
+  &-icon {
+    font-size: 48px;
+    color: #444;
+    margin-bottom: 16px;
+  }
+
+  &-title {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  &-description {
+    color: #888;
+    font-size: 14px;
+    line-height: 1.5;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ============================================================================
+// Platform Icons
+// ============================================================================
+
+.DepositHistory-platformImg {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+// PlatformIcon component styles
+.PlatformIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &.size-small {
+    width: 24px;
+    height: 24px;
+
+    img {
+      width: 20px;
+      height: 20px;
+      border-radius: 3px;
+    }
+
+    i {
+      font-size: 16px;
+    }
+  }
+
+  &.size-medium {
+    width: 32px;
+    height: 32px;
+
+    img {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+    }
+
+    i {
+      font-size: 20px;
+    }
+  }
+
+  &.size-large {
+    width: 48px;
+    height: 48px;
+
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+    }
+
+    i {
+      font-size: 28px;
+    }
+  }
+
+  img {
+    object-fit: cover;
+  }
+
+  i {
+    color: #4A90E2;
+  }
+}

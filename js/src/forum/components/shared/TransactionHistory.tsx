@@ -37,7 +37,7 @@ interface TransactionHistoryAttrs {
   transactions: (WithdrawalRequest | DepositRecord)[];
   platforms: (WithdrawalPlatform | DepositPlatform)[];
   loading: boolean;
-  type: 'funds' | 'deposit';
+  type: 'withdrawal' | 'deposit';
 }
 
 export default class TransactionHistory extends Component<TransactionHistoryAttrs> {
@@ -51,7 +51,7 @@ export default class TransactionHistory extends Component<TransactionHistoryAttr
     if (!transactions || transactions.length === 0) {
       return (
         <EmptyState
-          iconName={type === 'funds' ? 'fas fa-history' : 'fas fa-inbox'}
+          iconName={type === 'withdrawal' ? 'fas fa-history' : 'fas fa-inbox'}
           title={app.translator.trans('funds.forum.history.empty.title')}
           description={app.translator.trans('funds.forum.history.empty.description')}
           className={`${type}History-empty`}
