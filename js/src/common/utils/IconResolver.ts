@@ -65,6 +65,11 @@ export function renderIcon(
         src: iconRep.value,
         alt: iconRep.alt || "Icon",
         className: `${classes} icon--image`,
+        style: {
+          width: "100%",
+          height: "100%",
+          objectFit: "contain",
+        },
       });
 
     case "class":
