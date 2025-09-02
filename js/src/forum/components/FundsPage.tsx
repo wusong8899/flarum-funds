@@ -373,9 +373,6 @@ export default class FundsPage extends Page<any, FundsPageState> {
       <div className="FundsPage-historyContent">
         {hasWithdrawals && (
           <div className="FundsPage-historySection">
-            <h3 className="FundsPage-sectionTitle">
-              {app.translator.trans("funds.forum.history.withdrawal_title")}
-            </h3>
             <TransactionHistory
               transactions={withdrawalRequests}
               platforms={this.state.withdrawalPlatforms}
@@ -435,17 +432,13 @@ export default class FundsPage extends Page<any, FundsPageState> {
     );
   }
 
-  // 移除复杂的存款选择器和信息显示 - 简化版本不再需要这些方法
-
   private handleTabChange(tab: TabType): void {
     this.state.activeTab(tab);
     this.updatePageTitle();
     this.updateUrl();
   }
 
-  // Withdrawal methods (copied from WithdrawalPage)
   private getWithdrawalFormDataForComponent() {
-    // Fixed: Added null check to prevent invoking null objects
     const selectedPlatform = this.withdrawalFormData.selectedPlatform();
     return {
       selectedPlatform: selectedPlatform,
@@ -491,7 +484,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
 
       if (availableAmount > 0) {
         this.withdrawalFormData.amount(availableAmount.toString());
-        m.redraw();
+        // m.redraw();
       } else {
         app.alerts.show(
           { type: "warning", dismissible: true },
