@@ -1,5 +1,16 @@
 export interface WithdrawalPlatform {
   id(): number;
+  name(): string;
+  symbol(): string;
+  network(): string;
+  displayName(): string;
+  minAmount(): number;
+  maxAmount(): number;
+  fee(): number;
+  platformIconUrl(): string;
+  platformIconClass(): string;
+  isActive(): boolean;
+  createdAt(): string;
   attributes: {
     name: string;
     symbol?: string;

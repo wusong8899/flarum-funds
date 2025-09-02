@@ -1,5 +1,5 @@
 import app from 'flarum/admin/app';
-import Modal from 'flarum/common/components/Modal';
+import Modal, { IInternalModalAttrs } from 'flarum/common/components/Modal';
 import Button from 'flarum/common/components/Button';
 import Stream from 'flarum/common/utils/Stream';
 import type Mithril from 'mithril';
@@ -7,7 +7,7 @@ import { WithdrawalPlatform } from '../types/AdminTypes';
 import { FormValidator } from '../../../common/utils/formValidators';
 import m from 'mithril';
 
-export interface EditPlatformModalAttrs {
+export interface EditPlatformModalAttrs extends IInternalModalAttrs {
   platform: WithdrawalPlatform;
   onEdit: (id: number, formData: any) => Promise<void>;
 }
@@ -42,16 +42,16 @@ export default class EditPlatformModal extends Modal<EditPlatformModalAttrs> {
     const { platform } = this.attrs;
     
     // Populate form fields with current platform data
-    this.name(platform.attributes.name || '');
-    this.symbol(platform.attributes.symbol || '');
-    this.network(platform.attributes.network || '');
-    this.minAmount(platform.attributes.minAmount?.toString() || '');
-    this.maxAmount(platform.attributes.maxAmount?.toString() || '');
-    this.fee(platform.attributes.fee?.toString() || '');
-    this.isActive(platform.attributes.isActive ?? true);
+    this.name(platform.name() || '');
+    this.symbol(platform.symbol() || '');
+    this.network(platform.network() || '');
+    this.minAmount(platform.minAmount()?.toString() || '');
+    this.maxAmount(platform.maxAmount()?.toString() || '');
+    this.fee(platform.fee()?.toString() || '');
+    this.isActive(platform.isActive() ?? true);
     // Use simplified icon system
-    this.platformIconUrl(platform.attributes.platformIconUrl || '');
-    this.platformIconClass(platform.attributes.platformIconClass || '');
+    this.platformIconUrl(platform.platformIconUrl() || '');
+    this.platformIconClass(platform.platformIconClass() || '');
   }
 
   content(): Mithril.Children {
