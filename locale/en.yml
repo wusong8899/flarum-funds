@@ -50,12 +50,12 @@ funds:
         warning_text: Warning Text
       # Deposit record management - admin approval interface
       records:
-        approve_button: Approve
+        approve: Approve
         approve_error: Failed to approve deposit record
         approve_notes_prompt: "Admin notes (optional):"
         approve_prompt: "Enter credited amount (default: {amount}):"
         approve_success: Deposit record approved successfully
-        delete_button: Delete
+        delete: Delete
         delete_cancel_button: Cancel
         delete_confirm_button: Delete
         delete_confirm_message: Are you sure you want to delete deposit record for {user} ({amount})?
@@ -69,7 +69,7 @@ funds:
         load_error: Failed to load deposit records
         # Supports pluralization based on count
         pending_count: "{count, plural, =0 {No pending records} one {# pending record} other {# pending records}}"
-        reject_button: Reject
+        reject: Reject
         reject_error: Failed to reject deposit record
         reject_reason_prompt: "Enter rejection reason:"
         reject_reason_required: Rejection reason is required
