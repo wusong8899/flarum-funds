@@ -467,6 +467,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
       
       if (availableAmount > 0) {
         this.withdrawalFormData.amount(availableAmount.toString());
+        m.redraw();
       } else {
         app.alerts.show(
           { type: 'warning', dismissible: true },

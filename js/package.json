@@ -3,6 +3,7 @@
   "name": "@wusong8899/flarum-withdrawal",
   "devDependencies": {
     "@types/mithril": "^2.2.7",
+    "@typescript/native-preview": "7.0.0-dev.20250901.1",
     "flarum-tsconfig": "^1.0.0",
     "mithril": "^2.3.4",
     "oxlint": "^1.11.2",
