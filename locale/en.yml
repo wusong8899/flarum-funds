@@ -206,6 +206,8 @@ funds:
       form:
         admin_notes: Admin Notes
         cancel: Cancel
+        deposit_address: Deposit Address
+        deposit_address_help: Copy the address below to make your deposit
         form_description: Fill in the following information to submit your deposit request
         form_title: Deposit Request
         no_history: No deposit records

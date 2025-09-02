@@ -193,6 +193,8 @@ funds:
       form:
         admin_notes: 管理员备注
         cancel: 取消
+        deposit_address: 存款地址
+        deposit_address_help: 复制下方地址进行存款
         form_description: 填写以下信息提交您的存款申请
         form_title: 存款申请
         no_history: 暂无存款记录
