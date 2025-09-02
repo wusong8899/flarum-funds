@@ -97,7 +97,7 @@ export default class DepositPlatformManagementSection extends Component<DepositP
   private handleEdit(platform: GenericPlatform): void {
     // Convert GenericPlatform to DepositPlatform for modal
     const depositPlatform: DepositPlatform = {
-      id: typeof platform.id === 'function' ? platform.id() : platform.id || -1,
+      id: typeof platform.id === 'function' ? platform.id() : platform.id,
       name: typeof platform.name === 'function' ? platform.name() : platform.name || 'Unknown Platform',
       symbol: typeof platform.symbol === 'function' ? platform.symbol() : platform.symbol,
       network: typeof platform.network === 'function' ? platform.network() : platform.network,
@@ -118,7 +118,7 @@ export default class DepositPlatformManagementSection extends Component<DepositP
     this.editingPlatform = depositPlatform;
     app.modal.show(EditDepositPlatformModal, {
       platform: depositPlatform,
-      onEdit: this.handleEditSubmit.bind(this)
+      onEditPlatform: this.handleEditSubmit.bind(this)
     });
   }
 

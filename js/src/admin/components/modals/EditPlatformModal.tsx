@@ -9,7 +9,7 @@ import m from 'mithril';
 
 export interface EditPlatformModalAttrs extends IInternalModalAttrs {
   platform: WithdrawalPlatform;
-  onEdit: (id: number, formData: any) => Promise<void>;
+  onEditPlatform: (id: number, formData: any) => Promise<void>;
 }
 
 export default class EditPlatformModal extends Modal<EditPlatformModalAttrs> {
@@ -262,7 +262,7 @@ export default class EditPlatformModal extends Modal<EditPlatformModalAttrs> {
     };
 
     try {
-      await this.attrs.onEdit(this.attrs.platform.id(), formData);
+      await this.attrs.onEditPlatform(this.attrs.platform.id(), formData);
       this.hide();
       app.alerts.show(
         { type: 'success', dismissible: true },

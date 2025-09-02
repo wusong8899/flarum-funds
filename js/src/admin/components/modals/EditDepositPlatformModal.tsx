@@ -11,7 +11,7 @@ import m from 'mithril';
 
 export interface EditDepositPlatformModalAttrs extends IInternalModalAttrs {
   platform: DepositPlatform;
-  onEdit: (id: number, formData: DepositPlatformFormData) => Promise<void>;
+  onEditPlatform: (id: number, formData: DepositPlatformFormData) => Promise<void>;
 }
 
 export default class EditDepositPlatformModal extends Modal<EditDepositPlatformModalAttrs> {
@@ -367,7 +367,7 @@ export default class EditDepositPlatformModal extends Modal<EditDepositPlatformM
     };
 
     try {
-      await this.attrs.onEdit(this.attrs.platform.id, formData);
+      await this.attrs.onEditPlatform(this.attrs.platform.id, formData);
       this.hide();
       app.alerts.show(
         { type: 'success', dismissible: true },
