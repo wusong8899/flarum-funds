@@ -226,7 +226,6 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
           <ImageDisplay
             platform={platform}
             loading={false}
-            size={160}
           />
         </div>
 

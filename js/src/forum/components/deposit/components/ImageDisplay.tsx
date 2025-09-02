@@ -10,10 +10,10 @@ export interface ImageDisplayAttrs {
 
 export default class ImageDisplay extends Component<ImageDisplayAttrs> {
   view(vnode: Mithril.Vnode<ImageDisplayAttrs>) {
-    const { platform, loading, size = 160 } = vnode.attrs;
+    const { platform, loading } = vnode.attrs;
 
     return (
-      <div className="ImageDisplay" style={{ width: `${size}px`, height: `${size}px` }}>
+      <div className="ImageDisplay">
         {loading ? (
           <div className="ImageDisplay-loading">
             <i className="fas fa-spinner fa-spin"></i>
