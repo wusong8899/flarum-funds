@@ -18,7 +18,6 @@ interface DepositPlatformManagementSectionAttrs {
 }
 
 export default class DepositPlatformManagementSection extends Component<DepositPlatformManagementSectionAttrs> {
-  private editingPlatform: DepositPlatform | null = null;
 
   view(vnode: Mithril.Vnode<DepositPlatformManagementSectionAttrs>): Mithril.Children {
     const { platforms, submittingPlatform, onAddPlatform, onTogglePlatformStatus, onDeletePlatform } = vnode.attrs;
@@ -81,15 +80,7 @@ export default class DepositPlatformManagementSection extends Component<DepositP
           </div>
         </div>
         
-        {this.editingPlatform && (
-          <EditDepositPlatformModal
-            platform={this.editingPlatform}
-            onEdit={this.handleEditSubmit.bind(this)}
-            onhide={() => {
-              this.editingPlatform = null;
-            }}
-          />
-        )}
+
       </div>
     );
   }
@@ -114,8 +105,7 @@ export default class DepositPlatformManagementSection extends Component<DepositP
       createdAt: typeof platform.createdAt === 'function' ? platform.createdAt() : new Date(),
       updatedAt: new Date()
     };
-    
-    this.editingPlatform = depositPlatform;
+
     app.modal.show(EditDepositPlatformModal, {
       platform: depositPlatform,
       onEditPlatform: this.handleEditSubmit.bind(this)
@@ -124,6 +114,5 @@ export default class DepositPlatformManagementSection extends Component<DepositP
 
   private async handleEditSubmit(id: number, formData: DepositPlatformFormData): Promise<void> {
     await this.attrs.onEditPlatform(id, formData);
-    this.editingPlatform = null;
   }
 }
