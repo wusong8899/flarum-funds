@@ -87,11 +87,6 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
                 required
                 disabled={submitting}
               />
-              <div className="DepositForm-help">
-                {app.translator.trans('funds.forum.deposit.record.amount_help', {
-                  symbol: getAttr(this.state.selectedPlatform(), 'symbol') || ''
-                })}
-              </div>
             </div>
           )}
 
