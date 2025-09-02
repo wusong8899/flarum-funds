@@ -282,67 +282,14 @@ export default class FundsPage extends Page<any, FundsPageState> {
   }
 
   private renderDepositHistory(): Mithril.Children {
-    const depositRecords = this.state.depositRecords || [];
-
-    if (depositRecords.length === 0) {
-      return (
-        <div className="FundsPage-depositContent">
-          <div className="FundsPage-emptyState">
-            <div className="FundsPage-emptyIcon">{icon("fas fa-history")}</div>
-            <h3 className="FundsPage-emptyTitle">
-              {app.translator.trans("funds.forum.deposit.form.no_history")}
-            </h3>
-            <p className="FundsPage-emptyDescription">
-              {app.translator.trans(
-                "funds.forum.deposit.form.no_history_description"
-              )}
-            </p>
-          </div>
-        </div>
-      );
-    }
-
     return (
       <div className="FundsPage-depositContent">
-        <div className="DepositHistory">
-          {depositRecords.map((record: DepositRecord) => (
-            <div key={record.id()} className="DepositHistory-item">
-              <div className="DepositHistory-header">
-                <span className={`Badge Badge--${record.getStatusColor()}`}>
-                  <i className={record.getStatusIcon()}></i>
-                  {record.statusText()}
-                </span>
-                <span className="DepositHistory-date">
-                  {record.formattedCreatedAt()}
-                </span>
-              </div>
-              <div className="DepositHistory-content">
-                {record.userMessage() && (
-                  <div className="DepositHistory-message">
-                    <strong>
-                      {app.translator.trans(
-                        "funds.forum.deposit.form.user_message"
-                      )}
-                      :
-                    </strong>
-                    <p>{record.userMessage()}</p>
-                  </div>
-                )}
-                {record.adminNotes() && (
-                  <div className="DepositHistory-adminNotes">
-                    <strong>
-                      {app.translator.trans(
-                        "funds.forum.deposit.form.admin_notes"
-                      )}
-                      :
-                    </strong>
-                    <p>{record.adminNotes()}</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+        <TransactionHistory
+          transactions={this.state.depositRecords}
+          platforms={this.state.depositPlatforms}
+          loading={false}
+          type="deposit"
+        />
       </div>
     );
   }
@@ -384,48 +331,12 @@ export default class FundsPage extends Page<any, FundsPageState> {
 
         {hasDeposits && (
           <div className="FundsPage-historySection">
-            <h3 className="FundsPage-sectionTitle">
-              {app.translator.trans("funds.forum.history.deposit_title")}
-            </h3>
-            <div className="DepositHistory">
-              {depositRecords.map((record: DepositRecord) => (
-                <div key={record.id()} className="DepositHistory-item">
-                  <div className="DepositHistory-header">
-                    <span className={`Badge Badge--${record.getStatusColor()}`}>
-                      <i className={record.getStatusIcon()}></i>
-                      {record.statusText()}
-                    </span>
-                    <span className="DepositHistory-date">
-                      {record.formattedCreatedAt()}
-                    </span>
-                  </div>
-                  <div className="DepositHistory-content">
-                    {record.userMessage() && (
-                      <div className="DepositHistory-message">
-                        <strong>
-                          {app.translator.trans(
-                            "funds.forum.deposit.form.user_message"
-                          )}
-                          :
-                        </strong>
-                        <p>{record.userMessage()}</p>
-                      </div>
-                    )}
-                    {record.adminNotes() && (
-                      <div className="DepositHistory-adminNotes">
-                        <strong>
-                          {app.translator.trans(
-                            "funds.forum.deposit.form.admin_notes"
-                          )}
-                          :
-                        </strong>
-                        <p>{record.adminNotes()}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <TransactionHistory
+              transactions={depositRecords}
+              platforms={this.state.depositPlatforms}
+              loading={false}
+              type="deposit"
+            />
           </div>
         )}
       </div>
