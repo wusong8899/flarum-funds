@@ -61,7 +61,7 @@ export default class FundsPage extends Page<any, FundsPageState> {
     depositRecords: [],
     submittingDeposit: false,
     loading: true,
-    activeTab: Stream("withdrawal"),
+    activeTab: Stream("deposit"),
   };
 
   // Withdrawal form data
@@ -162,19 +162,19 @@ export default class FundsPage extends Page<any, FundsPageState> {
         <div className="FundsPage-tabs">
           <div
             className={`FundsPage-tab ${
-              activeTab === "withdrawal" ? "active" : ""
-            }`}
-            onclick={() => this.handleTabChange("withdrawal")}
-          >
-            {app.translator.trans("funds.forum.tabs.funds")}
-          </div>
-          <div
-            className={`FundsPage-tab ${
               activeTab === "deposit" ? "active" : ""
             }`}
             onclick={() => this.handleTabChange("deposit")}
           >
             {app.translator.trans("funds.forum.deposit.tabs.deposit")}
+          </div>
+          <div
+            className={`FundsPage-tab ${
+              activeTab === "withdrawal" ? "active" : ""
+            }`}
+            onclick={() => this.handleTabChange("withdrawal")}
+          >
+            {app.translator.trans("funds.forum.tabs.funds")}
           </div>
           <div
             className={`FundsPage-tab ${
