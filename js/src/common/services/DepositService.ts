@@ -67,20 +67,16 @@ class DepositServiceImpl implements DepositService {
   async create(data: DepositFormData): Promise<DepositRecord> {
     // Extract platformId from the selected platform
     if (!data.selectedPlatform) {
-      throw new Error('Selected platform is required');
+      throw new Error("Selected platform is required");
     }
 
     const platformId = parseInt(data.selectedPlatform.id() as string);
     if (!platformId) {
-      throw new Error('Platform ID is required');
+      throw new Error("Platform ID is required");
     }
 
     if (!data.amount || data.amount <= 0) {
-      throw new Error('Amount is required and must be greater than 0');
-    }
-
-    if (!data.depositTime) {
-      throw new Error('Deposit time is required');
+      throw new Error("Amount is required and must be greater than 0");
     }
 
     const response = await app.request({
@@ -92,7 +88,6 @@ class DepositServiceImpl implements DepositService {
           attributes: {
             platformId: platformId,
             amount: data.amount,
-            depositTime: data.depositTime.toISOString(),
             userMessage: data.userMessage,
           },
         },
@@ -182,10 +177,10 @@ class DepositServiceImpl implements DepositService {
     if (validParams.include) {
       // Filter out 'platform' from include since DepositRecord doesn't have platform relationship
       validParams.include = validParams.include
-        .split(',')
-        .filter((rel: string) => rel.trim() !== 'platform')
-        .join(',');
-      
+        .split(",")
+        .filter((rel: string) => rel.trim() !== "platform")
+        .join(",");
+
       // If no valid includes remain, remove the include parameter
       if (!validParams.include) {
         delete validParams.include;

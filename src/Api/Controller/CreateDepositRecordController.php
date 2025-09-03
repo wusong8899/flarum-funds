@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace wusong8899\Funds\Api\Controller;
 
+use Carbon\Carbon;
 use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Http\RequestUtil;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
@@ -37,7 +38,6 @@ class CreateDepositRecordController extends AbstractCreateController
         $validator = $this->validation->make($attributes, [
             'platformId' => 'required|integer|exists:wusong8899_funds_deposit_platforms,id',
             'amount' => 'required|numeric|min:0.01',
-            'depositTime' => 'required|date',
             'userMessage' => 'nullable|string|max:1000'
         ], [
             'platformId.required' => '平台ID不能为空',
@@ -45,21 +45,19 @@ class CreateDepositRecordController extends AbstractCreateController
             'amount.required' => '存款金额不能为空',
             'amount.numeric' => '存款金额必须是数字',
             'amount.min' => '存款金额必须大于0.01',
-            'depositTime.required' => '存款时间不能为空',
-            'depositTime.date' => '存款时间格式不正确',
             'userMessage.max' => '留言不能超过1000个字符'
         ]);
 
         if ($validator->fails()) {
             $errors = $validator->errors();
             $flattenedErrors = [];
-            
+
             foreach ($errors->toArray() as $field => $messages) {
                 foreach ($messages as $message) {
                     $flattenedErrors[] = $message;
                 }
             }
-            
+
             throw new ValidationException($flattenedErrors);
         }
 
@@ -79,7 +77,8 @@ class CreateDepositRecordController extends AbstractCreateController
             'user_id' => $actor->id,
             'platform_id' => $attributes['platformId'],
             'amount' => $attributes['amount'],
-            'deposit_time' => $attributes['depositTime'],
+            // 自动设置为当前时间
+            'deposit_time' => Carbon::now(),
             'user_message' => $attributes['userMessage'] ?? null,
             'status' => DepositRecord::STATUS_PENDING,
         ]);

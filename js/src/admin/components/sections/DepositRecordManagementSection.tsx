@@ -14,7 +14,6 @@ interface DepositRecord {
   platformId(): number;
   platformAccount(): string;
   amount(): number;
-  depositTime(): Date;
   screenshotUrl?(): string;
   userMessage?(): string;
   status(): string;
@@ -115,7 +114,6 @@ export default class DepositRecordManagementSection extends Component<
     const platform = this.findPlatform(platforms, platformId);
     const user = record.user?.();
     const status = this.getRecordStatus(record);
-    const depositTime = this.getDepositTime(record);
     const createdAt = this.getCreatedAt(record);
 
     return (
@@ -151,12 +149,7 @@ export default class DepositRecordManagementSection extends Component<
           
           
           
-          <div className="DepositRecordItem-row">
-            <span className="DepositRecordItem-label">Deposit Time:</span>
-            <span className="DepositRecordItem-value">
-              {depositTime.toLocaleDateString()} {depositTime.toLocaleTimeString()}
-            </span>
-          </div>
+          
           
           <div className="DepositRecordItem-row">
             <span className="DepositRecordItem-label">Submitted:</span>
@@ -296,30 +289,7 @@ export default class DepositRecordManagementSection extends Component<
     return 'pending'; // default status
   }
 
-  private getDepositTime(record: DepositRecord): Date {
-    if (typeof record.depositTime === 'function') {
-      try {
-        return record.depositTime();
-      } catch (error) {
-        console.warn('Failed to call depositTime() method:', error);
-      }
-    }
-    
-    const recordAny = record as any;
-    if (recordAny.depositTime) {
-      return new Date(recordAny.depositTime);
-    }
-    
-    if (recordAny.attributes && recordAny.attributes.depositTime) {
-      return new Date(recordAny.attributes.depositTime);
-    }
-    
-    if (recordAny.attributes && recordAny.attributes.deposit_time) {
-      return new Date(recordAny.attributes.deposit_time);
-    }
-    
-    return new Date(); // fallback to current time
-  }
+  
 
   private getCreatedAt(record: DepositRecord): Date {
     if (typeof record.createdAt === 'function') {

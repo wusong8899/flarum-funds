@@ -6,7 +6,6 @@ export default class DepositRecord extends Model {
   userId = Model.attribute<number>("userId");
   platformId = Model.attribute<number>("platformId");
   amount = Model.attribute<number>("amount");
-  depositTime = Model.attribute("depositTime", Model.transformDate);
   userMessage = Model.attribute<string>("userMessage");
   status = Model.attribute<string>("status");
   statusText = Model.attribute<string>("statusText");
@@ -73,12 +72,5 @@ export default class DepositRecord extends Model {
   getFormattedAmount(): string {
     const amount = this.amount();
     return amount ? amount.toFixed(2) : "0.00";
-  }
-
-  getFormattedDepositTime(): string {
-    const time = this.depositTime();
-    return time
-      ? time.toLocaleDateString() + " " + time.toLocaleTimeString()
-      : "";
   }
 }

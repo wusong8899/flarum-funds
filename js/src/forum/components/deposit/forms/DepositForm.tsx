@@ -27,24 +27,16 @@ interface DepositFormProps {
 interface DepositFormState {
   selectedPlatform: Stream<DepositPlatform | null>;
   amount: Stream<string>;
-  depositTime: Stream<string>;
   userMessage: Stream<string>;
 }
 
 export default class DepositForm extends Component<DepositFormProps, DepositFormState> {
   oninit(vnode: Mithril.Vnode<DepositFormProps>) {
     super.oninit(vnode);
-    
-    // Initialize with current date/time for deposit time
-    const now = new Date();
-    const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
-      .toISOString()
-      .slice(0, 16); // Format: YYYY-MM-DDTHH:mm
-    
+
     this.state = {
       selectedPlatform: Stream(null),
       amount: Stream(''),
-      depositTime: Stream(localDateTime),
       userMessage: Stream('')
     };
   }
@@ -90,26 +82,7 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
             </div>
           )}
 
-          {/* 存款时间字段 */}
-          {this.state.selectedPlatform() && (
-            <div className="DepositForm-field">
-              <label className="DepositForm-label">
-                {app.translator.trans('funds.forum.deposit.record.deposit_time')}
-                <span className="DepositForm-required">*</span>
-              </label>
-              <input
-                type="datetime-local"
-                className="DepositForm-input"
-                value={this.state.depositTime()}
-                oninput={withAttr('value', this.state.depositTime)}
-                required
-                disabled={submitting}
-              />
-              <div className="DepositForm-help">
-                {app.translator.trans('funds.forum.deposit.record.deposit_time_help')}
-              </div>
-            </div>
-          )}
+          
 
           {/* 留言字段 */}
           <div className="DepositForm-field">
@@ -247,14 +220,7 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
       return;
     }
 
-    // 验证存款时间
-    if (!this.state.depositTime()) {
-      app.alerts.show(
-        { type: 'error', dismissible: true },
-        app.translator.trans('funds.forum.deposit.record.validation.deposit_time_required')
-      );
-      return;
-    }
+    
 
     // 检查平台最小金额限制
     const platform = this.state.selectedPlatform();
@@ -275,7 +241,7 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
     const formData: DepositFormData = {
       selectedPlatform: this.state.selectedPlatform(),
       amount: amount,
-      depositTime: new Date(this.state.depositTime()),
+      depositTime: new Date(),
       userMessage: this.state.userMessage() || undefined
     };
 
@@ -286,14 +252,7 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
   resetForm(): void {
     this.state.selectedPlatform(null);
     this.state.amount('');
-    
-    // Reset deposit time to current time
-    const now = new Date();
-    const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
-      .toISOString()
-      .slice(0, 16);
-    this.state.depositTime(localDateTime);
-    
+
     this.state.userMessage('');
   }
 }
