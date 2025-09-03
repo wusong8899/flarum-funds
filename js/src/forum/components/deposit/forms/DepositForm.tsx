@@ -108,15 +108,6 @@ export default class DepositForm extends Component<DepositFormProps, DepositForm
           {/* 表单操作按钮 */}
           <div className="DepositForm-actions">
             <Button
-              type="button"
-              className="Button Button--secondary DepositForm-cancelButton"
-              onclick={() => app.modal.close()}
-              disabled={submitting}
-            >
-              {app.translator.trans('funds.forum.deposit.form.cancel')}
-            </Button>
-            
-            <Button
               type="submit"
               className="Button Button--primary DepositForm-submitButton"
               loading={submitting}
